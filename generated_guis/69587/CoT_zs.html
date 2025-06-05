@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Inbox</title>
+</head>
+<body style="margin: 0; font-family: Arial, sans-serif;">
+
+<!-- Header -->
+<div style="background-color: #f8f9fa; padding: 10px; text-align: center; font-size: 20px;">
+  Email App
+</div>
+
+<!-- Search Bar -->
+<div style="padding: 10px; background-color: #f0f0f0;">
+  <input type="search" placeholder="Search emails" style="width: 100%; padding: 10px; font-size: 16px;">
+</div>
+
+<!-- Email List -->
+<div style="overflow-y: auto; height: calc(100vh - 120px); padding: 10px;">
+  <!-- Sample Email Item -->
+  <div style="background-color: white; padding: 15px; border-bottom: 1px solid #eeeeee;">
+    <div style="font-weight: bold;">Sender's Name</div>
+    <div style="color: #555;">Email Subject</div>
+    <div style="color: #999; font-size: 14px;">Email snippet...</div>
+    <div style="color: #999; font-size: 12px; text-align: right;">10m ago</div>
+  </div>
+  <!-- Repeat above div block for each email in the list -->
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div style="position: fixed; bottom: 0; width: 100%; background-color: #f8f9fa; display: flex; justify-content: space-around; padding: 10px 0;">
+  <div>Inbox</div>
+  <div>Sent</div>
+  <div>Drafts</div>
+  <div>Trash</div>
+</div>
+
+<!-- Compose Button -->
+<button style="position: fixed; bottom: 60px; right: 20px; background-color: #007bff; color: white; border: none; padding: 15px; border-radius: 50%; font-size: 24px;">+</button>
+
+</body>
+</html>

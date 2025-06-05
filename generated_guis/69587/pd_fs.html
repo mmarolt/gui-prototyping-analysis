@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            background: #f0f0f0;
+        }
+        .header {
+            background: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            margin-top: 10px;
+        }
+        .search-bar input {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .search-bar button {
+            margin-left: 10px;
+            padding: 10px;
+            font-size: 1em;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .main-content {
+            padding: 5px;
+            overflow-y: scroll;
+            height: calc(100vh - 160px);
+        }
+        .email-item {
+            background: #fff;
+            margin: 5px 0;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.1);
+        }
+        .checkbox {
+            margin-right: 10px;
+        }
+        .email-info {
+            flex-grow: 1;
+        }
+        .sender {
+            font-weight: bold;
+        }
+        .subject {
+            color: #333;
+        }
+        .snippet {
+            color: #666;
+        }
+        .timestamp {
+            white-space: nowrap;
+        }
+        .unread {
+            font-weight: bold;
+        }
+        .read-indicator {
+            height: 10px;
+            width: 10px;
+            background: blue;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .floating-action {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        .navigation {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .action-section {
+            display: flex;
+            justify-content: space-evenly;
+            background: #fff;
+            padding: 10px 0;
+            box-shadow: 0px -2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 10;
+        }
+        .action-section button {
+            background: none;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .footer {
+            background: #fff;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0px -2px 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="page-heading">Inbox <span class="badge">3</span></div>
+    <div class="search-bar">
+        <input type="text" placeholder="Search emails">
+        <button class="refresh-button">&#x21bb;</button>
+    </div>
+</div>
+
+<div class="main-content">
+    <!-- Repeat this block for each email -->
+    <div class="email-item">
+        <div class="read-indicator"></div>
+        <input type="checkbox" class="checkbox">
+        <div class="email-info">
+            <div class="sender">Sender Name</div>
+            <div class="subject unread">Email Subject</div>
+            <div class="snippet">Email snippet preview text...</div>
+        </div>
+        <div class="timestamp">10:30 AM</div>
+    </div>
+    <!-- Repeat block ends -->
+</div>
+
+<div class="floating-action">+</div>
+
+<div class="navigation">&#9776;</div>
+
+<div class="action-section">
+    <button>Sort</button>
+    <button>Filter</button>
+    <button>Settings</button>
+</div>
+
+<div class="footer">
+    <!-- Footer content goes here (optional) -->
+</div>
+
+</body>
+</html>

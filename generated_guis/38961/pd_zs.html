@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Management App</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6;
+  }
+  header {
+    background-color: #ffffff;
+    padding: 10px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+  .search-bar {
+    width: 90%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+  }
+  .summary-dashboard {
+    background-color: #ffffff;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .transaction-list {
+    margin: 10px;
+    padding-bottom: 60px; /* Space for floating action button */
+  }
+  .transaction-item {
+    background-color: #ffffff;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .transaction-item span {
+    display: block;
+  }
+  .income {
+    color: green;
+  }
+  .expense {
+    color: red;
+  }
+  .floating-action-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background-color: #27ae60;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 50px;
+    font-size: 30px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
+  }
+  .nav-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #ffffff;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  .nav-bar a {
+    text-decoration: none;
+    color: #333;
+    text-align: center;
+  }
+  .nav-bar a span {
+    display: block;
+  }
+  @media (max-width: 375px) {
+    /* Adjustments for smaller screens can be made here */
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <input type="search" class="search-bar" placeholder="Search transactions...">
+</header>
+
+<div class="summary-dashboard">
+  <strong>Total Balance:</strong> $10,000<br>
+  <strong>Income:</strong> <span class="income">$15,000</span><br>
+  <strong>Expenses:</strong> <span class="expense">-$5,000</span>
+</div>
+
+<div class="transaction-list">
+  <!-- Repeat this block for each transaction -->
+  <div class="transaction-item">
+    <div>
+      <span>Date: 2023-04-01</span>
+      <span>Description: Groceries</span>
+      <span>Category: Food</span>
+    </div>
+    <div>
+      <span class="expense">-$50.00</span>
+    </div>
+  </div>
+  <!-- ... more transactions -->
+</div>
+
+<div class="floating-action-button">+</div>
+
+<div class="nav-bar">
+  <a href="#"><span>🏠</span>Home</a>
+  <a href="#"><span>📊</span>Reports</a>
+  <a href="#"><span>⚙️</span>Settings</a>
+</div>
+
+</body>
+</html>

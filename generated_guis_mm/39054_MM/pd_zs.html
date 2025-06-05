@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>List an Item</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  padding: 16px;
+}
+
+.section-header {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important for width: 100% to work correctly */
+}
+
+.form-group textarea {
+  resize: vertical;
+  height: 100px; /* Set a reasonable default height */
+}
+
+.form-group input[type="number"] {
+  width: 80px; /* Adjust as needed */
+}
+
+.price-input {
+  display: flex;
+  align-items: center;
+}
+
+.price-input span {
+  margin-right: 4px;
+}
+
+.image-upload {
+  margin-top: 8px;
+}
+
+.image-preview-container {
+  overflow-x: auto; /* Enable horizontal scrolling */
+  white-space: nowrap; /* Prevent wrapping */
+  margin-top: 8px;
+}
+
+.image-preview {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.condition-options {
+  display: flex;
+  gap: 8px;
+}
+
+.condition-options label {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.condition-options input[type="radio"] {
+  display: none;
+}
+
+.condition-options input[type="radio"]:checked + label {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.optional-section {
+  margin-top: 24px;
+}
+
+.shipping-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shipping-details {
+  margin-top: 8px;
+  padding-left: 16px;
+}
+
+.footer {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  padding: 16px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.footer button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.footer button.secondary {
+  background-color: #eee;
+  color: #333;
+}
+
+.footer button.tertiary {
+  background-color: #fdd;
+  color: #900;
+}
+
+/* Media query for smaller screens (example) */
+@media (max-width: 400px) {
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer button {
+    margin-bottom: 8px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <section>
+    <h2 class="section-header">Item Information</h2>
+
+    <div class="form-group">
+      <label for="title">Item Title *</label>
+      <input type="text" id="title" name="title" placeholder="Enter item title" required>
+      <small>0/100 characters</small>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description *</label>
+      <textarea id="description" name="description" placeholder="Enter item description" required></textarea>
+      <small>0/1000 characters</small>
+    </div>
+
+    <div class="form-group">
+      <label for="category">Category *</label>
+      <select id="category" name="category" required>
+        <option value="">Select a category</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+        <option value="books">Books</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="price">Price *</label>
+      <div class="price-input">
+        <span>$</span>
+        <input type="number" id="price" name="price" placeholder="0.00" step="0.01" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Photos/Videos</label>
+      <button class="image-upload">Add Photos/Videos</button>
+      <div class="image-preview-container">
+        <!-- Image previews will be added here dynamically -->
+        <!-- Example: -->
+        <!-- <div class="image-preview">
+          <img src="placeholder.jpg" alt="Preview">
+        </div> -->
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Condition</label>
+      <div class="condition-options">
+        <input type="radio" id="new" name="condition" value="new">
+        <label for="new">New</label>
+
+        <input type="radio" id="used" name="condition" value="used">
+        <label for="used">Used</label>
+
+        <input type="radio" id="like-new" name="condition" value="like-new">
+        <label for="like-new">Like New</label>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="optional-section">
+    <h2 class="section-header">Optional Information</h2>
+
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input type="text" id="location" name="location" placeholder="Enter location">
+    </div>
+
+    <div class="form-group">
+      <label for="quantity">Quantity</label>
+      <div style="display: flex; align-items: center;">
+        <button style="padding: 4px 8px;">-</button>
+        <input type="number" id="quantity" name="quantity" placeholder="1" value="1" min="1" style="width: 50px; text-align: center;">
+        <button style="padding: 4px 8px;">+</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="shipping-options">
+        <label for="shipping">Shipping Available</label>
+        <input type="checkbox" id="shipping" name="shipping">
+      </div>
+
+      <div id="shipping-details" class="shipping-details" style="display: none;">
+        <label for="shipping-cost">Shipping Cost</label>
+        <input type="number" id="shipping-cost" name="shipping-cost" placeholder="0.00" step="0.01">
+
+        <label for="shipping-method">Shipping Method</label>
+        <select id="shipping-method" name="shipping-method">
+          <option value="">Select a method</option>
+          <option value="usps">USPS</option>
+          <option value="ups">UPS</option>
+          <option value="fedex">FedEx</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="return-policy">Return Policy</label>
+      <textarea id="return-policy" name="return-policy" placeholder="Enter return policy"></textarea>
+    </div>
+
+  </section>
+
+</div>
+
+<footer class="footer">
+  <button class="secondary">Preview Listing</button>
+  <button class="primary">Post Listing</button>
+  <button class="secondary">Save as Draft</button>
+  <button class="tertiary">Clear Form</button>
+</footer>
+
+<script>
+  // Basic shipping details toggle
+  const shippingCheckbox = document.getElementById('shipping');
+  const shippingDetails = document.getElementById('shipping-details');
+
+  shippingCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+      shippingDetails.style.display = 'block';
+    } else {
+      shippingDetails.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>

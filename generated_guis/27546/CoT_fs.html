@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Budget Summary</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .budget-overview {
+            padding: 20px;
+            background-color: #fff;
+            /* Placeholder for the graph */
+            height: 200px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .budget-details {
+            padding: 0 20px;
+        }
+        .budget-item {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .add-budget-btn {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav-item {
+            text-align: center;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Monthly Budget Summary</h1>
+</div>
+
+<div class="budget-overview">
+    <!-- Placeholder for a chart/graph -->
+    <div>Chart/Graph</div>
+</div>
+
+<div class="budget-details">
+    <div class="budget-item">Housing: $1000 / $800 spent / $200 left</div>
+    <div class="budget-item">Groceries: $300 / $250 spent / $50 left</div>
+    <div class="budget-item">Utilities: $150 / $120 spent / $30 left</div>
+    <!-- More budget items can be added here -->
+</div>
+
+<div class="add-budget-btn">+</div>
+
+<div class="bottom-nav">
+    <div class="nav-item">Summary</div>
+    <div class="nav-item">Transactions</div>
+    <div class="nav-item">Settings</div>
+</div>
+
+</body>
+</html>

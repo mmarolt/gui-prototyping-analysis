@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Products</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            width: 375px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .category-tabs {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-bar {
+            display: flex;
+            padding: 10px;
+            background: #f4f4f4;
+            border-radius: 20px;
+            margin: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            outline: none;
+            flex: 1;
+        }
+
+        .search-bar i {
+            margin-right: 10px;
+        }
+
+        .cart-icon {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .cart-badge {
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            position: absolute;
+            right: -5px;
+            top: -5px;
+        }
+
+        .main-content {
+            padding: 10px;
+        }
+
+        .filter-sort {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .product-card {
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .product-info {
+            text-align: left;
+        }
+
+        .product-info h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .product-info span {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .add-to-cart {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #fff;
+            padding: 10px;
+            position: sticky;
+            bottom: 0;
+            z-index: 1000;
+        }
+
+        footer button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            width: 100%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="search-bar">
+        <i>&#x1F50D;</i>
+        <input type="text" placeholder="Search products">
+        <div class="cart-icon">
+            &#x1F6D2;<span class="cart-badge">2</span>
+        </div>
+    </div>
+    <div class="category-tabs">
+        <div>Cleansers</div>
+        <div>Moisturizers</div>
+        <div>Serums</div>
+    </div>
+</header>
+
+<div class="main-content">
+    <div class="filter-sort">
+        <button>&#x1F50E; Filter</button>
+        <select>
+            <option>Sort by</option>
+            <option>Price</option>
+            <option>Popularity</option>
+            <option>Rating</option>
+        </select>
+    </div>
+
+    <!-- Repeat this structure for each product -->
+    <div class="product-card">
+        <img src="product-image.jpg" alt="Product Image">
+        <div class="product-info">
+            <h3>Product Name</h3>
+            <span>Price: $19.99</span>
+            <br>
+            <span>Size: 50ml</span>
+            <br>
+            <span>Key Benefits: Hydration, Softening</span>
+            <br>
+            <span>★★★★☆ (27 Reviews)</span>
+        </div>
+        <button class="add-to-cart">Add to Cart</button>
+        <!-- Wishlist/Favorites Icon -->
+        <!-- Star Rating Display and Review Count and Link -->
+        <!-- Detail Page Link -->
+    </div>
+    <!-- End of product structure -->
+
+</div>
+
+<footer>
+    <button>Checkout</button>
+</footer>
+
+</body>
+</html>

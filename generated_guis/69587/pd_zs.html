@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Mobile Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+        }
+        .search-bar {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .email-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            max-height: 500px; /* Example fixed height for scroll */
+            overflow-y: auto;
+        }
+        .email-list-item {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .email-details {
+            flex-grow: 1;
+        }
+        .sender {
+            font-weight: bold;
+        }
+        .unread .sender,
+        .unread .subject {
+            font-weight: bold;
+            color: #000;
+        }
+        .snippet {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .email-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .email-actions button {
+            background: none;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+        .email-actions img {
+            width: 20px;
+            height: 20px;
+        }
+        /* Media query for responsive adjustments */
+        @media (max-width: 375px) {
+            .email-list-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .email-actions {
+                justify-content: space-between;
+                width: 100%;
+                padding-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <input type="text" class="search-bar" placeholder="Search emails">
+    </div>
+
+    <ul class="email-list">
+        <!-- Repeat this list item structure for each email -->
+        <li class="email-list-item unread">
+            <div class="email-details">
+                <div class="sender">John Doe</div>
+                <div class="subject">Meeting Reminder</div>
+                <div class="snippet">Don't forget our meeting at 10am...</div>
+            </div>
+            <div class="email-actions">
+                <button><img src="reply-icon.svg" alt="Reply"></button>
+                <button><img src="delete-icon.svg" alt="Delete"></button>
+            </div>
+        </li>
+        <!-- More list items would go here -->
+    </ul>
+
+</body>
+</html>

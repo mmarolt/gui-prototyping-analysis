@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alarm Clock App Settings</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+    }
+    .container {
+        max-width: 375px;
+        margin: auto;
+        background-color: #fff;
+        min-height: 667px;
+        box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        overflow: auto;
+        padding: 20px;
+    }
+    .setting-group {
+        margin-bottom: 30px;
+    }
+    .setting-group h2 {
+        font-size: 20px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    .setting-option {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .setting-option label {
+        font-size: 16px;
+    }
+    .setting-option input[type="checkbox"] {
+        transform: scale(1.5);
+    }
+    .setting-option select {
+        font-size: 16px;
+        padding: 5px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="setting-group">
+        <h2>General Settings</h2>
+        <div class="setting-option">
+            <label for="snooze">Snooze Duration</label>
+            <select id="snooze">
+                <option value="5">5 minutes</option>
+                <option value="10">10 minutes</option>
+                <option value="15">15 minutes</option>
+            </select>
+        </div>
+        <div class="setting-option">
+            <label for="volume">Alarm Volume</label>
+            <select id="volume">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+    </div>
+    <div class="setting-group">
+        <h2>Advanced Settings</h2>
+        <div class="setting-option">
+            <label for="vibrate">Vibrate</label>
+            <input type="checkbox" id="vibrate" checked>
+        </div>
+        <div class="setting-option">
+            <label for="repeat">Repeat</label>
+            <input type="checkbox" id="repeat">
+        </div>
+    </div>
+</div>
+</body>
+</html>

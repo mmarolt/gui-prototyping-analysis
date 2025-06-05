@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 375px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .select-wrapper, .input-wrapper {
+            margin-bottom: 20px;
+        }
+        .workout-select, .workout-duration {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .start-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .start-button:hover {
+            background-color: #4cae4c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Start Workout</h1>
+        <div class="select-wrapper">
+            <select class="workout-select">
+                <option value="">Select Workout Type</option>
+                <option value="cardio">Cardio</option>
+                <option value="strength">Strength</option>
+                <option value="flexibility">Flexibility</option>
+                <option value="balance">Balance</option>
+            </select>
+        </div>
+        <div class="input-wrapper">
+            <input type="number" class="workout-duration" placeholder="Duration (minutes)">
+        </div>
+        <button class="start-button">Start Workout</button>
+    </div>
+</body>
+</html>

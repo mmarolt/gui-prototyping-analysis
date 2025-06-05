@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Configuration</title>
+</head>
+<body style="margin: 0; font-family: Arial, sans-serif;">
+
+<div style="padding: 20px; text-align: center; background-color: #f8f8f8; border-bottom: 1px solid #e7e7e7;">
+  <button style="float: left; background: none; border: none; font-size: 16px; color: #007bff;">Back</button>
+  <span style="font-size: 18px; font-weight: bold;">Configure Workout</span>
+</div>
+
+<div style="padding: 20px; display: flex; flex-direction: column; gap: 10px;">
+  <!-- Workout Type Selection -->
+  <label for="workout-type" style="font-size: 16px;">Workout Type:</label>
+  <select id="workout-type" style="padding: 10px; font-size: 16px;">
+    <option value="cardio">Cardio</option>
+    <option value="strength">Strength</option>
+    <option value="yoga">Yoga</option>
+  </select>
+
+  <!-- Difficulty Level Selector -->
+  <label for="difficulty-level" style="font-size: 16px;">Difficulty Level:</label>
+  <select id="difficulty-level" style="padding: 10px; font-size: 16px;">
+    <option value="beginner">Beginner</option>
+    <option value="intermediate">Intermediate</option>
+    <option value="advanced">Advanced</option>
+  </select>
+
+  <!-- Duration Input -->
+  <label for="duration" style="font-size: 16px;">Duration (minutes):</label>
+  <input type="number" id="duration" value="30" style="padding: 10px; font-size: 16px;">
+
+  <!-- Start Workout Button -->
+  <button style="padding: 15px; font-size: 18px; background-color: #28a745; color: white; border: none; border-radius: 5px; margin-top: 20px;">
+    Start Workout
+  </button>
+</div>
+
+</body>
+</html>

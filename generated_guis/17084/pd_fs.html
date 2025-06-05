@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Details</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f3f3f3;
+    }
+    header {
+        background-color: #fff;
+        text-align: center;
+        padding: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    header h1 {
+        margin: 10px 0;
+        font-size: 24px;
+    }
+    header p {
+        margin: 4px 0;
+        color: #666;
+    }
+    .operating-hours {
+        text-align: left;
+        padding: 0 15px;
+        font-size: 14px;
+    }
+    .review-summary {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+    }
+    .review-summary span {
+        font-size: 14px;
+    }
+    .photo-gallery {
+        display: flex;
+        overflow-x: auto;
+        padding: 10px 0;
+        gap: 10px;
+        padding-left: 15px;
+    }
+    .photo-gallery img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    .reviews-list {
+        padding: 10px 15px;
+        background-color: #fff;
+        border-top: 1px solid #ddd;
+    }
+    .review-entry {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+    .review-entry:last-child {
+        border-bottom: none;
+    }
+    .review-entry p {
+        font-size: 14px;
+        color: #333;
+    }
+    .review-entry .buttons {
+        display: flex;
+        justify-content: space-around;
+        padding: 5px 0;
+    }
+    .map-thumbnail {
+        position: relative;
+        text-align: center;
+        padding: 10px;
+    }
+    .map-thumbnail img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+    .map-button,
+    .reservation-button {
+        display: block;
+        width: 90%;
+        padding: 10px;
+        margin: 10px auto;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    .search-bar {
+        display: block;
+        width: 90%;
+        padding: 10px;
+        margin: 10px auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .navigation-controls {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+    }
+    .navigation-controls button {
+        background: none;
+        border: none;
+        padding: 5px;
+        font-size: 16px;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="navigation-controls">
+        <button>&lt; Back</button>
+        <button>Write Review</button>
+    </div>
+    <input type="text" class="search-bar" placeholder="Search...">
+    <h1>La Bella Italia</h1>
+    <p>Italian Cuisine</p>
+    <p>123 Main St, Anytown</p>
+    <div class="operating-hours">
+        <p>Mon-Fri: 11am - 10pm</p>
+        <p>Sat-Sun: 12pm - 11pm</p>
+    </div>
+</header>
+
+<div class="review-summary">
+    <span>⭐⭐⭐⭐☆</span>
+    <span>102 Reviews</span>
+</div>
+
+<div class="photo-gallery">
+    <img src="thumbnail1.jpg" alt="Food Photo">
+    <img src="thumbnail2.jpg" alt="Restaurant Interior">
+    <img src="thumbnail3.jpg" alt="Dining Area">
+    <!-- Add more thumbnails as needed -->
+</div>
+
+<div class="reviews-list">
+    <div class="review-entry">
+        <p>Great atmosphere and lovely food. - John Doe</p>
+        <p>⭐⭐⭐⭐☆</p>
+        <p>Reviewed on 01/01/2023</p>
+        <div class="buttons">
+            <button>Like</button>
+            <button>Comment</button>
+            <button>Share</button>
+        </div>
+    </div>
+    <!-- Add more reviews as needed -->
+</div>
+
+<div class="map-thumbnail">
+    <img src="map-thumbnail.jpg" alt="Map">
+    <button class="map-button">View on Map</button>
+</div>
+
+<button class="reservation-button">Make a Reservation</button>
+
+</body>
+</html>

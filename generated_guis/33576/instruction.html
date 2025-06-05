@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Travel Booking App - Hotels</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  .header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 10px;
+  }
+  .hotel-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .hotel-item {
+    background-color: white;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .hotel-name {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  .hotel-info {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+  .hotel-price {
+    font-size: 16px;
+    color: #007bff;
+    font-weight: bold;
+  }
+  .hotel-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Select Your Hotel</h1>
+</div>
+
+<ul class="hotel-list">
+  <li class="hotel-item">
+    <img src="hotel1.jpg" alt="Hotel 1" class="hotel-image">
+    <div class="hotel-name">Grand Hotel</div>
+    <div class="hotel-info">Located in the heart of the city, close to shopping districts and landmarks.</div>
+    <div class="hotel-price">$120 per night</div>
+  </li>
+  <li class="hotel-item">
+    <img src="hotel2.jpg" alt="Hotel 2" class="hotel-image">
+    <div class="hotel-name">Ocean View Resort</div>
+    <div class="hotel-info">Enjoy stunning sea views and private beaches at our exclusive resort.</div>
+    <div class="hotel-price">$250 per night</div>
+  </li>
+  <li class="hotel-item">
+    <img src="hotel3.jpg" alt="Hotel 3" class="hotel-image">
+    <div class="hotel-name">Mountain Escape Lodge</div>
+    <div class="hotel-info">Perfect for a peaceful retreat in the mountains, with hiking trails nearby.</div>
+    <div class="hotel-price">$150 per night</div>
+  </li>
+  <!-- Add more hotels as needed -->
+</ul>
+
+</body>
+</html>

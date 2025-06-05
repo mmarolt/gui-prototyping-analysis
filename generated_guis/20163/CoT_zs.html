@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty and Skincare Shop</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; }
+  .header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: #fff; }
+  .search-bar { flex-grow: 1; margin: 0 10px; }
+  .search-bar input { width: 100%; padding: 8px; }
+  .icon { width: 24px; height: 24px; }
+  .nav-bar { background-color: #eee; padding: 10px; text-align: center; }
+  .nav-item { display: inline; margin: 0 10px; }
+  .product-card { width: 48%; padding: 10px; box-sizing: border-box; float: left; }
+  .product-image { width: 100%; height: auto; }
+  .product-name { font-weight: bold; }
+  .product-price { color: #f00; }
+  .btn { display: block; width: 100%; padding: 10px; margin-top: 5px; text-align: center; text-decoration: none; color: white; }
+  .add-to-cart { background-color: #5cb85c; }
+  .buy-now { background-color: #f0ad4e; }
+  .footer { background-color: #333; color: white; padding: 10px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="logo.png" alt="Logo" class="icon">
+  <div class="search-bar">
+    <input type="search" placeholder="Search products...">
+  </div>
+  <img src="cart.png" alt="Cart" class="icon">
+  <img src="user.png" alt="User" class="icon">
+</div>
+
+<div class="nav-bar">
+  <span class="nav-item">Home</span>
+  <span class="nav-item">Categories</span>
+  <span class="nav-item">Offers</span>
+  <span class="nav-item">More</span>
+</div>
+
+<div class="main-content">
+  <div class="product-card">
+    <img src="product1.jpg" alt="Product 1" class="product-image">
+    <div class="product-info">
+      <div class="product-name">Product 1</div>
+      <div class="product-price">$19.99</div>
+      <a href="#" class="btn add-to-cart">Add to Cart</a>
+      <a href="#" class="btn buy-now">Buy Now</a>
+    </div>
+  </div>
+  <!-- Repeat for other products -->
+</div>
+
+<div class="footer">
+  © 2023 Beauty and Skincare Shop
+</div>
+
+</body>
+</html>

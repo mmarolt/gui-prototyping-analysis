@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Search</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+    }
+    header {
+        background-color: #4a76a8;
+        color: white;
+        text-align: center;
+        padding: 15px;
+    }
+    .container {
+        padding: 20px;
+    }
+    .search-box {
+        margin-bottom: 20px;
+    }
+    .search-box input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    .search-box button {
+        width: 100%;
+        padding: 10px;
+        background-color: #5cb85c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .search-box button:hover {
+        background-color: #4cae4c;
+    }
+    .options {
+        margin-bottom: 20px;
+    }
+    .options label {
+        display: block;
+        margin-bottom: 5px;
+    }
+    .options select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Property Search</h1>
+</header>
+
+<div class="container">
+    <div class="search-box">
+        <input type="text" placeholder="Enter a city, neighborhood, or address" />
+        <button>Search</button>
+    </div>
+
+    <div class="options">
+        <label for="propertyType">Property Type</label>
+        <select id="propertyType">
+            <option value="any">Any</option>
+            <option value="house">House</option>
+            <option value="apartment">Apartment</option>
+            <option value="condo">Condo</option>
+            <option value="land">Land</option>
+        </select>
+
+        <label for="priceRange">Price Range</label>
+        <select id="priceRange">
+            <option value="any">Any</option>
+            <option value="0-100000">$0 - $100,000</option>
+            <option value="100000-200000">$100,000 - $200,000</option>
+            <option value="200000-300000">$200,000 - $300,000</option>
+            <option value="300000-400000">$300,000 - $400,000</option>
+            <option value="400000+">$400,000+</option>
+        </select>
+    </div>
+</div>
+
+</body>
+</html>

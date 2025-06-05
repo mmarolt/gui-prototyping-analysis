@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contacts List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            width: 375px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .header {
+            background-color: #f8f8f8;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .back-button {
+            font-size: 24px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .search-bar {
+            display: block;
+            width: calc(100% - 20px);
+            margin: 10px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            box-sizing: border-box;
+        }
+        .groups-favorites {
+            display: flex;
+            justify-content: space-evenly;
+            padding-bottom: 10px;
+        }
+        .groups-favorites div {
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .scrollable-contacts-view {
+            overflow-y: auto;
+            height: calc(100vh - 160px);
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            margin-bottom: 1px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .contact-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            position: relative;
+        }
+        .unread-badge {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 12px;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+        .contact-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .contact-status {
+            height: 10px;
+            width: 10px;
+            background-color: #00FF00;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+        }
+        .contact-last-message {
+            font-size: 14px;
+            color: #666;
+        }
+        .compose-button {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 24px;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <button class="back-button">&#9664;</button>
+    <input type="text" class="search-bar" placeholder="Search contacts">
+    <div class="groups-favorites">
+        <div>Groups</div>
+        <div>Favorites</div>
+    </div>
+</div>
+
+<div class="scrollable-contacts-view">
+    <!-- Repeat this block for each contact -->
+    <div class="contact-item">
+        <img src="profile_picture.jpg" alt="Profile Picture">
+        <span class="contact-name">John Doe <span class="contact-status"></span></span>
+        <span class="contact-last-message">Hey, how are you?</span>
+        <span class="unread-badge">3</span>
+    </div>
+    <!-- End Contact Item block -->
+</div>
+
+<button class="compose-button">+</button>
+
+</body>
+</html>

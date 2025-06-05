@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout App</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .back-button {
+            font-size: 24px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .main-content {
+            padding: 15px;
+        }
+        .workout-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .instructions {
+            margin-top: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .start-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 30px;
+            cursor: pointer;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .cancel-button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .shopping-list-button {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .badge {
+            background-color: red;
+            border-radius: 50%;
+            color: white;
+            padding: 2px 6px;
+            font-size: 12px;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <span class="back-button">&larr;</span>
+    <h1>Workout Selection</h1>
+</div>
+
+<div class="main-content">
+    <div class="workout-card">
+        <img src="cardio-icon.png" alt="Cardio">
+        <p>Cardio</p>
+    </div>
+    <div class="workout-card">
+        <img src="strength-icon.png" alt="Strength">
+        <p>Strength</p>
+    </div>
+    <div class="workout-card">
+        <img src="yoga-icon.png" alt="Yoga">
+        <p>Yoga</p>
+    </div>
+
+    <div class="instructions">
+        <p>Instructions and Tips</p>
+        <ul>
+            <li>Select a workout type to begin.</li>
+            <li>Customize your workout in the next step.</li>
+        </ul>
+        <button>More Tips</button>
+    </div>
+
+    <button class="start-button">Start Workout</button>
+</div>
+
+<div class="bottom-nav">
+    <button class="shopping-list-button">Shopping List <span class="badge">0</span></button>
+    <button class="cancel-button">Cancel</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inbox - Email App</title>
+<style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: #f7f7f7;
+        color: #333;
+    }
+    .header {
+        background-color: #007bff;
+        color: #fff;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .email-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .email-item {
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    .email-item:hover {
+        background-color: #f0f0f0;
+    }
+    .subject {
+        font-weight: bold;
+    }
+    .preview {
+        color: #666;
+    }
+    .time {
+        text-align: right;
+        font-size: 0.85em;
+        color: #666;
+    }
+    @media screen and (min-width: 375px) {
+        .email-item {
+            padding: 15px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="header">
+    <h1>Inbox</h1>
+</div>
+<ul class="email-list">
+    <li class="email-item">
+        <div class="subject">Welcome to Email App</div>
+        <div class="preview">Get started by sending an email.</div>
+        <div class="time">5m ago</div>
+    </li>
+    <li class="email-item">
+        <div class="subject">New Features Update</div>
+        <div class="preview">Check out the latest updates in your email app.</div>
+        <div class="time">1h ago</div>
+    </li>
+    <li class="email-item">
+        <div class="subject">Security Alert</div>
+        <div class="preview">We've noticed a new sign-in from a recognized device.</div>
+        <div class="time">3h ago</div>
+    </li>
+    <!-- Add more emails as needed -->
+</ul>
+</body>
+</html>

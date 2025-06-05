@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 18px;
+        }
+        .news-container {
+            padding: 10px;
+            background-color: #f2f2f2;
+        }
+        .news-item {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        .headline {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .summary {
+            font-size: 14px;
+            color: #555;
+        }
+        .navigation-bar {
+            display: flex;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+        }
+        .nav-icon {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">News App</div>
+
+<div class="news-container">
+    <!-- Example of a news item -->
+    <div class="news-item">
+        <img src="thumbnail.jpg" class="thumbnail" alt="News image">
+        <div>
+            <div class="headline">Headline of the news story</div>
+            <div class="summary">A brief summary of the news story...</div>
+        </div>
+    </div>
+    <!-- Repeat for other news items -->
+</div>
+
+<div class="navigation-bar">
+    <div class="nav-icon">Home</div>
+    <div class="nav-icon">Categories</div>
+    <div class="nav-icon">Search</div>
+    <div class="nav-icon">Profile</div>
+</div>
+
+</body>
+</html>

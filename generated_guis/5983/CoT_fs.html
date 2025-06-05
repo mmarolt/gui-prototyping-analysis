@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fafafa;
+            width: 375px;
+            max-width: 100%;
+        }
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #cccccc; /* Placeholder for image */
+            margin: 20px auto;
+        }
+        .user-info {
+            margin-bottom: 10px;
+        }
+        .name {
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .age {
+            font-size: 20px;
+        }
+        .bio {
+            margin: 10px 20px;
+            text-align: left;
+        }
+        .interests-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .interest-tag {
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            padding: 5px 15px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .action-buttons {
+            margin: 20px 0;
+        }
+        .action-button {
+            border: none;
+            padding: 10px;
+            margin: 0 10px;
+            font-size: 24px;
+            background: none;
+            cursor: pointer;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid #dddddd;
+        }
+        .nav-icon {
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-section">
+    <div class="profile-image"></div>
+    <div class="user-info">
+        <div class="name">Alex,</div>
+        <div class="age">27</div>
+    </div>
+    <p class="bio">Loves hiking, photography, and a good book. Always ready for a new adventure.</p>
+    <div class="interests-container">
+        <span class="interest-tag">Hiking</span>
+        <span class="interest-tag">Photography</span>
+        <span class="interest-tag">Reading</span>
+        <span class="interest-tag">Travel</span>
+    </div>
+</div>
+
+<div class="action-buttons">
+    <button class="action-button">&#x1F90D;</button> <!-- Like -->
+    <button class="action-button">&#x1F5D1;</button> <!-- Dislike -->
+    <button class="action-button">&#x2B50;</button> <!-- Super Like -->
+</div>
+
+<div class="nav-bar">
+    <div class="nav-icon">&#x1F3E0;</div> <!-- Home -->
+    <div class="nav-icon">&#x1F50D;</div> <!-- Search -->
+    <div class="nav-icon">&#x1F4AC;</div> <!-- Chat -->
+    <div class="nav-icon">&#x1F464;</div> <!-- Profile -->
+</div>
+
+</body>
+</html>

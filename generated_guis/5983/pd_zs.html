@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile Page</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 375px;
+    margin: auto;
+    background: #fff;
+  }
+  .header {
+    text-align: center;
+    padding: 10px;
+  }
+  .profile-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #ddd;
+    margin: auto;
+  }
+  .thumbnail {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 5px;
+    background: #ddd;
+  }
+  .main-content {
+    padding: 15px;
+  }
+  .bio-section {
+    margin-bottom: 15px;
+  }
+  .basic-info {
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+  .info-card {
+    flex: 0 0 auto;
+    margin-right: 10px;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  .compatibility {
+    margin-bottom: 15px;
+  }
+  .percentage-bar {
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    width: 100%;
+  }
+  .percentage-value {
+    height: 10px;
+    background: #4caf50;
+    border-radius: 5px;
+    width: 75%; /* Example compatibility percentage */
+  }
+  .match-preferences {
+    margin-bottom: 15px;
+  }
+  .tag {
+    display: inline-block;
+    background: #e0e0e0;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+  .action-buttons {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    text-align: center;
+  }
+  .action-button {
+    display: inline-block;
+    padding: 10px 15px;
+    margin: 0 5px;
+    background: #e0e0e0;
+    border-radius: 5px;
+  }
+  .message-button {
+    background: #4caf50;
+    color: #fff;
+  }
+  .social-media {
+    display: flex;
+    margin-bottom: 15px;
+  }
+  .social-icon {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 5px;
+    background: #ddd;
+  }
+  .verification-badge {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: gold;
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .footer {
+    padding: 10px;
+    text-align: center;
+  }
+  .report-link {
+    color: red;
+    font-size: 0.8rem;
+  }
+  .online-indicator {
+    color: #4caf50;
+    font-size: 0.8rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <img src="profile_photo.jpg" alt="Profile Photo" class="profile-photo">
+    <div class="thumbnail"></div>
+    <div class="thumbnail"></div>
+    <div class="thumbnail"></div>
+    <div class="verification-badge"></div>
+  </div>
+
+  <div class="main-content">
+    <div class="bio-section">
+      <p>User's bio snippet... <a href="#">Read more</a></p>
+    </div>
+
+    <div class="basic-info">
+      <div class="info-card">27</div>
+      <div class="info-card">New York</div>
+      <div class="info-card">Hiking, Reading</div>
+    </div>
+
+    <div class="compatibility">
+      <div class="percentage-bar">
+        <div class="percentage-value"></div>
+      </div>
+    </div>
+
+    <div class="match-preferences">
+      <div class="tag">Active Lifestyle</div>
+      <div class="tag">Non-Smoker</div>
+      <div class="tag">Loves Pets</div>
+      <!-- More tags... -->
+      <button>Edit Preferences</button>
+    </div>
+
+    <div class="social-media">
+      <div class="social-icon"></div>
+      <div class="social-icon"></div>
+      <div class="social-icon"></div>
+      <!-- More social icons... -->
+    </div>
+  </div>
+
+  <div class="action-buttons">
+    <div class="action-button">Like</div>
+    <div class="action-button">Dislike</div>
+    <div class="action-button">Super Like</div>
+    <div class="action-button message-button">Message</div>
+  </div>
+
+  <div class="footer">
+    <div class="report-link">Report/Block</div>
+    <div class="online-indicator">Online now</div>
+  </div>
+</div>
+
+</body>
+</html>

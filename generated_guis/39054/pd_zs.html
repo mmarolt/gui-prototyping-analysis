@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Mobile Page Example</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f8f8f8;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: #fff;
+  }
+  .back-button {
+    border: none;
+    background: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .app-logo {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: bold;
+  }
+  .content {
+    padding: 15px;
+  }
+  .input-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  .text-input, .dropdown, .price-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .image-upload {
+    margin-bottom: 15px;
+  }
+  .quantity-selector {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  .quantity-button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #f8f8f8;
+    cursor: pointer;
+  }
+  .quantity-input {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    width: 50px;
+    text-align: center;
+  }
+  .footer {
+    padding: 15px;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+  .footer button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="back-button">Back</button>
+  <div class="app-logo">App Name</div>
+</div>
+
+<div class="content">
+  <label class="input-label" for="name">Name</label>
+  <input type="text" id="name" class="text-input" placeholder="Enter your name">
+  
+  <!-- Other input fields, dropdowns, image uploads, etc. would be similarly structured -->
+  
+  <div class="image-upload">
+    <button>Upload Images</button>
+    <!-- Thumbnail gallery here -->
+  </div>
+  
+  <label class="input-label" for="price">Price</label>
+  <input type="text" id="price" class="price-input" placeholder="$0.00">
+  
+  <div class="quantity-selector">
+    <button class="quantity-button">-</button>
+    <input type="number" class="quantity-input" value="1">
+    <button class="quantity-button">+</button>
+  </div>
+  
+  <!-- Additional product parameters, autocomplete/suggestions, etc. -->
+  
+</div>
+
+<div class="footer">
+  <button>Preview</button>
+  <button>Save Draft</button>
+  <button>Submit</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outdoor Activity Tracking App</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px;
+    }
+    .navbar .title {
+        flex-grow: 1;
+        text-align: center;
+    }
+    .navbar button, .navbar .menu {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2em;
+    }
+    .tabs {
+        display: flex;
+        justify-content: space-around;
+        background-color: #f2f2f2;
+        padding: 10px 0;
+    }
+    .map-container {
+        position: relative;
+        height: calc(100vh - 170px); /* Adjust based on other elements */
+        background-color: #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .map-container:before {
+        content: 'Map Integration Placeholder';
+    }
+    .fab {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px;
+        border-radius: 50%;
+        font-size: 1.2em;
+    }
+    .weather-widget {
+        background-color: #f9f9f9;
+        padding: 10px;
+        text-align: center;
+    }
+    .cta-button {
+        position: fixed;
+        bottom: 20px;
+        width: calc(100% - 40px);
+        left: 20px;
+        padding: 15px;
+        background-color: #2196F3;
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        font-size: 1.2em;
+    }
+</style>
+</head>
+<body>
+<div class="navbar">
+    <button onclick="history.back()">&#x2190; Back</button>
+    <span class="title">Activity Tracker</span>
+    <div class="menu">&#x2630;</div>
+</div>
+<div class="tabs">
+    <button>Routes</button>
+    <button>Checklist</button>
+    <button>Weather</button>
+</div>
+<div class="map-container">
+    <button class="fab">+</button>
+</div>
+<div class="weather-widget">
+    <p>Weather Info: &#9728; 76°F</p>
+</div>
+<button class="cta-button">Start Planning</button>
+</body>
+</html>

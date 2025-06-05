@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Review App</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; }
+  .header { position: fixed; top: 0; width: 100%; background-color: #333; color: white; padding: 10px; box-sizing: border-box; }
+  .search-bar { width: 100%; padding: 5px; }
+  .menu-icon { font-size: 24px; cursor: pointer; }
+  .main-content { padding: 60px 15px 15px 15px; }
+  .movie-listing { border: 1px solid #ddd; margin-bottom: 15px; padding: 10px; }
+  .movie-image { width: 100px; height: 150px; background-color: #eee; float: left; margin-right: 15px; }
+  .movie-info { margin-left: 120px; }
+  .rating, .reviews, .trailer, .bookmark, .buy-tickets { margin-top: 5px; }
+  .footer { background-color: #333; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
+  @media (max-width: 375px) {
+    .main-content, .footer { padding: 60px 10px 10px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="menu-icon">&#9776;</div>
+  <input type="text" class="search-bar" placeholder="Search movies...">
+</div>
+
+<div class="main-content">
+  <!-- Sorting and Filtering Options -->
+  <div class="sorting-filtering">
+    <select>
+      <option>Sort by</option>
+      <option>Release Date</option>
+      <option>Rating</option>
+      <option>Title</option>
+    </select>
+    <!-- Additional filtering options would go here -->
+  </div>
+
+  <!-- Movie Listings -->
+  <div class="movie-listing">
+    <div class="movie-image"></div>
+    <div class="movie-info">
+      <h3>Movie Title</h3>
+      <div class="rating">★★★★☆ 8.5/10</div>
+      <div class="reviews">123 reviews</div>
+      <div class="trailer">Watch Trailer</div>
+      <div class="bookmark">Bookmark</div>
+      <button class="buy-tickets">Buy Tickets</button>
+    </div>
+  </div>
+  <!-- Repeat for each movie listing -->
+
+</div>
+
+<div class="footer">
+  <!-- Social Sharing Options -->
+  <div>Social Media Icons</div>
+  <!-- Navigation to Other App Sections -->
+  <div>Navigation Bar</div>
+</div>
+
+</body>
+</html>

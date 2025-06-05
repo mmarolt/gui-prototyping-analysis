@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Reviews</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: #f7f7f7;
+        }
+        .header {
+            background: #fff;
+            text-align: center;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .search-bar {
+            padding: 10px;
+            background: #fff;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .restaurant-list {
+            padding: 10px;
+            background: #f7f7f7;
+        }
+        .restaurant {
+            background: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        .thumbnail img {
+            width: 100%;
+            height: auto;
+        }
+        .info {
+            flex: 1;
+        }
+        .name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .cuisine {
+            font-size: 14px;
+            color: #666;
+        }
+        .ratings {
+            font-size: 14px;
+            color: #FFD700;
+        }
+        .action-buttons {
+            text-align: right;
+        }
+        .action-buttons button {
+            padding: 5px 10px;
+            margin-left: 5px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* Bottom navigation omitted for brevity */
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Restaurant Reviews</h1>
+</div>
+
+<div class="search-bar">
+    <input type="text" class="search-input" placeholder="Search restaurants...">
+</div>
+
+<div class="restaurant-list">
+    <div class="restaurant">
+        <div class="thumbnail">
+            <img src="restaurant_thumbnail.jpg" alt="Restaurant Thumbnail">
+        </div>
+        <div class="info">
+            <div class="name">The Gourmet Hut</div>
+            <div class="cuisine">Italian, Pizza</div>
+            <div class="ratings">★★★★☆</div>
+        </div>
+        <div class

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rental Properties</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #ffffff;
+        }
+        .back-button {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .search-input {
+            flex-grow: 1;
+            margin: 0 10px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .search-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .list-view {
+            padding: 10px;
+        }
+        .property-item {
+            background-color: #ffffff;
+            margin-bottom: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .property-image {
+            width: 80px;
+            height: 80px;
+            margin-right: 15px;
+            border-radius: 5px;
+            background-color: #eaeaea;
+        }
+        .property-details {
+            flex-grow: 1;
+        }
+        .contact-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="back-button">&lt;</div>
+    <input type="text" class="search-input" placeholder="Search properties">
+    <button class="search-button">Search</button>
+</div>
+
+<div class="list-view">
+    <!-- Repeat this block for each property listing -->
+    <div class="property-item">
+        <div class="property-image"></div>
+        <div class="property-details">
+            <div><strong>Property Name</strong></div>
+            <div>Location</div>
+            <div>Price: $XXXX</div>
+            <div>Bedrooms: X, Bathrooms: X</div>
+        </div>
+        <button class="contact-button">Contact</button>
+    </div>
+    <!-- End of property listing block -->
+</div>
+
+</body>
+</html>

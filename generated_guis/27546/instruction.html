@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monthly Budget Summary</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f4f4f4;
+    }
+    .container {
+        width: 100%;
+        max-width: 375px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+    }
+    h1 {
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .budget-item {
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        padding: 10px 15px;
+    }
+    .budget-item:last-child {
+        border-bottom: none;
+    }
+    .budget-item h2 {
+        font-size: 18px;
+        margin: 5px 0;
+        color: #444;
+    }
+    .budget-item p {
+        font-size: 14px;
+        line-height: 1.4;
+        color: #666;
+    }
+    .total {
+        font-weight: bold;
+        font-size: 20px;
+        color: #333;
+        text-align: center;
+        padding: 20px 0;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Monthly Budget Summary</h1>
+    <div class="budget-item">
+        <h2>Groceries</h2>
+        <p>Planned: $400</p>
+        <p>Spent: $375</p>
+    </div>
+    <div class="budget-item">
+        <h2>Utilities</h2>
+        <p>Planned: $250</p>
+        <p>Spent: $200</p>
+    </div>
+    <div class="budget-item">
+        <h2>Rent</h2>
+        <p>Planned: $1200</p>
+        <p>Spent: $1200</p>
+    </div>
+    <div class="budget-item">
+        <h2>Transportation</h2>
+        <p>Planned: $100</p>
+        <p>Spent: $75</p>
+    </div>
+    <div class="budget-item">
+        <h2>Entertainment</h2>
+        <p>Planned: $150</p>
+        <p>Spent: $80</p>
+    </div>
+    <div class="total">Total Spent: $1930</div>
+</div>
+</body>
+</html>

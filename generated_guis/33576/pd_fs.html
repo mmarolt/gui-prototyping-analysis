@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Hotels</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        .header h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+        .back-button,
+        .menu-button {
+            font-size: 24px;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        .filter-sort {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background-color: #f2f2f2;
+        }
+        .filter-sort button {
+            background-color: #e0e0e0;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .scroll-view {
+            overflow-y: auto;
+            padding: 0 16px;
+            margin: 16px 0;
+        }
+        .hotel {
+            display: flex;
+            background-color: #fff;
+            margin-bottom: 16px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .hotel img {
+            width: 100px;
+            height: 100px;
+        }
+        .details {
+            padding: 10px;
+            flex-grow: 1;
+        }
+        .bookmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .book-now {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .bottom-section {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <button class="back-button">&#x2190;</button>
+    <h1>Hotels</h1>
+    <button class="menu-button">&#x2630;</button>
+</div>
+
+<div class="filter-sort">
+    <button class="sort-button">Sort</button>
+    <button class="filter-button">Filter</button>
+</div>
+
+<div class="scroll-view">
+    <!-- Repeat this block for each hotel listing -->
+    <div class="hotel">
+        <img src="hotel-thumbnail.jpg" alt="Hotel image">
+        <div class="details">
+            <h2>Hotel Name</h2>
+            <p>Location</p>
+            <p>Star Rating</p>
+            <p>Price per night</p>
+            <button class="book-now">Book Now</button>
+        </div>
+        <button class="bookmark">&#x2764;</button>
+    </div>
+    <!-- End hotel listing block -->
+</div>
+
+<div class="bottom-section">
+    &#x1F30D;
+</div>
+
+</body>
+</html>

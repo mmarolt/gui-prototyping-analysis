@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flight Search</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    padding: 20px;
+    font-size: 16px;
+  }
+  .container {
+    max-width: 375px;
+    margin: auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  input[type="text"], input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  input[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Flight Search</h1>
+  </div>
+  <form>
+    <div class="form-group">
+      <label for="from">From:</label>
+      <input type="text" id="from" name="from" placeholder="Departure City">
+    </div>
+    <div class="form-group">
+      <label for="to">To:</label>
+      <input type="text" id="to" name="to" placeholder="Destination City">
+    </div>
+    <div class="form-group">
+      <label for="departure-date">Departure Date:</label>
+      <input type="date" id="departure-date" name="departure-date">
+    </div>
+    <div class="form-group">
+      <label for="return-date">Return Date:</label>
+      <input type="date" id="return-date" name="return-date">
+    </div>
+    <input type="submit" value="Search Flights">
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe App</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    
+    header {
+        background-color: #ff6347;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+    }
+    
+    .recipe-image {
+        width: 100%;
+        height: auto;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .recipe-title {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .ingredient-list,
+    .instructions {
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        color: #ff6347;
+        margin-bottom: 10px;
+    }
+    
+    .list-item {
+        font-size: 16px;
+        line-height: 1.5;
+        color: #666;
+    }
+    
+    @media (max-width: 375px) {
+        .content {
+            padding: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Recipe App</h1>
+</header>
+
+<div class="content">
+    <h2 class="recipe-title">Classic Tomato Spaghetti</h2>
+    <img src="tomato-spaghetti.jpg" alt="Classic Tomato Spaghetti" class="recipe-image">
+    
+    <div class="ingredient-list">
+        <h3 class="section-title">Ingredients</h3>
+        <ul>
+            <li class="list-item">200g spaghetti</li>
+            <li class="list-item">400g ripe tomatoes</li>
+            <li class="list-item">1 garlic clove</li>
+            <li class="list-item">Fresh basil</li>
+            <li class="list-item">Olive oil</li>
+            <li class="list-item">Salt & pepper</li>
+        </ul>
+    </div>
+    
+    <div class="instructions">
+        <h3 class="section-title">Instructions</h3>
+        <ol>
+            <li class="list-item">Cook spaghetti in salted boiling water until al dente.</li>
+            <li class="list-item">Meanwhile, chop the tomatoes and garlic.</li>
+            <li class="list-item">Heat oil in a pan and sauté garlic until fragrant.</li>
+            <li class="list-item">Add tomatoes and cook until soft.</li>
+            <li class="list-item">Drain spaghetti and mix with the sauce.</li>
+            <li class="list-item">Garnish with basil and serve hot.</li>
+        </ol>
+    </div>
+</div>
+
+</body>
+</html>

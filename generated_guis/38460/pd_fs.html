@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Box Office Movies</title>
+    <style>
+        body, html {
+            padding: 0;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: #f2f2f2;
+        }
+        header {
+            background: white;
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+        }
+        .back-button {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .page-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: .5rem;
+        }
+        .search-bar {
+            width: 90%;
+            padding: .5rem;
+            font-size: 1rem;
+            margin: 0 auto;
+            border-radius: .5rem;
+            border: 1px solid #ccc;
+        }
+        .sorting-notification-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem;
+            background: white;
+        }
+        .sorting-control {
+            border: 1px solid #ccc;
+            padding: .5rem;
+            border-radius: .5rem;
+            font-size: 1rem;
+        }
+        .notification-toggle {
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: .5rem 1rem;
+            border-radius: .5rem;
+            font-size: 1rem;
+        }
+        .movie-listings {
+            padding: 1rem 0;
+        }
+        .movie-entry {
+            display: flex;
+            background: white;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: .5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .movie-entry:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .movie-poster {
+            width: 80px;
+            height: 120px;
+            margin-right: 1rem;
+            border-radius: .25rem;
+        }
+        .movie-info {
+            flex-grow: 1;
+        }
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .release-date {
+            font-size: .9rem;
+            color: #666;
+        }
+        .interest-buttons, .rating-display {
+            display: flex;
+            align-items: center;
+            margin-top: .5rem;
+        }
+        .stars {
+            color: #f5c518;
+            margin-right: .5rem;
+        }
+        .user-reviews {
+            font-size: .8rem;
+            color: #666;
+        }
+        .add-watchlist, .share-button {
+            border: none;
+            background: #4CAF50;
+            color: white;
+            padding: .5rem;
+            border-radius: .5rem;
+            margin-left: .5rem;
+            cursor: pointer;
+            font-size: .9rem;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+        .nav-item {
+            text-align: center;
+            flex-grow: 1;
+        }
+        .nav-icon {
+            display: block;
+            margin: 0 auto;
+            font-size: 1.5rem;
+            margin-bottom: .5rem;
+        }
+        .nav-label {
+            display: block;
+            font-size: .8rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="back-button">Back</button>
+        <div class="page-title">Upcoming Box Office Movies</div>
+        <input type="text" class="search-bar" placeholder="Search Movies">
+    </header>
+    <div class="sorting-notification-section">
+        <select class="sorting-control">
+            <option value="popularity">Most Popular</option>
+            <option value="rating">Top Rated</option>
+            <option value="release_date">Release Date</option>
+        </select>
+        <button class="notification-toggle">Notify Me</button>
+    </div>
+    <div class="movie-listings">
+        <!-- Repeat this section for each movie entry -->
+        <div class="movie-entry">
+            <img src="movie_poster.jpg" alt="Movie Poster" class="movie-poster">
+            <div class="movie-info">
+                <div class="movie-title">Movie Title</div>
+                <div class="release-date">Release Date</div>
+                <div class="interest-buttons">
+                    <button class="add-watchlist">+ Watchlist</button>
+                    <button class="share-button">&#x1F4E4;</button>
+                </div>
+                <div class="rating-display">
+                    <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+                    <span class="user-reviews">(1234 reviews)</span>
+                </div>
+            </div>
+        </div>
+        <!-- End of movie entry section -->
+    </div>
+    <div class="nav-bar">
+        <!-- Repeat this section for each navigation item -->
+        <div class="nav-item">
+            <span class="nav-icon">&#127916;</span>
+            <span class="nav-label">Movies</span>
+        </div>
+        <!-- End of navigation item section -->
+    </div>
+</body>
+</html>

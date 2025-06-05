@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recent Transactions</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+  }
+  .header {
+    background: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    font-size: 18px;
+  }
+  .transaction-list {
+    padding: 10px;
+  }
+  .transaction-item {
+    background: white;
+    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: 4px;
+  }
+  .credit {
+    color: #4CAF50;
+  }
+  .debit {
+    color: #F44336;
+  }
+  .transaction-details {
+    display: flex;
+    justify-content: space-between;
+  }
+  .navigation-control {
+    text-align: center;
+    padding: 12px;
+    font-size: 16px;
+    color: #4CAF50;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+<div class="header">Recent Transactions</div>
+<div class="transaction-list">
+  <div class="transaction-item">
+    <div class="transaction-details">
+      <span>Date: 2023-04-01</span>
+      <span>Description: Salary</span>
+      <span class="credit">+$5000</span>
+    </div>
+  </div>
+  <div class="transaction-item">
+    <div class="transaction-details">
+      <span>Date: 2023-04-02</span>
+      <span>Description: Grocery Shopping</span>
+      <span class="debit">-$150</span>
+    </div>
+  </div>
+  <!-- More transactions can be added here -->
+</div>
+<div class="navigation-control">&#9664; Back to Dashboard</div>
+</body>
+</html>

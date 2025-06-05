@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Search App</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+  }
+  header {
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  input[type="search"] {
+    width: calc(100% - 44px);
+    padding: 8px;
+    margin-right: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  button.filter {
+    width: 40px;
+    height: 40px;
+    background: url('filter_icon.png') no-repeat center;
+    border: none;
+    background-size: 24px;
+  }
+  .main-content {
+    padding: 15px;
+  }
+  .job-card {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .bookmark-icon {
+    float: right;
+    width: 24px;
+    height: 24px;
+    background: url('bookmark_icon.png') no-repeat center;
+    background-size: 100%;
+  }
+  .load-more {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-top: 20px;
+  }
+  nav.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 10px 0;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+  }
+  nav.bottom-nav a {
+    text-align: center;
+    flex: 1;
+    text-decoration: none;
+    color: #333;
+  }
+  .menu-drawer {
+    /* This would be hidden by default and shown on click */
+  }
+  @media screen and (max-width: 375px) {
+    body {
+      font-size: 14px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <input type="search" placeholder="Search jobs">
+  <button class="filter"></button>
+</header>
+<div class="main-content">
+  <div class="job-card">
+    <div class="bookmark-icon"></div>
+    <h3>Front-end Developer</h3>
+    <p>Company XYZ - Full Time</p>
+    <p>Location: Remote</p>
+    <button class="apply-now">Apply Now</button>
+  </div>
+  <!-- More job cards would go here -->
+  <button class="load-more">Load More</button>
+</div>
+<nav class="bottom-nav">
+  <a href="#">Home</a>
+  <a href="#">Saved</a>
+  <a href="#">Applied</a>
+  <a href="#">More</a>
+</nav>
+<!-- Menu, account management, job application, notifications, etc. would be implemented here -->
+</body>
+</html>

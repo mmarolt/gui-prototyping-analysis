@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Settings</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .time-picker,
+        .repeat-options,
+        .alarm-tone-selector,
+        .volume-slider,
+        .snooze-toggle {
+            margin-bottom: 20px;
+        }
+        .dropdown,
+        .slider,
+        .toggle,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .footer {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .save-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    Alarm Settings
+</div>
+
+<div class="main-content">
+    <div class="time-picker">
+        <label for="time">Set Time:</label>
+        <input type="time" id="time" name="time" class="dropdown">
+    </div>
+
+    <div class="repeat-options">
+        <label>Repeat:</label>
+        <div><input type="checkbox" id="mon" name="day"><label for="mon">Monday</label></div>
+        <div><input type="checkbox" id="tue" name="day"><label for="tue">Tuesday</label></div>
+        <div><input type="checkbox" id="wed" name="day"><label for="wed">Wednesday</label></div>
+        <div><input type="checkbox" id="thu" name="day"><label for="thu">Thursday</label></div>
+        <div><input type="checkbox" id="fri" name="day"><label for="fri">Friday</label></div>
+        <div><input type="checkbox" id="sat" name="day"><label for="sat">Saturday</label></div>
+        <div><input type="checkbox" id="sun" name="day"><label for="sun">Sunday</label></div>
+    </div>
+
+    <div class="alarm-tone-selector">
+        <label for="tone">Alarm Tone:</label>
+        <select id="tone" name="tone" class="dropdown">
+            <option value="tone1">Tone 1</option>
+            <option value="tone2">Tone 2</option>
+            <option value="tone3">Tone 3</option>
+        </select>
+    </div>
+
+    <div class="volume-slider">
+        <label for="volume">Volume:</label>
+        <input type="range" id="volume" name="volume" min="0" max="100" class="slider">
+    </div>
+
+    <div class="snooze-toggle">
+        <label for="snooze">Snooze:</label>
+        <input type="checkbox" id="snooze" name="snooze" class="toggle">
+    </div>
+</div>
+
+<div class="footer">
+    <button class="cancel-btn">Cancel</button>
+    <button class="save-btn">Save</button>
+</div>
+
+</body>
+</html>

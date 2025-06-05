@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Mobile App</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  .top-bar {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f8f9fa;
+  }
+  .search-bar {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  .secondary-toolbar {
+    padding: 10px;
+    background-color: #e9ecef;
+    text-align: center;
+  }
+  .filter-sort-button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    margin: 0 5px;
+  }
+  .main-content {
+    padding: 10px;
+  }
+  .listing-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .listing-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #eee;
+  }
+  .listing-info {
+    padding: 10px;
+  }
+  .favorites-contact {
+    padding: 10px;
+    text-align: right;
+  }
+  .favorites-icon, .contact-button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #28a745;
+    color: white;
+    border-radius: 4px;
+    margin-left: 10px;
+  }
+  .toggle-view {
+    padding: 10px;
+    text-align: center;
+  }
+  .toggle-button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #6c757d;
+    color: white;
+    border-radius: 4px;
+  }
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #343a40;
+    padding: 10px 0;
+    text-align: center;
+    color: white;
+  }
+  .nav-item {
+    display: inline;
+    margin: 0 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <input type="text" class="search-bar" placeholder="Search properties...">
+</div>
+
+<div class="secondary-toolbar">
+  <button class="filter-sort-button">Filter</button>
+  <button class="filter-sort-button">Sort</button>
+</div>
+
+<div class="main-content">
+  <!-- Repeat the below block for each listing -->
+  <div class="listing-card">
+    <div class="listing-image">
+      <!-- Images would be loaded here -->
+    </div>
+    <div class="listing-info">
+      <!-- Listing details like title, price, etc. -->
+    </div>
+    <div class="favorites-contact">
+      <button class="favorites-icon">♥</button>
+      <button class="contact-button">Contact</button>
+    </div>
+  </div>
+</div>
+
+<div class="toggle-view">
+  <button class="toggle-button">Map View</button>
+</div>
+
+<div class="navigation">
+  <span class="nav-item">Home</span>
+  <span class="nav-item">Favorites</span>
+  <span class="nav-item">Search</span>
+  <span class="nav-item">Account</span>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sell Your Product</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 20px;
+            background-color: #f3f3f3;
+        }
+        .form-container {
+            max-width: 375px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .image-preview {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+        .image-preview img {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Sell Your Product</h1>
+    <input type="text" placeholder="Product Name" />
+    <textarea placeholder="Product Description"></textarea>
+    <select>
+        <option value="">Select Category</option>
+        <option value="electronics">Electronics</option>
+        <option value="clothing">Clothing</option>
+        <option value="books">Books</option>
+    </select>
+    <input type="text" placeholder="Price" />
+    <input type="number" placeholder="Quantity" />
+    <div>
+        <button class="image-upload-btn">Upload Images</button>
+    </div>
+    <div class="image-preview">
+        <!-- Image thumbnails will be inserted here -->
+    </div>
+    <button class="submit-btn">Post Your Product</button>
+</div>
+
+</body>
+</html>

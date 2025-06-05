@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+  }
+  .header {
+    text-align: center;
+    padding: 20px;
+    background: #333;
+    color: #fff;
+  }
+  .nav-menu {
+    display: flex;
+    justify-content: space-around;
+    background: #ddd;
+    padding: 10px 0;
+  }
+  .nav-menu div {
+    text-align: center;
+  }
+  .list-view {
+    padding: 10px;
+    background: #fff;
+  }
+  .alarm-item {
+    border-bottom: 1px solid #eee;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .add-alarm-btn {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #5cb85c;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 24px;
+  }
+  .toggle-switch {
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    background: #ccc;
+    border-radius: 20px;
+    position: relative;
+  }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+  .toggle-switch.active {
+    background: #4cd964;
+  }
+  .toggle-switch.active::after {
+    left: 22px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  Alarm Settings
+</div>
+
+<div class="nav-menu">
+  <div>Alarm Tone</div>
+  <div>Volume</div>
+  <div>Snooze</div>
+</div>
+
+<div class="list-view">
+  <div class="alarm-item">
+    <span>07:00 AM</span>
+    <div class="toggle-switch"></div>
+  </div>
+  <!-- Repeat alarm items as needed -->
+</div>
+
+<button class="add-alarm-btn">+</button>
+
+</body>
+</html>

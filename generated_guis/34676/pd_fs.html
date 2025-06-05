@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Language Translator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            width: 375px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .top-section, .middle-section, .bottom-section {
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        select {
+            width: 48%;
+            margin-bottom: 10px;
+        }
+        select:nth-child(2) {
+            margin-left: 4%;
+        }
+        .text-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .translate-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .output-display {
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .audio-output, .copy-save-function {
+            display: inline-block;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .bottom-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        .navigation-buttons {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            background-color: #e0e0e0;
+            border: none;
+            cursor: pointer;
+        }
+        .help-support {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-section">
+    <select id="from-language">
+        <option value="en">English</option>
+        <option value="es">Spanish</option>
+        <!-- More languages can be added here -->
+    </select>
+    <select id="to-language">
+        <option value="es">Spanish</option>
+        <option value="en">English</option>
+        <!-- More languages can be added here -->
+    </select>
+</div>
+
+<div class="middle-section">
+    <input type="text" class="text-input" placeholder="Enter text to translate">
+    <button class="translate-button">Translate</button>
+    <div class="output-display">
+        <span id="translated-text">Translation appears here...</span>
+        <div class="audio-output">&#x1F50A;</div>
+        <div class="copy-save-function">&#x2398;</div>
+        <div class="copy-save-function">&#x1F4BE;</div>
+    </div>
+</div>
+
+<div class="bottom-section">
+    <button class="navigation-buttons">Back</button>
+    <div class="help-support">&#x2753; Help</div>
+</div>
+
+</body>
+</html>

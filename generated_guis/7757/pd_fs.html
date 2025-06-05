@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Feed</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .headline-section {
+            position: relative;
+            text-align: center;
+            background-color: #ddd;
+        }
+        .main-headline {
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .headline-image {
+            width: 100%;
+            height: auto;
+        }
+        .news-feed {
+            overflow-y: scroll;
+            padding: 10px;
+            height: calc(100vh - 210px); /* Adjusted for headline and search */
+        }
+        .news-item {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        .title-label {
+            font-weight: bold;
+        }
+        .summary-text {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #666;
+        }
+        .search-bar {
+            padding: 10px;
+            background-color: #eaeaea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .category-tabs {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+            background-color: #eaeaea;
+            margin-top: -10px;
+        }
+        .category-tab {
+            display: inline-block;
+            padding: 10px;
+            margin-right: 5px;
+            background-color: #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .bookmark-button,
+        .share-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="headline-section">
+    <div class="main-headline">Today's Top Story</div>
+    <img src="headline-image.jpg" alt="Main story image" class="headline-image">
+</div>
+
+<div class="search-bar">
+    <input type="text" class="search-input" placeholder="Search news...">
+</div>
+
+<div class="category-tabs">
+    <div class="category-tab">World</div>
+    <div class="category-tab">Business</div>
+    <div class="category-tab">Technology</div>
+    <div class="category-tab">Entertainment</div>
+    <div class="category-tab">Sports</div>
+    <div class="category-tab">Science</div>
+</div>
+
+<div class="news-feed">
+    <!-- News Item 1 -->
+    <div class="news-item">
+        <img src="thumbnail1.jpg" alt="Article thumbnail" class="thumbnail">
+        <div>
+            <div class="title-label">Breaking News Title</div>
+            <div class="summary-text">A quick summary of the news article goes here...</div>
+            <div class="timestamp">Published: 2 hours ago</div>
+        </div>
+        <button class="bookmark-button">&#9734;</button>
+        <button class="share-button">&#x1f4e4;</button>
+    </div>
+    
+    <!-- News Item 2 -->
+    <div class="news-item">
+        <img src="thumbnail2.jpg" alt="Article thumbnail" class="thumbnail">
+        <div>
+            <div class="title-label">Another News Title</div>
+            <div class="summary-text">A quick summary of the news article goes here...</div>
+            <div class="timestamp">Published: 3 hours ago</div>
+        </div>
+        <button class="bookmark-button">&#9734;</button>
+        <button class="share-button">&#x1f4e4;</button>
+    </div>
+
+    <!-- Add more news items as needed -->
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Music Player</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .top-section, .middle-section, .bottom-section {
+    padding: 16px;
+  }
+  .navigation {
+    display: flex;
+    align-items: center;
+  }
+  .back-arrow {
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .track-info {
+    text-align: center;
+    margin-top: 16px;
+  }
+  .album-art {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+  .track-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+  .artist-name {
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .progress-bar-container {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .progress-bar {
+    flex-grow: 1;
+    height: 4px;
+    background-color: #444;
+    border-radius: 2px;
+    margin: 0 8px;
+    position: relative;
+  }
+  .slider {
+    position: absolute;
+    top: -6px;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .time-indicator {
+    font-size: 12px;
+  }
+  .main-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 24px;
+  }
+  .playback-button {
+    font-size: 32px;
+    cursor: pointer;
+  }
+  .small-controls {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .volume-control {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+  }
+  .volume-slider {
+    flex-grow: 1;
+    height: 4px;
+    background-color: #444;
+    border-radius: 2px;
+    margin-left: 8px;
+  }
+  .volume-icon {
+    font-size: 20px;
+  }
+  .bottom-icons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+  }
+  .bottom-icon {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .queue-button {
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 24px;
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+  }
+</style>
+</head>
+<body>
+<div class="top-section">
+  <div class="navigation">
+    <span class="back-arrow">&#x2190;</span>
+  </div>
+  <div class="track-info">
+    <img src="album-art.jpg" alt="Album Art" class="album-art">
+    <div class="track-title">Song Title</div>
+    <div class="artist-name">Artist Name</div>
+  </div>
+  <div class="progress-bar-container">
+    <span class="time-indicator">0:00</span>
+    <div class="progress-bar">
+      <div class="slider" style="left: 50%;"></div>
+    </div>
+    <span class="time-indicator">3:30</span>
+  </div>
+</div>
+<div class="middle-section">
+  <button class="queue-button">View Queue</button>
+</div>
+<div class="bottom-section">
+  <div class="main-controls">
+    <span class="small-controls">&#x21BA;</span>
+    <span class="playback-button">&#x25B6;</span>
+    <span class="small-controls">&#x21BB;</span>
+  </div>
+  <div class="volume-control">
+    <span class="volume-icon">&#x1F50A;</span>
+    <div class="volume-slider"></div>
+  </div>
+  <div class="bottom-icons">
+    <span class="bottom-icon">&#x1F4F6;</span>
+    <span class="bottom-icon">&#x1F39B;</span>
+  </div>
+</div>
+</body>
+</html>

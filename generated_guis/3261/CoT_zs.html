@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Search</title>
+</head>
+<body style="margin: 0; font-family: Arial, sans-serif;">
+<div style="padding: 16px; background-color: #f8f8f8;">
+  <input type="text" placeholder="Search properties..." style="width: 100%; padding: 10px; margin-bottom: 16px; border: 1px solid #ccc; border-radius: 4px;">
+  
+  <div style="margin-bottom: 16px; text-align: center;">
+    <button style="padding: 10px; margin-right: 8px; border: none; background-color: #e7e7e7; border-radius: 4px;">Filter</button>
+    <button style="padding: 10px; border: none; background-color: #e7e7e7; border-radius: 4px;">Sort</button>
+  </div>
+  
+  <div style="overflow: auto;">
+    <!-- Repeat this block for each property -->
+    <div style="background-color: #fff; margin-bottom: 16px; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+      <img src="property-image.jpg" alt="Property" style="width: 100%; height: auto; display: block;">
+      <div style="padding: 16px;">
+        <h4 style="margin-top: 0;">Property Title</h4>
+        <p style="margin: 8px 0;">$500,000 • 3 Beds • 2 Baths</p>
+        <button style="width: 100%; padding: 10px; border: none; background-color: #4CAF50; color: white; border-radius: 4px;">View Details</button>
+      </div>
+    </div>
+    <!-- End of property block -->
+  </div>
+</div>
+
+<div style="position: fixed; bottom: 0; width: 100%; background-color: #f8f8f8; border-top: 1px solid #ccc;">
+  <div style="display: flex; justify-content: space-around; padding: 10px 0;">
+    <a href="#" style="text-decoration: none; color: #333;">Home</a>
+    <a href="#" style="text-decoration: none; color: #333;">Search</a>
+    <a href="#" style="text-decoration: none; color: #333;">Favorites</a>
+    <a href="#" style="text-decoration: none; color: #333;">Profile</a>
+  </div>
+</div>
+</body>
+</html>

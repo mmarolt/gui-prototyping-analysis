@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: white;
+            border-bottom: 1px solid #ccc;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            flex-grow: 1;
+        }
+        .back-button, .save-icon, .share-button {
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .image-section {
+            text-align: center;
+            background-color: #ddd;
+            padding: 8px;
+        }
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .recipe-overview {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px;
+            background-color: white;
+            border-bottom: 1px solid #ccc;
+        }
+        .time-indicator, .servings-info {
+            text-align: center;
+        }
+        .ingredients-section, .instructions-section, .nutritional-section, .user-interaction-section {
+            padding: 16px;
+            background-color: white;
+            margin-top: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .ingredients-section ul, .instructions-section ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .rating-system, .comments-section, .share-results-button {
+            text-align: center;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <div class="back-button">&#8592;</div>
+        <div class="title">Delicious Recipe</div>
+        <div class="save-icon">&#9734;</div>
+        <div class="share-button">&#10150;</div>
+    </div>
+    <div class="image-section">
+        <img src="dish.jpg" alt="Delicious Dish">
+    </div>
+    <div class="recipe-overview">
+        <div class="time-indicator">
+            <div>Prep Time: 20 mins</div>
+            <div>Cook Time: 45 mins</div>
+        </div>
+        <div class="servings-info">
+            <div>Servings: 4</div>
+        </div>
+    </div>
+    <div class="ingredients-section">
+        <h3>Ingredients</h3>
+        <ul>
+            <li>Ingredient 1</li>
+            <li>Ingredient 2</li>
+            <li>Ingredient 3</li>
+        </ul>
+    </div>
+    <div class="instructions-section">
+        <h3>Instructions</h3>
+        <ol>
+            <li>Step one of the recipe</li>
+            <li>Step two of the recipe</li>
+            <li>Step three of the recipe</li>
+        </ol>
+    </div>
+    <div class="nutritional-section">
+        <h3>Nutritional Information</h3>
+        <p>Calories: 300 per serving</p>
+        <!-- Additional nutritional info here -->
+    </div>
+    <div class="user-interaction-section">
+        <div class="rating-system">
+            &#9733; &#9733; &#9733; &#9733; &#9734;
+        </div>
+        <div class="comments-section">
+            <h3>Comments</h3>
+            <!-- Comments list here -->
+        </div>
+        <div class="share-results-button">
+            <button>Share Your Results</button>
+        </div>
+    </div>
+</body>
+</html>

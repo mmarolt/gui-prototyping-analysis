@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitness Tracker</title>
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+    .container {
+        width: 100%;
+        max-width: 375px;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    .activity-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .activity-card h2 {
+        margin: 0;
+        color: #333;
+        font-size: 18px;
+    }
+    .activity-card p {
+        margin: 10px 0 0;
+        color: #666;
+        font-size: 14px;
+    }
+    .activity-card .activity-data {
+        font-size: 24px;
+        color: #000;
+        margin: 5px 0 20px;
+    }
+    .activity-card:last-child {
+        margin-bottom: 0;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="activity-card">
+        <h2>Steps</h2>
+        <p>Total steps taken today:</p>
+        <div class="activity-data">3,500</div>
+    </div>
+    <div class="activity-card">
+        <h2>Calories Burned</h2>
+        <p>Calories burned through physical activity:</p>
+        <div class="activity-data">650 kcal</div>
+    </div>
+    <div class="activity-card">
+        <h2>Active Minutes</h2>
+        <p>Total active minutes:</p>
+        <div class="activity-data">45 min</div>
+    </div>
+    <div class="activity-card">
+        <h2>Distance</h2>
+        <p>Total distance covered:</p>
+        <div class="activity-data">2.7 km</div>
+    </div>
+</div>
+</body>
+</html>

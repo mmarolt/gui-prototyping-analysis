@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            padding: 20px;
+            text-align: center;
+            background-color: #e9e9e9;
+            position: relative;
+        }
+        .summary-cards {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .card {
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 30%;
+            text-align: center;
+        }
+        .progress-bar {
+            background-color: #e6e6e6;
+            border-radius: 20px;
+            padding: 3px;
+            margin: 20px;
+        }
+        .progress {
+            background-color: #4caf50;
+            height: 20px;
+            border-radius: 20px;
+            width: 65%;
+        }
+        .activities-list {
+            padding: 0 20px;
+        }
+        .activity-item {
+            background-color: white;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #e9e9e9;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+        .add-activity-btn {
+            position: fixed;
+            right: 30px;
+            bottom: 70px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>Monday, March 14</div>
+    <div class="summary-cards">
+        <div class="card">
+            <div>Steps</div>
+            <strong>3,200</strong>
+        </div>
+        <div class="card">
+            <div>Distance</div>
+            <strong>2.5 km</strong>
+        </div>
+        <div class="card">
+            <div>Calories</div>
+            <strong>560 kcal</strong>
+        </div>
+    </div>
+    <div class="progress-bar">
+        <div class="progress"></div>
+    </div>
+</div>
+
+<div class="activities-list">
+    <div class="activity-item">
+        <div>Running</div>
+        <div>Duration: 30 min</div>
+        <div>Calories: 300 kcal</div>
+    </div>
+    <div class="activity-item">
+        <div>Walking</div>
+        <div>Duration: 45 min</div>
+        <div>Calories: 180 kcal</div>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <div>Dashboard</div>
+    <div>Activities</div>
+    <div>Profile</div>
+</div>
+
+<button class="add-activity-btn">+</button>
+
+</body>
+</html>

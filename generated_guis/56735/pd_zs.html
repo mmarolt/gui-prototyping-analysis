@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Review and Discovery App</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f7f7f7;
+  }
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px 10px;
+  }
+  .search-bar input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    width: 100%;
+  }
+  .search-bar img {
+    width: 20px;
+    height: 20px;
+  }
+  .filter-sort {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: #fff;
+    margin-top: 60px; /* Adjusted for fixed header */
+  }
+  .list {
+    padding: 10px;
+    padding-top: 120px; /* Adjusted for fixed header and filter-sort */
+  }
+  .restaurant-card {
+    background: white;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .restaurant-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  .restaurant-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+  }
+  .restaurant-info span {
+    font-size: 14px;
+  }
+  .button {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #008CBA;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 5px;
+    margin: 5px 0;
+  }
+  .button:active {
+    background-color: #005f73;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="search-bar">
+    <img src="magnifying-glass-icon.png" alt="Search" />
+    <input type="text" placeholder="Search for restaurants..." />
+  </div>
+</div>
+
+<div class="filter-sort">
+  <button class="button">Filter</button>
+  <button class="button">Sort</button>
+</div>
+
+<div class="list">
+  <!-- Repeat this block for each restaurant -->
+  <div class="restaurant-card">
+    <img src="restaurant-thumbnail.jpg" alt="Restaurant Name">
+    <h3>Restaurant Name</h3>
+    <div class="restaurant-info">
+      <span>Rating: 4.5</span>
+      <span>Price: $$</span>
+      <span>Cuisine: Italian</span>
+      <span>0.5 miles</span>
+    </div>
+    <div class="restaurant-info">
+      <span>100 Reviews</span>
+      <button class="button">View Reviews</button>
+    </div>
+    <div class="restaurant-info">
+      <button class="button">Reserve</button>
+      <button class="button">Call</button>
+      <button class="button">Directions</button>
+    </div>
+  </div>
+  <!-- End Restaurant Block -->
+</div>
+
+</body>
+</html>

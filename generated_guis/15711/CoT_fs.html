@@ -1,0 +1,99 @@
+.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            color: #333;
+        }
+        .album-art {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            background-color: #ddd;
+            margin-bottom: 20px;
+        }
+        .track-info {
+            margin-bottom: 20px;
+        }
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .time {
+            margin: 0 10px;
+        }
+        .slider {
+            flex-grow: 1;
+            height: 4px;
+            background-color: #ccc;
+            position: relative;
+        }
+        .progress {
+            height: 100%;
+            width: 50%;
+            background-color: #4caf50;
+            position: absolute;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .volume {
+            width: 80%;
+            height: 4px;
+            background-color: #ccc;
+            margin: 0 auto;
+            position: relative;
+        }
+        .volume-level {
+            height: 100%;
+            width: 70%;
+            background-color: #4caf50;
+            position: absolute;
+        }
+        button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="track-info">
+        <img src="album-art-placeholder.png" alt="Album Art" class="album-art">
+        <div>Track Name</div>
+        <div>Artist Name</div>
+    </div>
+    <div class="progress-bar">
+        <span class="time">0:00</span>
+        <div class="slider">
+            <div class="progress" style="width: 50%;"></div>
+        </div>
+        <span class="time">3:30</span>
+    </div>
+    <div class="controls">
+        <button id="shuffle">&#x1F500;</button>
+        <button id="prev">&#x23EE;</button>
+        <button id="play-pause">&#x25B6;</button>
+        <button id="next">&#x23ED;</button>
+    </div>
+    <div class="volume">
+        <div class="volume-level" style="width: 70%;"></div>
+    </div>
+</body>
+</html>

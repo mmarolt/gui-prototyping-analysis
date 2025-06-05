@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messaging App Contacts</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            width: 375px;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        .search-box {
+            background-color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 0;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            box-sizing: border-box;
+        }
+        .contact-list {
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .contact-item img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .contact-name {
+            font-size: 16px;
+            color: #333;
+        }
+        .fab {
+            position: fixed;
+            right: 20px;
+            bottom: 70px;
+            width: 50px;
+            height: 50px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f8f8;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        .nav-item {
+            text-align: center;
+            flex-grow: 1;
+        }
+        .nav-item a {
+            text-decoration: none;
+            color: #333;
+            display: block;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-box">
+    <input type="text" placeholder="Search contacts">
+</div>
+
+<div class="contact-list">
+    <!-- Repeat this block for each contact -->
+    <div class="contact-item">
+        <img src="path_to_profile_picture.jpg" alt="Profile Picture">
+        <div class="contact-name">John Doe</div>
+    </div>
+    <!-- ... -->
+</div>
+
+<div class="fab">+</div>
+
+<div class="nav-bar">
+    <div class="nav-item"><a href="#">Contacts</a></div>
+    <div class="nav-item"><a href="#">Calls</a></div>
+    <div class="nav-item"><a href="#">Chats</a></div>
+    <div class="nav-item"><a href="#">Settings</a></div>
+</div>
+
+</body>
+</html>

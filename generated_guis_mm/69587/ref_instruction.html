@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Inbox</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    /* Basic Reset & Font */
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      color: #333; /* Base text color */
+      background-color: #FAFAFA; /* Surface Color */
+    }
+
+    /* App Bar Styles */
+    .app-bar {
+      height: 56px;
+      background-color: #6200EE; /* Material Design Primary Color */
+      color: #FFFFFF; /* On Primary Color */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 16px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100; /* Ensure app bar stays on top */
+    }
+
+    .app-bar-left,
+    .app-bar-right {
+      display: flex;
+      align-items: center;
+    }
+
+    .app-bar-center {
+      font-size: 20px;
+      font-weight: 500; /* Roboto Medium */
+    }
+
+    .app-bar i {
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    /* Email List Styles */
+    .email-list {
+      margin-top: 56px; /* Account for app bar height */
+      padding: 8px;
+    }
+
+    .email-card {
+      display: flex;
+      padding: 12px;
+      border-bottom: 1px solid #EEEEEE; /* Divider */
+      background-color: #FFFFFF;
+      align-items: flex-start;
+      cursor: pointer;
+    }
+
+    .email-card-left {
+      margin-right: 16px;
+    }
+
+    .email-card-left img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .email-card-center {
+      flex-grow: 1;
+      overflow: hidden; /* Ensure text doesn't overflow */
+    }
+
+    .email-card-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .email-sender {
+      font-size: 16px;
+      font-weight: 500; /* Roboto Medium */
+      color: #212121; /* On Surface High Emphasis (close to 87% black) */
+      white-space: nowrap; /* Prevent wrapping */
+      overflow: hidden;
+      text-overflow: ellipsis; /* Add ellipsis if too long */
+    }
+
+    .email-subject {
+      font-size: 14px;
+      color: #757575; /* On Surface Medium Emphasis (close to 54% black) */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-summary {
+      font-size: 12px;
+      color: #757575; /* On Surface Medium Emphasis */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-timestamp {
+      font-size: 12px;
+      color: #9E9E9E; /* On Surface Disabled Emphasis (close to 38% black) */
+    }
+
+    .email-card-right i {
+      color: #FF4081; /* Accent Color (Pink A400) */
+      cursor: pointer;
+    }
+
+    /* FAB Styles */
+    .fab {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background-color: #03DAC5; /* Material Design Secondary Color */
+      color: #000000; /* On Secondary Color */
+      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+    }
+
+    .fab i {
+      font-size: 24px;
+    }
+
+    /* Bottom Navigation Styles (Optional) */
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      background-color: #FFFFFF; /* Surface Color */
+      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .nav-item i {
+      font-size: 24px;
+      color: #757575;
+    }
+
+    .nav-item span {
+      font-size: 12px;
+      color: #757575;
+    }
+
+    /* Media Queries for Responsiveness (Example) */
+    @media (max-width: 480px) {
+      .app-bar {
+        padding: 0 8px;
+      }
+      .email-card {
+        padding: 8px;
+      }
+    }
+
+    /* Example avatar placeholder */
+    .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #90A4AE; /* Grey 300 */
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- App Bar -->
+  <header class="app-bar">
+    <div class="app-bar-left">
+      <i class="material-icons">menu</i>
+    </div>
+    <div class="app-bar-center">
+      <span>Inbox</span>
+    </div>
+    <div class="app-bar-right">
+      <i class="material-icons">search</i>
+      <i class="material-icons">more_vert</i>
+    </div>
+  </header>
+
+  <!-- Email List -->
+  <div class="email-list">
+
+    <!-- Email Card 1 -->
+    <div class="email-card">
+      <div class="email-card-left">
+        <img src="https://via.placeholder.com/40" alt="John Doe Avatar">
+      </div>
+      <div class="email-card-center">
+        <div class="email-sender">John Doe</div>
+        <div class="email-subject">Meeting Agenda</div>
+        <div class="email-summary">Please find attached the agenda for our upcoming meeting...</div>
+      </div>
+      <div class="email-card-right">
+        <div class="email-timestamp">2 hours ago</div>
+        <i class="material-icons">star_border</i>
+      </div>
+    </div>
+
+    <!-- Email Card 2 -->
+    <div class="email-card">
+      <div class="email-card-left">
+        <div class="avatar-placeholder">JD</div>
+      </div>
+      <div class="email-card-center">
+        <div class="email-sender">Jane Smith</div>
+        <div class="email-subject">Project Update</div>
+        <div class="email-summary">Quick update on the project progress.  We're on track to meet the deadline...</div>
+      </div>
+      <div class="email-card-right">
+        <div class="email-timestamp">Yesterday</div>
+        <i class="material-icons">star</i>
+      </div>
+    </div>
+
+    <!-- Email Card 3 -->
+     <div class="email-card">
+      <div class="email-card-left">
+          <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Peter Jones Avatar">
+      </div>
+      <div class="email-card-center">
+        <div class="email-sender">Peter Jones</div>
+        <div class="email-subject">Weekend Getaway</div>
+        <div class="email-summary">Thinking of planning a weekend getaway, any suggestions?...</div>
+      </div>
+      <div class="email-card-right">
+        <div class="email-timestamp">3 days ago</div>
+        <i class="material-icons">star_border</i>
+      </div>
+    </div>
+
+    <!-- More Email Cards (Add as needed) -->
+
+  </div>
+
+  <!-- Floating Action Button -->
+  <button class="fab" aria-label="Compose Email">
+    <i class="material-icons">add</i>
+  </button>
+
+  <!-- Optional Bottom Navigation -->
+  <footer>
+    <div class="nav-item">
+      <i class="material-icons">mail</i>
+      <span>Inbox</span>
+    </div>
+    <div class="nav-item">
+      <i class="material-icons">send</i>
+      <span>Sent</span>
+    </div>
+    <div class="nav-item">
+      <i class="material-icons">drafts</i>
+      <span>Drafts</span>
+    </div>
+  </footer>
+
+</body>
+</html>

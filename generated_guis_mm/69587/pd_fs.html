@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            height: 667px; /* Fixed height for demonstration */
+            width: 375px;  /* Fixed width for demonstration */
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Top App Bar */
+        .top-app-bar {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-app-bar .refresh-icon,
+        .top-app-bar .search-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .top-app-bar .category {
+            font-size: 18px;
+        }
+
+        /* Email List Container */
+        .email-list-container {
+            overflow-y: auto;
+            height: calc(667px - 60px - 60px); /* Total Height - Top Bar Height - Compose Button Height */
+            padding: 10px;
+        }
+
+        /* Email List Item */
+        .email-list-item {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-list-item .sender-name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .email-list-item .subject {
+            font-size: 14px;
+        }
+
+        .email-list-item .snippet {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .email-list-item .timestamp {
+            font-size: 10px;
+            color: #999;
+            float: right;
+        }
+
+        /* Compose Button */
+        .compose-button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Unread Styling */
+        .email-list-item.unread .sender-name,
+        .email-list-item.unread .subject {
+            font-weight: bold;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Top App Bar -->
+    <div class="top-app-bar">
+        <div class="refresh-icon">&#x21bb;</div>
+        <div class="category">Category: Inbox</div>
+        <div class="search-icon">&#x1F50D;</div>
+    </div>
+
+    <!-- Email List Container -->
+    <div class="email-list-container">
+
+        <!-- Email List Item (Unread Example) -->
+        <div class="email-list-item unread">
+            <div class="sender-name">John Doe</div>
+            <div class="subject">Important Project Update</div>
+            <div class="snippet">Hey team, just wanted to provide a quick update...</div>
+            <div class="timestamp">1 hour ago</div>
+        </div>
+
+        <!-- Email List Item (Read Example) -->
+        <div class="email-list-item">
+            <div class="sender-name">Jane Smith</div>
+            <div class="subject">Meeting Agenda</div>
+            <div class="snippet">Attached is the agenda for our upcoming meeting...</div>
+            <div class="timestamp">Yesterday</div>
+        </div>
+
+        <!-- Email List Item (Another Example) -->
+        <div class="email-list-item">
+            <div class="sender-name">Support Team</div>
+            <div class="subject">Your Account Security</div>
+            <div class="snippet">We've detected suspicious activity on your account...</div>
+            <div class="timestamp">2 days ago</div>
+        </div>
+
+        <!-- Add more email list items as needed -->
+        
+        <!-- Example of Empty State (If no emails) -->
+        <!-- <div class="empty-state">No emails</div> -->
+
+    </div>
+
+    <!-- Compose Button -->
+    <button class="compose-button">+</button>
+
+</body>
+</html>

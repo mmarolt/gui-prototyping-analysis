@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Material Design Reset */
+        body, h1, h2, h3, p, ul, li {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.5;
+            background-color: #f0f2f5; /* Lighter background */
+            -webkit-font-smoothing: antialiased; /* Better font rendering for webkit browsers */
+        }
+
+        /* Container for 667x375 */
+        .container {
+            width: 375px;
+            margin: 0 auto; /* Center the container */
+            overflow: hidden; /* Prevent content from overflowing */
+        }
+
+        /* App Bar */
+        .app-bar {
+            background-color: #3f51b5; /* Primary Color */
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* More pronounced shadow */
+        }
+
+        .app-bar h1 {
+            font-size: 1.2rem;
+            font-weight: 500; /* Medium Font Weight */
+        }
+
+        .app-bar .menu-icon {
+            cursor: pointer;
+        }
+
+        /* Job List */
+        .job-list {
+            padding: 12px;
+        }
+
+        .job-card {
+            background-color: white;
+            border-radius: 8px; /* More rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Softer shadow */
+            margin-bottom: 16px; /* More spacing */
+            padding: 16px;
+            transition: all 0.2s ease-in-out; /* Smoother Transition */
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Increased shadow on hover */
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #212121;
+            margin-bottom: 6px; /* Adjusted spacing */
+        }
+
+        .job-company {
+            font-size: 0.9rem;
+            color: #757575;
+            margin-bottom: 10px; /* Adjusted spacing */
+            display: block; /* Ensures company name takes full width */
+        }
+
+        .job-location {
+            font-size: 0.8rem;
+            color: #757575;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Adjusted spacing */
+        }
+
+        .job-location .material-icons {
+            font-size: 1rem;
+            margin-right: 6px; /* Adjusted spacing */
+        }
+
+        .job-snippet {
+            font-size: 0.9rem;
+            color: #424242;
+            line-height: 1.4;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 12px 0; /* Increased padding */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #757575;
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .nav-item:hover {
+            color: #546e7a; /* Darker grey on hover */
+        }
+
+        .nav-item .material-icons {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+
+        .nav-item span {
+            font-size: 0.7rem;
+        }
+
+        .nav-item.active {
+            color: #3f51b5; /* Primary Color */
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: #e91e63; /* Accent Color */
+            color: white;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2); /* Stronger Shadow */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+        }
+
+
+        .fab .material-icons {
+            font-size: 1.5rem;
+        }
+
+        /* Utility Classes (Optional) */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-1 {
+            margin-top: 8px;
+        }
+
+        .mt-2 {
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- App Bar -->
+        <header class="app-bar">
+            <i class="material-icons menu-icon">menu</i>
+            <h1>Job Opportunities</h1>
+            <div>
+                <!-- Actions go here (e.g., search) -->
+            </div>
+        </header>
+
+        <!-- Job List -->
+        <main class="job-list">
+            <div class="job-card">
+                <h2 class="job-title">Software Engineer</h2>
+                <span class="job-company">Google</span>
+                <div class="job-location">
+                    <i class="material-icons">location_on</i>
+                    <span>Mountain View, CA</span>
+                </div>
+                <p class="job-snippet">Exciting opportunity to work on cutting-edge technology and make a global impact.</p>
+            </div>
+
+            <div class="job-card">
+                <h2 class="job-title">UX Designer</h2>
+                <span class="job-company">Amazon</span>
+                <div class="job-location">
+                    <i class="material-icons">location_on</i>
+                    <span>Seattle, WA</span>
+                </div>
+                <p class="job-snippet">Shape the future of customer experience and design innovative solutions.</p>
+            </div>
+
+            <div class="job-card">
+                <h2 class="job-title">Data Scientist</h2>
+                <span class="job-company">Netflix</span>
+                <div class="job-location">
+                    <i class="material-icons">location_on</i>
+                    <span>Los Gatos, CA</span>
+                </div>
+                <p class="job-snippet">Use data to drive business decisions and personalize the streaming experience for millions of users.</p>
+            </div>
+
+
+             <div class="job-card">
+                <h2 class="job-title">Frontend Developer</h2>
+                <span class="job-company">Spotify</span>
+                <div class="job-location">
+                    <i class="material-icons">location_on</i>
+                    <span>Stockholm, Sweden</span>
+                </div>
+                <p class="job-snippet">Build the user interface for one of the world's leading music streaming platforms.</p>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <i class="material-icons">home</i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item">
+                <i class="material-icons">search</i>
+                <span>Search</span>
+            </div>
+            <div class="nav-item">
+                <i class="material-icons">favorite</i>
+                <span>Saved</span>
+            </div>
+            <div class="nav-item">
+                <i class="material-icons">person</i>
+                <span>Profile</span>
+            </div>
+        </nav>
+
+        <!-- FAB -->
+        <a href="#" class="fab">
+            <i class="material-icons">add</i>
+        </a>
+    </div>
+
+</body>
+</html>

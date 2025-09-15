@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Job Listings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            width: 375px; /* Fixed width for mobile */
+            max-width: 100%; /* Ensure it doesn't overflow */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #eee;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            background-color: transparent;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        .search-input::placeholder {
+            color: #aaa;
+        }
+
+        .search-icon {
+            margin-right: 5px;
+            color: #aaa;
+        }
+
+        .filter-sort-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .filter-button, .sort-button {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Job Listing Styles */
+        .job-list {
+            padding: 10px;
+        }
+
+        .job-item {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .job-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .location {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="search-bar">
+            <span class="search-icon">&#x1F50D;</span>
+            <input type="text" class="search-input" placeholder="Search Job Titles, Companies...">
+        </div>
+        <div class="filter-sort-row">
+            <button class="filter-button">Filter</button>
+            <button class="sort-button">Sort By: Relevance</button>
+        </div>
+    </div>
+
+    <div class="job-list">
+        <div class="job-item">
+            <div class="job-title">Software Engineer</div>
+            <div class="company-name">Acme Corp</div>
+            <div class="location">San Francisco, CA</div>
+            <div class="description">We are looking for a talented software engineer...</div>
+        </div>
+
+        <div class="job-item">
+            <div class="job-title">Data Scientist</div>
+            <div class="company-name">Beta Inc</div>
+            <div class="location">New York, NY</div>
+            <div class="description">Join our data science team and help us build the future...</div>
+        </div>
+
+        <div class="job-item">
+            <div class="job-title">Product Manager</div>
+            <div class="company-name">Gamma Ltd</div>
+            <div class="location">London, UK</div>
+            <div class="description">We are seeking a product manager to lead our next generation...</div>
+        </div>
+    </div>
+
+</body>
+</html>

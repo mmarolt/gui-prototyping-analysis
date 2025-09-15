@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Search</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased; /* for smoother fonts on some browsers */
+        }
+
+        /* App Bar */
+        header {
+            height: 56px;
+            background-color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            position: sticky; /* Keep the header at the top when scrolling */
+            top: 0;
+            z-index: 10; /* Ensure it's above other content */
+        }
+
+        header i {
+            cursor: pointer;
+            font-size: 24px; /* Adjust icon size */
+        }
+
+        header span {
+            font-size: 20px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        /* Search Input */
+        .search-container {
+            padding: 16px;
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .search-input-wrapper i {
+            margin-right: 8px;
+            color: rgba(0, 0, 0, 0.54);
+        }
+
+        .search-input-wrapper input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        /* Optional Clear Button */
+        .search-input-wrapper i.clear {
+          cursor: pointer;
+        }
+
+        /* Optional Location Button */
+        .location-button {
+            display: block;
+            margin-top: 8px;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        /* Quick Filters/Chips */
+        .chips-container {
+            padding: 0 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 4px;
+            border-radius: 16px;
+            background-color: #E0E0E0;
+            color: rgba(0, 0, 0, 0.87);
+            font-size: 14px;
+            cursor: pointer;
+            user-select: none; /* prevent text selection when clicking */
+        }
+
+        /* Search Results */
+        .search-results-container {
+            /* No specific styling needed here, adjust padding/margin as needed in list items */
+        }
+
+        .location-suggestion, .property-listing {
+            padding: 16px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            cursor: pointer; /* Indicate clickable items */
+        }
+
+        .location-suggestion i {
+            margin-right: 16px;
+            color: rgba(0, 0, 0, 0.54);
+        }
+
+        .location-suggestion span {
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        .property-listing img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            margin-right: 16px;
+            object-fit: cover; /* Prevent image distortion */
+        }
+
+        .property-listing div span:first-child {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.87);
+        }
+
+        .property-listing div span {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.54);
+            display: block; /* Ensure spans stack vertically */
+        }
+
+        /* Utility classes for spacing */
+        .ml-16 {
+            margin-left: 16px;
+        }
+
+        /* Ensure proper sizing on smaller screens */
+        @media (max-width: 375px) {
+            header span {
+                font-size: 18px;
+            }
+
+            .search-input-wrapper input {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <i class="material-icons">menu</i>
+        <span>Search Properties</span>
+        <i class="material-icons">filter_list</i>
+    </header>
+
+    <div class="search-container">
+        <div class="search-input-wrapper">
+            <i class="material-icons">search</i>
+            <input type="text" placeholder="Enter a city, address, or ZIP code" enterkeyhint="search">
+            <!-- Optional Clear Button (Conditionally show this with JavaScript) -->
+            <!-- <i class="material-icons clear">clear</i> -->
+        </div>
+        <!-- Optional Location Button -->
+        <!-- <button class="location-button"><i class="material-icons">my_location</i> Use Current Location</button> -->
+    </div>
+
+    <div class="chips-container">
+        <span class="chip">For Sale</span>
+        <span class="chip">For Rent</span>
+        <span class="chip">Apartments</span>
+        <span class="chip">Houses</span>
+        <span class="chip">Open Houses</span>
+    </div>
+
+    <div class="search-results-container">
+        <div class="location-suggestion">
+            <i class="material-icons">location_on</i>
+            <span>Los Angeles, CA</span>
+        </div>
+        <div class="location-suggestion">
+            <i class="material-icons">location_on</i>
+            <span>New York, NY</span>
+        </div>
+        <div class="property-listing">
+            <img src="https://via.placeholder.com/80" alt="Property">
+            <div>
+                <span>123 Main St</span>
+                <span>$1,200,000</span>
+                <span>3 Beds | 2 Baths</span>
+            </div>
+        </div>
+        <div class="property-listing">
+            <img src="https://via.placeholder.com/80" alt="Property">
+            <div>
+                <span>456 Oak Ave</span>
+                <span>$850,000</span>
+                <span>2 Beds | 1 Bath</span>
+            </div>
+        </div>
+
+        <div class="property-listing">
+            <img src="https://via.placeholder.com/80" alt="Property">
+            <div>
+                <span>789 Pine Ln</span>
+                <span>$600,000</span>
+                <span>1 Bed | 1 Bath</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

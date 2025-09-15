@@ -1,0 +1,133 @@
+/* Osnovni stil */
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #022B3A;
+    color: #cedfdd;
+    line-height: 1.6;
+}
+
+/* Glava in naslovi */
+h1 {
+    font-size: 1.6rem;
+    margin: 20px 0 10px 0;
+    color: #cedfdd;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.3rem;
+    margin: 25px 0 10px 0;
+    color: #cedfdd;
+}
+
+h3 {
+    font-size: 1.1rem;
+    margin: 15px 0 10px 0;
+    color: #cedfdd;
+}
+
+/* Glavni vsebinski blok */
+form {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #022B3A;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+label {
+    display: block;
+    margin: 12px 0;
+    font-weight: 500;
+}
+
+input[type="number"] {
+    width: 95%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 4px;
+    font-size: 1rem;
+}
+
+/* Sklopi */
+.group {
+    margin-top: 30px;
+    padding: 15px;
+    border-top: 2px solid #e1e6eb;
+}
+
+/* Posamezen prototip */
+.prototype {
+    border-top: 2px solid #e1e6eb;
+}
+
+.prototype:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Okvir prototipa (iframe) */
+iframe {
+    width: auto;
+    height: 95vh;
+    max-height: 667px;
+    border: 1px solid #ccd3db;
+    border-radius: 8px;
+    margin: 10px auto;
+}
+
+/* Kriteriji */
+.criterion {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+    max-width: 500px;
+}
+
+.criterion span {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+.ratings-inline {
+    display: flex;
+    gap: 10px;
+}
+
+.ratings-inline label {
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.ratings-inline input {
+    margin-right: 4px;
+}
+
+/* Gumb oddaje */
+.submit-btn {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #2c3e50;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+    transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #34495e;
+}
+
+/* Mobilna prilagoditev */
+@media (min-width: 768px) {
+    .criterion {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

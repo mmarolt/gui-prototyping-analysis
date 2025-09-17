@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Refine Search</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 100%;
+  max-width: 375px; /* Match mobile screen width */
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important for padding & border */
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1em;
+}
+
+button:hover {
+  background-color: #3e8e41;
+}
+
+.location-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.location-container input[type="text"] {
+    width: 50%;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Refine Your Search</h1>
+
+  <form>
+    <label for="keywords">Keywords:</label>
+    <input type="text" id="keywords" name="keywords" placeholder="e.g., Software Engineer, Manager">
+
+    <label for="location">Location:</label>
+    <div class="location-container">
+        <input type="text" id="city" name="city" placeholder="City">
+        <input type="text" id="state" name="state" placeholder="State">
+    </div>
+
+
+    <label for="jobType">Job Type:</label>
+    <select id="jobType" name="jobType">
+      <option value="">Any</option>
+      <option value="fulltime">Full-time</option>
+      <option value="parttime">Part-time</option>
+      <option value="contract">Contract</option>
+      <option value="internship">Internship</option>
+    </select>
+
+    <button type="submit">Apply Filters</button>
+  </form>
+</div>
+
+</body>
+</html>

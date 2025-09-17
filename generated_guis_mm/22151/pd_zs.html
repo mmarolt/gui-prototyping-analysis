@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Job Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+        }
+
+        .container {
+            width: 375px; /* Match the target screen width */
+            box-sizing: border-box; /* Include padding in width calculation */
+            padding: 10px;
+            background-color: white;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .job-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .school-name {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .location {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .view-details-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Styles for the simulated mobile screen */
+        @media (max-width: 375px) {
+            .container {
+                width: 100%; /* Take full width on smaller screens */
+                padding: 5px;
+            }
+        }
+
+        /*Added for better responsiveness on even smaller screens*/
+        @media (max-width: 320px) {
+            .container {
+                padding: 2px;
+            }
+            .job-card {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <input type="text" class="search-bar" placeholder="Search for teacher jobs...">
+
+        <div class="job-card">
+            <div class="job-title">Math Teacher</div>
+            <div class="school-name">Example High School</div>
+            <div class="location">New York, NY</div>
+            <div class="description">We are seeking a passionate and experienced Math Teacher to join our team. The ideal candidate will have a strong background in mathematics and a commitment to student success.</div>
+            <button class="view-details-button">View Details</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">Elementary School Teacher</div>
+            <div class="school-name">Sunshine Elementary</div>
+            <div class="location">Los Angeles, CA</div>
+            <div class="description">Sunshine Elementary is looking for a dedicated Elementary School Teacher to create a positive and engaging learning environment for our students.</div>
+            <button class="view-details-button">View Details</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">Science Teacher</div>
+            <div class="school-name">Central High School</div>
+            <div class="location">Chicago, IL</div>
+            <div class="description">Central High School is seeking a dynamic and knowledgeable Science Teacher to inspire and educate our students in the fields of biology, chemistry, and physics.</div>
+            <button class="view-details-button">View Details</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">English Teacher</div>
+            <div class="school-name">Northwood Academy</div>
+            <div class="location">Houston, TX</div>
+            <div class="description">Northwood Academy is looking for an enthusiastic English Teacher to foster a love of reading and writing in our students. The successful candidate will have excellent communication and classroom management skills.</div>
+            <button class="view-details-button">View Details</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">History Teacher</div>
+            <div class="school-name">Riverside High</div>
+            <div class="location">Philadelphia, PA</div>
+            <div class="description">Riverside High is seeking a dedicated History Teacher to bring the past to life for our students. The ideal candidate will have a strong knowledge of historical events and a passion for teaching.</div>
+            <button class="view-details-button">View Details</button>
+        </div>
+    </div>
+
+</body>
+</html>

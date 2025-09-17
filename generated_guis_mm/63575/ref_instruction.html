@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vitamin Capsules Suppliers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"> <!-- Recommended Roboto font -->
+  <style>
+    /*  Basic Reset & General Styles (You'll likely want more comprehensive styles) */
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif; /*  Material Design Font */
+      font-size: 16px; /* Base font size */
+      color: #212121; /* Dark grey text */
+      background-color: #FAFAFA; /* Light grey background */
+    }
+
+    /* Utility Classes for Spacing (Adapt as needed) */
+    .mt-1 { margin-top: 8px; }
+    .mt-2 { margin-top: 16px; }
+    .mb-1 { margin-bottom: 8px; }
+    .mb-2 { margin-bottom: 16px; }
+    .p-1 { padding: 8px; }
+    .p-2 { padding: 16px; }
+    .text-secondary { color: #757575; } /* Grey text for secondary info */
+    .text-right { text-align: right; }
+
+    /*  Material Design Card Styles */
+    .card {
+      background-color: #fff;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); /* Subtle shadow */
+      border-radius: 4px;
+      margin-bottom: 16px;
+      overflow: hidden; /*  Ensure content doesn't overflow rounded corners */
+    }
+
+    /* Button styles (Material Design Raised Button) */
+    .button {
+      background-color: #6200EE; /*  Purple 500 */
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    }
+
+    .button:hover {
+      background-color: #3700B3; /* Darker Purple */
+    }
+
+    /*  Specific to the layout */
+    header {
+      background-color: #6200EE;
+      color: white;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: sticky; /*  Keeps the app bar at the top on scroll */
+      top: 0;  /* Required for sticky positioning */
+      z-index: 100; /* Ensure it stays on top of other elements */
+    }
+
+    header i {
+      cursor: pointer;
+    }
+
+    header h6 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .search-filter-bar {
+      background-color: #fff;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    .search-filter-bar input[type="text"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+
+    footer {
+      background-color: #fff;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 8px 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    footer div {
+      text-align: center;
+    }
+
+    footer i {
+        font-size: 24px; /* Make the icons a bit larger */
+    }
+
+    /*  Media Query for larger screens (example) */
+    @media (min-width: 768px) {
+      body {
+        font-size: 18px; /* Increase base font size */
+      }
+      header {
+        padding: 24px; /* Increase padding on larger screens */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!--  App Content Goes Here -->
+  <header>
+    <div>
+      <i class="material-icons">menu</i>
+    </div>
+    <div>
+      <h6>Vitamin Capsules Suppliers</h6>
+    </div>
+    <div>
+      <i class="material-icons">search</i>
+      <i class="material-icons">filter_list</i>
+    </div>
+  </header>
+
+  <div class="search-filter-bar">
+    <input type="text" placeholder="Search Suppliers...">
+    <button class="button" style="background-color: #ddd; color: #333; box-shadow: none;">Filters</button>
+  </div>
+
+  <div class="p-2">
+    <div class="card">
+      <div class="p-2">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+          <img src="placeholder-logo.png" alt="Supplier Logo" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 8px;">
+          <h6 style="margin: 0;">Acme Vitamin Co.</h6>
+        </div>
+        <p class="text-secondary" style="font-size: 0.875rem;">High-quality Vitamin Capsules, GMP Certified.</p>
+        <div style="display: flex; flex-wrap: wrap; margin-top: 8px;">
+          <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 16px; margin-right: 4px; margin-bottom: 4px; font-size: 0.75rem;">GMP Certified</span>
+          <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 16px; margin-right: 4px; margin-bottom: 4px; font-size: 0.75rem;">Organic Options</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <span class="text-secondary">New York, USA</span>
+          <button class="button">Contact Supplier</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repeat the card for each supplier -->
+    <div class="card">
+      <div class="p-2">
+        <div style="display: flex; align-items: center; margin-bottom: 8px;">
+          <img src="placeholder-logo.png" alt="Supplier Logo" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 8px;">
+          <h6 style="margin: 0;">Beta Supplements Inc.</h6>
+        </div>
+        <p class="text-secondary" style="font-size: 0.875rem;">Leading supplier of Vitamin Capsules.</p>
+        <div style="display: flex; flex-wrap: wrap; margin-top: 8px;">
+          <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 16px; margin-right: 4px; margin-bottom: 4px; font-size: 0.75rem;">ISO 9001 Certified</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
+          <span class="text-secondary">London, UK</span>
+          <button class="button">Contact Supplier</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background-color: #fff; border-top: 1px solid #eee; display: flex; justify-content: space-around; align-items: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0;">
+    <div style="text-align: center;">
+        <i class="material-icons">home</i>
+        <div style="font-size: 0.75rem;">Home</div>
+    </div>
+    <div style="text-align: center;">
+        <i class="material-icons">category</i>
+        <div style="font-size: 0.75rem;">Categories</div>
+    </div>
+    <div style="text-align: center;">
+        <i class="material-icons">chat</i>
+        <div style="font-size: 0.75rem;">Messages</div>
+    </div>
+    <div style="text-align: center;">
+        <i class="material-icons">account_circle</i>
+        <div style="font-size: 0.75rem;">Profile</div>
+    </div>
+  </footer>
+
+</body>
+</html>

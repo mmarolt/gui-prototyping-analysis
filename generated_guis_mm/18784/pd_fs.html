@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Image Directory</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* App Bar (Header) */
+.app-bar {
+  background-color: #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-button, .home-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.directory-title {
+  font-size: 1.2em; /* Increased font size for prominence */
+  font-weight: bold;
+}
+
+/* Main Content (Image List) */
+.image-list {
+  overflow-y: auto;
+  padding: 10px;
+  height: calc(667px - 120px); /* Adjust height based on header and bottom toolbar */
+  box-sizing: border-box;
+}
+
+.image-item {
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  text-align: center; /* Center text within the item */
+}
+
+.image-thumbnail {
+  width: 100px;
+  height: 100px;
+  object-fit: cover; /* Maintain aspect ratio and fill container */
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.file-name {
+  font-size: 0.9em;
+  word-wrap: break-word; /* Prevent long filenames from breaking layout */
+}
+
+/* Bottom Toolbar (Initially Hidden) */
+.bottom-toolbar {
+  background-color: #eee;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  display: none; /* Initially hidden */
+}
+
+.toolbar-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+</style>
+</head>
+<body>
+
+<!-- App Bar -->
+<div class="app-bar">
+  <button class="back-button">&lt;</button>
+  <span class="directory-title">Vacation Photos</span>
+  <button class="home-button">&#8962;</button>
+</div>
+
+<!-- Image List -->
+<div class="image-list">
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">beach_sunset.jpg</div>
+  </div>
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">mountain_hike.png</div>
+  </div>
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">city_lights_night.jpeg</div>
+  </div>
+    <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">beach_sunset.jpg</div>
+  </div>
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">mountain_hike.png</div>
+  </div>
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">city_lights_night.jpeg</div>
+  </div>
+    <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">beach_sunset.jpg</div>
+  </div>
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">mountain_hike.png</div>
+  </div>
+  <div class="image-item">
+    <img src="placeholder_image.jpg" alt="Image" class="image-thumbnail">
+    <div class="file-name">city_lights_night.jpeg</div>
+  </div>
+</div>
+
+<!-- Bottom Toolbar (Hidden) -->
+<div class="bottom-toolbar">
+  <button class="toolbar-button">Select All</button>
+  <button class="toolbar-button">Delete</button>
+  <button class="toolbar-button">Share</button>
+  <button class="toolbar-button">Move</button>
+</div>
+
+<script>
+// JavaScript (for basic functionality like toggling the toolbar - more would be needed for full selection mode)
+// You'd need significantly more JS to handle the selection logic, etc.
+</script>
+
+</body>
+</html>

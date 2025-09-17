@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Police Stations</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    body {
+      font-family: Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* App Bar */
+    header {
+      background-color: #3F51B5;
+      height: 84px; /* Approximate 56dp */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: white;
+      box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+      position: sticky;
+      top: 0;
+      z-index: 10; /* Ensure it stays on top during scroll */
+    }
+
+    header i {
+      cursor: pointer;
+      font-size: 24px;
+    }
+
+    header h1 {
+      font-size: 20px;
+      margin: 0;
+      font-weight: 500; /* Roboto Medium */
+    }
+
+    /* Search Bar */
+    .search-bar {
+      background-color: #FFFFFF;
+      height: 72px; /* Approximate 48dp */
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      border-bottom: 1px solid #BDBDBD;
+    }
+
+    .search-bar i {
+      color: #757575;
+      margin-right: 8px;
+    }
+
+    .search-bar input[type="text"] {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: #212121;
+      width: 100%;
+    }
+
+    /* List Items */
+    .list-item {
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .list-item h2 {
+      font-size: 16px;
+      margin: 0;
+      color: #212121;
+      font-weight: 500; /* Roboto Medium */
+    }
+
+    .list-item p {
+      font-size: 14px;
+      margin: 0;
+      color: #757575;
+    }
+
+    .list-item i {
+      color: #757575;
+      cursor: pointer;
+    }
+
+    hr {
+      border: none;
+      border-bottom: 1px solid #EEEEEE;
+      margin: 0;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 32px;
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: #757575;
+    }
+
+    .empty-state p {
+      font-size: 16px;
+      color: #757575;
+    }
+
+    /* Make the list scrollable */
+    .list-container {
+      overflow-y: auto; /* Enable vertical scrolling */
+      height: calc(100vh - 84px - 72px); /* Full viewport height minus the AppBar and Search Bar heights */
+    }
+
+    /* Optional: Ensure the entire page fits the screen and disable horizontal scroll */
+    html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- App Bar -->
+  <header>
+    <i class="material-icons">arrow_back</i>
+    <h1>Police Stations</h1>
+    <i class="material-icons">search</i>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <i class="material-icons">search</i>
+    <input type="text" placeholder="Search Police Stations...">
+  </div>
+
+  <!-- List of Police Stations -->
+  <div class="list-container">
+    <div class="list-item">
+      <div>
+        <h2>Main Street Police Station</h2>
+        <p>123 Main Street</p>
+      </div>
+      <i class="material-icons">phone</i>
+    </div>
+    <hr>
+    <div class="list-item">
+      <div>
+        <h2>Oak Avenue Police Station</h2>
+        <p>456 Oak Avenue</p>
+      </div>
+      <i class="material-icons">phone</i>
+    </div>
+    <hr>
+     <div class="list-item">
+      <div>
+        <h2>Pine Lane Police Station</h2>
+        <p>789 Pine Lane</p>
+      </div>
+      <i class="material-icons">phone</i>
+    </div>
+    <hr>
+    <div class="list-item">
+      <div>
+        <h2>River Road Police Station</h2>
+        <p>101 River Road</p>
+      </div>
+      <i class="material-icons">phone</i>
+    </div>
+    <hr>
+    <div class="list-item">
+      <div>
+        <h2>Hilltop Police Station</h2>
+        <p>222 Hilltop Drive</p>
+      </div>
+      <i class="material-icons">phone</i>
+    </div>
+    <hr>
+
+    <!-- More list items would go here -->
+
+    <!-- Empty State (Example - Uncomment to test) -->
+    <!--
+    <div class="empty-state">
+      <i class="material-icons">not_listed_location</i>
+      <p>No police stations found. Please try a different search term.</p>
+    </div>
+    -->
+  </div>
+
+</body>
+</html>

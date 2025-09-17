@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitamin Capsules Suppliers</title>
+<style>
+/* General Styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8;
+}
+
+/* App Bar */
+.app-bar {
+  background-color: #007bff; /* Example primary color */
+  color: white;
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100; /* Ensure it stays on top */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.app-bar h1 {
+  margin: 0;
+  font-size: 1.2em;
+  flex-grow: 1; /* Allow title to take up available space */
+}
+
+.app-bar .back-button, .app-bar .search-icon, .app-bar .cart-icon {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.app-bar .back-button {
+  margin-right: auto; /* Push title to the center */
+}
+
+.app-bar .search-icon, .app-bar .cart-icon {
+  margin-left: auto; /* Push icons to the right */
+}
+
+/* Search Bar */
+.search-bar {
+  background-color: white;
+  padding: 10px;
+  position: absolute;
+  top: 50px; /* Adjust based on app bar height */
+  left: 0;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: none; /* Initially hidden */
+}
+
+.search-bar.active {
+  display: block; /* Show when active */
+}
+
+.search-bar input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+/* Filter/Sort Section */
+.filter-sort {
+  background-color: #fff;
+  padding: 10px;
+  margin-top: 60px; /* Adjust based on app bar height */
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-sort button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Supplier List */
+.supplier-list {
+  padding: 10px;
+  margin-top: 0; /* Adjust as needed */
+}
+
+.supplier-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 10px;
+  padding: 15px;
+}
+
+.supplier-card h2 {
+  font-size: 1.1em;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.supplier-card p {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.supplier-card button {
+  background-color: #28a745; /* Example success color */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+
+/* Media Query for Mobile (375x667) - Optional, but good practice */
+@media (max-width: 375px) {
+  .app-bar h1 {
+    font-size: 1em; /* Adjust for smaller screens */
+  }
+  .filter-sort button {
+    font-size: 0.8em; /* Adjust button text size */
+    padding: 6px 10px;
+  }
+  .supplier-card h2 {
+    font-size: 1em;
+  }
+  .supplier-card p {
+    font-size: 0.85em;
+  }
+}
+
+/* Pagination Styles (Example) */
+.pagination {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="app-bar">
+  <button class="back-button">Back</button>
+  <h1>Vitamin Capsules</h1>
+  <button class="search-icon" onclick="toggleSearch()">Search</button>
+  <button class="cart-icon">Cart</button>
+</div>
+
+<div class="search-bar">
+  <input type="text" placeholder="Search suppliers...">
+</div>
+
+<div class="filter-sort">
+  <button>Filters</button>
+  <button>Sort By</button>
+</div>
+
+<div class="supplier-list">
+  <div class="supplier-card">
+    <h2>Supplier A</h2>
+    <p>Location: City A</p>
+    <p>Specializes in: Vitamin Capsules</p>
+    <button>Contact Supplier</button>
+  </div>
+
+  <div class="supplier-card">
+    <h2>Supplier B</h2>
+    <p>Location: City B</p>
+    <p>Specializes in: High-Quality Vitamin Capsules</p>
+    <button>Contact Supplier</button>
+  </div>
+
+  <div class="supplier-card">
+    <h2>Supplier C</h2>
+    <p>Location: City C</p>
+    <p>Specializes in: Organic Vitamin Capsules</p>
+    <button>Contact Supplier</button>
+  </div>
+
+  <!-- More supplier cards here -->
+</div>
+
+<div class="empty-state" style="display: none;">
+  <p>No suppliers found matching your criteria.</p>
+</div>
+
+<div class="pagination">
+    <button>Previous</button>
+    <button>1</button>
+    <button>2</button>
+    <button>Next</button>
+</div>
+
+<script>
+function toggleSearch() {
+  var searchBar = document.querySelector('.search-bar');
+  searchBar.classList.toggle('active');
+}
+</script>
+
+</body>
+</html>

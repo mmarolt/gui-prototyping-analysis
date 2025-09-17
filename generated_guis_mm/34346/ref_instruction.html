@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Basic Reset */
+        body, h1, h2, h3, p, ul, li, input, textarea, button {
+            margin: 0;
+            padding: 0;
+            border: none;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif; /* Or your preferred Material Design font */
+        }
+
+        body {
+            font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: #f8f8f8; /* Light grey background */
+            color: #212121; /* Dark grey text */
+        }
+
+        /* General Styling */
+        .container {
+            width: 375px;
+            margin: 0 auto; /* Center the content */
+            overflow: hidden;
+        }
+
+        /* Top App Bar */
+        .top-app-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 56px;
+            background-color: #6200EE; /* Primary Color */
+            color: white;
+            padding: 0 16px;
+        }
+
+        .top-app-bar .leading-icon,
+        .top-app-bar .trailing-action {
+            cursor: pointer;
+        }
+
+        .top-app-bar .title {
+            font-size: 20px;
+            font-weight: 500;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .top-app-bar .save-button {
+            background-color: #03DAC5; /* Accent Color */
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background-color: #7c4dff; /* Primary Variant Color */
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: white;
+        }
+
+        .profile-picture-container {
+            position: relative;
+        }
+
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #bdbdbd; /* Placeholder Color */
+            margin-bottom: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-picture-edit-icon {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 50%;
+            padding: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .profile-header input {
+            background: none;
+            border: none;
+            text-align: center;
+            color: white;
+        }
+
+        .profile-header input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .profile-header .name-input {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            width: 100%; /* expand the input field */
+        }
+
+        .profile-header .profession-input {
+            font-size: 16px;
+            font-weight: 400;
+            width: 100%; /* expand the input field */
+        }
+
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 8px 0;
+        }
+
+        /* Contact Information Section */
+        .contact-info-section,
+        .about-me-section,
+        .skills-section,
+        .links-section {
+            background-color: #fff;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+
+        .contact-info-section .input-group,
+        .links-section .input-group {
+            margin-bottom: 12px;
+        }
+
+        .contact-info-section label,
+        .links-section label {
+            display: block;
+            font-size: 12px;
+            color: #757575;
+            margin-bottom: 4px;
+        }
+
+        .contact-info-section input,
+        .links-section input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #212121;
+        }
+
+       /* About Me Section */
+        .about-me-section textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #212121;
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 100px;
+        }
+
+        .about-me-section .section-title,
+        .skills-section .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #757575; /* Secondary Text Color */
+            margin-bottom: 8px;
+        }
+
+
+        /* Skills Section */
+        .skills-section .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .skills-section .skill-chip {
+            background-color: #e0e0e0;
+            color: #212121;
+            padding: 6px 12px;
+            border-radius: 16px;
+            margin: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .skills-section .skill-chip:hover {
+            background-color: #bdbdbd;
+        }
+
+        .skills-section .add-skill-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .skills-section .add-skill-container input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #bdbdbd;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #212121;
+            margin-right: 8px;
+        }
+
+        .skills-section .add-skill-container button {
+            background-color: #6200EE;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+
+        /* Links Section (reusing styles from Contact Info) */
+
+
+        /* Bottom Navigation (Placeholder - Implement as needed) */
+        .bottom-navigation {
+            /* Add your bottom navigation styles here */
+        }
+
+        /* Utility Classes (Margin & Padding)*/
+        .mb-1 { margin-bottom: 1rem; }
+        .mt-1 { margin-top: 1rem; }
+
+        /* Input Styles (To be refined and integrated with TextInputLayout) */
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Important for consistent sizing */
+            font-size: 16px;
+            color: #333;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="url"]:focus,
+        textarea:focus {
+            border-color: #6200EE;
+            outline: none;
+            box-shadow: 0 0 5px rgba(98, 0, 238, 0.5);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Top App Bar -->
+        <div class="top-app-bar">
+            <div class="leading-icon">
+                <i class="material-icons">close</i>
+            </div>
+            <div class="title">Edit Profile</div>
+            <div class="trailing-action">
+                <button class="save-button">Save</button>
+            </div>
+        </div>
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-picture-container">
+                <div class="profile-picture">
+                    <!--  Replace with user's profile picture or initials -->
+                    <img src="https://via.placeholder.com/80" alt="Profile Picture">
+                </div>
+                <div class="profile-picture-edit-icon">
+                    <i class="material-icons">add_a_photo</i>
+                </div>
+            </div>
+            <input type="text" class="name-input" placeholder="Your Name" value="John Doe">
+            <input type="text" class="profession-input" placeholder="Job Title" value="Software Engineer">
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Contact Information Section -->
+        <div class="contact-info-section">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Email Address">
+            </div>
+            <div class="input-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" placeholder="Phone Number">
+            </div>
+             <div class="input-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" placeholder="City, Country">
+            </div>
+        </div>
+
+        <!-- About Me Section -->
+        <div class="about-me-section">
+            <h2 class="section-title">About Me</h2>
+            <textarea placeholder="Tell us about yourself..."></textarea>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="skills-section">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-list">
+                <div class="skill-chip">JavaScript</div>
+                <div class="skill-chip">HTML</div>
+                <div class="skill-chip">CSS</div>
+                <!-- Add more skills dynamically -->
+            </div>
+            <div class="add-skill-container">
+                <input type="text" placeholder="Add a skill">
+                <button>Add</button>
+            </div>
+        </div>
+
+        <!-- Links Section -->
+        <div class="links-section">
+            <div class="input-group">
+                <label for="linkedin">LinkedIn Profile URL</label>
+                <input type="url" id="linkedin" placeholder="LinkedIn Profile URL">
+            </div>
+            <div class="input-group">
+                <label for="portfolio">Portfolio URL</label>
+                <input type="url" id="portfolio" placeholder="Portfolio URL">
+            </div>
+        </div>
+
+        <!-- Bottom Navigation (Placeholder) -->
+        <div class="bottom-navigation">
+            <!-- Implement your bottom navigation here -->
+        </div>
+    </div>
+</body>
+</html>

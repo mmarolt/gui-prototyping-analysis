@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Refine Search</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+  <style>
+    /* Basic Styling for demonstration */
+    body {
+      font-family: 'Roboto', sans-serif; /*  Assume Roboto is used, common in Material Design */
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5; /* Light grey background */
+    }
+
+    .container {
+      max-width: 375px;
+      margin: 0 auto;
+      padding: 16px;
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
+    }
+
+    .section {
+      background-color: #fff;
+      margin-bottom: 16px;
+      padding: 16px;
+      border-radius: 4px; /* Subtle rounded corners */
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); /* Subtle shadow */
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+      color: #212121; /* Dark grey text */
+    }
+
+    .input-field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      color: #757575; /* Medium grey text */
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #BDBDBD; /* Light grey border */
+      border-radius: 4px;
+      font-size: 1rem;
+      box-sizing: border-box; /* Important for consistent width */
+      -webkit-appearance: none; /* Remove default select styles */
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"); /* Add custom dropdown arrow */
+      background-repeat: no-repeat;
+      background-position: right 8px top 50%;
+      background-size: 16px;
+    }
+
+    button {
+      background-color: #6200EE; /* Primary color */
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.20); /* Material Design shadow */
+      width: 100%; /* Make button full-width */
+      box-sizing: border-box; /* Ensure padding/border don't affect width */
+    }
+
+    button:hover {
+      background-color: #3700B3; /* Darker shade on hover */
+    }
+
+    .chips-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background-color: #E0E0E0;
+      color: #212121;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none; /* Prevent text selection */
+    }
+
+    .chip i {
+      margin-left: 6px;
+      font-size: 1rem;
+    }
+
+    #top-app-bar {
+      display: flex;
+      align-items: center;
+      position: sticky; /* Or fixed, if you prefer */
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #FAFAFA; /* A slightly lighter grey */
+      z-index: 1000;
+      padding: 16px;
+      box-sizing: border-box; /* Ensure padding doesn't affect width */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* A subtle shadow */
+      margin-left: -16px;
+      margin-right: -16px;
+
+    }
+
+    #top-app-bar i {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .selected {
+      background-color: #BBDEFB; /* Light blue for selected chip */
+    }
+
+  </style>
+
+  <script>
+    function toggleChip(element) {
+      element.classList.toggle('selected');
+    }
+  </script>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Top App Bar Section -->
+  <section class="section" id="top-app-bar">
+    <i class="material-icons">arrow_back</i>
+    <h1 style="font-size: 20px; display: inline; margin-left: 10px">Refine Search</h1>
+  </section>
+
+  <!-- Keywords Section -->
+  <section class="section" id="keywords">
+    <h2 class="section-title">Keywords</h2>
+    <div class="input-field">
+      <label for="keywords">Enter keywords to search for</label>
+      <input type="text" id="keywords" name="keywords" placeholder="e.g., Software Engineer, Data Science">
+    </div>
+  </section>
+
+  <!-- Location Section -->
+  <section class="section" id="location">
+    <h2 class="section-title">Location</h2>
+    <div class="input-field">
+      <label for="location">City, State or Zip Code</label>
+      <input type="text" id="location" name="location" placeholder="e.g., New York, NY">
+    </div>
+  </section>
+
+  <!-- Job Type Section -->
+  <section class="section" id="job-type">
+    <h2 class="section-title">Job Type</h2>
+    <div class="chips-container">
+      <div class="chip" onclick="toggleChip(this)">Full Time</div>
+      <div class="chip" onclick="toggleChip(this)">Part Time</div>
+      <div class="chip" onclick="toggleChip(this)">Contract</div>
+      <div class="chip" onclick="toggleChip(this)">Internship</div>
+    </div>
+  </section>
+
+  <!-- Salary Section -->
+  <section class="section" id="salary">
+    <h2 class="section-title">Salary</h2>
+    <div class="input-field">
+      <label for="min-salary">Minimum Salary ($/year)</label>
+      <input type="number" id="min-salary" name="min-salary" placeholder="e.g., 60000">
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+  <section class="section" id="experience">
+    <h2 class="section-title">Experience</h2>
+    <div class="input-field">
+      <label for="experience">Years of Experience</label>
+      <select id="experience" name="experience">
+        <option value="">Any</option>
+        <option value="1">1+ Year</option>
+        <option value="3">3+ Years</option>
+        <option value="5">5+ Years</option>
+        <option value="7">7+ Years</option>
+        <option value="10">10+ Years</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- Buttons Section -->
+  <section class="section" id="buttons">
+    <button>Apply Filters</button>
+  </section>
+
+</div>
+
+</body>
+</html>

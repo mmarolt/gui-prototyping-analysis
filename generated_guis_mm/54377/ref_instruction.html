@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+/* Basic Styling - Replace with your actual CSS */
+body {
+  font-family: 'Roboto', sans-serif; /* Material Design font */
+  margin: 0;
+  padding: 0;
+  background-color: #f0f2f5; /* Light grey background */
+  overflow: hidden; /* Prevent scrollbars when bottom sheet is visible */
+}
+
+.app-bar {
+  background-color: #6200ee; /* Primary color */
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Elevation */
+  z-index: 10; /* Ensure app bar is above other content */
+}
+
+.app-bar h1 {
+  font-size: 20px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.app-bar a {
+  color: white;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 50%; /* Circular touch target */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+.app-bar a i {
+  font-size: 24px;
+}
+
+.app-bar > div {
+    display: flex;
+    gap: 8px;
+}
+
+.content-area {
+  padding: 16px;
+  height: calc(100vh - 56px - 72px); /* Adjust height for app bar and bottom sheet */
+  /* Ensure content area takes up most of the screen */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.slide-canvas {
+  width: 335px; /* Adjusted for padding and margins within the 375px width */
+  height: 535px; /* Adjusted for screen height and other elements */
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #888;
+}
+
+.slide-canvas p {
+  margin: 10px;
+}
+
+.slide-canvas i {
+  font-size: 48px;
+}
+
+/* Bottom Sheet Styles */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.2);
+  z-index: 20;
+  padding: 16px;
+  border-top: 1px solid #eee;
+  /* Initial state - hidden */
+  transform: translateY(100%); /* Slide up from bottom */
+  transition: transform 0.3s ease-in-out;
+}
+
+.bottom-sheet.show {
+  transform: translateY(0); /* Slide into view */
+}
+
+.bottom-sheet ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bottom-sheet li {
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.bottom-sheet li:hover {
+  background-color: #eee;
+  cursor: pointer;
+}
+
+.bottom-sheet a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  gap: 16px; /* Space between icon and text */
+}
+
+.bottom-sheet i {
+  font-size: 24px;
+  color: #6200ee; /* Consistent with primary color */
+}
+
+/* Example Button (replace with actual button element if needed) */
+.add-element-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background-color: #6200ee;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-element-button i {
+  font-size: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-bar">
+    <a href="#"><i class="material-icons">arrow_back</i></a>
+    <h1>New Slide</h1>
+    <div>
+        <a href="#"><i class="material-icons">save</i></a>
+        <a href="#"><i class="material-icons">more_vert</i></a>
+    </div>
+</div>
+
+<div class="content-area">
+    <div class="slide-canvas">
+        <p>Tap here to add title</p>
+        <div><i class="material-icons">image</i></div>
+    </div>
+</div>
+
+<div class="bottom-sheet">
+    <ul>
+        <li><a href="#"><i class="material-icons">text_fields</i> Text</a></li>
+        <li><a href="#"><i class="material-icons">image</i> Image</a></li>
+        <li><a href="#"><i class="material-icons">rounded_corner</i> Shape</a></li>
+    </ul>
+</div>
+
+<button class="add-element-button" onclick="toggleBottomSheet()">
+    <i class="material-icons">add</i> Add Element
+</button>
+
+<script>
+    const bottomSheet = document.querySelector('.bottom-sheet');
+
+    function toggleBottomSheet() {
+        bottomSheet.classList.toggle('show');
+    }
+</script>
+
+</body>
+</html>

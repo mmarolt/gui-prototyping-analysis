@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Police Stations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            box-sizing: border-box;
+            width: 375px; /* Fixed width for the specified screen size */
+            max-width: 100%; /* Ensure it scales down on smaller screens */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .back-button, .sort-button, .filter-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .screen-title {
+            font-size: 18px;
+        }
+
+        /* Search Bar Styles */
+        .search-bar {
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* List/Map Toggle Styles */
+        .toggle-container {
+            display: flex;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .toggle-button {
+            flex-grow: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .toggle-button.active {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        /* List View Styles */
+        .list-container {
+            padding: 10px;
+        }
+
+        .list-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .station-info {
+            flex-grow: 1;
+        }
+
+        .station-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .station-address {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .call-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Map View Styles (Placeholder - needs actual map implementation) */
+        .map-container {
+            height: 300px; /* Adjust as needed */
+            background-color: #eee;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Bottom Section Styles (Placeholder) */
+        .bottom-section {
+            padding: 20px;
+            text-align: center;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <button class="back-button">&lt;</button>
+        <span class="screen-title">Police Stations</span>
+        <div>
+          <button class="filter-button">Filter</button>
+          <button class="sort-button">Sort</button>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search for a police station...">
+    </div>
+
+    <!-- List/Map Toggle -->
+    <div class="toggle-container">
+        <button class="toggle-button active" onclick="showList()">List</button>
+        <button class="toggle-button" onclick="showMap()">Map</button>
+    </div>
+
+    <!-- List View -->
+    <div id="list-view" class="list-container">
+        <div class="list-item">
+            <div class="station-info">
+                <div class="station-name">Main Police Station</div>
+                <div class="station-address">123 Main Street, Anytown</div>
+            </div>
+            <button class="call-button">Call</button>
+        </div>
+
+        <div class="list-item">
+            <div class="station-info">
+                <div class="station-name">Downtown Substation</div>
+                <div class="station-address">456 Oak Avenue, Anytown</div>
+            </div>
+            <button class="call-button">Call</button>
+        </div>
+    </div>
+
+    <!-- Map View (Placeholder) -->
+    <div id="map-view" class="map-container" style="display: none;">
+        Map View (Implementation Needed)
+    </div>
+
+    <!-- Bottom Section (Placeholder) -->
+    <div class="bottom-section">
+        <!-- Future content here -->
+    </div>
+
+    <script>
+        function showList() {
+            document.getElementById('list-view').style.display = 'block';
+            document.getElementById('map-view').style.display = 'none';
+            document.querySelector('.toggle-button.active').classList.remove('active');
+            document.querySelector('.toggle-container button:first-child').classList.add('active');
+
+        }
+
+        function showMap() {
+            document.getElementById('list-view').style.display = 'none';
+            document.getElementById('map-view').style.display = 'block';
+            document.querySelector('.toggle-button.active').classList.remove('active');
+            document.querySelector('.toggle-container button:last-child').classList.add('active');
+
+        }
+    </script>
+
+</body>
+</html>

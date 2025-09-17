@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Search Filters</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+/* Header */
+.header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.2em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow */
+  position: sticky;
+  top: 0;
+  z-index: 100; /* Ensure it stays on top */
+}
+
+/* Form Container */
+.form-container {
+  padding: 15px;
+}
+
+/* Input Fields */
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group input[type="text"],
+.input-group input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important for width calculation */
+}
+
+/* Location */
+.location-group {
+  position: relative;
+}
+
+.location-group button {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Category */
+.category-group {
+  margin-bottom: 15px;
+}
+
+.category-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.category-chip {
+  background-color: #e9ecef;
+  padding: 8px 12px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.category-chip.selected {
+  background-color: #007bff;
+  color: white;
+}
+
+
+/* Salary Range */
+.salary-range {
+  display: flex;
+  gap: 10px;
+}
+
+.salary-range input {
+  width: 100%; /* Take up remaining space */
+}
+
+
+/* Job Type */
+.job-type-group {
+  margin-bottom: 15px;
+}
+
+.job-type-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.job-type-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.job-type-options label {
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+/* Experience Level */
+.experience-group {
+  margin-bottom: 15px;
+}
+
+.experience-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.experience-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.experience-options label {
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+
+/* Buttons */
+.button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.button-container button {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  margin: 0 10px;
+}
+
+.button-container button:hover {
+  background-color: #218838;
+}
+
+.button-container button.clear-filters {
+    background-color: #dc3545;
+}
+
+.button-container button.clear-filters:hover {
+    background-color: #c82333;
+}
+
+
+
+/* Loading Indicator */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-overlay.active {
+  display: flex;
+}
+
+.loading-spinner {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+  margin-right: 10px;
+}
+
+.loading-text {
+  color: white;
+  font-size: 1.2em;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Clear Button in Input */
+.input-group .clear-input {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+    display: none; /* Hidden by default */
+}
+
+.input-group input[type="text"]:valid + .clear-input,
+.input-group input[type="number"]:valid + .clear-input {
+    display: block; /* Show when input is not empty */
+}
+
+.input-group {
+    position: relative;
+}
+
+
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  Job Search Filters
+</div>
+
+<div class="form-container">
+  <form id="filterForm">
+    <div class="input-group">
+      <label for="keywords">Keywords:</label>
+      <input type="text" id="keywords" name="keywords" placeholder="e.g., 'Software Engineer', 'Manager'" required>
+      <button type="button" class="clear-input" onclick="clearInput('keywords')">×</button>
+    </div>
+
+    <div class="input-group location-group">
+      <label for="location">Location:</label>
+      <input type="text" id="location" name="location" placeholder="e.g., 'New York, NY'">
+      <button type="button" onclick="getLocation()">Use Current Location</button>
+    </div>
+
+    <div class="input-group">
+      <label for="radius">Radius (miles):</label>
+      <input type="number" id="radius" name="radius" value="25">
+    </div>
+
+    <div class="category-group">
+      <label>Job Category:</label>
+      <div class="category-chips">
+        <div class="category-chip" data-category="all" onclick="selectCategory(this)">All</div>
+        <div class="category-chip" data-category="software" onclick="selectCategory(this)">Software Development</div>
+        <div class="category-chip" data-category="marketing" onclick="selectCategory(this)">Marketing</div>
+        <div class="category-chip" data-category="sales" onclick="selectCategory(this)">Sales</div>
+        <!-- Add more categories as needed -->
+      </div>
+    </div>
+
+    <div class="input-group salary-range">
+      <div>
+        <label for="minSalary">Min. Salary:</label>
+        <input type="number" id="minSalary" name="minSalary" placeholder="e.g., 50000">
+      </div>
+      <div>
+        <label for="maxSalary">Max. Salary:</label>
+        <input type="number" id="maxSalary" name="maxSalary" placeholder="e.g., 100000">
+      </div>
+    </div>
+
+    <div class="job-type-group">
+      <label>Job Type:</label>
+      <div class="job-type-options">
+        <label><input type="radio" name="jobType" value="fulltime"> Full-time</label>
+        <label><input type="radio" name="jobType" value="parttime"> Part-time</label>
+        <label><input type="radio" name="jobType" value="contract"> Contract</label>
+        <label><input type="radio" name="jobType" value="internship"> Internship</label>
+      </div>
+    </div>
+
+    <div class="experience-group">
+      <label>Experience Level:</label>
+      <div class="experience-options">
+        <label><input type="radio" name="experience" value="entry"> Entry Level (0-2 years)</label>
+        <label><input type="radio" name="experience" value="mid"> Mid Level (2-5 years)</label>
+        <label><input type="radio" name="experience" value="senior"> Senior Level (5+ years)</label>
+      </div>
+    </div>
+
+    <div class="button-container">
+      <button type="button" onclick="applyFilters()">Apply Filters</button>
+      <button type="button" class="clear-filters" onclick="clearAllFilters()">Clear Filters</button>
+    </div>
+  </form>
+</div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Searching...</div>
+</div>
+
+
+<script>
+function clearInput(inputId) {
+    document.getElementById(inputId).value = "";
+}
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition, handleLocationError);
+  } else {
+    alert("Geolocation is not supported by this browser.");
+  }
+}
+
+function showPosition(position) {
+  // For simplicity, just update the location field with coordinates.
+  // In a real app, you'd likely use reverse geocoding to get the city/state.
+  const locationInput = document.getElementById("location");
+  locationInput.value = position.coords.latitude + ", " + position.coords.longitude;
+}
+
+function handleLocationError(error) {
+  let errorMessage = "Unable to retrieve your location. ";
+  switch(error.code) {
+    case error.PERMISSION_DENIED:
+      errorMessage += "User denied the request for Geolocation.";
+      break;
+    case error.POSITION_UNAVAILABLE:
+      errorMessage += "Location information is unavailable.";
+      break;
+    case error.TIMEOUT:
+      errorMessage += "The request to get user location timed out.";
+      break;
+    case error.UNKNOWN_ERROR:
+      errorMessage += "An unknown error occurred.";
+      break;
+  }
+  alert(errorMessage);
+}
+
+
+
+function selectCategory(element) {
+  // Deselect all other chips
+  const chips = document.querySelectorAll('.category-chip');
+  chips.forEach(chip => chip.classList.remove('selected'));
+
+  // Select the clicked chip
+  element.classList.add('selected');
+}
+
+function applyFilters() {
+  // Show loading indicator
+  document.getElementById("loadingOverlay").classList.add("active");
+
+  // Simulate a delay for the search process (replace with actual API call)
+  setTimeout(function() {
+    // Hide loading indicator
+    document.getElementById("loadingOverlay").classList.remove("active");
+
+    // Get form data (for demonstration)
+    const formData = new FormData(document.getElementById("filterForm"));
+    const formValues = Object.fromEntries(formData.entries());
+
+    // Log the form data to the console (replace with actual search logic)
+    console.log("Applying filters:", formValues);
+    alert("Applying filters (see console for data). In a real app, this would trigger a job search.");
+
+  }, 1500); // Simulate 1.5 seconds loading
+}
+
+
+function clearAllFilters() {
+    if (confirm("Are you sure you want to clear all filters?")) {
+      document.getElementById("filterForm").reset();
+      // Deselect category chips
+      const chips = document.querySelectorAll('.category-chip');
+      chips.forEach(chip => chip.classList.remove('selected'));
+    }
+}
+
+</script>
+
+</body>
+</html>

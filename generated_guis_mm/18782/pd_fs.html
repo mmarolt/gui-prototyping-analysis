@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Directory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Top Section (Action Bar) */
+        .action-bar {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between; /* Distribute items evenly */
+            align-items: center; /* Vertically align items */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .breadcrumb-bar {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Prevent wrapping */
+            padding: 5px 0;
+        }
+
+        .breadcrumb-item {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #2980b9;
+            color: white;
+            border-radius: 5px;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .sort-button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Middle Section (File List) */
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px;
+        }
+
+        .file-item {
+            background-color: white;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+
+        .file-name {
+            flex-grow: 1;
+            font-size: 16px;
+        }
+
+        .checkbox {
+            margin-left: 10px;
+        }
+
+        /* Bottom Section (Multi-Select Toolbar - Initially Hidden) */
+        .multi-select-toolbar {
+            background-color: #34495e;
+            color: white;
+            padding: 10px;
+            display: none; /* Initially hidden */
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .multi-select-toolbar button {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* General Styling for Mobile Screen */
+        body {
+            width: 375px; /* Set the body width */
+            max-width: 100%; /* Ensure it doesn't exceed the screen width */
+            margin: 0 auto; /* Center the content */
+        }
+
+        /* For smaller screens */
+        @media (max-width: 480px) {
+            .action-bar {
+                padding: 8px;
+            }
+
+            .breadcrumb-item {
+                padding: 4px 8px;
+                font-size: 14px;
+            }
+
+            .sort-button {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+
+            .file-item {
+                padding: 8px;
+            }
+
+            .file-icon {
+                width: 24px;
+                height: 24px;
+                margin-right: 8px;
+            }
+
+            .file-name {
+                font-size: 14px;
+            }
+
+            .multi-select-toolbar button {
+                padding: 6px 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Top Section: Action Bar -->
+<div class="action-bar">
+    <div class="breadcrumb-bar">
+        <span class="breadcrumb-item">Root</span>
+        <span class="breadcrumb-item">Folder1</span>
+        <span class="breadcrumb-item">Subfolder</span>
+    </div>
+    <button class="sort-button">Sort</button>
+</div>
+
+<!-- Middle Section: File List -->
+<ul class="file-list">
+    <li class="file-item">
+        <img src="folder_icon.png" alt="Folder" class="file-icon">
+        <span class="file-name">Documents</span>
+        <input type="checkbox" class="checkbox">
+    </li>
+    <li class="file-item">
+        <img src="file_icon.png" alt="File" class="file-icon">
+        <span class="file-name">report.pdf</span>
+        <input type="checkbox" class="checkbox">
+    </li>
+    <li class="file-item">
+        <img src="image_icon.png" alt="Image" class="file-icon">
+        <span class="file-name">photo.jpg</span>
+        <input type="checkbox" class="checkbox">
+    </li>
+</ul>
+
+<!-- Bottom Section: Multi-Select Toolbar (Initially Hidden) -->
+<div class="multi-select-toolbar">
+    <button>Copy</button>
+    <button>Move</button>
+    <button>Delete</button>
+    <button>Share</button>
+    <button>Select All</button>
+    <button>Cancel</button>
+</div>
+
+</body>
+</html>

@@ -10,6 +10,49 @@ Make sure, that the mobile page displays well in the Google Chrome Developer Too
 """
 )
 
+#refine instruction
+REFINE_SUMMARY_ZS = PromptTemplate(
+    input_variables=["summary"],
+    template=
+"""
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
+Please refine the following mobile app page description into several UI sections.
+Be careful, you should only give the UI sections of one single page. It should not contain too many sections.
+For each section, give as much detail as possible. 
+You could also give the example item for each section.
+
+Page description:
+```
+{summary}
+```
+"""
+)
+
+#refined instruction
+REF_SUMMARY2CODE_ZS = PromptTemplate(
+    input_variables=["summary"],
+    template=
+"""
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
+Please create the HTML code for a mobile app page according to the following description.
+
+Page description:
+```
+{summary}
+```
+"""
+)
+
 #PD_ZS
 SUMMARY2REQUIREMENTS_ZS = PromptTemplate(
     input_variables=["summary"],

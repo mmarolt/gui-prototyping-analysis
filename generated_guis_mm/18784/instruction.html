@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Directory</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+.header {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  font-size: 1.2em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.directory-path {
+  padding: 10px;
+  background-color: #ecf0f1;
+  border-bottom: 1px solid #bdc3c7;
+}
+
+.directory-path span {
+  font-size: 0.9em;
+  color: #7f8c8d;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #bdc3c7;
+  background-color: white;
+}
+
+.file-item:last-child {
+  border-bottom: none;
+}
+
+.file-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  background-color: #95a5a6; /* Placeholder color */
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 1.5em;
+}
+
+.file-name {
+  flex-grow: 1;
+  font-size: 1em;
+}
+
+.file-size {
+  font-size: 0.8em;
+  color: #7f8c8d;
+}
+
+/* Simulated icons - replace with actual image icons */
+.file-icon.image { background-color: #e67e22; }
+.file-icon.video { background-color: #9b59b6; }
+.file-icon.document { background-color: #34495e; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  Image Directory
+</div>
+
+<div class="directory-path">
+  <span>/Home/Pictures</span>
+</div>
+
+<ul class="file-list">
+  <li class="file-item">
+    <div class="file-icon image">
+      <i class="fa fa-image"></i>
+    </div>
+    <span class="file-name">Sunset.jpg</span>
+    <span class="file-size">2.5 MB</span>
+  </li>
+  <li class="file-item">
+    <div class="file-icon image">
+      <i class="fa fa-image"></i>
+    </div>
+    <span class="file-name">Mountains.png</span>
+    <span class="file-size">1.8 MB</span>
+  </li>
+    <li class="file-item">
+    <div class="file-icon image">
+      <i class="fa fa-image"></i>
+    </div>
+    <span class="file-name">OceanView.jpeg</span>
+    <span class="file-size">3.1 MB</span>
+  </li>
+  <li class="file-item">
+    <div class="file-icon image">
+      <i class="fa fa-image"></i>
+    </div>
+    <span class="file-name">ForestWalk.gif</span>
+    <span class="file-size">5.2 MB</span>
+  </li>
+  <li class="file-item">
+    <div class="file-icon image">
+      <i class="fa fa-image"></i>
+    </div>
+    <span class="file-name">CityLights.bmp</span>
+    <span class="file-size">4.7 MB</span>
+  </li>
+</ul>
+
+</body>
+</html>

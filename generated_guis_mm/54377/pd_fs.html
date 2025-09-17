@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Slide Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: #eee;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%;
+            height: 50px;
+        }
+
+        .top-bar button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        /* Slide Preview Area */
+        .slide-preview {
+            background-color: #fff;
+            height: calc(100vh - 150px); /* Account for top and bottom bars */
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden; /* Hide anything that overflows */
+            text-align: center;
+            line-height: calc(100vh - 150px); /* Vertically center placeholder */
+            color: #ccc;
+        }
+
+        /* Contextual Toolbar */
+        .contextual-toolbar {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+
+        .contextual-toolbar button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        /* Bottom Bar */
+        .bottom-bar {
+            background-color: #eee;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%;
+            height: 50px;
+        }
+
+        .bottom-bar button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        /* Add Element Menu */
+        .add-element-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .add-element-menu button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 80%;
+        }
+
+        /* Text Formatting Toolbar */
+        .text-formatting-toolbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .text-formatting-toolbar select,
+        .text-formatting-toolbar input,
+        .text-formatting-toolbar button {
+            margin: 5px;
+            padding: 5px;
+        }
+
+        .multiline-text-input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .visible {
+            display: flex !important;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div>
+            <button>&#8630;</button>  <!-- Undo -->
+            <button>&#8631;</button>  <!-- Redo -->
+        </div>
+        <div>Slide 1</div>
+        <div>
+            <button onclick="toggleAddElementMenu()">+</button> <!-- Add Element -->
+        </div>
+    </div>
+
+    <div class="slide-preview" onclick="showContextualToolbar()">
+        Slide Preview Area
+        <div class="contextual-toolbar">
+            <button>Move</button>
+            <button>Delete</button>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button>&#8592;</button> <!-- Previous Slide -->
+        <button>&#8594;</button> <!-- Next Slide -->
+    </div>
+
+    <div class="add-element-menu hidden" id="addElementMenu">
+        <button onclick="showTextFormatting()">Add Text</button>
+        <button>Add Image</button>
+        <button>Add Shape</button>
+    </div>
+
+    <div class="text-formatting-toolbar hidden" id="textFormattingToolbar">
+        <textarea class="multiline-text-input" placeholder="Enter text"></textarea>
+        <select>
+            <option>Arial</option>
+            <option>Times New Roman</option>
+        </select>
+        <input type="number" placeholder="Size">
+        <input type="color">
+        <div>
+            <button>Left</button>
+            <button>Center</button>
+            <button>Right</button>
+        </div>
+        <div>
+            <button><b>B</b></button>
+            <button><i>I</i></button>
+            <button><u>U</u></button>
+        </div>
+    </div>
+
+    <script>
+        function toggleAddElementMenu() {
+            var menu = document.getElementById("addElementMenu");
+            menu.classList.toggle("hidden");
+            menu.classList.toggle("visible");
+        }
+
+        function showTextFormatting() {
+            toggleAddElementMenu();
+            var toolbar = document.getElementById("textFormattingToolbar");
+            toolbar.classList.remove("hidden");
+            toolbar.classList.add("visible");
+
+            document.querySelector('.bottom-bar').classList.add('hidden'); // Hide bottom bar nav
+        }
+
+        function showContextualToolbar() {
+            document.querySelector('.contextual-toolbar').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

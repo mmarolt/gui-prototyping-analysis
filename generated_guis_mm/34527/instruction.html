@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate Filter</title>
+<style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  padding: 16px;
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+input[type="number"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Important for padding to not affect width */
+  font-size: 14px;
+}
+
+.checkbox-group {
+  margin-bottom: 15px;
+}
+
+.checkbox-group label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: normal;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.range-inputs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.range-inputs input {
+  width: 100%; /* Take up equal space */
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Filter Properties</h1>
+
+  <label for="propertyType">Property Type:</label>
+  <select id="propertyType">
+    <option value="">Any</option>
+    <option value="apartment">Apartment</option>
+    <option value="house">House</option>
+    <option value="condo">Condo</option>
+  </select>
+
+  <label>Price Range:</label>
+  <div class="range-inputs">
+    <input type="number" id="minPrice" placeholder="Min Price">
+    <input type="number" id="maxPrice" placeholder="Max Price">
+  </div>
+
+
+  <label>Bedrooms:</label>
+  <select id="bedrooms">
+    <option value="">Any</option>
+    <option value="1">1 Bedroom</option>
+    <option value="2">2 Bedrooms</option>
+    <option value="3">3+ Bedrooms</option>
+  </select>
+
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="pool"> Pool</label>
+    <label><input type="checkbox" id="garage"> Garage</label>
+    <label><input type="checkbox" id="petFriendly"> Pet Friendly</label>
+  </div>
+
+  <button>Apply Filters</button>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SD Card</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      color: #333;
+    }
+
+    .header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 1.2em;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+      padding: 10px;
+    }
+
+    .file-item {
+      background-color: white;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 5px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+    }
+
+    .file-item:hover {
+      background-color: #eee;
+    }
+
+    .file-icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      color: #555;
+    }
+
+    .file-name {
+      flex-grow: 1;
+    }
+
+    .file-size {
+      font-size: 0.8em;
+      color: #777;
+    }
+
+    .directory-icon {
+      color: #ffc107; /* Amber color for directories */
+    }
+
+    .image-icon {
+        color: #28a745;
+    }
+
+    .text-icon {
+        color: #17a2b8;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    SD Card
+  </div>
+
+  <div class="container">
+    <div class="file-item">
+      <div class="file-icon directory-icon">
+        <i class="fas fa-folder"></i>
+      </div>
+      <div class="file-name">Documents</div>
+      <div class="file-size"></div>
+    </div>
+
+    <div class="file-item">
+      <div class="file-icon directory-icon">
+        <i class="fas fa-folder"></i>
+      </div>
+      <div class="file-name">Pictures</div>
+      <div class="file-size"></div>
+    </div>
+
+    <div class="file-item">
+      <div class="file-icon directory-icon">
+        <i class="fas fa-folder"></i>
+      </div>
+      <div class="file-name">Downloads</div>
+      <div class="file-size"></div>
+    </div>
+
+    <div class="file-item">
+      <div class="file-icon image-icon">
+        <i class="fas fa-image"></i>
+      </div>
+      <div class="file-name">image1.jpg</div>
+      <div class="file-size">1.2 MB</div>
+    </div>
+
+      <div class="file-item">
+          <div class="file-icon text-icon">
+              <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="file-name">notes.txt</div>
+          <div class="file-size">5 KB</div>
+      </div>
+
+    <div class="file-item">
+      <div class="file-icon directory-icon">
+        <i class="fas fa-folder"></i>
+      </div>
+      <div class="file-name">Music</div>
+      <div class="file-size"></div>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</body>
+</html>

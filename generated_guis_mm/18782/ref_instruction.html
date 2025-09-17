@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* Light grey background */
+            color: #212121; /* Dark grey primary text color */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .container {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            overflow: hidden;
+            position: relative; /* Required for absolute positioning of FAB */
+        }
+
+        /* App Bar Styles */
+        .app-bar {
+            background-color: #2196F3; /* Primary app color (Blue) */
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow */
+            z-index: 10; /* Ensure app bar stays on top */
+        }
+
+        .app-bar-leading {
+            cursor: pointer;
+        }
+
+        .app-bar-title {
+            font-size: 20px;
+            font-weight: 500; /* Roboto Medium */
+        }
+
+        .app-bar-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .app-bar-actions i {
+            margin-left: 16px;
+            cursor: pointer;
+        }
+
+        /* Content Area Styles */
+        .content-area {
+            padding: 8px 0;
+            overflow-y: auto; /* Enable vertical scrolling */
+            height: calc(667px - 56px - 56px); /*Adjust height based on app bar and bottom nav bar*/
+            /*height: 555px; /* Calculate available height */
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid #e0e0e0; /* Subtle divider */
+            cursor: pointer; /* Indicate item is clickable */
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-icon {
+            margin-right: 16px;
+            color: #757575; /* Grey icon color */
+        }
+
+        .list-item-icon i {
+            font-size: 24px; /* Increased size for better visibility */
+        }
+
+        .list-item-content {
+            flex-grow: 1;
+        }
+
+        .list-item-title {
+            font-size: 16px;
+            font-weight: 400; /* Roboto Regular */
+        }
+
+        .list-item-subtitle {
+            font-size: 12px;
+            font-weight: 300; /* Roboto Light */
+            color: #757575; /* Secondary text color */
+        }
+
+        .list-item-action {
+            margin-left: 16px;
+            color: #757575;
+            cursor: pointer;
+        }
+
+        /* FAB Styles */
+        .fab {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            background-color: #FF4081; /* Accent color (Pink) */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px;
+            height: 56px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Pronounced shadow */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none; /* Remove default focus outline */
+            z-index: 15; /* Ensure FAB stays on top */
+        }
+
+        .fab i {
+            font-size: 24px;
+        }
+
+        /* Bottom Navigation Styles */
+        .bottom-nav {
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 56px;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Shadow at the top */
+            position: relative;
+            z-index: 10;
+
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #757575; /* Grey icon color */
+            text-decoration: none;
+            font-size: 12px;
+            padding: 8px;
+            border: none;
+        }
+
+        .bottom-nav-item.active {
+            color: #2196F3; /* Highlighted color */
+        }
+
+        .bottom-nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        /* Empty State Styles */
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: #757575;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- App Bar -->
+        <div class="app-bar">
+            <div class="app-bar-leading">
+                <i class="material-icons">menu</i>
+            </div>
+            <div class="app-bar-title">SD Card</div>
+            <div class="app-bar-actions">
+                <i class="material-icons">search</i>
+                <i class="material-icons">more_vert</i>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- List Items -->
+            <div class="list-item">
+                <div class="list-item-icon">
+                    <i class="material-icons">folder</i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">Documents</div>
+                    <div class="list-item-subtitle">12 items</div>
+                </div>
+                <div class="list-item-action">
+                    <i class="material-icons">more_vert</i>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="list-item-icon">
+                    <i class="material-icons">image</i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">Photos</div>
+                    <div class="list-item-subtitle">25 MB</div>
+                </div>
+                <div class="list-item-action">
+                    <i class="material-icons">more_vert</i>
+                </div>
+            </div>
+
+             <div class="list-item">
+                <div class="list-item-icon">
+                    <i class="material-icons">music_note</i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">Music</div>
+                    <div class="list-item-subtitle">10 MB</div>
+                </div>
+                <div class="list-item-action">
+                    <i class="material-icons">more_vert</i>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="list-item-icon">
+                    <i class="material-icons">insert_drive_file</i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">Report.pdf</div>
+                    <div class="list-item-subtitle">2.5 MB</div>
+                </div>
+                <div class="list-item-action">
+                    <i class="material-icons">more_vert</i>
+                </div>
+            </div>
+
+            <div class="list-item">
+                <div class="list-item-icon">
+                    <i class="material-icons">insert_drive_file</i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">Presentation.pptx</div>
+                    <div class="list-item-subtitle">5 MB</div>
+                </div>
+                <div class="list-item-action">
+                    <i class="material-icons">more_vert</i>
+                </div>
+            </div>
+            <!-- More list items can be added here -->
+
+            <!-- Example of Empty State -->
+            <!--
+            <div class="empty-state">
+                <i class="material-icons">folder_open</i>
+                <p>This folder is empty.</p>
+            </div>
+            -->
+        </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab">
+            <i class="material-icons">add</i>
+        </button>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="bottom-nav-item active">
+                <i class="material-icons">home</i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="bottom-nav-item">
+                <i class="material-icons">storage</i>
+                <span>Storage</span>
+            </a>
+            <a href="#" class="bottom-nav-item">
+                <i class="material-icons">settings</i>
+                <span>Settings</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

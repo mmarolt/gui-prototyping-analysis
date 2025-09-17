@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Listings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            width: 375px; /* Fixed width for mobile view */
+            max-width: 100%; /* Ensure it doesn't exceed screen width */
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .job-list {
+            padding: 10px;
+        }
+
+        .job-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative; /* For save button positioning */
+        }
+
+        .job-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .company {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .location {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 8px;
+        }
+
+        .description {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Show only 2 lines */
+            -webkit-box-orient: vertical;
+        }
+
+        .save-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .save-button.saved {
+            color: #f00; /* Red when saved */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-button">&lt;</button>
+    </div>
+
+    <div class="job-list">
+
+        <div class="job-card">
+            <div class="job-title">Software Engineer</div>
+            <div class="company">Google</div>
+            <div class="location">Mountain View, CA</div>
+            <div class="description">Join our team of talented engineers to build the next generation of search technologies...</div>
+            <button class="save-button">&#9825;</button> <!-- Heart symbol -->
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">Data Scientist</div>
+            <div class="company">Microsoft</div>
+            <div class="location">Redmond, WA</div>
+            <div class="description">Analyze large datasets and develop machine learning models to improve our cloud services...</div>
+            <button class="save-button saved">&#9829;</button> <!-- Filled heart -->
+        </div>
+
+        <div class="job-card">
+            <div class="job-title">Web Developer</div>
+            <div class="company">Amazon</div>
+            <div class="location">Seattle, WA</div>
+            <div class="description">Build and maintain our e-commerce platform, ensuring a seamless shopping experience for millions of customers...</div>
+            <button class="save-button">&#9825;</button>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript (Optional) to handle save button clicks
+        const saveButtons = document.querySelectorAll('.save-button');
+
+        saveButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('saved');
+
+                // In a real app, you would also update the data model and persist the saved state.
+            });
+        });
+    </script>
+
+</body>
+</html>

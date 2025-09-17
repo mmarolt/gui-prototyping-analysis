@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Station Details</title>
+    <style>
+        /* Reset some default browser styles */
+        body, h1, h2, h3, p, address {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
+
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background-color: #f0f0f0;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 10px;
+        }
+
+        #back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        #back-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        h1 {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0; /* Reset default margin */
+        }
+
+        main {
+            padding: 15px;
+        }
+
+        #station-info {
+            margin-bottom: 20px;
+        }
+
+        #station-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #address-container, #phone-numbers {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        #address-container svg, #phone-numbers svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            color: #555;
+        }
+
+        address {
+            font-style: normal;
+            font-size: 1em;
+        }
+
+        #phone-numbers p {
+            margin-bottom: 5px; /* Space between phone number entries */
+            display: flex;
+            align-items: center;
+        }
+
+        #phone-numbers a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        #map-section {
+            margin-bottom: 20px;
+        }
+
+        #map-section img {
+            width: 100%;
+            max-width: 100%; /* Ensure image doesn't overflow */
+            height: auto;
+            display: block;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        #get-directions {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* Full width for mobile */
+        }
+
+        #get-directions svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        #actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* spacing between buttons */
+            margin-bottom: 20px;
+        }
+
+        #actions button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%; /* Full width for mobile */
+        }
+
+        #actions button svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        #operating-hours {
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+
+        #operating-hours h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        #operating-hours p {
+            margin-bottom: 3px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #f0f0f0;
+            border-top: 1px solid #ccc;
+        }
+
+        /* Media Query for larger screens (e.g., tablets) */
+        @media (min-width: 600px) {
+            #actions {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            #actions button {
+                width: 48%; /* Adjust as needed */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <button id="back-button" aria-label="Back to Police Stations">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M11.707 5.293a1 1 0 0 0-1.414 0L4.293 11.586a1 1 0 0 0 0 1.414l6 7.293a1 1 0 0 0 1.414-1.414L6.414 12l5.293-5.293a1 1 0 0 0 0-1.414z"/>
+                </svg>
+            </button>
+            <h1>Police Station Details</h1>
+        </nav>
+    </header>
+
+    <main>
+        <section id="station-info">
+            <h2 id="station-name">Central Police Station</h2>
+
+            <div id="address-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <address>
+                    123 Main Street<br>
+                    Anytown, CA 91234
+                </address>
+            </div>
+
+            <div id="phone-numbers">
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M20.65 17.06c-1.25-1.25-2.83-1.98-4.54-1.98-1.71 0-3.29.73-4.54 1.98l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H7c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C5.29 15.27 3.71 14.54 2.46 13.29c-1.25-1.25-1.98-2.83-1.98-4.54 0-1.71.73-3.29 1.98-4.54l.09-.09c.22-.22.35-.53.35-.85V3c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1.23c0 .32.13.63.35.85l.09.09C3.29 8.73 4.71 9.46 5.96 10.71c1.25 1.25 2.83 1.98 4.54 1.98 1.71 0 3.29-.73 4.54-1.98l.09-.09c.22-.22.35-.53.35-.85V3c0-.55.45-1 1-1h.23c.55 0 1 .45 1 1v1.23c0 .32.13.63.35.85l.09.09C20.71 8.73 22.13 9.46 23.38 10.71c1.25 1.25 1.98 2.83 1.98 4.54 0 1.71-.73 3.29-1.98 4.54l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H23c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C20.65 17.06 20.65 17.06 20.65 17.06zM6.5 4.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm11 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                    </svg>
+                    <a href="tel:+15551234567">Emergency Line: (555) 123-4567</a>
+                </p>
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M20.65 17.06c-1.25-1.25-2.83-1.98-4.54-1.98-1.71 0-3.29.73-4.54 1.98l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H7c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C5.29 15.27 3.71 14.54 2.46 13.29c-1.25-1.25-1.98-2.83-1.98-4.54 0-1.71.73-3.29 1.98-4.54l.09-.09c.22-.22.35-.53.35-.85V3c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1.23c0 .32.13.63.35.85l.09.09C3.29 8.73 4.71 9.46 5.96 10.71c1.25 1.25 2.83 1.98 4.54 1.98 1.71 0 3.29-.73 4.54-1.98l.09-.09c.22-.22.35-.53.35-.85V3c0-.55.45-1 1-1h.23c.55 0 1 .45 1 1v1.23c0 .32.13.63.35.85l.09.09C20.71 8.73 22.13 9.46 23.38 10.71c1.25 1.25 1.98 2.83 1.98 4.54 0 1.71-.73 3.29-1.98 4.54l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H23c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C20.65 17.06 20.65 17.06 20.65 17.06zM6.5 4.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm11 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                    </svg>
+                    <a href="tel:+15557654321">Non-Emergency: (555) 765-4321</a>
+                </p>
+            </div>
+        </section>
+
+        <section id="map-section">
+            <a href="https://www.google.com/maps?q=123+Main+Street+Anytown+CA+91234">
+                <img src="https://via.placeholder.com/375x200/444444/FFFFFF?text=Map+Placeholder" alt="Map of Central Police Station">
+            </a>
+            <button id="get-directions">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M1.96 14.48a1 1 0 0 1 0-1.28l20-11.5a1 1 0 0 1 1.56.72v22.6a1 1 0 0 1-1.56.72l-20-11.5a1 1 0 0 1 0-1.28zM4.08 13.86l17.77 10.22v-20.05L4.08 10.14z"/>
+                </svg>
+                Get Directions
+            </button>
+        </section>
+
+        <section id="actions">
+            <button id="add-to-contacts">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 6.1c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v1.8H4V6.1zM4 12c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2H4zm14 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
+                </svg>
+                Add to Contacts
+            </button>
+            <button id="report-issue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                Report an Issue
+            </button>
+        </section>
+
+        <section id="operating-hours">
+            <h3>Operating Hours</h3>
+            <p>Monday-Friday: 8:00 AM - 6:00 PM</p>
+            <p>Saturday: 9:00 AM - 1:00 PM</p>
+            <p>Sunday: Closed</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Police Department</p>
+    </footer>
+
+    <script>
+        document.getElementById('back-button').addEventListener('click', function() {
+            window.history.back();
+        });
+
+        document.getElementById('get-directions').addEventListener('click', function() {
+            window.location.href = "https://www.google.com/maps?daddr=123+Main+Street+Anytown+CA+91234";
+        });
+
+        document.getElementById('report-issue').addEventListener('click', function() {
+            window.location.href = "mailto:feedback@example.com?subject=Issue with Police Station Info&body=Please describe the issue:";
+        });
+    </script>
+</body>
+</html>

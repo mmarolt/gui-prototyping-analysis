@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job Listings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            width: 375px; /* Fixed width for mobile view */
+            max-width: 100%; /* Ensure it doesn't overflow on larger screens */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .back-button {
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border: none;
+            background: none;
+        }
+
+        .header-title {
+            font-size: 18px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .filter-button {
+            font-size: 16px;
+            cursor: pointer;
+            padding: 5px;
+            border: none;
+            background: none;
+        }
+        /* Job Listing Styles */
+        .job-listings {
+            padding: 10px;
+        }
+
+        .job-listing {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .company-name {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 3px;
+        }
+
+        .location {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .description {
+            font-size: 13px;
+            color: #333;
+            margin-top: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Number of lines to show */
+            -webkit-box-orient: vertical;
+        }
+
+        .apply-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <div class="header">
+        <button class="back-button">&lt;</button>
+        <div class="header-title">Java Developer Jobs in San Francisco, CA</div>
+        <button class="filter-button">Filter</button>
+    </div>
+
+    <!-- Job Listings Section -->
+    <div class="job-listings">
+        <div class="job-listing">
+            <div class="job-title">Senior Java Developer</div>
+            <div class="company-name">Acme Corp</div>
+            <div class="location">San Francisco, CA</div>
+            <div class="description">We are looking for a Senior Java Developer to join our team. The ideal candidate will have experience with Spring, Hibernate, and RESTful web services.</div>
+            <button class="apply-button">Apply Now</button>
+        </div>
+
+        <div class="job-listing">
+            <div class="job-title">Mid-Level Java Engineer</div>
+            <div class="company-name">Beta Industries</div>
+            <div class="location">San Francisco, CA</div>
+            <div class="description">Beta Industries is seeking a Mid-Level Java Engineer to contribute to our flagship product. Experience with Agile methodologies is a plus.</div>
+            <button class="apply-button">Apply Now</button>
+        </div>
+
+        <div class="job-listing">
+            <div class="job-title">Java Software Engineer</div>
+            <div class="company-name">Gamma Solutions</div>
+            <div class="location">San Francisco, CA</div>
+            <div class="description">Gamma Solutions is hiring a Java Software Engineer to work on a variety of projects. Strong problem-solving skills and a passion for learning are essential.</div>
+            <button class="apply-button">Apply Now</button>
+        </div>
+    </div>
+
+</body>
+</html>

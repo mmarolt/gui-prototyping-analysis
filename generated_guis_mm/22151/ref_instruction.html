@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listing</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Light grey background */
+        }
+
+        /* App Bar */
+        header {
+            height: 56px;
+            background-color: #6200EE;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        }
+
+        header button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px; /* Increase padding for better touch target */
+            border-radius: 50%; /* Make it circular */
+            min-width: 48px; /* Ensure minimum touch target size */
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header h1 {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* Job Listing Card */
+        .job-card {
+            width: calc(100% - 32px); /* screen width - left and right margin */
+            margin: 8px 16px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* prevent content overflow */
+        }
+
+        .job-card-title {
+            padding: 16px 16px 8px 16px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #212121;
+        }
+
+        .job-card-company {
+            padding: 0 16px 8px 16px;
+            font-size: 14px;
+            color: #757575;
+            display: flex;
+            align-items: center;
+        }
+
+        .job-card-company i {
+            font-size: 16px;
+            margin-right: 4px;
+        }
+
+        .job-card-salary {
+            padding: 0 16px 8px 16px;
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .job-card-chips {
+            padding: 0 16px 8px 16px;
+            display: flex;
+            flex-wrap: wrap; /* Allow chips to wrap to the next line */
+        }
+
+        .job-card-chips span {
+            background-color: #e0e0e0;
+            padding: 4px 8px;
+            border-radius: 16px;
+            margin-right: 4px;
+            margin-bottom: 4px; /* add bottom margin */
+            font-size: 12px;
+            color: #555;
+        }
+
+        .job-card button {
+            background-color: #03DAC5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 8px 16px 16px auto;
+            display: block;
+            font-size: 14px;
+            text-transform: uppercase; /* Make the button text uppercase */
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #03DAC5;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100; /* Ensure it's above other elements */
+        }
+
+        .fab i {
+            font-size: 24px;
+        }
+
+        /* Scrollable Content Area */
+        .content {
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding-bottom: 72px; /* add padding to allow the last job card to be fully visible when FAB is present */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button><i class="material-icons">arrow_back</i></button>
+        <h1>Teacher Jobs</h1>
+        <button><i class="material-icons">filter_list</i></button>
+    </header>
+
+    <div class="content">
+        <div class="job-card">
+            <div class="job-card-title">Math Teacher</div>
+            <div class="job-card-company"><i class="material-icons">location_on</i>Springfield High</div>
+            <div class="job-card-salary">$50,000 - $60,000</div>
+            <div class="job-card-chips">
+                <span>Part-time</span>
+                <span>High School</span>
+                <span>Math</span>
+            </div>
+            <button>Apply Now</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-card-title">English Teacher</div>
+            <div class="job-card-company"><i class="material-icons">location_on</i>Northwood Academy</div>
+            <div class="job-card-salary">$55,000 - $65,000</div>
+            <div class="job-card-chips">
+                <span>Full-time</span>
+                <span>Middle School</span>
+                <span>Literature</span>
+            </div>
+            <button>Apply Now</button>
+        </div>
+
+        <div class="job-card">
+            <div class="job-card-title">Science Teacher</div>
+            <div class="job-card-company"><i class="material-icons">location_on</i>Central High School</div>
+            <div class="job-card-salary">$48,000 - $58,000</div>
+            <div class="job-card-chips">
+                <span>Part-time</span>
+                <span>High School</span>
+                <span>Biology</span>
+            </div>
+            <button>Apply Now</button>
+        </div>
+    </div>
+
+    <button class="fab">
+        <i class="material-icons">add</i>
+    </button>
+
+</body>
+</html>

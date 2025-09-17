@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Listings</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.filter-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.container {
+  padding: 10px;
+}
+
+.job-card {
+  background-color: white;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.job-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.company-name {
+  font-size: 0.9em;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.location {
+  font-size: 0.9em;
+  color: #777;
+}
+
+.description {
+  font-size: 0.9em;
+  color: #333;
+  margin-top: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.date-posted {
+  font-size: 0.8em;
+  color: #999;
+  margin-top: 10px;
+}
+
+/* Style for the "Save" button */
+.save-button {
+  background-color: #f0f0f0; /* Light gray background */
+  border: none; /* No border */
+  color: #333; /* Dark gray text */
+  padding: 8px 12px; /* Padding for the button */
+  text-align: center; /* Center the text */
+  text-decoration: none; /* Remove underlines */
+  display: inline-block; /* Make it an inline block element */
+  font-size: 0.8em; /* Smaller font size */
+  margin-top: 10px;
+  cursor: pointer; /* Add a cursor on hover */
+  border-radius: 5px; /* Rounded corners */
+}
+
+/* Hover effect */
+.save-button:hover {
+  background-color: #ddd; /* Slightly darker gray on hover */
+}
+
+/* Active/Pressed effect */
+.save-button:active {
+  background-color: #ccc; /* Even darker gray when pressed */
+}
+
+/* Saved state */
+.save-button.saved {
+  background-color: #007bff; /* Blue background */
+  color: white; /* White text */
+}
+
+.save-button.saved:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.save-button.saved:active {
+  background-color: #004085; /* Even darker blue when pressed */
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+
+/* Bottom Navigation (Optional) */
+.bottom-nav {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  position: fixed; /* Keep it at the bottom */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.bottom-nav a {
+  color: #555;
+  text-decoration: none;
+}
+
+/* Media query for smaller screens (example) */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1em;
+  }
+  .job-card {
+    padding: 10px;
+  }
+  .job-title {
+    font-size: 1em;
+  }
+  .company-name, .location, .description, .date-posted {
+    font-size: 0.8em;
+  }
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="back-button">Back</button>
+  <h1>Job Listings</h1>
+  <button class="filter-button">Filter</button>
+</div>
+
+<div class="container">
+  <div class="job-card">
+    <h2 class="job-title">Software Engineer</h2>
+    <p class="company-name">Acme Corp</p>
+    <p class="location">New York, NY</p>
+    <p class="description">We are looking for a talented software engineer to join our team.  Must have experience with Java, Python, and React.  Competitive salary and benefits.</p>
+    <p class="date-posted">Posted 2 days ago</p>
+    <button class="save-button">Save</button>
+  </div>
+
+  <div class="job-card">
+    <h2 class="job-title">Data Scientist</h2>
+    <p class="company-name">Beta Inc</p>
+    <p class="location">San Francisco, CA</p>
+    <p class="description">Seeking a data scientist with strong analytical and machine learning skills.  Experience with Python, R, and SQL required.  Apply now!</p>
+    <p class="date-posted">Posted 1 week ago</p>
+    <button class="save-button saved">Saved</button>
+  </div>
+
+  <div class="job-card">
+    <h2 class="job-title">Web Developer</h2>
+    <p class="company-name">Gamma Ltd</p>
+    <p class="location">London, UK</p>
+    <p class="description">Looking for a web developer proficient in HTML, CSS, and JavaScript. Experience with React or Angular is a plus. Join our innovative team!</p>
+    <p class="date-posted">Posted 3 days ago</p>
+    <button class="save-button">Save</button>
+  </div>
+
+  <div class="loading">Loading more jobs...</div>
+</div>
+
+<div class="bottom-nav">
+  <a href="#">Home</a>
+  <a href="#">Search</a>
+  <a href="#">Saved</a>
+  <a href="#">Profile</a>
+</div>
+
+<script>
+// JavaScript to toggle the "Save" button state
+const saveButtons = document.querySelectorAll('.save-button');
+
+saveButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        this.classList.toggle('saved');
+        this.textContent = this.classList.contains('saved') ? 'Saved' : 'Save';
+    });
+});
+
+</script>
+
+</body>
+</html>

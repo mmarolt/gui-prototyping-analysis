@@ -1,0 +1,1765 @@
+{
+  "activity_name": "net.infojobs.mobile.android/com.infojobs.app.signup.view.activity.phone.SignupActivity", 
+  "activity": {
+    "root": {
+      "scrollable-horizontal": false, 
+      "draw": true, 
+      "ancestors": [
+        "android.widget.FrameLayout", 
+        "android.view.ViewGroup", 
+        "android.view.View", 
+        "java.lang.Object"
+      ], 
+      "clickable": false, 
+      "pressed": "not_pressed", 
+      "focusable": false, 
+      "long-clickable": false, 
+      "enabled": true, 
+      "bounds": [
+        0, 
+        0, 
+        1440, 
+        2560
+      ], 
+      "visibility": "visible", 
+      "content-desc": [
+        null
+      ], 
+      "rel-bounds": [
+        0, 
+        0, 
+        1440, 
+        2560
+      ], 
+      "focused": false, 
+      "selected": false, 
+      "scrollable-vertical": false, 
+      "children": [
+        {
+          "scrollable-horizontal": false, 
+          "draw": true, 
+          "ancestors": [
+            "android.view.ViewGroup", 
+            "android.view.View", 
+            "java.lang.Object"
+          ], 
+          "clickable": false, 
+          "pressed": "not_pressed", 
+          "focusable": false, 
+          "long-clickable": false, 
+          "enabled": true, 
+          "bounds": [
+            0, 
+            0, 
+            1440, 
+            2392
+          ], 
+          "visibility": "visible", 
+          "content-desc": [
+            null
+          ], 
+          "rel-bounds": [
+            0, 
+            0, 
+            1440, 
+            2392
+          ], 
+          "focused": false, 
+          "selected": false, 
+          "scrollable-vertical": false, 
+          "children": [
+            {
+              "resource-id": "android:id/action_mode_bar_stub", 
+              "adapter-view": false, 
+              "pointer": "1eee12c", 
+              "scrollable-horizontal": false, 
+              "ancestors": [
+                "android.view.View", 
+                "java.lang.Object"
+              ], 
+              "selected": false, 
+              "content-desc": [
+                null
+              ], 
+              "rel-bounds": [
+                0, 
+                0, 
+                0, 
+                0
+              ], 
+              "draw": true, 
+              "focusable": false, 
+              "long-clickable": false, 
+              "visibility": "gone", 
+              "focused": false, 
+              "clickable": false, 
+              "abs-pos": true, 
+              "class": "android.view.ViewStub", 
+              "visible-to-user": false, 
+              "package": "android", 
+              "enabled": true, 
+              "bounds": [
+                0, 
+                0, 
+                0, 
+                0
+              ], 
+              "pressed": "not_pressed", 
+              "scrollable-vertical": false
+            }, 
+            {
+              "scrollable-horizontal": false, 
+              "draw": true, 
+              "ancestors": [
+                "android.view.ViewGroup", 
+                "android.view.View", 
+                "java.lang.Object"
+              ], 
+              "clickable": false, 
+              "pressed": "not_pressed", 
+              "focusable": false, 
+              "long-clickable": false, 
+              "enabled": true, 
+              "bounds": [
+                0, 
+                0, 
+                1440, 
+                2392
+              ], 
+              "visibility": "visible", 
+              "content-desc": [
+                null
+              ], 
+              "rel-bounds": [
+                0, 
+                0, 
+                1440, 
+                2392
+              ], 
+              "focused": false, 
+              "selected": false, 
+              "scrollable-vertical": false, 
+              "children": [
+                {
+                  "resource-id": "net.infojobs.mobile.android:id/action_bar_root", 
+                  "adapter-view": false, 
+                  "pointer": "822e98a", 
+                  "children": [
+                    {
+                      "resource-id": "net.infojobs.mobile.android:id/action_mode_bar_stub", 
+                      "adapter-view": false, 
+                      "pointer": "4c1abfb", 
+                      "scrollable-horizontal": false, 
+                      "ancestors": [
+                        "android.view.View", 
+                        "java.lang.Object"
+                      ], 
+                      "selected": false, 
+                      "content-desc": [
+                        null
+                      ], 
+                      "rel-bounds": [
+                        0, 
+                        0, 
+                        0, 
+                        0
+                      ], 
+                      "draw": true, 
+                      "focusable": false, 
+                      "long-clickable": false, 
+                      "visibility": "gone", 
+                      "focused": false, 
+                      "clickable": false, 
+                      "abs-pos": true, 
+                      "class": "android.support.v7.widget.ViewStubCompat", 
+                      "visible-to-user": false, 
+                      "package": "net.infojobs.mobile.android", 
+                      "enabled": true, 
+                      "bounds": [
+                        0, 
+                        0, 
+                        0, 
+                        0
+                      ], 
+                      "pressed": "not_pressed", 
+                      "scrollable-vertical": false
+                    }, 
+                    {
+                      "resource-id": "android:id/content", 
+                      "adapter-view": false, 
+                      "pointer": "7fee418", 
+                      "children": [
+                        {
+                          "resource-id": "net.infojobs.mobile.android:id/signup.root", 
+                          "adapter-view": false, 
+                          "pointer": "3969e71", 
+                          "children": [
+                            {
+                              "resource-id": "net.infojobs.mobile.android:id/toolbar", 
+                              "adapter-view": false, 
+                              "pointer": "7ce1456", 
+                              "children": [
+                                {
+                                  "scrollable-horizontal": false, 
+                                  "draw": true, 
+                                  "ancestors": [
+                                    "android.view.ViewGroup", 
+                                    "android.view.View", 
+                                    "java.lang.Object"
+                                  ], 
+                                  "clickable": false, 
+                                  "pressed": "not_pressed", 
+                                  "focusable": false, 
+                                  "long-clickable": false, 
+                                  "enabled": true, 
+                                  "bounds": [
+                                    196, 
+                                    84, 
+                                    1440, 
+                                    280
+                                  ], 
+                                  "visibility": "visible", 
+                                  "content-desc": [
+                                    null
+                                  ], 
+                                  "rel-bounds": [
+                                    196, 
+                                    0, 
+                                    1440, 
+                                    196
+                                  ], 
+                                  "focused": false, 
+                                  "selected": false, 
+                                  "scrollable-vertical": false, 
+                                  "children": [
+                                    {
+                                      "text": "Crea tu cuenta", 
+                                      "resource-id": "net.infojobs.mobile.android:id/customTitle", 
+                                      "adapter-view": false, 
+                                      "pointer": "a0a29c4", 
+                                      "scrollable-horizontal": false, 
+                                      "ancestors": [
+                                        "android.widget.TextView", 
+                                        "android.view.View", 
+                                        "java.lang.Object"
+                                      ], 
+                                      "selected": false, 
+                                      "content-desc": [
+                                        null
+                                      ], 
+                                      "rel-bounds": [
+                                        28, 
+                                        55, 
+                                        439, 
+                                        140
+                                      ], 
+                                      "draw": false, 
+                                      "focusable": false, 
+                                      "long-clickable": false, 
+                                      "visibility": "visible", 
+                                      "focused": false, 
+                                      "clickable": false, 
+                                      "abs-pos": true, 
+                                      "font-family": "default", 
+                                      "class": "android.support.v7.widget.AppCompatTextView", 
+                                      "visible-to-user": true, 
+                                      "package": "net.infojobs.mobile.android", 
+                                      "enabled": true, 
+                                      "bounds": [
+                                        224, 
+                                        139, 
+                                        635, 
+                                        224
+                                      ], 
+                                      "pressed": "not_pressed", 
+                                      "scrollable-vertical": false
+                                    }, 
+                                    {
+                                      "text": "1/5", 
+                                      "resource-id": "net.infojobs.mobile.android:id/customSubtitle", 
+                                      "adapter-view": false, 
+                                      "pointer": "a5b0ad", 
+                                      "scrollable-horizontal": false, 
+                                      "ancestors": [
+                                        "android.widget.TextView", 
+                                        "android.view.View", 
+                                        "java.lang.Object"
+                                      ], 
+                                      "selected": false, 
+                                      "content-desc": [
+                                        null
+                                      ], 
+                                      "rel-bounds": [
+                                        1091, 
+                                        55, 
+                                        1188, 
+                                        140
+                                      ], 
+                                      "draw": false, 
+                                      "focusable": false, 
+                                      "long-clickable": false, 
+                                      "visibility": "visible", 
+                                      "focused": false, 
+                                      "clickable": false, 
+                                      "abs-pos": true, 
+                                      "font-family": "default", 
+                                      "class": "android.support.v7.widget.AppCompatTextView", 
+                                      "visible-to-user": true, 
+                                      "package": "net.infojobs.mobile.android", 
+                                      "enabled": true, 
+                                      "bounds": [
+                                        1287, 
+                                        139, 
+                                        1384, 
+                                        224
+                                      ], 
+                                      "pressed": "not_pressed", 
+                                      "scrollable-vertical": false
+                                    }
+                                  ], 
+                                  "adapter-view": false, 
+                                  "abs-pos": true, 
+                                  "pointer": "d750cd7", 
+                                  "class": "android.widget.RelativeLayout", 
+                                  "visible-to-user": true
+                                }, 
+                                {
+                                  "text": "InfoJobs", 
+                                  "scrollable-vertical": false, 
+                                  "adapter-view": false, 
+                                  "pointer": "52f1fe2", 
+                                  "scrollable-horizontal": false, 
+                                  "ancestors": [
+                                    "android.view.View", 
+                                    "java.lang.Object"
+                                  ], 
+                                  "selected": false, 
+                                  "content-desc": [
+                                    null
+                                  ], 
+                                  "rel-bounds": [
+                                    196, 
+                                    51, 
+                                    196, 
+                                    144
+                                  ], 
+                                  "draw": false, 
+                                  "focusable": false, 
+                                  "long-clickable": false, 
+                                  "visibility": "visible", 
+                                  "focused": false, 
+                                  "clickable": false, 
+                                  "abs-pos": true, 
+                                  "font-family": "default", 
+                                  "class": "android.widget.TextView", 
+                                  "visible-to-user": false, 
+                                  "enabled": true, 
+                                  "bounds": [
+                                    196, 
+                                    135, 
+                                    196, 
+                                    228
+                                  ], 
+                                  "pressed": "not_pressed"
+                                }, 
+                                {
+                                  "scrollable-horizontal": false, 
+                                  "draw": false, 
+                                  "ancestors": [
+                                    "android.widget.ImageView", 
+                                    "android.view.View", 
+                                    "java.lang.Object"
+                                  ], 
+                                  "clickable": true, 
+                                  "pressed": "not_pressed", 
+                                  "focusable": true, 
+                                  "long-clickable": false, 
+                                  "enabled": true, 
+                                  "bounds": [
+                                    0, 
+                                    84, 
+                                    196, 
+                                    280
+                                  ], 
+                                  "visibility": "visible", 
+                                  "content-desc": [
+                                    "Navigate up"
+                                  ], 
+                                  "rel-bounds": [
+                                    0, 
+                                    0, 
+                                    196, 
+                                    196
+                                  ], 
+                                  "focused": false, 
+                                  "selected": false, 
+                                  "scrollable-vertical": false, 
+                                  "adapter-view": false, 
+                                  "abs-pos": true, 
+                                  "pointer": "b939f73", 
+                                  "class": "android.widget.ImageButton", 
+                                  "visible-to-user": true
+                                }, 
+                                {
+                                  "scrollable-horizontal": false, 
+                                  "draw": true, 
+                                  "ancestors": [
+                                    "android.support.v7.widget.LinearLayoutCompat", 
+                                    "android.view.ViewGroup", 
+                                    "android.view.View", 
+                                    "java.lang.Object"
+                                  ], 
+                                  "clickable": false, 
+                                  "pressed": "not_pressed", 
+                                  "focusable": false, 
+                                  "long-clickable": false, 
+                                  "enabled": true, 
+                                  "bounds": [
+                                    1440, 
+                                    84, 
+                                    1440, 
+                                    280
+                                  ], 
+                                  "visibility": "visible", 
+                                  "content-desc": [
+                                    null
+                                  ], 
+                                  "rel-bounds": [
+                                    1440, 
+                                    0, 
+                                    1440, 
+                                    196
+                                  ], 
+                                  "focused": false, 
+                                  "selected": false, 
+                                  "scrollable-vertical": false, 
+                                  "adapter-view": false, 
+                                  "abs-pos": true, 
+                                  "pointer": "e621e30", 
+                                  "class": "android.support.v7.widget.ActionMenuView", 
+                                  "visible-to-user": false
+                                }
+                              ], 
+                              "scrollable-horizontal": false, 
+                              "ancestors": [
+                                "android.view.ViewGroup", 
+                                "android.view.View", 
+                                "java.lang.Object"
+                              ], 
+                              "selected": false, 
+                              "content-desc": [
+                                null
+                              ], 
+                              "rel-bounds": [
+                                0, 
+                                84, 
+                                1440, 
+                                280
+                              ], 
+                              "draw": true, 
+                              "focusable": false, 
+                              "long-clickable": false, 
+                              "visibility": "visible", 
+                              "focused": false, 
+                              "clickable": false, 
+                              "abs-pos": true, 
+                              "class": "android.support.v7.widget.Toolbar", 
+                              "visible-to-user": true, 
+                              "package": "net.infojobs.mobile.android", 
+                              "enabled": true, 
+                              "bounds": [
+                                0, 
+                                84, 
+                                1440, 
+                                280
+                              ], 
+                              "pressed": "not_pressed", 
+                              "scrollable-vertical": false
+                            }, 
+                            {
+                              "resource-id": "net.infojobs.mobile.android:id/container", 
+                              "adapter-view": false, 
+                              "pointer": "e19aaa9", 
+                              "children": [
+                                {
+                                  "scrollable-horizontal": false, 
+                                  "draw": true, 
+                                  "ancestors": [
+                                    "android.view.ViewGroup", 
+                                    "android.view.View", 
+                                    "java.lang.Object"
+                                  ], 
+                                  "clickable": false, 
+                                  "pressed": "not_pressed", 
+                                  "focusable": false, 
+                                  "long-clickable": false, 
+                                  "enabled": true, 
+                                  "bounds": [
+                                    0, 
+                                    280, 
+                                    1440, 
+                                    2392
+                                  ], 
+                                  "visibility": "visible", 
+                                  "content-desc": [
+                                    null
+                                  ], 
+                                  "rel-bounds": [
+                                    0, 
+                                    0, 
+                                    1440, 
+                                    2112
+                                  ], 
+                                  "focused": false, 
+                                  "selected": false, 
+                                  "scrollable-vertical": false, 
+                                  "children": [
+                                    {
+                                      "resource-id": "net.infojobs.mobile.android:id/sv_signup", 
+                                      "adapter-view": false, 
+                                      "pointer": "dfebfcf", 
+                                      "children": [
+                                        {
+                                          "scrollable-horizontal": false, 
+                                          "draw": true, 
+                                          "ancestors": [
+                                            "android.view.ViewGroup", 
+                                            "android.view.View", 
+                                            "java.lang.Object"
+                                          ], 
+                                          "clickable": false, 
+                                          "pressed": "not_pressed", 
+                                          "focusable": false, 
+                                          "long-clickable": false, 
+                                          "enabled": true, 
+                                          "bounds": [
+                                            0, 
+                                            280, 
+                                            1440, 
+                                            2391
+                                          ], 
+                                          "visibility": "visible", 
+                                          "content-desc": [
+                                            null
+                                          ], 
+                                          "rel-bounds": [
+                                            0, 
+                                            0, 
+                                            1440, 
+                                            2111
+                                          ], 
+                                          "focused": false, 
+                                          "selected": false, 
+                                          "scrollable-vertical": false, 
+                                          "children": [
+                                            {
+                                              "text": "Datos personales", 
+                                              "scrollable-vertical": false, 
+                                              "adapter-view": false, 
+                                              "pointer": "fb94865", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                112, 
+                                                1384, 
+                                                169
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": false, 
+                                              "long-clickable": false, 
+                                              "visibility": "visible", 
+                                              "focused": false, 
+                                              "clickable": false, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "android.support.v7.widget.AppCompatTextView", 
+                                              "visible-to-user": true, 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                392, 
+                                                1384, 
+                                                449
+                                              ], 
+                                              "pressed": "not_pressed"
+                                            }, 
+                                            {
+                                              "text": "RaphaelTan", 
+                                              "resource-id": "net.infojobs.mobile.android:id/et_name", 
+                                              "adapter-view": false, 
+                                              "pointer": "910c93a", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.EditText", 
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                169, 
+                                                1384, 
+                                                361
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": true, 
+                                              "long-clickable": true, 
+                                              "visibility": "visible", 
+                                              "text-hint": "Nombre", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "com.rengwuxian.materialedittext.MaterialEditText", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                449, 
+                                                1384, 
+                                                641
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "text": "", 
+                                              "resource-id": "net.infojobs.mobile.android:id/et_surname", 
+                                              "adapter-view": false, 
+                                              "pointer": "65189eb", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.EditText", 
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                417, 
+                                                1384, 
+                                                658
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": true, 
+                                              "long-clickable": true, 
+                                              "visibility": "visible", 
+                                              "text-hint": "Primer apellido", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "com.rengwuxian.materialedittext.MaterialEditText", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                697, 
+                                                1384, 
+                                                938
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "text": "Datos de la cuenta", 
+                                              "scrollable-vertical": false, 
+                                              "adapter-view": false, 
+                                              "pointer": "f7f8348", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                770, 
+                                                1384, 
+                                                827
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": false, 
+                                              "long-clickable": false, 
+                                              "visibility": "visible", 
+                                              "focused": false, 
+                                              "clickable": false, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "android.support.v7.widget.AppCompatTextView", 
+                                              "visible-to-user": true, 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                1050, 
+                                                1384, 
+                                                1107
+                                              ], 
+                                              "pressed": "not_pressed"
+                                            }, 
+                                            {
+                                              "text": "appcrawler2@gmail.com", 
+                                              "resource-id": "net.infojobs.mobile.android:id/et_email", 
+                                              "adapter-view": false, 
+                                              "pointer": "4fb05e1", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.EditText", 
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                827, 
+                                                1384, 
+                                                1019
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": true, 
+                                              "long-clickable": true, 
+                                              "visibility": "visible", 
+                                              "text-hint": "Email", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "com.rengwuxian.materialedittext.MaterialEditText", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                1107, 
+                                                1384, 
+                                                1299
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "text": "Entrar en Infojobs", 
+                                              "resource-id": "net.infojobs.mobile.android:id/bt_login", 
+                                              "adapter-view": false, 
+                                              "pointer": "7b23f06", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                0, 
+                                                0, 
+                                                0, 
+                                                0
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": false, 
+                                              "long-clickable": false, 
+                                              "visibility": "gone", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "android.support.v7.widget.AppCompatTextView", 
+                                              "visible-to-user": false, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                0, 
+                                                280, 
+                                                0, 
+                                                280
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "scrollable-horizontal": false, 
+                                              "draw": true, 
+                                              "ancestors": [
+                                                "android.view.ViewGroup", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "clickable": false, 
+                                              "pressed": "not_pressed", 
+                                              "focusable": false, 
+                                              "long-clickable": false, 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                1383, 
+                                                1384, 
+                                                1631
+                                              ], 
+                                              "visibility": "visible", 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                1103, 
+                                                1384, 
+                                                1351
+                                              ], 
+                                              "focused": false, 
+                                              "selected": false, 
+                                              "scrollable-vertical": false, 
+                                              "children": [
+                                                {
+                                                  "text": "Crowd3116", 
+                                                  "resource-id": "net.infojobs.mobile.android:id/et_password", 
+                                                  "adapter-view": false, 
+                                                  "pointer": "3ad8bf4", 
+                                                  "scrollable-horizontal": false, 
+                                                  "ancestors": [
+                                                    "android.widget.EditText", 
+                                                    "android.widget.TextView", 
+                                                    "android.view.View", 
+                                                    "java.lang.Object"
+                                                  ], 
+                                                  "selected": false, 
+                                                  "content-desc": [
+                                                    null
+                                                  ], 
+                                                  "rel-bounds": [
+                                                    0, 
+                                                    0, 
+                                                    1328, 
+                                                    192
+                                                  ], 
+                                                  "draw": false, 
+                                                  "focusable": true, 
+                                                  "long-clickable": true, 
+                                                  "visibility": "visible", 
+                                                  "text-hint": "Contrase\u00f1a (m\u00ednimo 8 caracteres)", 
+                                                  "focused": true, 
+                                                  "clickable": true, 
+                                                  "abs-pos": true, 
+                                                  "font-family": "default", 
+                                                  "class": "com.rengwuxian.materialedittext.MaterialEditText", 
+                                                  "visible-to-user": true, 
+                                                  "package": "net.infojobs.mobile.android", 
+                                                  "enabled": true, 
+                                                  "bounds": [
+                                                    56, 
+                                                    1383, 
+                                                    1384, 
+                                                    1575
+                                                  ], 
+                                                  "pressed": "not_pressed", 
+                                                  "scrollable-vertical": false
+                                                }, 
+                                                {
+                                                  "text": "Mostrar", 
+                                                  "resource-id": "net.infojobs.mobile.android:id/bt_show_password", 
+                                                  "adapter-view": false, 
+                                                  "pointer": "4411f1d", 
+                                                  "scrollable-horizontal": false, 
+                                                  "ancestors": [
+                                                    "android.widget.TextView", 
+                                                    "android.view.View", 
+                                                    "java.lang.Object"
+                                                  ], 
+                                                  "selected": false, 
+                                                  "content-desc": [
+                                                    null
+                                                  ], 
+                                                  "rel-bounds": [
+                                                    1040, 
+                                                    42, 
+                                                    1328, 
+                                                    164
+                                                  ], 
+                                                  "draw": false, 
+                                                  "focusable": false, 
+                                                  "long-clickable": false, 
+                                                  "visibility": "visible", 
+                                                  "focused": false, 
+                                                  "clickable": true, 
+                                                  "abs-pos": true, 
+                                                  "font-family": "default", 
+                                                  "class": "android.support.v7.widget.AppCompatTextView", 
+                                                  "visible-to-user": true, 
+                                                  "package": "net.infojobs.mobile.android", 
+                                                  "enabled": true, 
+                                                  "bounds": [
+                                                    1096, 
+                                                    1425, 
+                                                    1384, 
+                                                    1547
+                                                  ], 
+                                                  "pressed": "not_pressed", 
+                                                  "scrollable-vertical": false
+                                                }
+                                              ], 
+                                              "adapter-view": false, 
+                                              "abs-pos": true, 
+                                              "pointer": "abcd9c7", 
+                                              "class": "android.widget.RelativeLayout", 
+                                              "visible-to-user": true
+                                            }, 
+                                            {
+                                              "resource-id": "net.infojobs.mobile.android:id/rl_password_security", 
+                                              "adapter-view": false, 
+                                              "pointer": "4a34592", 
+                                              "children": [
+                                                {
+                                                  "text": "Seguridad: Alta", 
+                                                  "resource-id": "net.infojobs.mobile.android:id/tv_password_security", 
+                                                  "adapter-view": false, 
+                                                  "pointer": "9a34b63", 
+                                                  "scrollable-horizontal": false, 
+                                                  "ancestors": [
+                                                    "android.widget.TextView", 
+                                                    "android.view.View", 
+                                                    "java.lang.Object"
+                                                  ], 
+                                                  "selected": false, 
+                                                  "content-desc": [
+                                                    null
+                                                  ], 
+                                                  "rel-bounds": [
+                                                    0, 
+                                                    28, 
+                                                    1328, 
+                                                    85
+                                                  ], 
+                                                  "draw": false, 
+                                                  "focusable": false, 
+                                                  "long-clickable": false, 
+                                                  "visibility": "visible", 
+                                                  "focused": false, 
+                                                  "clickable": false, 
+                                                  "abs-pos": true, 
+                                                  "font-family": "default", 
+                                                  "class": "android.support.v7.widget.AppCompatTextView", 
+                                                  "visible-to-user": true, 
+                                                  "package": "net.infojobs.mobile.android", 
+                                                  "enabled": true, 
+                                                  "bounds": [
+                                                    56, 
+                                                    1659, 
+                                                    1384, 
+                                                    1716
+                                                  ], 
+                                                  "pressed": "not_pressed", 
+                                                  "scrollable-vertical": false
+                                                }, 
+                                                {
+                                                  "scrollable-horizontal": false, 
+                                                  "draw": true, 
+                                                  "ancestors": [
+                                                    "android.view.ViewGroup", 
+                                                    "android.view.View", 
+                                                    "java.lang.Object"
+                                                  ], 
+                                                  "clickable": false, 
+                                                  "pressed": "not_pressed", 
+                                                  "focusable": false, 
+                                                  "long-clickable": false, 
+                                                  "enabled": true, 
+                                                  "bounds": [
+                                                    56, 
+                                                    1730, 
+                                                    1384, 
+                                                    1744
+                                                  ], 
+                                                  "visibility": "visible", 
+                                                  "content-desc": [
+                                                    null
+                                                  ], 
+                                                  "rel-bounds": [
+                                                    0, 
+                                                    99, 
+                                                    1328, 
+                                                    113
+                                                  ], 
+                                                  "focused": false, 
+                                                  "selected": false, 
+                                                  "scrollable-vertical": false, 
+                                                  "children": [
+                                                    {
+                                                      "resource-id": "net.infojobs.mobile.android:id/v_password_security_1", 
+                                                      "adapter-view": false, 
+                                                      "pointer": "dd59019", 
+                                                      "scrollable-horizontal": false, 
+                                                      "ancestors": [
+                                                        "java.lang.Object"
+                                                      ], 
+                                                      "selected": false, 
+                                                      "content-desc": [
+                                                        null
+                                                      ], 
+                                                      "rel-bounds": [
+                                                        0, 
+                                                        0, 
+                                                        443, 
+                                                        14
+                                                      ], 
+                                                      "draw": false, 
+                                                      "focusable": false, 
+                                                      "long-clickable": false, 
+                                                      "visibility": "visible", 
+                                                      "focused": false, 
+                                                      "clickable": false, 
+                                                      "abs-pos": true, 
+                                                      "class": "android.view.View", 
+                                                      "visible-to-user": true, 
+                                                      "package": "net.infojobs.mobile.android", 
+                                                      "enabled": true, 
+                                                      "bounds": [
+                                                        56, 
+                                                        1730, 
+                                                        499, 
+                                                        1744
+                                                      ], 
+                                                      "pressed": "not_pressed", 
+                                                      "scrollable-vertical": false
+                                                    }, 
+                                                    {
+                                                      "resource-id": "net.infojobs.mobile.android:id/v_password_security_2", 
+                                                      "adapter-view": false, 
+                                                      "pointer": "22c28de", 
+                                                      "scrollable-horizontal": false, 
+                                                      "ancestors": [
+                                                        "java.lang.Object"
+                                                      ], 
+                                                      "selected": false, 
+                                                      "content-desc": [
+                                                        null
+                                                      ], 
+                                                      "rel-bounds": [
+                                                        443, 
+                                                        0, 
+                                                        886, 
+                                                        14
+                                                      ], 
+                                                      "draw": false, 
+                                                      "focusable": false, 
+                                                      "long-clickable": false, 
+                                                      "visibility": "visible", 
+                                                      "focused": false, 
+                                                      "clickable": false, 
+                                                      "abs-pos": true, 
+                                                      "class": "android.view.View", 
+                                                      "visible-to-user": true, 
+                                                      "package": "net.infojobs.mobile.android", 
+                                                      "enabled": true, 
+                                                      "bounds": [
+                                                        499, 
+                                                        1730, 
+                                                        942, 
+                                                        1744
+                                                      ], 
+                                                      "pressed": "not_pressed", 
+                                                      "scrollable-vertical": false
+                                                    }, 
+                                                    {
+                                                      "resource-id": "net.infojobs.mobile.android:id/v_password_security_3", 
+                                                      "adapter-view": false, 
+                                                      "pointer": "af53abf", 
+                                                      "scrollable-horizontal": false, 
+                                                      "ancestors": [
+                                                        "java.lang.Object"
+                                                      ], 
+                                                      "selected": false, 
+                                                      "content-desc": [
+                                                        null
+                                                      ], 
+                                                      "rel-bounds": [
+                                                        886, 
+                                                        0, 
+                                                        1328, 
+                                                        14
+                                                      ], 
+                                                      "draw": false, 
+                                                      "focusable": false, 
+                                                      "long-clickable": false, 
+                                                      "visibility": "visible", 
+                                                      "focused": false, 
+                                                      "clickable": false, 
+                                                      "abs-pos": true, 
+                                                      "class": "android.view.View", 
+                                                      "visible-to-user": true, 
+                                                      "package": "net.infojobs.mobile.android", 
+                                                      "enabled": true, 
+                                                      "bounds": [
+                                                        942, 
+                                                        1730, 
+                                                        1384, 
+                                                        1744
+                                                      ], 
+                                                      "pressed": "not_pressed", 
+                                                      "scrollable-vertical": false
+                                                    }
+                                                  ], 
+                                                  "adapter-view": false, 
+                                                  "abs-pos": true, 
+                                                  "pointer": "d117360", 
+                                                  "class": "android.widget.LinearLayout", 
+                                                  "visible-to-user": true
+                                                }
+                                              ], 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.view.ViewGroup", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                1351, 
+                                                1384, 
+                                                1464
+                                              ], 
+                                              "draw": true, 
+                                              "focusable": false, 
+                                              "long-clickable": false, 
+                                              "visibility": "visible", 
+                                              "focused": false, 
+                                              "clickable": false, 
+                                              "abs-pos": true, 
+                                              "class": "android.widget.LinearLayout", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                1631, 
+                                                1384, 
+                                                1744
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "text": "Al continuar aceptas las  Condiciones de uso  y la  Pol\u00edtica de env\u00edo de emails", 
+                                              "resource-id": "net.infojobs.mobile.android:id/legal_link", 
+                                              "adapter-view": false, 
+                                              "pointer": "10a658c", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                1464, 
+                                                1384, 
+                                                1727
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": true, 
+                                              "long-clickable": true, 
+                                              "visibility": "visible", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "android.support.v7.widget.AppCompatTextView", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                1744, 
+                                                1384, 
+                                                2007
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "text": "Continuar", 
+                                              "resource-id": "net.infojobs.mobile.android:id/bt_signup", 
+                                              "adapter-view": false, 
+                                              "pointer": "2a614d5", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                1783, 
+                                                1384, 
+                                                1961
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": true, 
+                                              "long-clickable": false, 
+                                              "visibility": "visible", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "android.support.v7.widget.AppCompatTextView", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                2063, 
+                                                1384, 
+                                                2241
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }, 
+                                            {
+                                              "text": "\u00bfYa tienes una cuenta?  Entra", 
+                                              "resource-id": "net.infojobs.mobile.android:id/enter_infojobs_link", 
+                                              "adapter-view": false, 
+                                              "pointer": "ccdf4ea", 
+                                              "scrollable-horizontal": false, 
+                                              "ancestors": [
+                                                "android.widget.TextView", 
+                                                "android.view.View", 
+                                                "java.lang.Object"
+                                              ], 
+                                              "selected": false, 
+                                              "content-desc": [
+                                                null
+                                              ], 
+                                              "rel-bounds": [
+                                                56, 
+                                                1961, 
+                                                693, 
+                                                2083
+                                              ], 
+                                              "draw": false, 
+                                              "focusable": true, 
+                                              "long-clickable": true, 
+                                              "visibility": "visible", 
+                                              "focused": false, 
+                                              "clickable": true, 
+                                              "abs-pos": true, 
+                                              "font-family": "default", 
+                                              "class": "android.support.v7.widget.AppCompatTextView", 
+                                              "visible-to-user": true, 
+                                              "package": "net.infojobs.mobile.android", 
+                                              "enabled": true, 
+                                              "bounds": [
+                                                56, 
+                                                2241, 
+                                                693, 
+                                                2363
+                                              ], 
+                                              "pressed": "not_pressed", 
+                                              "scrollable-vertical": false
+                                            }
+                                          ], 
+                                          "adapter-view": false, 
+                                          "abs-pos": true, 
+                                          "pointer": "d02ed5c", 
+                                          "class": "android.widget.LinearLayout", 
+                                          "visible-to-user": true
+                                        }
+                                      ], 
+                                      "scrollable-horizontal": false, 
+                                      "ancestors": [
+                                        "android.widget.FrameLayout", 
+                                        "android.view.ViewGroup", 
+                                        "android.view.View", 
+                                        "java.lang.Object"
+                                      ], 
+                                      "selected": false, 
+                                      "content-desc": [
+                                        null
+                                      ], 
+                                      "rel-bounds": [
+                                        0, 
+                                        0, 
+                                        1440, 
+                                        2112
+                                      ], 
+                                      "draw": false, 
+                                      "focusable": true, 
+                                      "long-clickable": false, 
+                                      "visibility": "visible", 
+                                      "focused": false, 
+                                      "clickable": false, 
+                                      "abs-pos": true, 
+                                      "class": "android.widget.ScrollView", 
+                                      "visible-to-user": true, 
+                                      "package": "net.infojobs.mobile.android", 
+                                      "enabled": true, 
+                                      "bounds": [
+                                        0, 
+                                        280, 
+                                        1440, 
+                                        2392
+                                      ], 
+                                      "pressed": "not_pressed", 
+                                      "scrollable-vertical": true
+                                    }, 
+                                    {
+                                      "resource-id": "net.infojobs.mobile.android:id/spb", 
+                                      "adapter-view": false, 
+                                      "pointer": "b4cc3db", 
+                                      "scrollable-horizontal": false, 
+                                      "ancestors": [
+                                        "android.widget.ProgressBar", 
+                                        "android.view.View", 
+                                        "java.lang.Object"
+                                      ], 
+                                      "selected": false, 
+                                      "content-desc": [
+                                        null
+                                      ], 
+                                      "rel-bounds": [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                      ], 
+                                      "draw": false, 
+                                      "focusable": false, 
+                                      "long-clickable": false, 
+                                      "visibility": "gone", 
+                                      "focused": false, 
+                                      "clickable": false, 
+                                      "abs-pos": true, 
+                                      "class": "fr.castorflex.android.smoothprogressbar.SmoothProgressBar", 
+                                      "visible-to-user": false, 
+                                      "package": "net.infojobs.mobile.android", 
+                                      "enabled": true, 
+                                      "bounds": [
+                                        0, 
+                                        280, 
+                                        0, 
+                                        280
+                                      ], 
+                                      "pressed": "not_pressed", 
+                                      "scrollable-vertical": false
+                                    }
+                                  ], 
+                                  "adapter-view": false, 
+                                  "abs-pos": true, 
+                                  "pointer": "aa3582e", 
+                                  "class": "android.widget.RelativeLayout", 
+                                  "visible-to-user": true
+                                }, 
+                                {
+                                  "resource-id": "net.infojobs.mobile.android:id/notification_root", 
+                                  "adapter-view": false, 
+                                  "pointer": "64b0a85", 
+                                  "children": [
+                                    {
+                                      "text": "Corrige los campos con error para continuar", 
+                                      "resource-id": "net.infojobs.mobile.android:id/notification_message", 
+                                      "adapter-view": false, 
+                                      "pointer": "30630da", 
+                                      "scrollable-horizontal": false, 
+                                      "ancestors": [
+                                        "android.widget.TextView", 
+                                        "android.view.View", 
+                                        "java.lang.Object"
+                                      ], 
+                                      "selected": false, 
+                                      "content-desc": [
+                                        null
+                                      ], 
+                                      "rel-bounds": [
+                                        0, 
+                                        0, 
+                                        1440, 
+                                        178
+                                      ], 
+                                      "draw": false, 
+                                      "focusable": false, 
+                                      "long-clickable": false, 
+                                      "visibility": "visible", 
+                                      "focused": false, 
+                                      "clickable": false, 
+                                      "abs-pos": true, 
+                                      "font-family": "default", 
+                                      "class": "android.support.v7.widget.AppCompatTextView", 
+                                      "visible-to-user": true, 
+                                      "package": "net.infojobs.mobile.android", 
+                                      "enabled": true, 
+                                      "bounds": [
+                                        0, 
+                                        280, 
+                                        1440, 
+                                        458
+                                      ], 
+                                      "pressed": "not_pressed", 
+                                      "scrollable-vertical": false
+                                    }, 
+                                    {
+                                      "resource-id": "net.infojobs.mobile.android:id/notification_cancel", 
+                                      "adapter-view": false, 
+                                      "pointer": "f21690b", 
+                                      "scrollable-horizontal": false, 
+                                      "ancestors": [
+                                        "android.widget.ImageView", 
+                                        "android.view.View", 
+                                        "java.lang.Object"
+                                      ], 
+                                      "selected": false, 
+                                      "content-desc": [
+                                        null
+                                      ], 
+                                      "rel-bounds": [
+                                        0, 
+                                        0, 
+                                        0, 
+                                        0
+                                      ], 
+                                      "draw": false, 
+                                      "focusable": false, 
+                                      "long-clickable": false, 
+                                      "visibility": "gone", 
+                                      "focused": false, 
+                                      "clickable": false, 
+                                      "abs-pos": true, 
+                                      "class": "android.support.v7.widget.AppCompatImageView", 
+                                      "visible-to-user": false, 
+                                      "package": "net.infojobs.mobile.android", 
+                                      "enabled": true, 
+                                      "bounds": [
+                                        0, 
+                                        280, 
+                                        0, 
+                                        280
+                                      ], 
+                                      "pressed": "not_pressed", 
+                                      "scrollable-vertical": false
+                                    }
+                                  ], 
+                                  "scrollable-horizontal": false, 
+                                  "ancestors": [
+                                    "android.view.ViewGroup", 
+                                    "android.view.View", 
+                                    "java.lang.Object"
+                                  ], 
+                                  "selected": false, 
+                                  "content-desc": [
+                                    null
+                                  ], 
+                                  "rel-bounds": [
+                                    0, 
+                                    0, 
+                                    1440, 
+                                    196
+                                  ], 
+                                  "draw": true, 
+                                  "focusable": false, 
+                                  "long-clickable": false, 
+                                  "visibility": "visible", 
+                                  "focused": false, 
+                                  "clickable": true, 
+                                  "abs-pos": true, 
+                                  "class": "android.widget.LinearLayout", 
+                                  "visible-to-user": true, 
+                                  "package": "net.infojobs.mobile.android", 
+                                  "enabled": true, 
+                                  "bounds": [
+                                    0, 
+                                    280, 
+                                    1440, 
+                                    476
+                                  ], 
+                                  "pressed": "not_pressed", 
+                                  "scrollable-vertical": false
+                                }
+                              ], 
+                              "scrollable-horizontal": false, 
+                              "ancestors": [
+                                "android.view.ViewGroup", 
+                                "android.view.View", 
+                                "java.lang.Object"
+                              ], 
+                              "selected": false, 
+                              "content-desc": [
+                                null
+                              ], 
+                              "rel-bounds": [
+                                0, 
+                                280, 
+                                1440, 
+                                2392
+                              ], 
+                              "draw": true, 
+                              "focusable": false, 
+                              "long-clickable": false, 
+                              "visibility": "visible", 
+                              "focused": false, 
+                              "clickable": false, 
+                              "abs-pos": true, 
+                              "class": "android.widget.FrameLayout", 
+                              "visible-to-user": true, 
+                              "package": "net.infojobs.mobile.android", 
+                              "enabled": true, 
+                              "bounds": [
+                                0, 
+                                280, 
+                                1440, 
+                                2392
+                              ], 
+                              "pressed": "not_pressed", 
+                              "scrollable-vertical": false
+                            }, 
+                            {
+                              "scrollable-horizontal": false, 
+                              "draw": false, 
+                              "ancestors": [
+                                "java.lang.Object"
+                              ], 
+                              "clickable": false, 
+                              "pressed": "not_pressed", 
+                              "focusable": false, 
+                              "long-clickable": false, 
+                              "enabled": true, 
+                              "bounds": [
+                                0, 
+                                280, 
+                                1440, 
+                                301
+                              ], 
+                              "visibility": "visible", 
+                              "content-desc": [
+                                null
+                              ], 
+                              "rel-bounds": [
+                                0, 
+                                280, 
+                                1440, 
+                                301
+                              ], 
+                              "focused": false, 
+                              "selected": false, 
+                              "scrollable-vertical": false, 
+                              "adapter-view": false, 
+                              "abs-pos": true, 
+                              "pointer": "9be4e78", 
+                              "class": "android.view.View", 
+                              "visible-to-user": true
+                            }
+                          ], 
+                          "scrollable-horizontal": false, 
+                          "ancestors": [
+                            "android.view.ViewGroup", 
+                            "android.view.View", 
+                            "java.lang.Object"
+                          ], 
+                          "selected": false, 
+                          "content-desc": [
+                            null
+                          ], 
+                          "rel-bounds": [
+                            0, 
+                            0, 
+                            1440, 
+                            2392
+                          ], 
+                          "draw": true, 
+                          "focusable": false, 
+                          "long-clickable": false, 
+                          "visibility": "visible", 
+                          "focused": false, 
+                          "clickable": false, 
+                          "abs-pos": true, 
+                          "class": "android.widget.RelativeLayout", 
+                          "visible-to-user": true, 
+                          "package": "net.infojobs.mobile.android", 
+                          "enabled": true, 
+                          "bounds": [
+                            0, 
+                            0, 
+                            1440, 
+                            2392
+                          ], 
+                          "pressed": "not_pressed", 
+                          "scrollable-vertical": false
+                        }
+                      ], 
+                      "scrollable-horizontal": false, 
+                      "ancestors": [
+                        "android.widget.FrameLayout", 
+                        "android.view.ViewGroup", 
+                        "android.view.View", 
+                        "java.lang.Object"
+                      ], 
+                      "selected": false, 
+                      "content-desc": [
+                        null
+                      ], 
+                      "rel-bounds": [
+                        0, 
+                        0, 
+                        1440, 
+                        2392
+                      ], 
+                      "draw": true, 
+                      "focusable": false, 
+                      "long-clickable": false, 
+                      "visibility": "visible", 
+                      "focused": false, 
+                      "clickable": false, 
+                      "abs-pos": true, 
+                      "class": "android.support.v7.widget.ContentFrameLayout", 
+                      "visible-to-user": true, 
+                      "package": "android", 
+                      "enabled": true, 
+                      "bounds": [
+                        0, 
+                        0, 
+                        1440, 
+                        2392
+                      ], 
+                      "pressed": "not_pressed", 
+                      "scrollable-vertical": false
+                    }
+                  ], 
+                  "scrollable-horizontal": false, 
+                  "ancestors": [
+                    "android.widget.LinearLayout", 
+                    "android.view.ViewGroup", 
+                    "android.view.View", 
+                    "java.lang.Object"
+                  ], 
+                  "selected": false, 
+                  "content-desc": [
+                    null
+                  ], 
+                  "rel-bounds": [
+                    0, 
+                    0, 
+                    1440, 
+                    2392
+                  ], 
+                  "draw": true, 
+                  "focusable": false, 
+                  "long-clickable": false, 
+                  "visibility": "visible", 
+                  "focused": false, 
+                  "clickable": false, 
+                  "abs-pos": true, 
+                  "class": "android.support.v7.widget.FitWindowsLinearLayout", 
+                  "visible-to-user": true, 
+                  "package": "net.infojobs.mobile.android", 
+                  "enabled": true, 
+                  "bounds": [
+                    0, 
+                    0, 
+                    1440, 
+                    2392
+                  ], 
+                  "pressed": "not_pressed", 
+                  "scrollable-vertical": false
+                }
+              ], 
+              "adapter-view": false, 
+              "abs-pos": true, 
+              "pointer": "f5977f5", 
+              "class": "android.widget.FrameLayout", 
+              "visible-to-user": true
+            }
+          ], 
+          "adapter-view": false, 
+          "abs-pos": true, 
+          "pointer": "935e0df", 
+          "class": "android.widget.LinearLayout", 
+          "visible-to-user": true
+        }, 
+        {
+          "resource-id": "android:id/navigationBarBackground", 
+          "adapter-view": false, 
+          "pointer": "ac02951", 
+          "scrollable-horizontal": false, 
+          "ancestors": [
+            "java.lang.Object"
+          ], 
+          "selected": false, 
+          "content-desc": [
+            null
+          ], 
+          "rel-bounds": [
+            0, 
+            2392, 
+            1440, 
+            2560
+          ], 
+          "draw": false, 
+          "focusable": false, 
+          "long-clickable": false, 
+          "visibility": "visible", 
+          "focused": false, 
+          "clickable": false, 
+          "abs-pos": true, 
+          "class": "android.view.View", 
+          "visible-to-user": true, 
+          "package": "android", 
+          "enabled": true, 
+          "bounds": [
+            0, 
+            2392, 
+            1440, 
+            2560
+          ], 
+          "pressed": "not_pressed", 
+          "scrollable-vertical": false
+        }
+      ], 
+      "adapter-view": false, 
+      "abs-pos": true, 
+      "pointer": "74d137e", 
+      "class": "com.android.internal.policy.PhoneWindow$DecorView", 
+      "visible-to-user": true
+    }, 
+    "added_fragments": [], 
+    "active_fragments": []
+  }, 
+  "is_keyboard_deployed": false, 
+  "request_id": "710"
+}

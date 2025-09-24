@@ -18,9 +18,9 @@ async function loadDataset() {
     const idMap = {};
     const opisMap = {};
     rows.slice(1).forEach(r => {
-        idMap[r[0]] = r[1];
-        ///opisMap[+r[0]] = r[2];
-        opisMap[+r[1]] = r[2];
+        //idMap[r[0]] = r[1];
+        //opisMap[+r[0]] = r[2];
+        opisMap[+r[0]] = r[1];
     });
     return [opisMap, idMap];
 }
@@ -34,7 +34,7 @@ function createPrototype(index, id) {
     div.appendChild(h3);
 
     const iframe = document.createElement("iframe");
-    iframe.src = `generated_guis_mm/${id}/${METHOD[index-1]}.html`;
+    iframe.src = `generated_guis/${id}/${METHOD[index-1]}.html`;
     div.appendChild(iframe);
 
     CRITERIA.forEach((crit) => {

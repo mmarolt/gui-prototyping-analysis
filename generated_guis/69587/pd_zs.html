@@ -1,111 +1,352 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Mobile Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
-        }
-        .search-bar {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .email-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            max-height: 500px; /* Example fixed height for scroll */
-            overflow-y: auto;
-        }
-        .email-list-item {
-            background-color: #fff;
-            border-bottom: 1px solid #eee;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .email-details {
-            flex-grow: 1;
-        }
-        .sender {
-            font-weight: bold;
-        }
-        .unread .sender,
-        .unread .subject {
-            font-weight: bold;
-            color: #000;
-        }
-        .snippet {
-            color: #666;
-            font-size: 0.9em;
-        }
-        .email-actions {
-            display: flex;
-            gap: 10px;
-        }
-        .email-actions button {
-            background: none;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-        }
-        .email-actions img {
-            width: 20px;
-            height: 20px;
-        }
-        /* Media query for responsive adjustments */
-        @media (max-width: 375px) {
-            .email-list-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .email-actions {
-                justify-content: space-between;
-                width: 100%;
-                padding-top: 10px;
-            }
-        }
-    </style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Inbox</title>
+<style>
+/* General Styles */
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f8f8;
+}
+
+/* Top Navigation Bar */
+.top-nav {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd; /* Subtle border */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;  /* Important for width */
+  z-index: 100; /* Ensure it stays on top */
+}
+
+.top-nav h1 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: normal;
+}
+
+.top-nav .account-indicator {
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.top-nav .icons {
+    display: flex;
+    align-items: center;
+}
+
+.top-nav .icons img {
+  width: 24px;
+  height: 24px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Email List Area */
+.email-list {
+  padding: 10px;
+  margin-top: 50px; /* Account for fixed top nav */
+}
+
+.email-item {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  display: flex;
+  align-items: center;
+}
+
+.email-item .sender-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd;
+  margin-right: 10px;
+  overflow: hidden;  /* Ensure image stays within the circle */
+}
+
+.email-item .sender-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Maintain aspect ratio and fill the container */
+}
+
+.email-item .email-content {
+  flex: 1;
+}
+
+.email-item .email-content .sender-name {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.email-item .email-content .subject {
+  font-weight: normal;
+  margin-bottom: 3px;
+}
+
+.email-item .email-content .preview {
+  color: #666;
+  font-size: 0.9em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.email-item .timestamp {
+  font-size: 0.8em;
+  color: #888;
+  margin-left: 10px;
+}
+
+.email-item .unread-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: blue;
+  margin-left: 10px;
+}
+
+.email-item .attachment-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.email-item .flag-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 99; /* Ensure it is above other elements */
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  margin-top: 60px;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  margin-top: 60px;
+}
+
+/* Selection Mode */
+.email-item.selected {
+  background-color: #e0f7fa; /* Light blue highlight */
+}
+
+.selection-checkbox {
+  margin-right: 10px;
+}
+
+/* Contextual Action Bar (displayed in selection mode) */
+.contextual-action-bar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 101;
+}
+
+.contextual-action-bar button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    margin: 0 5px;
+}
+</style>
 </head>
 <body>
 
-    <div class="header">
-        <input type="text" class="search-bar" placeholder="Search emails">
-    </div>
+<div class="top-nav">
+  <img src="menu-icon.png" alt="Menu" class="menu-icon">
+  <h1>Inbox</h1>
+  <div class="icons">
+    <img src="search-icon.png" alt="Search">
+    <span class="account-indicator">JD</span>
+  </div>
+</div>
 
-    <ul class="email-list">
-        <!-- Repeat this list item structure for each email -->
-        <li class="email-list-item unread">
-            <div class="email-details">
-                <div class="sender">John Doe</div>
-                <div class="subject">Meeting Reminder</div>
-                <div class="snippet">Don't forget our meeting at 10am...</div>
-            </div>
-            <div class="email-actions">
-                <button><img src="reply-icon.svg" alt="Reply"></button>
-                <button><img src="delete-icon.svg" alt="Delete"></button>
-            </div>
-        </li>
-        <!-- More list items would go here -->
-    </ul>
+<div class="email-list">
+
+  <div class="email-item">
+    <div class="sender-image">
+      <img src="user1.jpg" alt="Sender">
+    </div>
+    <div class="email-content">
+      <div class="sender-name">John Doe</div>
+      <div class="subject">Project Update</div>
+      <div class="preview">This is a preview of the email content...</div>
+    </div>
+    <span class="timestamp">10:30 AM</span>
+    <div class="unread-indicator"></div>
+    <img src="attachment.png" alt="Attachment" class="attachment-icon">
+    <img src="flag.png" alt="Flag" class="flag-icon">
+  </div>
+
+  <div class="email-item">
+    <div class="sender-image">
+      <img src="user2.jpg" alt="Sender">
+    </div>
+    <div class="email-content">
+      <div class="sender-name">Jane Smith</div>
+      <div class="subject">Meeting Reminder</div>
+      <div class="preview">Don't forget about our meeting tomorrow...</div>
+    </div>
+    <span class="timestamp">Yesterday</span>
+    <img src="attachment.png" alt="Attachment" class="attachment-icon">
+    <img src="flag.png" alt="Flag" class="flag-icon">
+  </div>
+
+  <!-- More email items... -->
+</div>
+
+<div class="fab">+</div>
+
+<!-- Empty State (initially hidden) -->
+<div class="empty-state" style="display: none;">
+  <p>Your inbox is empty.</p>
+</div>
+
+<!-- Loading Indicator (initially hidden) -->
+<div class="loading-indicator" style="display: none;">
+  <p>Loading...</p>
+</div>
+
+<!-- Contextual Action Bar (initially hidden) -->
+<div class="contextual-action-bar" style="display: none;">
+    <button>Cancel</button>
+    <span>2 Selected</span>
+    <div>
+        <button>Delete</button>
+        <button>Archive</button>
+    </div>
+</div>
+
+<script>
+  //Basic JavaScript for Selection Mode
+  const emailItems = document.querySelectorAll('.email-item');
+  const contextualActionBar = document.querySelector('.contextual-action-bar');
+  let selectionMode = false;
+  let selectedCount = 0;
+
+  emailItems.forEach(item => {
+    item.addEventListener('click', () => {
+      if (selectionMode) {
+        item.classList.toggle('selected');
+        updateSelectedCount();
+      } else {
+        // Open the email (replace with actual email opening logic)
+        alert('Opening email...');
+      }
+    });
+
+    item.addEventListener('longpress', (event) => { //Using a custom event for long press
+      event.preventDefault(); // Prevent default long press behavior
+      if (!selectionMode) {
+        selectionMode = true;
+        contextualActionBar.style.display = 'flex';
+        item.classList.add('selected');
+        selectedCount = 1;
+        updateSelectedCount();
+      }
+    });
+  });
+
+  // Simulate long press event (since it's not natively supported well)
+  emailItems.forEach(item => {
+      let pressTimer;
+      item.addEventListener('mousedown', function(e) {
+          pressTimer = window.setTimeout(function() {
+              const longPressEvent = new Event('longpress');
+              item.dispatchEvent(longPressEvent);
+          }, 500); // Adjust time as needed
+      });
+
+      item.addEventListener('mouseup', function(e) {
+          clearTimeout(pressTimer);
+      });
+      item.addEventListener('mouseleave', function(e) {
+          clearTimeout(pressTimer);
+      });
+
+      item.addEventListener('touchstart', function(e) {
+          pressTimer = window.setTimeout(function() {
+              const longPressEvent = new Event('longpress');
+              item.dispatchEvent(longPressEvent);
+          }, 500); // Adjust time as needed
+      });
+
+      item.addEventListener('touchend', function(e) {
+          clearTimeout(pressTimer);
+      });
+  });
+
+  function updateSelectedCount() {
+    selectedCount = document.querySelectorAll('.email-item.selected').length;
+    contextualActionBar.querySelector('span').textContent = `${selectedCount} Selected`;
+  }
+
+  contextualActionBar.querySelector('button:first-child').addEventListener('click', () => {
+    selectionMode = false;
+    contextualActionBar.style.display = 'none';
+    emailItems.forEach(item => item.classList.remove('selected'));
+    selectedCount = 0;
+  });
+</script>
 
 </body>
 </html>

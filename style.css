@@ -3,8 +3,8 @@ body {
     font-family: "Segoe UI", Roboto, Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #022B3A;
-    color: #cedfdd;
+    background: #011936;
+    color: #FFFFFF;
     line-height: 1.6;
 }
 
@@ -12,20 +12,20 @@ body {
 h1 {
     font-size: 1.6rem;
     margin: 20px 0 10px 0;
-    color: #cedfdd;
+    color: #FFFFFF;
     text-align: center;
 }
 
 h2 {
     font-size: 1.3rem;
     margin: 25px 0 10px 0;
-    color: #cedfdd;
+    color: #FFFFFF;
 }
 
 h3 {
     font-size: 1.1rem;
     margin: 15px 0 10px 0;
-    color: #cedfdd;
+    color: #FFFFFF;
 }
 
 /* Glavni vsebinski blok */
@@ -33,7 +33,7 @@ form {
     max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    background: #022B3A;
+    background: #011936;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
@@ -126,8 +126,53 @@ iframe {
 /* Mobilna prilagoditev */
 @media (min-width: 768px) {
     .criterion {
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: 1fr auto; /* naziv | zvezdice */
         align-items: center;
-        justify-content: space-between;
+        gap: 10px;
+        margin: 10px 0;
+        width: 100%;
+        /* odstrani max-width:500px, če je bila nastavitev prej */
     }
+
+    /* skrajšanje dolgega naziva (ne prelomi vrstice) */
+    .criterion span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+}
+
+/* Zvezdično ocenjevanje */
+.ratings-inline {
+    display: flex;
+    flex-direction: row-reverse; /* če uporabljaš ta ordering za funkcionalnost */
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0; /* prepreči, da bi se zvezdice stisnile */
+}
+
+.ratings-inline input {
+    display: none;
+}
+
+.ratings-inline label.star {
+    font-size: 1.6rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0 2px;
+}
+
+.ratings-inline input:checked ~ label.star,
+.ratings-inline label.star:hover,
+.ratings-inline label.star:hover ~ label.star {
+    color: gold;
+}
+
+@media (max-width: 360px) {
+    .criterion span { font-size: 0.9rem; }
+    .ratings-inline label.star { font-size: 1.4rem; }
 }

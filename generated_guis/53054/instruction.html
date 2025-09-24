@@ -1,74 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Search App</title>
+<title>Job Opportunities</title>
 <style>
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-  }
-  .header {
-    background-color: #007bff;
-    color: #ffffff;
-    text-align: center;
-    padding: 10px;
-  }
-  .job-listing {
-    background-color: #ffffff;
-    border-bottom: 1px solid #dddddd;
-    padding: 15px;
-    font-size: 14px;
-  }
-  .job-title {
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 5px;
-  }
-  .company {
-    color: #666666;
-    margin-bottom: 5px;
-  }
-  .location {
-    color: #666666;
-    margin-bottom: 10px;
-  }
-  .apply-button {
-    display: block;
-    text-align: center;
-    background-color: #28a745;
-    color: white;
-    padding: 10px 15px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-  }
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  max-width: 375px; /* Match the mobile screen width */
+  margin: 0 auto;
+}
+
+.header {
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.job-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.job-item {
+  background-color: white;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.job-title {
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.company {
+  font-style: italic;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.location {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.apply-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.apply-button:hover {
+  background-color: #218838;
+}
+
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>Job Opportunities</h1>
+
+<div class="container">
+  <div class="header">
+    Job Opportunities
+  </div>
+
+  <ul class="job-list">
+    <li class="job-item">
+      <h2 class="job-title">Software Engineer</h2>
+      <p class="company">Acme Corp</p>
+      <p class="location">San Francisco, CA</p>
+      <a href="#" class="apply-button">Apply Now</a>
+    </li>
+
+    <li class="job-item">
+      <h2 class="job-title">Data Scientist</h2>
+      <p class="company">Beta Industries</p>
+      <p class="location">New York, NY</p>
+      <a href="#" class="apply-button">Apply Now</a>
+    </li>
+
+    <li class="job-item">
+      <h2 class="job-title">Web Developer</h2>
+      <p class="company">Gamma Solutions</p>
+      <p class="location">London, UK</p>
+      <a href="#" class="apply-button">Apply Now</a>
+    </li>
+  </ul>
 </div>
-<div class="job-listing">
-  <div class="job-title">Front-end Developer</div>
-  <div class="company">TechCorp Inc.</div>
-  <div class="location">San Francisco, CA</div>
-  <a href="#" class="apply-button">Apply Now</a>
-</div>
-<div class="job-listing">
-  <div class="job-title">Back-end Developer</div>
-  <div class="company">DataSoft LLC</div>
-  <div class="location">New York, NY</div>
-  <a href="#" class="apply-button">Apply Now</a>
-</div>
-<div class="job-listing">
-  <div class="job-title">UI/UX Designer</div>
-  <div class="company">Creative Solutions</div>
-  <div class="location">Austin, TX</div>
-  <a href="#" class="apply-button">Apply Now</a>
-</div>
-<!-- More job listings can be added here -->
+
 </body>
 </html>

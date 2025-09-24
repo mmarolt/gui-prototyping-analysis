@@ -37,7 +37,9 @@ function createPrototype(index, id) {
     iframe.src = `generated_guis_mm/${id}/${METHOD[index-1]}.html`;
     div.appendChild(iframe);
 
-    CRITERIA.forEach((crit, cIndex) => {
+    CRITERIA.forEach((crit) => {
+        const cIndex = CRITERIA.indexOf(crit);
+
         const critDiv = document.createElement("div");
         critDiv.className = "criterion";
 
@@ -47,9 +49,20 @@ function createPrototype(index, id) {
 
         const ratingsDiv = document.createElement("div");
         ratingsDiv.className = "ratings-inline";
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 5; i >= 1; i--) {
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.id = `a${id}_p${index}_c${cIndex}_${i}`;
+            input.name = `a${id}_p${index}_c${cIndex}`;
+            input.value = i;
+            input.required = true;
+
             const label = document.createElement("label");
-            label.innerHTML = `<input type="radio" name="p${index}_c${cIndex}" value="${i}" required> ${i}`;
+            label.htmlFor = input.id;
+            label.className = "star";
+            label.textContent = "★";
+
+            ratingsDiv.appendChild(input);
             ratingsDiv.appendChild(label);
         }
         critDiv.appendChild(ratingsDiv);
@@ -91,22 +104,24 @@ loadDataset().then(([opisMap, idMap]) => {
     }
 });
 
-document.getElementById("surveyForm").addEventListener("submit", function(e) {
+document.getElementById("surveyForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {};
     formData.forEach((val, key) => { data[key] = val; });
 
-    let csv = "key,value\n";
-    for (let k in data) {
-        csv += `${k},${data[k]}\n`;
+    try {
+        const resp = await fetch("/netlify/functions/saveResponse", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+        });
+        if (resp.ok) {
+            alert("Hvala! Odgovori so bili shranjeni.");
+        } else {
+            alert("Napaka pri shranjevanju.");
+        }
+    } catch (err) {
+        alert("Težava s povezavo: " + err);
     }
-
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "results.csv";
-    a.click();
-    URL.revokeObjectURL(url);
 });

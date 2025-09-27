@@ -1,2 +1,3 @@
 /.env
-data/
+/gui-prototyping-analysis.iml
+.idea/

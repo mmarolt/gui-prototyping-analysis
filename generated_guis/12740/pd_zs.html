@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Entry & Setting</title>
+    <style>
+        /* General Body Styles for Mobile View */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align content to the top */
+            min-height: 100vh;
+            background-color: #f0f2f5;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased; /* Better font rendering */
+            -moz-osx-font-smoothing: grayscale; /* Better font rendering */
+        }
+
+        /* Main Screen Container - Simulates a mobile device screen */
+        .mobile-screen {
+            width: 100%;
+            max-width: 375px; /* Fixed width for mobile simulation */
+            height: 667px; /* Fixed height for mobile simulation */
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            padding: 0px 20px 20px 20px; /* Top padding handled by AppBar, bottom for keypad */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            position: relative;
+            overflow: hidden; /* Prevent content from spilling out */
+        }
+
+        /* Responsive adjustment for screens smaller than 667px height */
+        @media (max-height: 667px) {
+            .mobile-screen {
+                height: 100vh; /* Use full viewport height if less than 667px */
+            }
+        }
+
+        /* App Bar / Top Navigation */
+        .app-bar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 20px; /* Space below app bar */
+            min-height: 56px; /* Common AppBar height */
+            box-sizing: border-box;
+        }
+
+        .exit-button {
+            background: none;
+            border: none;
+            font-size: 1.8em; /* Larger X for better tap target */
+            color: #555;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 50%; /* Circular hit area */
+            transition: background-color 0.2s ease;
+            -webkit-tap-highlight-color: transparent; /* Remove default tap highlight */
+        }
+
+        .exit-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .exit-button:active {
+            background-color: #e0e0e0;
+        }
+
+        /* Instruction Label */
+        .instruction-label {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* Password Input Field/Indicators */
+        .password-input-field {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            height: 40px; /* Fixed height for consistent layout */
+        }
+
+        .placeholder-indicator {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            margin: 0 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+
+        .placeholder-indicator.filled {
+            background-color: #333;
+            border-color: #333;
+        }
+
+        .placeholder-indicator.active {
+            border-color: #007bff; /* Highlight color for active */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); /* Glow effect */
+            animation: pulse 1.2s infinite ease-in-out;
+        }
+
+        /* Keyframe animation for the active indicator pulse */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); }
+            50% { box-shadow: 0 0 0 6px rgba(0, 123, 255, 0.1); }
+            100% { box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3); }
+        }
+
+        /* Error/Success Message Display */
+        .message-display {
+            text-align: center;
+            font-size: 0.9em;
+            min-height: 20px; /* Reserve space to prevent layout shift */
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            will-change: opacity; /* Optimize for animation */
+        }
+
+        .message-display.error {
+            color: #dc3545;
+            opacity: 1;
+        }
+
+        .message-display.success {
+            color: #28a745;
+            opacity: 1;
+        }
+
+        /* Spacer to push keypad to bottom */
+        .spacer {
+            flex-grow: 1;
+        }
+
+        /* Numeric Keypad */
+        .numeric-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns, equal width */
+            gap: 15px; /* Spacing between buttons */
+            padding: 10px 0; /* Vertical padding for the keypad */
+            width: 100%; /* Occupy full width of the screen */
+            max-width: 300px; /* Adjust keypad width to be centered and not too wide */
+            margin: 0 auto; /* Center the keypad horizontally */
+        }
+
+        .keypad-button {
+            width: 70px; /* Fixed size for large tap target */
+            height: 70px;
+            border-radius: 50%; /* Circular buttons */
+            background-color: #e0e0e0;
+            border: none;
+            font-size: 1.8em;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            -webkit-tap-highlight-color: transparent; /* Remove default tap highlight on mobile */
+        }
+
+        .keypad-button:hover {
+            background-color: #d0d0d0;
+        }
+
+        .keypad-button:active {
+            background-color: #c0c0c0;
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .keypad-button.clear-button,
+        .keypad-button.ok-button {
+            font-size: 1.2em; /* Smaller text for action buttons */
+            font-weight: normal;
+        }
+
+        .keypad-button.ok-button {
+            background-color: #007bff; /* Primary brand color */
+            color: #ffffff;
+        }
+
+        .keypad-button.ok-button:hover {
+            background-color: #0056b3;
+        }
+
+        .keypad-button.ok-button:active {
+            background-color: #004085;
+        }
+
+        .keypad-button.ok-button:disabled {
+            background-color: #a0c4e7; /* Lighter blue for disabled state */
+            color: #e0e0e0;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        
+        /* Specific styling for the 'Clear' button icon (backspace symbol) */
+        .clear-button-icon {
+            font-size: 1.5em; /* Adjust size of the icon */
+            line-height: 1; /* Ensure it's centered vertically */
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <div class="app-bar">
+            <button class="exit-button" id="exitButton">
+                &times; <!-- Unicode 'times' symbol for exit/close -->
+            </button>
+        </div>
+
+        <div class="instruction-label" id="instructionLabel">
+            Enter new password
+        </div>
+
+        <div class="password-input-field" id="passwordInputField">
+            <div class="placeholder-indicator"></div>
+            <div class="placeholder-indicator"></div>
+            <div class="placeholder-indicator"></div>
+            <div class="placeholder-indicator"></div>
+        </div>
+
+        <div class="message-display" id="messageDisplay">
+            <!-- Error/Success messages will appear here -->
+        </div>
+
+        <div class="spacer"></div> <!-- Pushes keypad to the bottom -->
+
+        <div class="numeric-keypad" id="numericKeypad">
+            <button class="keypad-button digit-button" data-digit="1">1</button>
+            <button class="keypad-button digit-button" data-digit="2">2</button>
+            <button class="keypad-button digit-button" data-digit="3">3</button>
+
+            <button class="keypad-button digit-button" data-digit="4">4</button>
+            <button class="keypad-button digit-button" data-digit="5">5</button>
+            <button class="keypad-button digit-button" data-digit="6">6</button>
+
+            <button class="keypad-button digit-button" data-digit="7">7</button>
+            <button class="keypad-button digit-button" data-digit="8">8</button>
+            <button class="keypad-button digit-button" data-digit="9">9</button>
+
+            <button class="keypad-button clear-button" id="clearButton">
+                <span class="clear-button-icon">&#x232B;</span> <!-- Backspace symbol -->
+            </button>
+            <button class="keypad-button digit-button" data-digit="0">0</button>
+            <button class="keypad-button ok-button" id="okButton" disabled>OK</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DOM Element References ---
+        const instructionLabel = document.getElementById('instructionLabel');
+        const passwordIndicators = document.querySelectorAll('.placeholder-indicator');
+        const messageDisplay = document.getElementById('messageDisplay');
+        const numericKeypad = document.getElementById('numericKeypad');
+        const exitButton = document.getElementById('exitButton');
+        const clearButton = document.getElementById('clearButton');
+        const okButton = document.getElementById('okButton');
+
+        // --- State Variables ---
+        let _currentPassword = '';
+        let _firstEntryPassword = '';
+        let _currentStep = 'enterNew'; // Possible values: 'enterNew', 'confirmNew'
+        let _instructionText = 'Enter new password';
+        let _errorMessage = '';
+
+        const MAX_PASSWORD_LENGTH = 4;
+
+        // --- UI Update Function ---
+        // This function reflects the current state variables onto the UI elements.
+        function updateUI() {
+            instructionLabel.textContent = _instructionText;
+
+            // Update password indicators: filled status and active (next digit) indicator
+            passwordIndicators.forEach((indicator, index) => {
+                indicator.classList.remove('filled', 'active');
+                if (index < _currentPassword.length) {
+                    indicator.classList.add('filled');
+                }
+                // The indicator for the NEXT digit to be entered (if not full) is active
+                if (index === _currentPassword.length && _currentPassword.length < MAX_PASSWORD_LENGTH) {
+                    indicator.classList.add('active');
+                }
+            });
+
+            // Update message display (error/success)
+            messageDisplay.textContent = _errorMessage;
+            messageDisplay.classList.remove('error', 'success');
+            if (_errorMessage) {
+                if (_errorMessage.includes('successfully')) {
+                    messageDisplay.classList.add('success');
+                } else {
+                    messageDisplay.classList.add('error');
+                }
+                messageDisplay.style.opacity = '1'; // Make message visible
+            } else {
+                messageDisplay.style.opacity = '0'; // Hide message if empty
+            }
+
+            // Update OK button state: enabled only when password has 4 digits
+            okButton.disabled = _currentPassword.length !== MAX_PASSWORD_LENGTH;
+        }
+
+        // --- Event Handlers ---
+
+        // Handle clicks on the numeric keypad buttons
+        numericKeypad.addEventListener('click', (event) => {
+            const target = event.target.closest('.keypad-button'); // Use closest to handle clicks on child spans/icons
+            if (!target) return; // Not a keypad button
+
+            if (target.classList.contains('digit-button')) {
+                // Handle digit entry
+                const digit = target.dataset.digit;
+                if (_currentPassword.length < MAX_PASSWORD_LENGTH) {
+                    _currentPassword += digit;
+                    _errorMessage = ''; // Clear any previous error message on new input
+                    updateUI();
+                }
+            } else if (target.id === 'clearButton') {
+                // Handle 'Clear' button
+                _currentPassword = '';
+                _errorMessage = ''; // Clear any previous error message
+                updateUI();
+            } else if (target.id === 'okButton' && !target.disabled) {
+                // Handle 'OK' button only if it's enabled
+                handleOK();
+            }
+        });
+
+        // Handle 'Exit' button click
+        exitButton.addEventListener('click', () => {
+            alert('Exiting password setup. (In a real app, this would navigate back or close the modal.)');
+            // For demonstration, we could reset the state, but an alert is sufficient here.
+            _currentPassword = '';
+            _firstEntryPassword = '';
+            _currentStep = 'enterNew';
+            _instructionText = 'Enter new password';
+            _errorMessage = '';
+            updateUI();
+        });
+
+        // Logic for the 'OK' button press
+        function handleOK() {
+            if (_currentStep === 'enterNew') {
+                // Store the first entered password and move to confirmation step
+                _firstEntryPassword = _currentPassword;
+                _currentPassword = ''; // Clear current input for next step
+                _currentStep = 'confirmNew';
+                _instructionText = 'Re-enter password for confirmation';
+                _errorMessage = ''; // Clear any previous error
+            } else if (_currentStep === 'confirmNew') {
+                // Compare the re-entered password with the first one
+                if (_currentPassword === _firstEntryPassword) {
+                    _errorMessage = 'Password set successfully!';
+                    // Simulate a delay before navigating away or showing success screen
+                    setTimeout(() => {
+                        alert('Password successfully set!');
+                        // Reset all state to restart the process for demonstration purposes
+                        _currentPassword = '';
+                        _firstEntryPassword = '';
+                        _currentStep = 'enterNew';
+                        _instructionText = 'Enter new password';
+                        _errorMessage = '';
+                        updateUI();
+                    }, 1500); // Display success message for 1.5 seconds
+                } else {
+                    // Passwords do not match
+                    _errorMessage = 'Passwords do not match. Please try again.';
+                    _currentPassword = ''; // Clear current input for re-entry
+                    // As per description, restart the entire two-step process on mismatch
+                    _currentStep = 'enterNew';
+                    _firstEntryPassword = '';
+                    _instructionText = 'Enter new password';
+                }
+            }
+            updateUI(); // Update UI after state changes
+        }
+
+        // --- Initial Render ---
+        updateUI();
+    </script>
+</body>
+</html>

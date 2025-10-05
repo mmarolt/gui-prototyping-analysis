@@ -1,206 +1,953 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mobile Profile</title>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  color: #333;
-  line-height: 1.6;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile App UI Structure</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-.container {
-  width: 100%;
-  max-width: 375px; /* Target mobile screen width */
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box; /* Important for padding */
-}
+        /* Mobile Device Frame Simulation */
+        .mobile-frame {
+            width: 375px; /* Standard mobile width for simulation */
+            height: 667px; /* Standard mobile height for simulation */
+            background-color: #ffffff;
+            border: 8px solid #333;
+            border-radius: 36px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden; /* Hide overflowing content from screens */
+            display: flex;
+            flex-direction: column;
+        }
 
-.profile-header {
-  text-align: center;
-  margin-bottom: 20px;
-}
+        /* Screen Container */
+        .screen-container {
+            flex-grow: 1;
+            overflow: hidden; /* Hide individual screens when not active */
+            position: relative;
+        }
 
-.profile-image {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover; /* Maintain aspect ratio */
-  margin: 0 auto 10px;
-  display: block;
-  border: 3px solid #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
+        /* Individual Screen Styles */
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #ffffff;
+            display: none; /* Hide all screens by default */
+            flex-direction: column; /* Allow header, content, footer */
+            overflow: hidden; /* For scrollable content within */
+        }
 
-.profile-name {
-  font-size: 1.5em;
-  margin-bottom: 5px;
-}
+        /* Show active screen using :target pseudo-class */
+        .screen:target,
+        .screen.active { /* 'active' class for initial load or JS fallback */
+            display: flex;
+        }
 
-.profile-headline {
-  font-size: 1em;
-  color: #777;
-  margin-bottom: 10px;
-}
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            flex-shrink: 0; /* Prevent header from shrinking */
+            z-index: 10;
+        }
 
-.section {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.section-title {
-  font-size: 1.2em;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
-}
+        .header-icon {
+            font-size: 20px;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: none; /* For anchor icons */
+        }
 
-.experience-item {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-}
+        .header-title {
+            flex-grow: 1;
+            text-align: center;
+        }
 
-.experience-item:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
+        /* Main Content Area Styles */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto; /* Enable scrolling for content */
+            padding: 15px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
 
-.job-title {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+        /* Footer Styles (for screens with fixed buttons) */
+        .screen-footer {
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0; /* Prevent footer from shrinking */
+            z-index: 10;
+        }
 
-.company-name {
-  color: #555;
-  font-size: 0.9em;
-}
+        /* Bottom Navigation Bar Styles */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 60px;
+            background-color: #ffffff;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Prevent nav from shrinking */
+            z-index: 100; /* Ensure it's above other content */
+        }
 
-.skills-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-}
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 12px;
+            text-decoration: none;
+            padding: 5px 0;
+            transition: color 0.2s ease;
+            position: relative; /* For active indicator */
+        }
 
-.skill-item {
-  background-color: #e0e0e0;
-  padding: 5px 10px;
-  border-radius: 20px;
-  margin: 5px;
-  font-size: 0.8em;
-}
+        .nav-item-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
 
-/* Contact */
-.contact-info {
-    display: flex;
-    flex-direction: column;
-}
+        .nav-item.active {
+            color: #007bff; /* Active state color */
+        }
 
-.contact-info a {
-    text-decoration: none;
-    color: #007bff; /* Link color */
-    margin-bottom: 5px;
-    display: block;
-}
+        .nav-item.active .active-indicator {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background-color: #007bff;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
 
-.contact-info a:hover {
-    text-decoration: underline;
-}
+        /* General UI Elements */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            background-color: #e9ecef;
+            border-radius: 25px;
+            padding: 8px 15px;
+            margin-right: 10px;
+        }
 
-/* Responsive adjustments */
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
-  }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex-grow: 1;
+            font-size: 16px;
+            padding: 0 5px;
+        }
 
-  .profile-name {
-    font-size: 1.3em;
-  }
+        .search-bar .icon {
+            color: #6c757d;
+            margin-right: 5px;
+        }
 
-  .profile-headline {
-    font-size: 0.9em;
-  }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            width: calc(100% - 0px); /* Fill parent width */
+            box-sizing: border-box;
+        }
 
-  .section {
-    padding: 10px;
-  }
+        .button:hover {
+            background-color: #0056b3;
+        }
 
-  .section-title {
-    font-size: 1.1em;
-  }
-}
-</style>
+        .input-field, .textarea-field {
+            width: 100%;
+            padding: 12px 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .textarea-field {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .job-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .job-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .job-card p {
+            margin: 4px 0;
+            color: #666;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .job-card p .icon {
+            margin-right: 5px;
+            color: #888;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            margin-right: 10px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid #eee;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            height: 10px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 60%; /* Example progress */
+            background-color: #28a745;
+            border-radius: 5px;
+        }
+
+        .star-rating {
+            color: #ffc107;
+            font-size: 20px;
+        }
+
+        .review-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fcfcfc;
+        }
+
+        .review-card .reviewer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .review-card .reviewer-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .review-card .review-date {
+            color: #888;
+        }
+
+        .review-card .review-stars {
+            font-size: 16px;
+            color: #ffc107;
+            margin-bottom: 5px;
+        }
+
+        .review-card .review-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* Utility classes */
+        .text-center { text-align: center; }
+        .mb-15 { margin-bottom: 15px; }
+        .mt-15 { margin-top: 15px; }
+        .text-muted { color: #6c757d; }
+        .text-primary { color: #007bff; }
+        .flex-row { display: flex; flex-direction: row; }
+        .flex-column { display: flex; flex-direction: column; }
+        .align-center { align-items: center; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-10 { gap: 10px; }
+        .p-15 { padding: 15px; }
+        .rounded-full { border-radius: 50%; }
+        .w-full { width: 100%; }
+        .mb-0 { margin-bottom: 0 !important; }
+
+        /* Icon fonts (using unicode characters as placeholders) */
+        .icon-home::before { content: "🏠"; }
+        .icon-bookmark::before { content: "🔖"; }
+        .icon-message::before { content: "💬"; }
+        .icon-profile::before { content: "👤"; }
+        .icon-search::before { content: "🔍"; }
+        .icon-filter::before { content: "⚙️"; }
+        .icon-back::before { content: "⬅️"; }
+        .icon-save::before { content: "❤️"; }
+        .icon-share::before { content: "📤"; }
+        .icon-location::before { content: "📍"; }
+        .icon-money::before { content: "💰"; }
+        .icon-company::before { content: "🏢"; }
+        .icon-edit::before { content: "✏️"; }
+        .icon-add-video::before { content: "🎥"; }
+        .icon-upload::before { content: "⬆️"; }
+        .icon-trash::before { content: "🗑️"; }
+        .icon-cancel::before { content: "✖️"; }
+        .icon-star::before { content: "⭐"; }
+        .icon-play::before { content: "▶️"; }
+
+        /* Animation for loading spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
+    <div class="mobile-frame">
+        <div class="screen-container">
 
-  <div class="profile-header">
-    <img src="https://via.placeholder.com/100" alt="Profile Picture" class="profile-image">
-    <h1 class="profile-name">John Doe</h1>
-    <p class="profile-headline">Software Engineer</p>
-  </div>
+            <!-- 1. Home / Jobs Screen (Job Discovery - I.1) -->
+            <div id="home-screen" class="screen active">
+                <div class="header">
+                    <div class="search-bar">
+                        <span class="icon icon-search"></span>
+                        <input type="text" placeholder="Search for jobs...">
+                    </div>
+                    <span class="header-icon icon-filter"></span>
+                </div>
+                <div class="main-content">
+                    <h2>Recommended Jobs</h2>
 
-  <div class="section">
-    <h2 class="section-title">About Me</h2>
-    <p>Passionate software engineer with 5+ years of experience developing web and mobile applications. Expertise in JavaScript, React, and Node.js.</p>
-  </div>
+                    <div class="job-card">
+                        <a href="#job-details-screen" style="text-decoration: none; color: inherit;">
+                            <h3>Senior Software Engineer</h3>
+                            <div class="company-info">
+                                <img src="https://via.placeholder.com/40/007bff/FFFFFF?text=TS" alt="Company Logo" class="company-logo">
+                                <div>
+                                    <p class="mb-0"><span class="icon icon-company"></span> Tech Solutions Inc.</p>
+                                </div>
+                            </div>
+                            <p><span class="icon icon-location"></span> New York, NY</p>
+                            <p><span class="icon icon-money"></span> $120k - $150k / year</p>
+                            <button class="button" style="width: auto; padding: 8px 15px; margin-top: 10px; font-size: 14px;">Quick Apply</button>
+                        </a>
+                    </div>
 
-  <div class="section">
-    <h2 class="section-title">Experience</h2>
+                    <div class="job-card">
+                        <a href="#job-details-screen" style="text-decoration: none; color: inherit;">
+                            <h3>Product Manager</h3>
+                            <div class="company-info">
+                                <img src="https://via.placeholder.com/40/28a745/FFFFFF?text=IC" alt="Company Logo" class="company-logo">
+                                <div>
+                                    <p class="mb-0"><span class="icon icon-company"></span> Innovate Corp.</p>
+                                </div>
+                            </div>
+                            <p><span class="icon icon-location"></span> San Francisco, CA</p>
+                            <p><span class="icon icon-money"></span> $130k - $160k / year</p>
+                            <button class="button" style="width: auto; padding: 8px 15px; margin-top: 10px; font-size: 14px;">Quick Apply</button>
+                        </a>
+                    </div>
 
-    <div class="experience-item">
-      <h3 class="job-title">Senior Software Engineer</h3>
-      <p class="company-name">Acme Corp</p>
-      <p>Developed and maintained key features for our flagship product. Led a team of 3 junior developers.</p>
+                    <div class="job-card">
+                        <a href="#job-details-screen" style="text-decoration: none; color: inherit;">
+                            <h3>UX Designer</h3>
+                            <div class="company-info">
+                                <img src="https://via.placeholder.com/40/ffc107/FFFFFF?text=CA" alt="Company Logo" class="company-logo">
+                                <div>
+                                    <p class="mb-0"><span class="icon icon-company"></span> Creative Agency</p>
+                                </div>
+                            </div>
+                            <p><span class="icon icon-location"></span> Remote</p>
+                            <p><span class="icon icon-money"></span> $90k - $110k / year</p>
+                            <button class="button" style="width: auto; padding: 8px 15px; margin-top: 10px; font-size: 14px;">Quick Apply</button>
+                        </a>
+                    </div>
+
+                    <div class="text-center mt-15 text-muted">
+                        <p>Loading more jobs...</p>
+                        <div style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Job Details View (I.2) -->
+            <div id="job-details-screen" class="screen">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#home-screen" class="header-icon icon-back"></a>
+                    </div>
+                    <div class="header-right">
+                        <span class="header-icon icon-save"></span>
+                        <span class="header-icon icon-share"></span>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <h2 style="margin-top: 0;">Senior Software Engineer</h2>
+                    <div class="company-info">
+                        <img src="https://via.placeholder.com/50/007bff/FFFFFF?text=TS" alt="Company Logo" class="company-logo" style="width: 50px; height: 50px;">
+                        <div>
+                            <p style="margin-bottom: 0;"><a href="#employer-profile-screen" class="text-primary" style="text-decoration: none;">Tech Solutions Inc.</a></p>
+                            <p style="font-size: 14px; color: #666; margin-top: 0;">(IT & Software)</p>
+                        </div>
+                    </div>
+                    <p><span class="icon icon-location"></span> New York, NY</p>
+                    <p><span class="icon icon-money"></span> $120,000 - $150,000 / year</p>
+                    <p style="font-size: 14px; color: #666;">Full-time, Remote-friendly</p>
+
+                    <h3>Job Description</h3>
+                    <p>We are looking for a highly skilled Senior Software Engineer to join our dynamic team. You will be responsible for designing, developing, and maintaining scalable software solutions. This role requires strong problem-solving abilities and a deep understanding of modern software development practices.</p>
+                    <p><strong>Responsibilities:</strong></p>
+                    <ul>
+                        <li>Lead the design and implementation of new features.</li>
+                        <li>Write clean, maintainable, and efficient code.</li>
+                        <li>Collaborate with cross-functional teams.</li>
+                        <li>Participate in code reviews and mentor junior engineers.</li>
+                        <li>Troubleshoot and debug production issues.</li>
+                    </ul>
+                    <p><strong>Requirements:</strong></p>
+                    <ul>
+                        <li>Bachelor's or Master's degree in Computer Science or related field.</li>
+                        <li>5+ years of experience in software development.</li>
+                        <li>Proficiency in [Programming Language, e.g., Python, Java, Go].</li>
+                        <li>Experience with cloud platforms (AWS, Azure, GCP) is a plus.</li>
+                    </ul>
+
+                    <h3>About Tech Solutions Inc.</h3>
+                    <p>Tech Solutions Inc. is a leading technology company dedicated to innovation and excellence. We build cutting-edge software products that empower businesses and individuals worldwide. Join us to make an impact!</p>
+                    <p><a href="https://www.techsolutions.com" target="_blank" class="text-primary" style="text-decoration: none;">Visit our website</a></p>
+                </div>
+                <div class="screen-footer">
+                    <a href="#application-form-screen" class="button">Apply Now</a>
+                </div>
+            </div>
+
+            <!-- 3.1. Application Form Screen (I.3) -->
+            <div id="application-form-screen" class="screen">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#job-details-screen" class="header-icon icon-back"></a>
+                    </div>
+                    <span class="header-title">Apply for Job</span>
+                    <div class="header-right"></div>
+                </div>
+                <div class="main-content">
+                    <h3 style="margin-top: 0;">Your Application</h3>
+                    <label for="appName">Full Name</label>
+                    <input type="text" id="appName" class="input-field" value="John Doe">
+
+                    <label for="appEmail">Email Address</label>
+                    <input type="email" id="appEmail" class="input-field" value="john.doe@example.com">
+
+                    <label for="appPhone">Phone Number</label>
+                    <input type="tel" id="appPhone" class="input-field" value="+1 (555) 123-4567">
+
+                    <label for="resumeUpload">Resume</label>
+                    <input type="file" id="resumeUpload" class="input-field" style="padding-top: 15px;">
+
+                    <label for="coverLetter">Cover Letter (Optional)</label>
+                    <textarea id="coverLetter" class="textarea-field" placeholder="Tell us why you're a great fit..."></textarea>
+
+                    <h3 style="margin-top: 15px;">Additional Questions</h3>
+                    <label for="experience">Years of relevant experience?</label>
+                    <input type="number" id="experience" class="input-field" placeholder="e.g., 5">
+
+                    <label>Are you authorized to work in the US?</label>
+                    <div class="flex-row gap-10 mb-15" style="align-items: center;">
+                        <input type="radio" id="authYes" name="authorized" value="yes" checked><label for="authYes">Yes</label>
+                        <input type="radio" id="authNo" name="authorized" value="no"><label for="authNo">No</label>
+                    </div>
+                </div>
+                <div class="screen-footer">
+                    <a href="#application-confirmation-screen" class="button">Submit Application</a>
+                </div>
+            </div>
+
+            <!-- 3.2. Application Submission Overlay/Screen (I.3) -->
+            <div id="application-confirmation-screen" class="screen text-center">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#job-details-screen" class="header-icon icon-back"></a>
+                    </div>
+                    <span class="header-title">Application Status</span>
+                    <div class="header-right"></div>
+                </div>
+                <div class="main-content flex-column justify-center align-center">
+                    <div id="submission-spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px;"></div>
+                    <p id="submission-text" style="font-size: 18px; color: #333;">Submitting your application...</p>
+                    <p id="submission-success-message" style="font-size: 24px; color: #28a745; display: none;">Application Submitted Successfully! 🎉</p>
+                </div>
+                <div class="screen-footer">
+                    <a href="#home-screen" class="button" style="display: none;" id="return-home-button">Return to Home</a>
+                </div>
+                <script>
+                    // Simple JS to simulate submission and show success
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const confirmScreen = document.getElementById('application-confirmation-screen');
+                        if (confirmScreen) {
+                            confirmScreen.addEventListener('click', function() { // Any click on the screen will trigger the "submission"
+                                const spinner = document.getElementById('submission-spinner');
+                                const submittingText = document.getElementById('submission-text');
+                                const successMessage = document.getElementById('submission-success-message');
+                                const returnButton = document.getElementById('return-home-button');
+
+                                if (spinner.style.display !== 'none') {
+                                    setTimeout(() => {
+                                        spinner.style.display = 'none';
+                                        submittingText.style.display = 'none';
+                                        successMessage.style.display = 'block';
+                                        returnButton.style.display = 'block';
+                                    }, 2000); // Simulate 2-second submission
+                                }
+                            });
+                        }
+                    });
+                </script>
+            </div>
+
+            <!-- 4. Profile Screen (User Profile Management - II.4, II.6, II.7) -->
+            <div id="profile-screen" class="screen">
+                <div class="header">
+                    <div class="header-left"></div>
+                    <span class="header-title">Profile</span>
+                    <div class="header-right">
+                        <a href="#edit-profile-screen" class="header-icon icon-edit"></a>
+                    </div>
+                </div>
+                <div class="main-content text-center">
+                    <img src="https://via.placeholder.com/150/007bff/FFFFFF?text=JD" alt="Profile Picture" class="profile-pic">
+                    <h2 style="margin-top: 0; margin-bottom: 5px;">John Doe</h2>
+                    <p class="text-muted mb-15">Senior Software Engineer</p>
+                    <p><span class="icon icon-location"></span> New York, NY</p>
+                    <p>✉️ john.doe@example.com</p>
+                    <p>📞 +1 (555) 123-4567</p>
+
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+
+                    <h3>Profile Completion</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 70%;"></div>
+                    </div>
+                    <p class="text-muted" style="margin-top: 10px;">Your profile is 70% complete.</p>
+                    <p>Add more details to attract top employers!</p>
+                    <a href="#edit-profile-screen" class="button" style="width: auto; padding: 10px 20px; font-size: 14px; margin: 15px auto; display: inline-block;">Complete Profile</a>
+
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+
+                    <h3>Video Profile</h3>
+                    <div class="text-center">
+                        <div style="background-color: #f0f0f0; border-radius: 10px; height: 150px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; position: relative; overflow: hidden;">
+                            <img src="https://via.placeholder.com/200x150/007bff/FFFFFF?text=Video+Preview" alt="Video Preview" style="max-width: 100%; max-height: 100%; border-radius: 8px;">
+                            <span class="icon icon-play" style="position: absolute; font-size: 40px; color: white; background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 10px;"></span>
+                        </div>
+                        <p class="text-muted">Video Profile Added</p>
+                        <div class="flex-row justify-center gap-10 mt-15">
+                            <button class="button" style="background-color: #6c757d; width: auto; padding: 10px 15px; font-size: 14px;"><span class="icon icon-upload"></span> Upload New</button>
+                            <button class="button" style="background-color: #dc3545; width: auto; padding: 10px 15px; font-size: 14px;"><span class="icon icon-trash"></span> Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Edit Profile Screen (II.5) -->
+            <div id="edit-profile-screen" class="screen">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#profile-screen" class="header-icon icon-cancel"></a>
+                    </div>
+                    <span class="header-title">Edit Profile</span>
+                    <div class="header-right"></div>
+                </div>
+                <div class="main-content text-center">
+                    <div style="position: relative; display: inline-block; margin-bottom: 20px;">
+                        <img src="https://via.placeholder.com/150/007bff/FFFFFF?text=JD" alt="Profile Picture" class="profile-pic">
+                        <div style="position: absolute; bottom: 0; right: 0; background-color: #007bff; border-radius: 50%; padding: 8px; cursor: pointer;">
+                            <span class="icon icon-edit" style="color: white; font-size: 16px;"></span>
+                        </div>
+                    </div>
+
+                    <label for="editName" style="display: block; text-align: left; margin-bottom: 5px;">Name</label>
+                    <input type="text" id="editName" class="input-field" value="John Doe">
+
+                    <label for="editLocation" style="display: block; text-align: left; margin-bottom: 5px;">Location</label>
+                    <input type="text" id="editLocation" class="input-field" value="New York, NY">
+
+                    <label for="editEmail" style="display: block; text-align: left; margin-bottom: 5px;">Email</label>
+                    <input type="email" id="editEmail" class="input-field" value="john.doe@example.com">
+
+                    <label for="editPhone" style="display: block; text-align: left; margin-bottom: 5px;">Phone Number</label>
+                    <input type="tel" id="editPhone" class="input-field" value="+1 (555) 123-4567">
+
+                    <label for="editBio" style="display: block; text-align: left; margin-bottom: 5px;">Bio (Optional)</label>
+                    <textarea id="editBio" class="textarea-field" placeholder="Tell us about yourself...">Passionate software engineer with 5+ years of experience.</textarea>
+                </div>
+                <div class="screen-footer">
+                    <a href="#profile-screen" class="button">Save Changes</a>
+                </div>
+            </div>
+
+            <!-- 6. Saved Items Screen -->
+            <div id="saved-items-screen" class="screen">
+                <div class="header">
+                    <div class="header-left"></div>
+                    <span class="header-title">Saved Jobs</span>
+                    <div class="header-right"></div>
+                </div>
+                <div class="main-content">
+                    <div class="job-card">
+                        <a href="#job-details-screen" style="text-decoration: none; color: inherit;">
+                            <h3>Data Scientist</h3>
+                            <div class="company-info">
+                                <img src="https://via.placeholder.com/40/6f42c1/FFFFFF?text=DI" alt="Company Logo" class="company-logo">
+                                <div>
+                                    <p class="mb-0"><span class="icon icon-company"></span> Data Insights LLC</p>
+                                </div>
+                            </div>
+                            <p><span class="icon icon-location"></span> Remote</p>
+                            <p><span class="icon icon-money"></span> $110k - $140k / year</p>
+                            <button class="button" style="width: auto; padding: 8px 15px; margin-top: 10px; font-size: 14px; background-color: #6c757d;">View Details</button>
+                        </a>
+                    </div>
+                    <div class="job-card">
+                        <a href="#job-details-screen" style="text-decoration: none; color: inherit;">
+                            <h3>Marketing Specialist</h3>
+                            <div class="company-info">
+                                <img src="https://via.placeholder.com/40/fd7e14/FFFFFF?text=BB" alt="Company Logo" class="company-logo">
+                                <div>
+                                    <p class="mb-0"><span class="icon icon-company"></span> Brand Builders</p>
+                                </div>
+                            </div>
+                            <p><span class="icon icon-location"></span> Chicago, IL</p>
+                            <p><span class="icon icon-money"></span> $70k - $90k / year</p>
+                            <button class="button" style="width: auto; padding: 8px 15px; margin-top: 10px; font-size: 14px; background-color: #6c757d;">View Details</button>
+                        </a>
+                    </div>
+                    <div class="text-center mt-15 text-muted">
+                        <p>You have 2 saved jobs.</p>
+                        <p>No more saved jobs to display.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Messaging Screen -->
+            <div id="messaging-screen" class="screen">
+                <div class="header">
+                    <div class="header-left"></div>
+                    <span class="header-title">Messages</span>
+                    <div class="header-right">
+                        <a href="#global-search-screen" class="header-icon icon-search"></a>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <div class="job-card" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://via.placeholder.com/50/007bff/FFFFFF?text=HR" alt="Sender Avatar" class="rounded-full" style="width: 50px; height: 50px;">
+                        <div>
+                            <h4 style="margin: 0;">HR Team - Tech Solutions Inc.</h4>
+                            <p style="margin: 5px 0 0; font-size: 14px; color: #555;">Hi John, we received your application!</p>
+                            <p style="margin: 0; font-size: 12px; color: #888;">2 hours ago</p>
+                        </div>
+                    </div>
+                    <div class="job-card" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://via.placeholder.com/50/28a745/FFFFFF?text=Rec" alt="Sender Avatar" class="rounded-full" style="width: 50px; height: 50px;">
+                        <div>
+                            <h4 style="margin: 0;">Recruiter - Innovate Corp.</h4>
+                            <p style="margin: 5px 0 0; font-size: 14px; color: #555;">Your profile looks great!</p>
+                            <p style="margin: 0; font-size: 12px; color: #888;">Yesterday</p>
+                        </div>
+                    </div>
+                    <div class="job-card" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://via.placeholder.com/50/ffc107/FFFFFF?text=Sup" alt="Sender Avatar" class="rounded-full" style="width: 50px; height: 50px;">
+                        <div>
+                            <h4 style="margin: 0;">Support Team</h4>
+                            <p style="margin: 5px 0 0; font-size: 14px; color: #555;">Welcome to the platform!</p>
+                            <p style="margin: 0; font-size: 12px; color: #888;">3 days ago</p>
+                        </div>
+                    </div>
+                    <div class="text-center mt-15 text-muted">
+                        <p>No new messages.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Employer Profile / Review Display Screen (III.8) -->
+            <div id="employer-profile-screen" class="screen">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#job-details-screen" class="header-icon icon-back"></a>
+                    </div>
+                    <span class="header-title">Company Profile</span>
+                    <div class="header-right"></div>
+                </div>
+                <div class="main-content text-center">
+                    <img src="https://via.placeholder.com/80/007bff/FFFFFF?text=TS" alt="Company Logo" class="company-logo" style="width: 80px; height: 80px; border-radius: 10px; margin-bottom: 10px;">
+                    <h2 style="margin-top: 0; margin-bottom: 5px;">Tech Solutions Inc.</h2>
+                    <p class="text-muted mb-15">IT & Software | 500-1000 Employees</p>
+                    <p>Tech Solutions Inc. is a global leader in innovative software development, dedicated to creating cutting-edge solutions that drive progress and empower businesses worldwide. With a focus on cloud computing and AI, we foster a culture of creativity and excellence.</p>
+                    <p><a href="https://www.techsolutions.com" target="_blank" class="text-primary" style="text-decoration: none;">Visit Website</a> | <a href="#home-screen" class="text-primary" style="text-decoration: none;">View All Jobs</a></p>
+
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
+
+                    <h3>Employee Reviews</h3>
+                    <div class="flex-row align-center justify-center gap-10 mb-15">
+                        <span class="star-rating icon-star"></span>
+                        <span class="star-rating icon-star"></span>
+                        <span class="star-rating icon-star"></span>
+                        <span class="star-rating icon-star"></span>
+                        <span class="star-rating" style="color: #ccc;">⭐</span>
+                        <span style="font-size: 24px; font-weight: bold;">4.2</span>
+                    </div>
+                    <p class="text-muted">Based on 125 Reviews</p>
+
+                    <div class="review-card">
+                        <div class="reviewer-info">
+                            <span class="reviewer-name">Anonymous Employee</span>
+                            <span class="review-date">Oct 2023</span>
+                        </div>
+                        <div class="review-stars">
+                            <span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span>
+                        </div>
+                        <p class="review-text">"Great company culture and challenging projects. Management is very supportive and encourages growth."</p>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="reviewer-info">
+                            <span class="reviewer-name">Jane D.</span>
+                            <span class="review-date">Sep 2023</span>
+                        </div>
+                        <div class="review-stars">
+                            <span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span style="color: #ccc;">⭐</span>
+                        </div>
+                        <p class="review-text">"Good benefits and work-life balance. Some bureaucracy but overall a positive experience."</p>
+                    </div>
+
+                    <a href="#" class="text-primary mb-15" style="display: block; text-decoration: none;">See All Reviews (125)</a>
+
+                    <a href="#leave-review-screen" class="button" style="margin-top: 20px;">Leave a Review</a>
+                </div>
+            </div>
+
+            <!-- 9. Leave a Review Modal/Screen (III.9) -->
+            <div id="leave-review-screen" class="screen">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#employer-profile-screen" class="header-icon icon-cancel"></a>
+                    </div>
+                    <span class="header-title">Leave a Review</span>
+                    <div class="header-right"></div>
+                </div>
+                <div class="main-content text-center">
+                    <h3 style="margin-top: 0;">Rate Tech Solutions Inc.</h3>
+                    <div class="star-rating-picker mb-15" style="display: inline-flex; gap: 5px;">
+                        <span class="icon-star" data-rating="1" style="font-size: 30px; cursor: pointer;"></span>
+                        <span class="icon-star" data-rating="2" style="font-size: 30px; cursor: pointer;"></span>
+                        <span class="icon-star" data-rating="3" style="font-size: 30px; cursor: pointer;"></span>
+                        <span class="icon-star" data-rating="4" style="font-size: 30px; cursor: pointer;"></span>
+                        <span class="icon-star" data-rating="5" style="font-size: 30px; cursor: pointer; color: #ccc;"></span>
+                    </div>
+                    <p class="text-muted">Tap stars to rate</p>
+
+                    <label for="reviewText" style="display: block; text-align: left; margin-bottom: 5px;">Your Review</label>
+                    <textarea id="reviewText" class="textarea-field" placeholder="Share your experience working here..."></textarea>
+
+                    <label for="reviewerName" style="display: block; text-align: left; margin-bottom: 5px;">Your Name (Optional)</label>
+                    <input type="text" id="reviewerName" class="input-field" placeholder="e.g., John D. or Anonymous">
+
+                </div>
+                <div class="screen-footer">
+                    <a href="#employer-profile-screen" class="button">Submit Review</a>
+                </div>
+            </div>
+
+            <!-- 10. Global Search Screen (IV.11) -->
+            <div id="global-search-screen" class="screen">
+                <div class="header">
+                    <div class="header-left">
+                        <a href="#messaging-screen" class="header-icon icon-back"></a>
+                    </div>
+                    <div class="search-bar" style="margin-right: 0;">
+                        <span class="icon icon-search"></span>
+                        <input type="text" placeholder="Search anything..." value="Software Engineer">
+                        <span class="icon icon-cancel" style="color: #6c757d; cursor: pointer;"></span>
+                    </div>
+                </div>
+                <div class="main-content">
+                    <h3 style="margin-top: 0;">Recent Searches</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="#" class="text-primary" style="text-decoration: none;">Senior Software Engineer</a></li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #eee;"><a href="#" class="text-primary" style="text-decoration: none;">Product Manager Remote</a></li>
+                        <li style="padding: 10px 0;"><a href="#" class="text-primary" style="text-decoration: none;">Google</a></li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px;">Search Results</h3>
+                    <div class="job-card">
+                        <h3>Software Engineer - Frontend</h3>
+                        <p><span class="icon icon-company"></span> Innovate Corp.</p>
+                        <p><span class="icon icon-location"></span> San Francisco, CA</p>
+                    </div>
+                    <div class="job-card">
+                        <h3>Senior Backend Developer</h3>
+                        <p><span class="icon icon-company"></span> Tech Solutions Inc.</p>
+                        <p><span class="icon icon-location"></span> New York, NY</p>
+                    </div>
+                    <div class="text-center mt-15 text-muted">
+                        <p>Showing 2 results for "Software Engineer"</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Overall Application Structure: Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <a href="#home-screen" class="nav-item active" id="nav-home">
+                <span class="active-indicator"></span>
+                <span class="nav-item-icon icon-home"></span>
+                <span>Home</span>
+            </a>
+            <a href="#saved-items-screen" class="nav-item" id="nav-saved">
+                <span class="active-indicator" style="display: none;"></span>
+                <span class="nav-item-icon icon-bookmark"></span>
+                <span>Saved</span>
+            </a>
+            <a href="#messaging-screen" class="nav-item" id="nav-messaging">
+                <span class="active-indicator" style="display: none;"></span>
+                <span class="nav-item-icon icon-message"></span>
+                <span>Messaging</span>
+            </a>
+            <a href="#profile-screen" class="nav-item" id="nav-profile">
+                <span class="active-indicator" style="display: none;"></span>
+                <span class="nav-item-icon icon-profile"></span>
+                <span>Profile</span>
+            </a>
+        </nav>
     </div>
 
-    <div class="experience-item">
-      <h3 class="job-title">Software Engineer</h3>
-      <p class="company-name">Beta Inc</p>
-      <p>Worked on a variety of projects, including a new e-commerce platform and a mobile app.</p>
-    </div>
-  </div>
+    <script>
+        // Simple JavaScript to handle active state of bottom navigation and screen visibility on hash change
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            const screens = document.querySelectorAll('.screen');
 
-  <div class="section">
-    <h2 class="section-title">Education</h2>
-    <p><strong>University of Example</strong><br>
-       Bachelor of Science in Computer Science</p>
-  </div>
+            function updateActiveState() {
+                const currentHash = window.location.hash || '#home-screen';
 
-  <div class="section">
-    <h2 class="section-title">Skills</h2>
-    <ul class="skills-list">
-      <li class="skill-item">JavaScript</li>
-      <li class="skill-item">React</li>
-      <li class="skill-item">Node.js</li>
-      <li class="skill-item">HTML</li>
-      <li class="skill-item">CSS</li>
-      <li class="skill-item">Git</li>
-    </ul>
-  </div>
+                // Update bottom nav active state
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    const indicator = item.querySelector('.active-indicator');
+                    if (indicator) indicator.style.display = 'none';
 
-  <div class="section">
-    <h2 class="section-title">Contact</h2>
-    <div class="contact-info">
-        <a href="mailto:john.doe@example.com">john.doe@example.com</a>
-        <a href="tel:+15551234567">+1 (555) 123-4567</a>
-        <a href="https://www.linkedin.com/in/johndoe">LinkedIn Profile</a>
-    </div>
-</div>
+                    if (item.getAttribute('href') === currentHash) {
+                        item.classList.add('active');
+                        if (indicator) indicator.style.display = 'block';
+                    }
+                });
 
-</div>
+                // Update screen visibility (for browsers not fully supporting :target or for initial load)
+                screens.forEach(screen => {
+                    screen.classList.remove('active');
+                    if ('#' + screen.id === currentHash) {
+                        screen.classList.add('active');
+                        screen.scrollTop = 0; // Scroll to top when screen becomes active
+                    }
+                });
+            }
 
+            // Listen for hash changes
+            window.addEventListener('hashchange', updateActiveState);
+
+            // Set initial active state on page load
+            updateActiveState();
+
+            // Handle the star rating picker for Leave a Review screen
+            const starRatingPicker = document.querySelector('#leave-review-screen .star-rating-picker');
+            if (starRatingPicker) {
+                const stars = starRatingPicker.querySelectorAll('.icon-star');
+                stars.forEach((star, index) => {
+                    star.addEventListener('click', () => {
+                        stars.forEach((s, i) => {
+                            if (i <= index) {
+                                s.style.color = '#ffc107'; // Active star color
+                            } else {
+                                s.style.color = '#ccc'; // Inactive star color
+                            }
+                        });
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>

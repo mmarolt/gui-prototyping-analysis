@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acme Corp. Tasks</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Optional: Link to Material Design-inspired font like Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,500,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Basic CSS for the mobile screen container */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5; /* Light grey background for the overall page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+        .mobile-screen {
+            width: 375px; /* Mobile screen width as per description */
+            height: 667px; /* Mobile screen height as per description */
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23); /* Material Design shadow */
+            overflow: hidden; /* Ensures content stays within rounded corners */
+            display: flex;
+            flex-direction: column; /* Stacks app bar, content, etc. vertically */
+            background-color: #ffffff; /* Default background for the app */
+            position: relative; /* Essential for FAB positioning */
+            box-sizing: border-box;
+        }
+
+        /* Material Design color palette */
+        :root {
+            --md-primary-color: #6200EE; /* Deep Purple */
+            --md-primary-variant: #3700B3; /* Darker Purple */
+            --md-secondary-color: #03DAC6; /* Teal */
+            --md-background-color: #FFFFFF;
+            --md-surface-color: #FFFFFF;
+            --md-error-color: #B00020; /* Red */
+            --md-on-primary-color: #FFFFFF;
+            --md-on-secondary-color: #000000;
+            --md-on-background-color: #000000;
+            --md-on-surface-color: #000000;
+            --md-on-error-color: #FFFFFF;
+            --md-text-primary: rgba(0, 0, 0, 0.87); /* High emphasis black */
+            --md-text-secondary: rgba(0, 0, 0, 0.60); /* Medium emphasis black */
+            --md-text-disabled: rgba(0, 0, 0, 0.38); /* Disabled emphasis black */
+            --md-divider-color: #E0E0E0; /* Light grey divider */
+        }
+
+        /* Section-specific styles */
+        .app-bar {
+            display: flex;
+            align-items: center;
+            padding: 0 16px; /* Horizontal padding */
+            height: 56px; /* Standard Material App Bar height */
+            background-color: var(--md-primary-color);
+            color: var(--md-on-primary-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Elevation for app bar */
+            z-index: 10; /* Ensure it stays on top of content */
+        }
+        .app-bar .material-icons {
+            font-size: 24px; /* Standard icon size */
+            cursor: pointer;
+            padding: 8px; /* For touch target */
+            margin: -8px; /* Compensate padding for icon position */
+            border-radius: 50%; /* Make touch area round */
+            transition: background-color 0.2s;
+        }
+        .app-bar .material-icons:active {
+            background-color: rgba(255, 255, 255, 0.15); /* Ripple effect simulation */
+        }
+        .app-bar .title-section {
+            display: flex;
+            align-items: center;
+            flex-grow: 1; /* Allows title to take available space */
+            margin-left: 16px;
+            cursor: pointer;
+            font-size: 20px; /* H6 equivalent */
+            font-weight: 500;
+            line-height: 1; /* Tighter line height */
+            padding: 8px 0; /* Vertical padding for touch target */
+            margin: -8px 0; /* Compensate */
+        }
+        .app-bar .title-section .material-icons {
+            margin-left: 4px;
+            padding: 0; /* Reset icon padding here */
+            margin: 0; /* Reset icon margin here */
+        }
+        .app-bar .action-icons {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* Pushes action icons to the right */
+        }
+        .app-bar .action-icons .material-icons {
+            margin-left: 16px; /* Spacing between icons */
+        }
+        .notification-badge {
+            position: relative;
+            display: inline-block;
+        }
+        .notification-badge .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--md-error-color);
+            color: var(--md-on-error-color);
+            border-radius: 50%;
+            font-size: 10px;
+            padding: 3px 5px;
+            line-height: 1;
+            min-width: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .task-list-content {
+            flex-grow: 1; /* Allows list to fill remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for the list */
+            background-color: var(--md-background-color);
+        }
+        .task-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px; /* Standard list item padding */
+            border-bottom: 1px solid var(--md-divider-color);
+            background-color: var(--md-surface-color);
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .task-list-item:hover {
+            background-color: rgba(0,0,0,0.04); /* Hover state for feedback */
+        }
+        .task-list-item:active {
+            background-color: rgba(0,0,0,0.08); /* Active/pressed state */
+        }
+        .task-list-item .text-content {
+            flex-grow: 1; /* Takes up available space */
+        }
+        .task-list-item .task-name {
+            font-size: 16px; /* Material Design Subtitle1 */
+            font-weight: 500;
+            color: var(--md-text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            line-height: 1.2;
+        }
+        .task-list-item .new-chip {
+            background-color: #4CAF50; /* Green for 'New' */
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            padding: 2px 6px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            line-height: 1; /* Ensures text is centered vertically */
+            margin-left: 8px;
+        }
+        .task-list-item .secondary-info {
+            font-size: 14px; /* Material Design Body2 */
+            color: var(--md-text-secondary);
+            line-height: 1.2;
+        }
+        .task-list-item .material-icons.chevron {
+            font-size: 24px;
+            color: var(--md-text-disabled);
+            margin-left: 16px;
+        }
+        .fab {
+            position: absolute;
+            bottom: 16px; /* Standard Material Design spacing */
+            right: 16px; /* Standard Material Design spacing */
+            width: 56px; /* Standard FAB size */
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--md-secondary-color);
+            color: var(--md-on-secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 6px 10px rgba(0,0,0,0.3); /* Standard FAB elevation (level 6) */
+            cursor: pointer;
+            z-index: 100; /* Ensure it's above list content */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-tap-highlight-color: transparent; /* Remove default tap highlight */
+        }
+        .fab:hover {
+            background-color: #00BFA5; /* Darker secondary on hover */
+            box-shadow: 0 8px 12px rgba(0,0,0,0.4); /* Higher elevation on hover */
+        }
+        .fab:active {
+            background-color: #00897B; /* Even darker on press */
+            box-shadow: 0 10px 15px rgba(0,0,0,0.5); /* Highest elevation on press */
+        }
+        .fab .material-icons {
+            font-size: 24px; /* Icon size inside FAB */
+            color: var(--md-on-secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-screen">
+
+    <!-- UI Section 1: Top App Bar -->
+    <header class="app-bar">
+        <i class="material-icons">menu</i>
+        <div class="title-section">
+            <span>Acme Corp.</span> <!-- Current Company Name -->
+            <i class="material-icons" style="margin-left: 4px;">arrow_drop_down</i>
+        </div>
+        <div class="action-icons">
+            <i class="material-icons">info</i>
+            <div class="notification-badge">
+                <i class="material-icons">notifications</i>
+                <span class="badge">2</span>
+            </div>
+            <i class="material-icons">search</i>
+            <i class="material-icons">folder</i> <!-- Icon for Projects -->
+            <i class="material-icons">chat</i>   <!-- Icon for Messaging -->
+        </div>
+    </header>
+
+    <!-- UI Section 2: Task List Content Area -->
+    <main class="task-list-content">
+        <!-- Example Task Item 1: New Task -->
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Review Q3 Financials</span>
+                    <span class="new-chip">New</span>
+                </div>
+                <span class="secondary-info">Project: Annual Budget Planning</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+
+        <!-- Example Task Item 2: Recently Added Task -->
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Finalize Marketing Strategy Doc</span>
+                    <span class="new-chip" style="background-color: #2196F3;">Recent</span> <!-- Blue for 'Recent' -->
+                </div>
+                <span class="secondary-info">Project: Product Launch Campaign</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+
+        <!-- Example Task Item 3: Standard Task -->
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Schedule Team Sync Meeting</span>
+                </div>
+                <span class="secondary-info">Due: Tomorrow, 10 AM</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+
+        <!-- Example Task Item 4: Standard Task -->
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Prepare Client Presentation</span>
+                </div>
+                <span class="secondary-info">Project: Client Onboarding</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+
+        <!-- Example Task Item 5: Standard Task -->
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Submit Expense Report</span>
+                </div>
+                <span class="secondary-info">Due: End of Week</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+        <!-- Add more task items to fill the screen and demonstrate scrolling -->
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Follow-up on Sales Lead</span>
+                </div>
+                <span class="secondary-info">Contact: Jane Doe</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Review UI/UX Mockups</span>
+                </div>
+                <span class="secondary-info">Project: Mobile App Redesign</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Draft Q4 Performance Report</span>
+                </div>
+                <span class="secondary-info">Project: Company Review</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Update CRM with Client Notes</span>
+                </div>
+                <span class="secondary-info">Project: Client Management</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+        <div class="task-list-item">
+            <div class="text-content">
+                <div class="task-name">
+                    <span>Research Competitor Analysis</span>
+                </div>
+                <span class="secondary-info">Due: Next Monday</span>
+            </div>
+            <i class="material-icons chevron">chevron_right</i>
+        </div>
+    </main>
+
+    <!-- UI Section 3: Floating Action Button (FAB) -->
+    <div class="fab">
+        <i class="material-icons">add</i>
+    </div>
+
+</div>
+
+</body>
+</html>

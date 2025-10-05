@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager</title>
+    <!-- Material Icons CDN - REQUIRED -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto (Material Design's default font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Reset & Body Styles for a clean Material Design foundation */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e0e0e0; /* A light, neutral background for the surrounding environment */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensures the mobile screen is centered vertically */
+            color: #333; /* Default text color */
+        }
+
+        /* Mobile Screen Container - Simulates the device's viewport */
+        .mobile-screen {
+            width: 375px; /* Mobile screen width as per description (portrait) */
+            height: 667px; /* Mobile screen height as per description (portrait) */
+            background-color: #ffffff; /* Main app background */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Elevation for the entire app */
+            border-radius: 8px; /* Subtle rounded corners for the app container */
+            overflow: hidden; /* Ensures all content stays within the app bounds */
+            display: flex;
+            flex-direction: column; /* Stacks the top selector and grid vertically */
+        }
+
+        /* Section 1: Storage Location Selector */
+        .storage-selector-bar {
+            padding: 16px; /* Generous padding around the control */
+            background-color: #f5f5f5; /* Light background for the bar */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle elevation for the bar */
+            display: flex;
+            justify-content: center; /* Centers the segmented control horizontally */
+        }
+
+        .segmented-control {
+            display: flex;
+            border-radius: 24px; /* Pill-shaped container for the segments */
+            overflow: hidden; /* Ensures button backgrounds stay within the rounded container */
+            background-color: #e0e0e0; /* Background color for inactive segments within the pill */
+            width: fit-content; /* Adjusts width to content, or set a max-width if desired */
+        }
+
+        .segmented-control button {
+            flex: 1; /* Allows buttons to share space equally */
+            padding: 10px 24px; /* Generous padding for touch comfort */
+            border: none;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 500; /* Medium-weight font for clarity */
+            cursor: pointer;
+            outline: none; /* Removes default focus outline */
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
+            background-color: transparent; /* Default for inactive segments */
+            color: #424242; /* Darker text for inactive segments */
+            white-space: nowrap; /* Prevents text from wrapping */
+        }
+
+        .segmented-control button.active {
+            background-color: #6200ee; /* Material Design Primary color for the active segment */
+            color: #ffffff; /* White text for active segment */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle elevation for the active segment */
+            z-index: 1; /* Ensures the active button appears above any potential underlying elements */
+            position: relative; /* Needed for z-index to take effect */
+        }
+
+        /* Section 2: File Categories Grid */
+        .file-categories-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns, each taking equal space */
+            gap: 16px; /* Consistent spacing (8dp grid system) between cards */
+            padding: 16px; /* Padding around the entire grid */
+            background-color: #ffffff; /* Matches the mobile-screen background */
+            flex-grow: 1; /* Allows the grid to fill the remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling if content exceeds height */
+        }
+
+        .category-card {
+            color: #ffffff; /* White text and icons for contrast on colored backgrounds */
+            border-radius: 8px; /* Rounded corners for the card */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for elevation (dp 2) */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centers content horizontally */
+            justify-content: center; /* Centers content vertically */
+            padding: 20px; /* Internal padding within the card */
+            text-align: center;
+            min-height: 150px; /* Ensures a good size for touch targets */
+            cursor: pointer; /* Indicates interactivity */
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover/active feedback */
+            position: relative; /* Necessary for potential ripple effects (JS, not implemented here) */
+            overflow: hidden; /* Important for ripple effects or internal content clipping */
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25); /* More prominent shadow on hover (dp 4) */
+        }
+
+        .category-card .material-icons {
+            font-size: 48px; /* Large icon size for visual prominence */
+            margin-bottom: 8px; /* Spacing between icon and label */
+        }
+
+        .category-card h3 {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px; /* Approximates Material Design Headline 6 / Subtitle 1 */
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        .category-card p {
+            margin: 4px 0 0;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px; /* Approximates Material Design Caption */
+            opacity: 0.8; /* Slightly less prominent than the label */
+        }
+
+        /* Specific Category Colors - Harmonious Material Design palette */
+        .card-docs { background-color: #2196f3; } /* Blue */
+        .card-video { background-color: #f44336; } /* Red */
+        .card-audio { background-color: #4caf50; } /* Green */
+        .card-images { background-color: #ff9800; } /* Orange */
+        .card-rar { background-color: #9c27b0; } /* Purple */
+        .card-downloads { background-color: #009688; } /* Teal */
+
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- Section 1: Storage Location Selector -->
+        <div class="storage-selector-bar">
+            <div class="segmented-control">
+                <button class="active">Local Storage</button>
+                <button>SD Card</button>
+            </div>
+        </div>
+
+        <!-- Section 2: File Categories Grid -->
+        <div class="file-categories-grid">
+            <!-- Category Card: Docs -->
+            <div class="category-card card-docs">
+                <i class="material-icons">article</i>
+                <h3>Docs</h3>
+                <p>125 files</p>
+            </div>
+
+            <!-- Category Card: Video -->
+            <div class="category-card card-video">
+                <i class="material-icons">videocam</i>
+                <h3>Video</h3>
+                <p>32 files</p>
+            </div>
+
+            <!-- Category Card: Audio -->
+            <div class="category-card card-audio">
+                <i class="material-icons">audiotrack</i>
+                <h3>Audio</h3>
+                <p>78 files</p>
+            </div>
+
+            <!-- Category Card: Images -->
+            <div class="category-card card-images">
+                <i class="material-icons">image</i>
+                <h3>Images</h3>
+                <p>230 files</p>
+            </div>
+
+            <!-- Category Card: RAR -->
+            <div class="category-card card-rar">
+                <i class="material-icons">folder_zip</i>
+                <h3>RAR</h3>
+                <p>15 files</p>
+            </div>
+
+            <!-- Category Card: Downloads -->
+            <div class="category-card card-downloads">
+                <i class="material-icons">download</i>
+                <h3>Downloads</h3>
+                <p>45 files</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

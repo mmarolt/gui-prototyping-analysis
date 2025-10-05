@@ -1,192 +1,282 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File Directory</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        /* Base styles for the mobile screen simulation */
         body, html {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-
-        /* Top Section (Action Bar) */
-        .action-bar {
-            background-color: #3498db;
-            color: white;
-            padding: 10px;
+            background: #f0f2f5; /* Light grey background */
             display: flex;
-            justify-content: space-between; /* Distribute items evenly */
-            align-items: center; /* Vertically align items */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            width: 375px; /* Target width for mobile simulation */
+            max-width: 100%; /* Ensures it fits on smaller actual screens */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            overflow: hidden; /* Prevent body scroll, allow inner containers to scroll */
         }
 
-        .breadcrumb-bar {
-            overflow-x: auto; /* Enable horizontal scrolling */
-            white-space: nowrap; /* Prevent wrapping */
-            padding: 5px 0;
-        }
-
-        .breadcrumb-item {
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: #2980b9;
-            color: white;
-            border-radius: 5px;
-            margin-right: 5px;
-            cursor: pointer;
-        }
-
-        .sort-button {
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Middle Section (File List) */
-        .file-list {
-            list-style: none;
-            padding: 0;
-            margin: 10px;
-        }
-
-        .file-item {
-            background-color: white;
-            margin-bottom: 8px;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        /* Top Header Section */
+        .header-top {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+            font-size: 14px;
+            color: #555;
+        }
+        .storage-display span {
+            margin-right: 10px; /* Spacing between total and available */
+        }
+        .storage-display .total {
+            font-weight: bold;
+            color: #333;
         }
 
-        .file-icon {
-            width: 32px;
-            height: 32px;
-            margin-right: 10px;
-        }
-
-        .file-name {
-            flex-grow: 1;
-            font-size: 16px;
-        }
-
-        .checkbox {
-            margin-left: 10px;
-        }
-
-        /* Bottom Section (Multi-Select Toolbar - Initially Hidden) */
-        .multi-select-toolbar {
-            background-color: #34495e;
-            color: white;
-            padding: 10px;
-            display: none; /* Initially hidden */
+        /* Storage Location Tabs */
+        .tabs {
+            display: flex;
             justify-content: space-around;
-            position: fixed;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03); /* Subtle shadow */
+        }
+        .tabs button {
+            flex-grow: 1; /* Tabs take equal width */
+            padding: 12px 0;
+            border: none;
+            background: none;
+            font-size: 15px;
+            color: #777;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .tabs button.active {
+            color: #007bff; /* Highlight color for active tab */
+            font-weight: bold;
+        }
+        .tabs button.active::after {
+            content: '';
+            position: absolute;
             bottom: 0;
             left: 0;
-            width: 100%;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.2);
+            right: 0;
+            height: 3px;
+            background-color: #007bff; /* Underline for active tab */
+            border-radius: 2px 2px 0 0;
         }
 
-        .multi-select-toolbar button {
-            background-color: #2c3e50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+        /* Main Content Section (Scrollable File/Directory List) */
+        .scrollable-list-container {
+            flex-grow: 1; /* Takes up all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 10px 0;
+            background-color: #f0f2f5;
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 1px; /* Slight separation between items */
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            font-size: 16px;
+        }
+        .list-item:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+        .type-icon {
+            font-size: 22px;
+            margin-right: 15px;
+            color: #007bff; /* Example color for folder/file icons */
+            min-width: 22px; /* Ensure icon doesn't shrink */
+            text-align: center;
+        }
+        .name-label {
+            flex-grow: 1; /* Takes up remaining space, pushing icons to right */
+            text-align: left;
+        }
+        .item-count {
+            font-size: 13px;
+            color: #888;
+            margin-left: 10px;
+            white-space: nowrap; /* Prevent wrapping of count */
+        }
+        .favorite-icon, .lock-icon {
+            font-size: 18px;
+            margin-left: 15px;
             cursor: pointer;
+            color: #ccc; /* Default color for outline star */
+            user-select: none; /* Prevent text selection on icons */
+        }
+        .favorite-icon.favorited {
+            color: #ffc107; /* Color for filled star */
+        }
+        .lock-icon.locked {
+            color: #dc3545; /* Color for closed lock */
+        }
+        .lock-icon.unlocked {
+            color: #28a745; /* Color for open lock */
         }
 
-        /* General Styling for Mobile Screen */
-        body {
-            width: 375px; /* Set the body width */
-            max-width: 100%; /* Ensure it doesn't exceed the screen width */
-            margin: 0 auto; /* Center the content */
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 0;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Shadow for depth */
+            height: 60px; /* Fixed height for the nav bar */
         }
-
-        /* For smaller screens */
-        @media (max-width: 480px) {
-            .action-bar {
-                padding: 8px;
-            }
-
-            .breadcrumb-item {
-                padding: 4px 8px;
-                font-size: 14px;
-            }
-
-            .sort-button {
-                padding: 6px 10px;
-                font-size: 14px;
-            }
-
-            .file-item {
-                padding: 8px;
-            }
-
-            .file-icon {
-                width: 24px;
-                height: 24px;
-                margin-right: 8px;
-            }
-
-            .file-name {
-                font-size: 14px;
-            }
-
-            .multi-select-toolbar button {
-                padding: 6px 10px;
-                font-size: 14px;
-            }
+        .bottom-nav button {
+            flex: 1; /* Buttons take equal width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            cursor: pointer;
+            outline: none;
+            color: #777;
+            font-size: 12px;
+            padding: 5px 0;
+            transition: color 0.3s ease;
+        }
+        .bottom-nav button:hover {
+            color: #007bff; /* Hover effect */
+        }
+        .bottom-nav button .icon {
+            font-size: 24px;
+            margin-bottom: 3px;
+        }
+        .bottom-nav button .label {
+            font-size: 11px;
+        }
+        /* Adjust specific icon sizes for better Unicode rendering */
+        .bottom-nav button .icon.new-folder {
+            font-size: 20px; /* Slightly smaller to accommodate the plus sign */
+        }
+        .bottom-nav button .icon.sort {
+            font-size: 22px;
         }
     </style>
 </head>
 <body>
 
-<!-- Top Section: Action Bar -->
-<div class="action-bar">
-    <div class="breadcrumb-bar">
-        <span class="breadcrumb-item">Root</span>
-        <span class="breadcrumb-item">Folder1</span>
-        <span class="breadcrumb-item">Subfolder</span>
+    <!-- Top Header Section -->
+    <div class="header-top">
+        <div class="storage-display">
+            <span class="total">Total: 128 GB</span>
+            <span class="available">Available: 80 GB</span>
+        </div>
     </div>
-    <button class="sort-button">Sort</button>
-</div>
 
-<!-- Middle Section: File List -->
-<ul class="file-list">
-    <li class="file-item">
-        <img src="folder_icon.png" alt="Folder" class="file-icon">
-        <span class="file-name">Documents</span>
-        <input type="checkbox" class="checkbox">
-    </li>
-    <li class="file-item">
-        <img src="file_icon.png" alt="File" class="file-icon">
-        <span class="file-name">report.pdf</span>
-        <input type="checkbox" class="checkbox">
-    </li>
-    <li class="file-item">
-        <img src="image_icon.png" alt="Image" class="file-icon">
-        <span class="file-name">photo.jpg</span>
-        <input type="checkbox" class="checkbox">
-    </li>
-</ul>
+    <!-- Storage Location Tabs -->
+    <div class="tabs">
+        <button class="tab active">Root</button>
+        <button class="tab">SD Card</button>
+        <button class="tab">App store</button>
+    </div>
 
-<!-- Bottom Section: Multi-Select Toolbar (Initially Hidden) -->
-<div class="multi-select-toolbar">
-    <button>Copy</button>
-    <button>Move</button>
-    <button>Delete</button>
-    <button>Share</button>
-    <button>Select All</button>
-    <button>Cancel</button>
-</div>
+    <!-- Main Content Section (Scrollable File/Directory List) -->
+    <div class="scrollable-list-container">
+        <!-- Directory Item: Documents -->
+        <div class="list-item">
+            <span class="type-icon">&#x1F4C1;</span> <!-- Folder icon -->
+            <span class="name-label">Documents</span>
+            <span class="item-count">(5 items)</span>
+            <span class="favorite-icon favorited" onclick="this.classList.toggle('favorited'); this.innerHTML = this.classList.contains('favorited') ? '&#x2605;' : '&#x2606;';">&#x2605;</span> <!-- Filled star -->
+            <span class="lock-icon locked" onclick="this.classList.toggle('locked'); this.classList.toggle('unlocked'); this.innerHTML = this.classList.contains('locked') ? '&#x1F512;' : '&#x1F513;';">&#x1F512;</span> <!-- Closed lock -->
+        </div>
+        <!-- Directory Item: Photos -->
+        <div class="list-item">
+            <span class="type-icon">&#x1F4C1;</span> <!-- Folder icon -->
+            <span class="name-label">Photos</span>
+            <span class="item-count">(120 items)</span>
+            <span class="favorite-icon" onclick="this.classList.toggle('favorited'); this.innerHTML = this.classList.contains('favorited') ? '&#x2605;' : '&#x2606;';">&#x2606;</span> <!-- Outline star -->
+            <span class="lock-icon unlocked" onclick="this.classList.toggle('locked'); this.classList.toggle('unlocked'); this.innerHTML = this.classList.contains('locked') ? '&#x1F512;' : '&#x1F513;';">&#x1F513;</span> <!-- Open lock -->
+        </div>
+        <!-- File Item: report.pdf -->
+        <div class="list-item">
+            <span class="type-icon" style="color: #dc3545;">&#x1F4C4;</span> <!-- Document icon, styled red for PDF-like -->
+            <span class="name-label">report.pdf</span>
+            <!-- No item count, favorite, or lock for file items -->
+        </div>
+        <!-- Directory Item: Downloads -->
+        <div class="list-item">
+            <span class="type-icon">&#x1F4C1;</span> <!-- Folder icon -->
+            <span class="name-label">Downloads</span>
+            <span class="item-count">(15 items)</span>
+            <span class="favorite-icon" onclick="this.classList.toggle('favorited'); this.innerHTML = this.classList.contains('favorited') ? '&#x2605;' : '&#x2606;';">&#x2606;</span> <!-- Outline star -->
+            <span class="lock-icon locked" onclick="this.classList.toggle('locked'); this.classList.toggle('unlocked'); this.innerHTML = this.classList.contains('locked') ? '&#x1F512;' : '&#x1F513;';">&#x1F512;</span> <!-- Closed lock -->
+        </div>
+        <!-- File Item: image.jpg -->
+        <div class="list-item">
+            <span class="type-icon" style="color: #28a745;">&#x1F5BC;&#xFE0F;</span> <!-- Image icon, styled green for image-like -->
+            <span class="name-label">image.jpg</span>
+            <!-- No item count, favorite, or lock for file items -->
+        </div>
+        <!-- Directory Item: Music -->
+        <div class="list-item">
+            <span class="type-icon">&#x1F4C1;</span> <!-- Folder icon -->
+            <span class="name-label">Music</span>
+            <span class="item-count">(30 items)</span>
+            <span class="favorite-icon favorited" onclick="this.classList.toggle('favorited'); this.innerHTML = this.classList.contains('favorited') ? '&#x2605;' : '&#x2606;';">&#x2605;</span> <!-- Filled star -->
+            <span class="lock-icon unlocked" onclick="this.classList.toggle('locked'); this.classList.toggle('unlocked'); this.innerHTML = this.classList.contains('locked') ? '&#x1F512;' : '&#x1F513;';">&#x1F513;</span> <!-- Open lock -->
+        </div>
+        <!-- Additional items to ensure scrollability for demo -->
+        <div class="list-item">
+            <span class="type-icon">&#x1F4C1;</span>
+            <span class="name-label">Videos</span>
+            <span class="item-count">(8 items)</span>
+            <span class="favorite-icon" onclick="this.classList.toggle('favorited'); this.innerHTML = this.classList.contains('favorited') ? '&#x2605;' : '&#x2606;';">&#x2606;</span>
+            <span class="lock-icon unlocked" onclick="this.classList.toggle('locked'); this.classList.toggle('unlocked'); this.innerHTML = this.classList.contains('locked') ? '&#x1F512;' : '&#x1F513;';">&#x1F513;</span>
+        </div>
+        <div class="list-item">
+            <span class="type-icon" style="color: #6f42c1;">&#x1F4C4;</span>
+            <span class="name-label">presentation.pptx</span>
+        </div>
+        <div class="list-item">
+            <span class="type-icon">&#x1F4C1;</span>
+            <span class="name-label">Work Files</span>
+            <span class="item-count">(20 items)</span>
+            <span class="favorite-icon favorited" onclick="this.classList.toggle('favorited'); this.innerHTML = this.classList.contains('favorited') ? '&#x2605;' : '&#x2606;';">&#x2605;</span>
+            <span class="lock-icon locked" onclick="this.classList.toggle('locked'); this.classList.toggle('unlocked'); this.innerHTML = this.classList.contains('locked') ? '&#x1F512;' : '&#x1F513;';">&#x1F512;</span>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar Section -->
+    <div class="bottom-nav">
+        <button>
+            <span class="icon">&#x2B07;&#xFE0E;</span> <!-- Download icon (Heavy Downwards Arrow) -->
+            <span class="label">Download</span>
+        </button>
+        <button>
+            <span class="icon">&#x1F50D;</span> <!-- Search icon (Magnifying Glass) -->
+            <span class="label">Search</span>
+        </button>
+        <button>
+            <span class="icon new-folder">&#x1F4C2;&#x2795;</span> <!-- Create New Folder icon (Open Folder + Plus Sign) -->
+            <span class="label">New Folder</span>
+        </button>
+        <button>
+            <span class="icon sort">&#x2B0B;&#xFE0E;</span> <!-- Sort Files icon (Up-Down Arrow) -->
+            <span class="label">Sort</span>
+        </button>
+    </div>
 
 </body>
 </html>

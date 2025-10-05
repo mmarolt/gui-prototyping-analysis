@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile News Feed</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light grey background for the overall page */
+        }
+
+        /* Mobile Container - Simulates a mobile device screen */
+        .mobile-container {
+            width: 375px; /* Fixed width for iPhone 8 simulation */
+            height: 667px; /* Fixed height for iPhone 8 simulation */
+            border: 1px solid #ddd;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            overflow: hidden; /* Ensures content doesn't spill out of rounded corners */
+            display: flex;
+            flex-direction: column;
+            background-color: #fff; /* Default background for screens */
+        }
+
+        /* Common Page Styles */
+        .page {
+            display: none; /* Hidden by default, shown by JS when active */
+            flex-direction: column;
+            flex-grow: 1; /* Allows the page to fill available vertical space */
+            overflow: hidden; /* Manages internal scrolling within specific sections */
+        }
+
+        .page.active {
+            display: flex; /* Show the active page */
+        }
+
+        /* Header Section (Main News Feed) */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f8f8; /* Lighter background for header */
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+            z-index: 10; /* Ensures header stays above scrollable content */
+        }
+
+        .personalized-greeting {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .logout-option {
+            background-color: transparent;
+            border: none;
+            color: #007bff; /* Primary blue color */
+            font-size: 0.9em;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            min-width: 48px; /* Minimum touch target size */
+            min-height: 48px; /* Minimum touch target size */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-option:hover {
+            background-color: #e9f5ff; /* Light blue on hover */
+        }
+
+        /* Category Filter Section */
+        .category-filter-section {
+            padding: 10px 0;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            z-index: 9; /* Below header, above list */
+        }
+
+        .horizontal-category-tab-bar {
+            display: flex;
+            overflow-x: scroll; /* Enable horizontal scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            white-space: nowrap; /* Prevent tabs from wrapping */
+            padding: 0 10px;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+        }
+        .horizontal-category-tab-bar::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+        }
+
+        .category-tab-button {
+            flex: 0 0 auto; /* Prevent stretching and allow content-based width */
+            padding: 8px 15px;
+            margin: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 20px; /* Pill-shaped buttons */
+            background-color: #e9e9e9;
+            color: #555;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+            min-width: 48px; min-height: 48px; /* Minimum touch target size */
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .category-tab-button.active {
+            background-color: #007bff; /* Primary blue for active tab */
+            color: #fff;
+            border-color: #007bff;
+        }
+        .category-tab-button:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+
+        /* News Article List */
+        .news-article-list {
+            flex-grow: 1; /* Takes remaining vertical space */
+            overflow-y: scroll; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch;
+            padding: 10px;
+            background-color: #f0f2f5;
+        }
+
+        /* News Article Card */
+        .news-article-card {
+            background-color: #fff;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden; /* Ensures image corners are rounded if card has border-radius */
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .news-article-card:hover {
+            transform: translateY(-3px); /* Subtle lift effect on hover */
+        }
+
+        .article-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover; /* Ensures image covers the area without distortion */
+            display: block;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-content {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .article-brief-description {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+            display: -webkit-box; /* For multi-line truncation */
+            -webkit-line-clamp: 3; /* Show up to 3 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .read-all-link {
+            align-self: flex-end; /* Pushes to bottom-right within card-content */
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            font-size: 0.9em;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            text-decoration: none; /* Remove underline for anchor tag */
+            min-width: 48px; min-height: 48px; /* Minimum touch target size */
+            display: flex; align-items: center; justify-content: center;
+        }
+        .read-all-link:hover {
+            background-color: #e9f5ff;
+        }
+
+        /* Full Article View Page */
+        .article-header-bar {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .back-button {
+            background-color: transparent;
+            border: none;
+            font-size: 1.5em; /* Larger icon */
+            color: #007bff;
+            cursor: pointer;
+            padding: 0 10px 0 0;
+            line-height: 1; /* Align arrow correctly */
+            min-width: 48px; min-height: 48px; /* Minimum touch target size */
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .article-page-title {
+            flex-grow: 1; /* Allows title to take available space and center */
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+            padding-right: 30px; /* Offset for back button to visually center title */
+        }
+
+        .article-content-scroll {
+            flex-grow: 1; /* Takes remaining vertical space */
+            overflow-y: scroll; /* Enable vertical scrolling for article content */
+            -webkit-overflow-scrolling: touch;
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .full-article-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border-radius: 8px; /* Slightly rounded corners for full image */
+        }
+
+        .full-article-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #222;
+            margin: 0 0 15px 0;
+            line-height: 1.3;
+        }
+
+        .detailed-body-text {
+            font-size: 1em;
+            color: #444;
+            line-height: 1.6;
+        }
+        .detailed-body-text p {
+            margin: 0 0 1em 0; /* Spacing between paragraphs */
+        }
+
+        /* Empty State View */
+        .empty-state-view {
+            display: none; /* Hidden by default, shown by JS when list is empty */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            background-color: #f0f2f5;
+        }
+        .empty-state-view p {
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+
+        <!-- I. Main News Feed Page -->
+        <div id="mainNewsFeedPage" class="page active">
+            <!-- Header Section -->
+            <div class="header-section">
+                <span class="personalized-greeting">Hi, John Doe!</span>
+                <button class="logout-option">Logout</button>
+            </div>
+
+            <!-- Category Filter Section -->
+            <div class="category-filter-section">
+                <div class="horizontal-category-tab-bar" id="categoryTabBar">
+                    <button class="category-tab-button active" data-category="all">All News</button>
+                    <button class="category-tab-button" data-category="sports">Sports</button>
+                    <button class="category-tab-button" data-category="events">Events</button>
+                    <button class="category-tab-button" data-category="logistics">Logistics</button>
+                    <button class="category-tab-button" data-category="technology">Technology</button>
+                    <button class="category-tab-button" data-category="health">Health</button>
+                    <button class="category-tab-button" data-category="finance">Finance</button>
+                </div>
+            </div>
+
+            <!-- News Article List -->
+            <div class="news-article-list" id="newsArticleList">
+                <!-- NewsArticleCard instances will be populated here by JavaScript -->
+            </div>
+
+            <!-- Empty State View (initially hidden) -->
+            <div class="empty-state-view" id="emptyStateView">
+                <p style="font-size: 3em;">📭</p>
+                <p>No news articles found in this category.</p>
+            </div>
+        </div>
+
+        <!-- II. Full Article View Page -->
+        <div id="fullArticleViewPage" class="page">
+            <!-- Article Header Bar -->
+            <div class="article-header-bar">
+                <button class="back-button" onclick="showMainFeed()" aria-label="Go back">&#x2190;</button> <!-- Left arrow icon -->
+                <h2 class="article-page-title" id="fullArticlePageTitle">News Article</h2>
+            </div>
+
+            <!-- Article Content Scroll -->
+            <div class="article-content-scroll" id="articleContentScroll">
+                <img src="" alt="Full Article Image" class="full-article-image" id="fullArticleImage">
+                <h1 class="full-article-title" id="fullArticleTitle"></h1>
+                <div class="detailed-body-text" id="detailedBodyText">
+                    <!-- Detailed body text will be populated here by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Dummy Data for Articles
+        const articles = [
+            {
+                id: 'article1',
+                category: 'sports',
+                image: 'https://via.placeholder.com/375x180/007bff/FFFFFF?text=Sports+Highlight',
+                fullImage: 'https://via.placeholder.com/375x220/007bff/FFFFFF?text=Sports+Highlight+Full',
+                title: 'Local Team Wins Championship in Thrilling Overtime',
+                brief: 'The city\'s beloved basketball team secured a dramatic victory last night, clinching the championship title after an intense overtime period...',
+                fullContent: `
+                    <p>In a nail-biting finish that had fans on the edge of their seats, the Raptors emerged victorious, defeating their long-standing rivals, the Warriors, in a stunning 102-98 overtime win.</p>
+                    <p>The game, held at the packed City Arena, showcased incredible athleticism and teamwork from both sides. With seconds left on the clock in regulation, their star player hit a crucial three-pointer, forcing the game into overtime.</p>
+                    <p>During the extra period, the Raptors defense tightened, and their star player, Michael J., scored 8 consecutive points, sealing the historic win. This marks the team's first championship in over a decade, sending the city into jubilant celebrations.</p>
+                    <p>Coach Smith praised his team's resilience and dedication. "They never gave up, even when things looked tough. This victory is a testament to their hard work and belief in each other," he stated in the post-game press conference.</p>
+                    <p>Fans are already looking forward to the victory parade scheduled for next weekend, where the team will undoubtedly be celebrated as heroes.</p>
+                `
+            },
+            {
+                id: 'article2',
+                category: 'events',
+                image: 'https://via.placeholder.com/375x180/28a745/FFFFFF?text=Community+Event',
+                fullImage: 'https://via.placeholder.com/375x220/28a745/FFFFFF?text=Community+Event+Full',
+                title: 'Annual Summer Festival Kicks Off Next Weekend',
+                brief: 'Get ready for fun! The highly anticipated annual summer festival is set to begin next Saturday, featuring live music, food trucks, and family activities...',
+                fullContent: `
+                    <p>The city's much-loved Annual Summer Festival is just around the corner, promising a weekend full of entertainment, delicious food, and community spirit. Kicking off next Saturday at Central Park, the festival will run from 10 AM to 10 PM each day.</p>
+                    <p>This year's lineup includes a diverse range of local bands performing on the main stage, a gourmet food truck alley offering cuisines from around the world, and a dedicated kids' zone with games, face painting, and magic shows.</p>
+                    <p>Organizers are expecting record attendance, encouraging visitors to use public transport or carpool due to limited parking. "We've worked hard to make this year's festival the best one yet, with something for everyone," said Jane Doe, event coordinator. "It's a fantastic opportunity for our community to come together and celebrate."</p>
+                    <p>Don't miss the grand fireworks display on Saturday evening, a highlight that traditionally draws large crowds. Admission is free, with proceeds from vendors supporting local charities.</p>
+                `
+            },
+            {
+                id: 'article3',
+                category: 'logistics',
+                image: 'https://via.placeholder.com/375x180/ffc107/FFFFFF?text=Logistics+Update',
+                fullImage: 'https://via.placeholder.com/375x220/ffc107/FFFFFF?text=Logistics+Update+Full',
+                title: 'New Smart City Logistics Hub Opens Downtown',
+                brief: 'A state-of-the-art logistics hub, integrating AI-driven delivery systems, has officially launched in the downtown area...',
+                fullContent: `
+                    <p>The future of urban delivery has arrived with the grand opening of the new Smart City Logistics Hub in the bustling downtown district. This innovative facility is set to revolutionize last-mile delivery services, making them faster, more efficient, and environmentally friendly.</p>
+                    <p>Equipped with cutting-edge AI-driven routing systems and a fleet of electric vehicles, the hub aims to significantly reduce traffic congestion and carbon emissions in the city center. Local businesses are expected to benefit immensely from optimized supply chains and quicker delivery times to customers.</p>
+                    <p>"This hub represents a major step forward in our vision for a smarter, more sustainable city," commented Mayor Adams, Director of Urban Planning. "It's not just about delivering packages; it's about building a more connected and efficient urban ecosystem."</p>
+                    <p>The project, a collaboration between the city council and TechLogix Corp., has been under development for three years and is expected to create numerous jobs in the logistics and technology sectors.</p>
+                    <p>Initial pilot programs have shown promising results, with delivery times reduced by an average of 25% and a notable decrease in operational costs for participating businesses.</p>
+                `
+            },
+            {
+                id: 'article4',
+                category: 'technology',
+                image: 'https://via.placeholder.com/375x180/6f42c1/FFFFFF?text=Tech+Innovation',
+                fullImage: 'https://via.placeholder.com/375x220/6f42c1/FFFFFF?text=Tech+Innovation+Full',
+                title: 'Quantum Computing Achieves New Milestone',
+                brief: 'Researchers at MIT have announced a significant breakthrough in quantum entanglement, paving the way for more powerful computing...',
+                fullContent: `
+                    <p>In a groundbreaking announcement, scientists at MIT's Quantum Research Lab have achieved a new milestone in quantum computing, successfully maintaining quantum entanglement for a record duration. This advancement brings the world closer to realizing the full potential of quantum computers.</p>
+                    <p>Quantum entanglement, a phenomenon where two particles become linked and share the same fate regardless of distance, is a cornerstone of quantum computing. The ability to sustain this state for longer periods is crucial for building stable and error-resistant quantum processors.</p>
+                    <p>"This is a pivotal moment for the field," stated Dr. Alice Chen, head of the research team. "Our findings open up new avenues for developing more robust quantum bits (qubits) and ultimately, more powerful quantum machines capable of solving problems currently intractable for even the most advanced supercomputers."</p>
+                    <p>Potential applications for this technology range from discovering new drugs and materials to breaking complex encryption codes and optimizing global logistics networks. While practical quantum computers are still years away, this breakthrough marks a significant leap forward in the journey.</p>
+                `
+            },
+            {
+                id: 'article5',
+                category: 'health',
+                image: 'https://via.placeholder.com/375x180/dc3545/FFFFFF?text=Health+Discovery',
+                fullImage: 'https://via.placeholder.com/375x220/dc3545/FFFFFF?text=Health+Discovery+Full',
+                title: 'New Study Links Diet to Mental Well-being',
+                brief: 'A comprehensive study has revealed a strong correlation between dietary patterns and mental health outcomes, emphasizing the importance of nutrition...',
+                fullContent: `
+                    <p>A recent large-scale study published in the journal "Nutritional Psychiatry" has provided compelling evidence linking dietary habits directly to mental well-being. Researchers analyzed data from thousands of participants, finding a significant correlation between a balanced, nutrient-rich diet and lower rates of anxiety and depression.</p>
+                    <p>The study highlighted that diets rich in fruits, vegetables, whole grains, and lean proteins, often referred to as "Mediterranean-style" diets, were associated with improved mood and cognitive function. Conversely, diets high in processed foods, sugar, and unhealthy fats were linked to an increased risk of mental health issues.</p>
+                    <p>"Our findings underscore that what we eat impacts not just our physical health, but our mental health too," explained Dr. Emily White, lead author of the study. "It's a powerful reminder that nutrition plays a holistic role in our overall well-being."</p>
+                    <p>Experts recommend incorporating more omega-3 fatty acids, probiotics, and antioxidants into daily meals, while reducing intake of highly processed foods. This study adds to a growing body of research advocating for dietary interventions as a complementary approach to mental health care.</p>
+                `
+            },
+            {
+                id: 'article6',
+                category: 'finance',
+                image: 'https://via.placeholder.com/375x180/17a2b8/FFFFFF?text=Market+Insights',
+                fullImage: 'https://via.placeholder.com/375x220/17a2b8/FFFFFF?text=Market+Insights+Full',
+                title: 'Global Markets React to Central Bank Policy Changes',
+                brief: 'Stock markets worldwide experienced significant shifts today following unexpected announcements from major central banks regarding interest rates...',
+                fullContent: `
+                    <p>Global financial markets were in flux today as central banks in key economies announced unexpected shifts in their monetary policies, primarily concerning interest rates. The decisions have sent ripples across equities, bonds, and currency markets.</p>
+                    <p>The Federal Reserve surprised analysts by raising its benchmark interest rate by 50 basis points, citing persistent inflationary pressures. Shortly after, the European Central Bank announced a more cautious approach, opting to hold rates steady while signaling potential future hikes.</p>
+                    <p>"The divergence in policy signals a complex economic landscape," noted Sarah Lee, Chief Economist at Global Financials Inc. "Investors are now grappling with how these different strategies will impact global growth and inflation trajectories."</p>
+                    <p>Stock indices in North America saw declines, particularly in rate-sensitive sectors like technology, while markets in Europe showed mixed reactions. Commodity prices also reacted, with crude oil experiencing a slight increase due to speculative buying.</p>
+                    <p>Analysts are advising investors to brace for continued volatility as markets digest the implications of these policy changes and anticipate further actions from central banks in the coming months.</p>
+                `
+            }
+        ];
+
+        // DOM Element References
+        const mainNewsFeedPage = document.getElementById('mainNewsFeedPage');
+        const fullArticleViewPage = document.getElementById('fullArticleViewPage');
+        const newsArticleList = document.getElementById('newsArticleList');
+        const categoryTabBar = document.getElementById('categoryTabBar');
+        const emptyStateView = document.getElementById('emptyStateView');
+
+        const fullArticleImage = document.getElementById('fullArticleImage');
+        const fullArticleTitle = document.getElementById('fullArticleTitle');
+        const detailedBodyText = document.getElementById('detailedBodyText');
+        const fullArticlePageTitle = document.getElementById('fullArticlePageTitle');
+
+        let currentCategory = 'all'; // Default active category
+
+        /**
+         * Renders the list of news articles based on the selected category.
+         * Populates the `newsArticleList` or shows an `emptyStateView`.
+         * Attaches event listeners for navigation.
+         */
+        function renderNewsArticles(category) {
+            newsArticleList.innerHTML = ''; // Clear existing articles
+            const filteredArticles = category === 'all' ? articles : articles.filter(a => a.category === category);
+
+            if (filteredArticles.length === 0) {
+                emptyStateView.style.display = 'flex'; // Show empty state
+                newsArticleList.style.display = 'none'; // Hide article list
+            } else {
+                emptyStateView.style.display = 'none'; // Hide empty state
+                newsArticleList.style.display = 'block'; // Show article list
+                filteredArticles.forEach(article => {
+                    const card = document.createElement('div');
+                    card.className = 'news-article-card';
+                    card.setAttribute('data-article-id', article.id); // Store article ID on the card
+                    card.innerHTML = `
+                        <img src="${article.image}" alt="${article.title}" class="article-image">
+                        <div class="card-content">
+                            <h3 class="article-title">${article.title}</h3>
+                            <p class="article-brief-description">${article.brief}</p>
+                            <a href="#" class="read-all-link" data-article-id="${article.id}">Read all...</a>
+                        </div>
+                    `;
+                    newsArticleList.appendChild(card);
+                });
+
+                // Attach event listeners to newly created "Read all..." links and cards
+                document.querySelectorAll('.news-article-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        // Prevent click on card from bubbling if a child interactive element (like "Read all...") was clicked
+                        if (e.target.classList.contains('read-all-link')) {
+                            e.preventDefault(); // Stop default anchor behavior
+                        }
+                        // Navigate to full article view using the article ID from the card
+                        showFullArticle(card.getAttribute('data-article-id'));
+                    });
+                });
+            }
+        }
+
+        /**
+         * Switches the view to the Main News Feed Page.
+         */
+        function showMainFeed() {
+            fullArticleViewPage.classList.remove('active');
+            mainNewsFeedPage.classList.add('active');
+            fullArticlePageTitle.textContent = 'News Article'; // Reset header title for full article view
+        }
+
+        /**
+         * Switches the view to the Full Article View Page and populates it with article data.
+         * @param {string} articleId - The ID of the article to display.
+         */
+        function showFullArticle(articleId) {
+            const article = articles.find(a => a.id === articleId);
+            if (article) {
+                fullArticleImage.src = article.fullImage;
+                fullArticleImage.alt = article.title;
+                fullArticleTitle.textContent = article.title;
+                detailedBodyText.innerHTML = article.fullContent; // Use innerHTML for paragraphs
+                fullArticlePageTitle.textContent = article.title; // Set header title to actual article title
+
+                mainNewsFeedPage.classList.remove('active');
+                fullArticleViewPage.classList.add('active');
+                articleContentScroll.scrollTop = 0; // Scroll to top when showing new article
+            } else {
+                alert('Article not found!');
+                showMainFeed(); // Go back to main feed if article isn't found
+            }
+        }
+
+        // Event Listeners for Category Tabs
+        categoryTabBar.querySelectorAll('.category-tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove 'active' class from all category buttons
+                categoryTabBar.querySelectorAll('.category-tab-button').forEach(btn => btn.classList.remove('active'));
+                // Add 'active' class to the clicked button
+                button.classList.add('active');
+                currentCategory = button.getAttribute('data-category'); // Update current category
+                renderNewsArticles(currentCategory); // Re-render articles for the new category
+            });
+        });
+
+        // Initial render on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNewsArticles(currentCategory);
+        });
+
+        // Logout functionality (simple alert for demonstration)
+        document.querySelector('.logout-option').addEventListener('click', () => {
+            alert('Logging out... (In a real app, this would clear session, redirect, etc.)');
+            // For a real application, you would implement actual logout logic here
+        });
+
+    </script>
+</body>
+</html>

@@ -1,156 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Estate Search</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f8f8f8;
-    }
-
-    .container {
-      max-width: 375px; /* Match mobile screen width */
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 20px;
-    }
-
-    .search-form {
-      display: flex;
-      flex-direction: column;
-    }
-
-    label {
-      margin-bottom: 5px;
-      font-weight: bold;
-      color: #555;
-    }
-
-    input[type="text"],
-    select {
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
-    select {
-      appearance: none; /* Remove default arrow */
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      background-size: 16px;
-    }
-
-    button {
-      background-color: #007bff;
-      color: white;
-      padding: 15px;
-      border: none;
-      border-radius: 5px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-
-    .featured-properties {
-      margin-top: 30px;
-    }
-
-    .featured-properties h2 {
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    .property-list {
-      display: flex;
-      flex-direction: column; /* Stack properties vertically */
-    }
-
-    .property-item {
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
-
-    .property-item h3 {
-      margin-top: 0;
-      color: #333;
-    }
-
-    .property-item p {
-      color: #666;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Search</title>
 </head>
-<body>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f5;">
 
-  <div class="container">
-    <h1>Find Your Dream Home</h1>
+    <!-- Main container for the mobile page content -->
+    <!-- max-width: 375px and margin: 0 auto simulates a mobile screen and centers it -->
+    <div style="max-width: 375px; margin: 0 auto; padding: 20px; box-sizing: border-box; background-color: #ffffff; box-shadow: 0 0 15px rgba(0,0,0,0.1); min-height: 100vh;">
 
-    <form class="search-form">
-      <label for="location">Location:</label>
-      <input type="text" id="location" name="location" placeholder="Enter city or neighborhood">
+        <h2 style="text-align: center; color: #333; margin-bottom: 25px; font-size: 24px;">Find Your Property</h2>
 
-      <label for="property-type">Property Type:</label>
-      <select id="property-type" name="property-type">
-        <option value="">Any</option>
-        <option value="house">House</option>
-        <option value="apartment">Apartment</option>
-        <option value="condo">Condo</option>
-        <option value="townhouse">Townhouse</option>
-      </select>
-
-      <label for="price-range">Price Range:</label>
-      <select id="price-range" name="price-range">
-        <option value="">Any</option>
-        <option value="50k-100k">$50,000 - $100,000</option>
-        <option value="100k-200k">$100,000 - $200,000</option>
-        <option value="200k-300k">$200,000 - $300,000</option>
-        <option value="300k+">$300,000+</option>
-      </select>
-
-      <button type="submit">Search</button>
-    </form>
-
-    <div class="featured-properties">
-      <h2>Featured Properties</h2>
-      <div class="property-list">
-
-        <div class="property-item">
-          <h3>Charming House in Suburbia</h3>
-          <p>3 bedrooms, 2 bathrooms.  Quiet neighborhood with great schools.</p>
+        <!-- Search Bar: Location, Project Name, or Keyword -->
+        <div style="margin-bottom: 20px;">
+            <label for="location" style="display: block; margin-bottom: 10px; font-weight: bold; color: #555; font-size: 15px;">Location, Project or Keyword</label>
+            <input type="text" id="location" placeholder="e.g., New York, Park Towers, 2BHK" 
+                   style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
         </div>
 
-        <div class="property-item">
-          <h3>Modern Apartment in Downtown</h3>
-          <p>1 bedroom, 1 bathroom.  Walkable to restaurants and shops.</p>
+        <!-- PG Only Properties Filter -->
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9; display: flex; align-items: center;">
+            <input type="checkbox" id="pgOnly" style="margin-right: 12px; width: 18px; height: 18px;">
+            <label for="pgOnly" style="font-weight: bold; color: #444; font-size: 16px; cursor: pointer;">PG Only Properties</label>
         </div>
 
-        <div class="property-item">
-          <h3>Spacious Condo with City Views</h3>
-          <p>2 bedrooms, 2 bathrooms.  Amenities include a pool and gym.</p>
+        <!-- Property Type Filter -->
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+            <label style="display: block; margin-bottom: 12px; font-weight: bold; color: #555; font-size: 15px;">Property Type</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px 20px;">
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="propertyType" value="apartment" style="margin-right: 8px; width: 16px; height: 16px;"> Apartment</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="propertyType" value="houseVilla" style="margin-right: 8px; width: 16px; height: 16px;"> House/Villa</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="propertyType" value="builderFloor" style="margin-right: 8px; width: 16px; height: 16px;"> Builder Floor</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="propertyType" value="farmHouse" style="margin-right: 8px; width: 16px; height: 16px;"> Farm House</label>
+            </div>
         </div>
 
-      </div>
+        <!-- Price Range Filter -->
+        <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+            <label style="display: block; margin-bottom: 12px; font-weight: bold; color: #555; font-size: 15px;">Price Range</label>
+            <div style="display: flex; justify-content: space-between; gap: 15px;">
+                <input type="number" placeholder="Min Price" 
+                       style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
+                <input type="number" placeholder="Max Price" 
+                       style="flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; box-sizing: border-box;">
+            </div>
+        </div>
+
+        <!-- Number of Bedrooms Filter -->
+        <div style="margin-bottom: 30px; padding: 15px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9;">
+            <label style="display: block; margin-bottom: 12px; font-weight: bold; color: #555; font-size: 15px;">Bedrooms</label>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px 20px;">
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="bedrooms" value="1" style="margin-right: 8px; width: 16px; height: 16px;"> 1</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="bedrooms" value="2" style="margin-right: 8px; width: 16px; height: 16px;"> 2</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="bedrooms" value="3" style="margin-right: 8px; width: 16px; height: 16px;"> 3</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="bedrooms" value="4" style="margin-right: 8px; width: 16px; height: 16px;"> 4</label>
+                <label style="display: flex; align-items: center; cursor: pointer;"><input type="radio" name="bedrooms" value="5+" style="margin-right: 8px; width: 16px; height: 16px;"> 5+</label>
+            </div>
+        </div>
+
+        <!-- Search Button -->
+        <button style="width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; transition: background-color 0.3s ease; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);">Search</button>
     </div>
-  </div>
 
 </body>
 </html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Questionnaire App</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font CDN (Material Design's default font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Global styles for the mobile screen simulation */
+        html, body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            color: rgba(0, 0, 0, 0.87); /* Default high emphasis text color */
+        }
+
+        /* Basic container to simulate the mobile screen dimensions */
+        #app-container {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            margin: 20px auto; /* Center the app on larger screens and add some margin */
+            border: 1px solid #ccc; /* Simulate device border */
+            border-radius: 8px; /* Slightly rounded corners */
+            overflow: hidden; /* Ensure content stays within bounds */
+            display: flex;
+            flex-direction: column;
+            background-color: #F5F5F5; /* Light grey background for the app */
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for app container */
+        }
+
+        /* UI Section 1: Top App Bar (Header & Progress) */
+        .top-app-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px; /* Standard MDC Top App Bar height */
+            padding: 0 16px;
+            background-color: #FFFFFF; /* White */
+            border-bottom: 1px solid #E0E0E0; /* Subtle separator */
+            box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),
+                        0px 4px 5px 0px rgba(0,0,0,0.14),
+                        0px 1px 10px 0px rgba(0,0,0,0.12); /* MD elevation 4 */
+            z-index: 10; /* Ensure it stays on top */
+        }
+
+        .top-app-bar__button {
+            background: none;
+            border: none;
+            color: rgba(0, 0, 0, 0.87); /* On-surface color */
+            padding: 0;
+            font-size: 24px; /* Material Icons size */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* Touch target size */
+            height: 48px; /* Touch target size */
+            border-radius: 50%; /* Make it circular for ripple effect */
+            transition: background-color 0.15s ease-in-out;
+            outline: none; /* Remove default focus outline */
+        }
+
+        .top-app-bar__button:hover {
+            background-color: rgba(0, 0, 0, 0.04); /* Hover effect */
+        }
+
+        .top-app-bar__progress {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(0, 0, 0, 0.60); /* Medium emphasis text */
+            flex-grow: 1;
+            text-align: center;
+            /* Offset the button to center text optically */
+            margin-left: -48px; 
+            white-space: nowrap; /* Prevent wrapping if text is long */
+        }
+
+        /* UI Section 2: Question Prompt Area */
+        .question-prompt {
+            padding: 48px 24px 32px 24px; /* Ample vertical padding, horizontal for content */
+            text-align: center;
+            background-color: #F8F9FA; /* Light background for contrast */
+            flex-grow: 1; /* Allows it to take up available space */
+            display: flex;
+            align-items: center; /* Vertically center the question */
+            justify-content: center; /* Horizontally center the question */
+        }
+
+        .question-prompt__text {
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 28px;
+            color: rgba(0, 0, 0, 0.87); /* High emphasis text */
+            margin: 0; /* Remove default paragraph margin */
+            max-width: 320px; /* Constrain width for readability on wide screens */
+        }
+
+        /* UI Section 3: Scale Response Input */
+        .scale-response {
+            padding: 24px;
+            background-color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .scale-response__labels {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px; /* Space between labels and slider */
+            max-width: 320px; /* Align with question width */
+        }
+
+        .scale-response__label {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.60); /* Medium emphasis text */
+        }
+
+        .scale-response__slider {
+            width: 100%;
+            max-width: 320px; /* Consistent width */
+            -webkit-appearance: none; /* Hide default slider styling */
+            appearance: none;
+            height: 4px; /* Slider track height */
+            border-radius: 2px;
+            outline: none;
+            margin: 0;
+            cursor: pointer;
+            /* Using CSS custom property for track fill. Default value is 50% for static display. */
+            --progress: 50%; 
+            background: linear-gradient(to right, #6200EE var(--progress), #E0E0E0 var(--progress));
+            transition: background 0.1s ease-in-out; /* Smooth transition for track fill */
+        }
+
+        /* Custom slider thumb for Material Design look (WebKit browsers) */
+        .scale-response__slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px; /* Thumb size */
+            height: 24px; /* Thumb size */
+            background: #6200EE; /* Primary color */
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #FFFFFF; /* White border for contrast */
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.2); /* Subtle shadow */
+            margin-top: -10px; /* Vertically center thumb on track (half of (thumb_size - track_height)) */
+            transition: background-color 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+        }
+        /* Custom slider thumb for Material Design look (Mozilla Firefox) */
+        .scale-response__slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #6200EE;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.2);
+            transition: background-color 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+        }
+        
+        /* UI Section 4: Secondary Action Button */
+        .secondary-action {
+            padding: 16px 24px;
+            background-color: #FFFFFF;
+            text-align: center; /* Center the button */
+        }
+
+        .secondary-action__button {
+            background: none;
+            border: none;
+            color: #6200EE; /* Primary color */
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px; /* Standard button border-radius */
+            transition: background-color 0.15s ease-in-out;
+            outline: none; /* Remove default focus outline */
+        }
+
+        .secondary-action__button:hover {
+            background-color: rgba(98, 0, 238, 0.04); /* Primary color with 4% opacity for hover */
+        }
+
+        /* UI Section 5: Primary Action Button (Navigation) */
+        .primary-action-footer {
+            padding: 16px 24px;
+            background-color: #FFFFFF;
+            box-shadow: 0px -2px 4px -1px rgba(0,0,0,0.2),
+                        0px -4px 5px 0px rgba(0,0,0,0.14),
+                        0px -1px 10px 0px rgba(0,0,0,0.12); /* MD elevation 4, inverted */
+            display: flex;
+            justify-content: flex-end; /* Align to the right for progression */
+            z-index: 10; /* Ensure it stays on top */
+        }
+
+        .primary-action__button {
+            background-color: #6200EE; /* Primary color */
+            color: #FFFFFF;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            min-width: 80px; /* Ensure a decent size */
+            box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),
+                        0px 4px 5px 0px rgba(0,0,0,0.14),
+                        0px 1px 10px 0px rgba(0,0,0,0.12); /* MD elevation 2 */
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            outline: none; /* Remove default focus outline */
+        }
+
+        .primary-action__button:hover {
+            background-color: #791EED; /* Slightly darker primary on hover */
+            box-shadow: 0px 4px 5px -2px rgba(0,0,0,0.2),
+                        0px 6px 10px 0px rgba(0,0,0,0.14),
+                        0px 2px 14px 0px rgba(0,0,0,0.12); /* Higher elevation on hover */
+        }
+
+        /* Example for disabled state for the primary button */
+        .primary-action__button:disabled {
+            opacity: 0.6;
+            pointer-events: none; /* Prevents click events when disabled */
+            background-color: #BBBBBB; /* Disabled button background */
+            color: #E0E0E0; /* Disabled text color */
+            box-shadow: none; /* No shadow when disabled */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <!-- UI Section 1: Top App Bar (Header & Progress) -->
+        <header class="top-app-bar">
+            <button class="top-app-bar__button">
+                <i class="material-icons">close</i>
+            </button>
+            <span class="top-app-bar__progress">
+                Question 5 of 12
+            </span>
+        </header>
+
+        <!-- UI Section 2: Question Prompt Area -->
+        <section class="question-prompt">
+            <p class="question-prompt__text">
+                How much do you value spontaneous adventures over meticulously planned trips?
+            </p>
+        </section>
+
+        <!-- UI Section 3: Scale Response Input -->
+        <section class="scale-response">
+            <div class="scale-response__labels">
+                <span class="scale-response__label">Always Spontaneous</span>
+                <span class="scale-response__label">Always Planned</span>
+            </div>
+            <input type="range" min="0" max="100" value="50" class="scale-response__slider">
+            <!-- The slider's track fill is dynamically updated via JavaScript to reflect the current value. -->
+        </section>
+
+        <!-- UI Section 4: Secondary Action Button -->
+        <section class="secondary-action">
+            <button class="secondary-action__button">
+                Ask me differently
+            </button>
+        </section>
+
+        <!-- UI Section 5: Primary Action Button (Navigation) -->
+        <footer class="primary-action-footer">
+            <button class="primary-action__button">
+                Next
+            </button>
+        </footer>
+    </div>
+
+    <!-- Small JS for slider progress visualization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const slider = document.querySelector('.scale-response__slider');
+            if (slider) {
+                const updateSliderProgress = () => {
+                    const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+                    slider.style.setProperty('--progress', `${value}%`);
+                };
+                slider.addEventListener('input', updateSliderProgress);
+                updateSliderProgress(); // Set initial progress on load
+            }
+        });
+    </script>
+</body>
+</html>

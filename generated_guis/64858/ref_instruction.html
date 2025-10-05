@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>New Fax</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Material Design Web CSS CDN (for core styles and components) -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+
+    <style>
+        /* Base styling for the document and screen simulation */
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensures the mobile screen is centered vertically on larger displays */
+            background-color: #f5f5f5; /* Light grey background for the viewport outside the phone */
+            font-family: 'Roboto', sans-serif; /* Default Material Design font */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Mobile Screen Simulation (375px width x 667px height) */
+        .mobile-screen {
+            width: 375px; /* Specified mobile screen width */
+            height: 667px; /* Specified mobile screen height */
+            background-color: var(--mdc-theme-background, #FFFFFF); /* Page background color */
+            box-shadow: 0 0 10px rgba(0,0,0,0.15); /* Subtle shadow for screen separation */
+            position: relative; /* Essential for positioning fixed/absolute children (footer) */
+            display: flex;
+            flex-direction: column; /* Stacks content vertically */
+            overflow: hidden; /* Ensures content does not overflow the screen bounds */
+        }
+
+        /* Material Design Theme Colors (example definition, MDC Web CSS provides defaults) */
+        :root {
+            --mdc-theme-primary: #6200EE; /* Deep Purple, common Material primary */
+            --mdc-theme-on-primary: #FFFFFF;
+            --mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+            --mdc-theme-text-secondary-on-background: rgba(0, 0, 0, 0.6);
+            --mdc-theme-text-hint-on-background: rgba(0, 0, 0, 0.38);
+            --mdc-theme-surface: #FFFFFF;
+            --mdc-theme-background: #FFFFFF;
+        }
+
+        /* 1. Top App Bar & User Status */
+        .mdc-top-app-bar {
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            height: 56px; /* Explicit height as per description */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Standard elevation for app bar */
+            flex-shrink: 0; /* Prevent app bar from shrinking */
+        }
+
+        .mdc-top-app-bar__title {
+            font-weight: 500; /* headline6 typography */
+            font-size: 20px; /* headline6 typography */
+        }
+
+        .top-app-bar-credits {
+            display: flex;
+            align-items: center;
+            font-size: 16px; /* subtitle1 typography */
+            margin-right: 16px; /* Spacing before the help icon */
+            white-space: nowrap; /* Prevent credits from wrapping */
+        }
+
+        .top-app-bar-credits .material-icons {
+            font-size: 20px; /* Icon size slightly smaller than default 24px for visual balance */
+            margin-right: 4px; /* Space between icon and text */
+        }
+
+        .mdc-top-app-bar__action-item {
+            color: var(--mdc-theme-on-primary); /* Ensures icon button color matches on-primary */
+        }
+
+        /* Page Content Area - The main scrollable portion of the screen */
+        .page-content {
+            flex-grow: 1; /* Takes all available vertical space between app bar and footer */
+            overflow-y: auto; /* Enables vertical scrolling for content */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-bottom: 72px; /* Reserves space for the fixed footer at the bottom */
+            background-color: var(--mdc-theme-background); /* Ensures consistent background */
+        }
+
+        /* Section Headers (e.g., "Files to Fax", "Recipients") */
+        .section-header {
+            font-size: 16px; /* subtitle1 typography */
+            font-weight: 500; /* As specified for subtitle1 */
+            color: var(--mdc-theme-text-primary-on-background);
+            padding: 16px;
+            margin: 0; /* Remove default h2 margin */
+            padding-bottom: 8px; /* Slightly less padding at bottom for compact feel */
+        }
+
+        /* Container for "Add File" / "Add Recipient" buttons */
+        .add-item-container {
+            padding: 8px 16px 16px 16px; /* Top, Right, Bottom, Left padding */
+            display: flex;
+            justify-content: center; /* Centers the button horizontally */
+        }
+        .add-item-container .mdc-button {
+            width: 100%; /* Make button span full width of its container (minus padding) */
+            max-width: 343px; /* A common maximum width for full-width buttons on mobile */
+        }
+
+        /* List items general styling adjustments */
+        .mdc-list-item__meta.material-icons {
+            font-size: 24px; /* Standard Material Icon size for list actions */
+            color: var(--mdc-theme-text-secondary-on-background); /* Lighter color for secondary icons */
+            cursor: pointer; /* Indicates interactivity */
+        }
+
+        /* Placeholder message for empty lists */
+        .placeholder-message {
+            text-align: center;
+            color: var(--mdc-theme-text-hint-on-background); /* Hint text color */
+            padding: 24px 16px;
+            font-size: 14px; /* body2 typography */
+            margin: 0;
+        }
+
+        /* Recipient Source Selection (example of content for a bottom sheet/dialog) */
+        .recipient-source-selection {
+            /* This section is hidden by default in static HTML, would be shown dynamically */
+            display: none;
+            border-top: 1px solid rgba(0,0,0,0.08); /* Subtle separator from previous content */
+            margin-top: 16px;
+        }
+        .recipient-source-selection .mdc-list-item__graphic {
+            color: var(--mdc-theme-text-secondary-on-background);
+        }
+
+        /* 4. Action Buttons (Footer) */
+        .action-buttons-footer {
+            position: absolute; /* Positions footer relative to .mobile-screen */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 72px; /* Fixed height for the footer */
+            background-color: var(--mdc-theme-surface); /* White background */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Elevation for the footer */
+            padding: 12px 16px; /* Vertical and horizontal padding */
+            display: flex;
+            justify-content: space-between; /* Puts buttons on opposite ends (or with space between) */
+            align-items: center; /* Vertically centers buttons */
+            gap: 16px; /* Space between buttons */
+            flex-shrink: 0; /* Prevent footer from shrinking */
+        }
+
+        .action-buttons-footer .mdc-button {
+            height: 48px; /* Standard button height */
+            flex-grow: 1; /* Allows buttons to expand and fill available width */
+        }
+
+        /* Specific styling for the "Continue" button */
+        .action-buttons-footer .mdc-button--raised {
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            /* button typography (uppercase, 500, 14px) is default for mdc-button__label */
+        }
+
+        /* Specific styling for the "Clear Setup" button */
+        .action-buttons-footer .mdc-button--text .mdc-button__label {
+            text-transform: none; /* body2 typography does not have uppercase */
+            font-weight: normal; /* body2 typography is not bold */
+            font-size: 14px; /* body2 typography */
+            color: var(--mdc-theme-text-secondary-on-background); /* Less prominent text color */
+        }
+
+        /* Styling for disabled buttons */
+        .mdc-button[disabled] {
+            opacity: 0.5; /* Visually indicates disabled state */
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- 1. Top App Bar & User Status -->
+        <header class="mdc-top-app-bar">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <span class="mdc-top-app-bar__title">New Fax</span>
+                </section>
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                    <span class="top-app-bar-credits">
+                        <i class="material-icons">toll</i> 150 Credits
+                    </span>
+                    <button class="mdc-icon-button material-icons mdc-top-app-bar__action-item" aria-label="Help">help_outline</button>
+                </section>
+            </div>
+        </header>
+
+        <!-- Main page content area, which is scrollable -->
+        <main class="page-content">
+            <!-- 2. Files to Fax Section -->
+            <h2 class="section-header">Files to Fax</h2>
+            <div class="add-item-container">
+                <button class="mdc-button mdc-button--outlined">
+                    <span class="mdc-button__ripple"></span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">add_box</i>
+                    <span class="mdc-button__label">Add File</span>
+                </button>
+            </div>
+            
+            <ul class="mdc-list mdc-list--two-line">
+                <li class="mdc-list-item">
+                    <span class="mdc-list-item__text">
+                        <span class="mdc-list-item__primary-text">MyDocument.pdf</span>
+                        <span class="mdc-list-item__secondary-text">PDF, 1.2 MB</span>
+                    </span>
+                    <span class="mdc-list-item__meta material-icons" aria-hidden="true">close</span>
+                </li>
+                <li class="mdc-list-item">
+                    <span class="mdc-list-item__text">
+                        <span class="mdc-list-item__primary-text">Report.docx</span>
+                        <span class="mdc-list-item__secondary-text">Word Document, 0.8 MB</span>
+                    </span>
+                    <span class="mdc-list-item__meta material-icons" aria-hidden="true">close</span>
+                </li>
+            </ul>
+            <!-- Example: Placeholder if no files are selected (display: none for initial state) -->
+            <p class="placeholder-message" style="display: none;">No files selected yet</p>
+
+
+            <!-- 3. Recipients Section -->
+            <h2 class="section-header">Recipients</h2>
+            <div class="add-item-container">
+                <button class="mdc-button mdc-button--outlined">
+                    <span class="mdc-button__ripple"></span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">person_add</i>
+                    <span class="mdc-button__label">Add Recipient</span>
+                </button>
+            </div>
+
+            <ul class="mdc-list mdc-list--two-line">
+                <li class="mdc-list-item">
+                    <span class="mdc-list-item__text">
+                        <span class="mdc-list-item__primary-text">John Doe</span>
+                        <span class="mdc-list-item__secondary-text">+1-234-567-8901</span>
+                    </span>
+                    <span class="mdc-list-item__meta material-icons" aria-hidden="true">close</span>
+                </li>
+                <li class="mdc-list-item">
+                    <span class="mdc-list-item__text">
+                        <span class="mdc-list-item__primary-text">+1-987-654-3210</span>
+                    </span>
+                    <span class="mdc-list-item__meta material-icons" aria-hidden="true">close</span>
+                </li>
+            </ul>
+            <!-- Example: Placeholder if no recipients are added (display: none for initial state) -->
+            <p class="placeholder-message" style="display: none;">No recipients added yet</p>
+
+            <!-- Example: Recipient Source Selection content (would typically be inside a dialog or bottom sheet) -->
+            <div class="recipient-source-selection">
+                <ul class="mdc-list">
+                    <li class="mdc-list-item">
+                        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">dialpad</i>
+                        <span class="mdc-list-item__text">Enter Fax Number Manually</span>
+                    </li>
+                    <li class="mdc-list-item">
+                        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">contacts</i>
+                        <span class="mdc-list-item__text">Select From Contacts</span>
+                    </li>
+                </ul>
+            </div>
+        </main>
+
+        <!-- 4. Action Buttons (Footer) -->
+        <div class="action-buttons-footer">
+            <button class="mdc-button mdc-button--text">
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">Clear Setup</span>
+            </button>
+            <button class="mdc-button mdc-button--raised" disabled> <!-- 'disabled' attribute as per interaction description -->
+                <span class="mdc-button__ripple"></span>
+                <span class="mdc-button__label">Continue</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MDC Web JavaScript (optional: enables ripple effects, makes components interactive) -->
+    <!-- For a fully functional Material Design experience, you'd initialize MDC components with JS. -->
+    <!-- <script type="module">
+        import {MDCRipple} from 'https://unpkg.com/@material/ripple@latest/dist/mdc.ripple.min.js';
+        import {MDCTopAppBar} from 'https://unpkg.com/@material/top-app-bar@latest/dist/mdc.topAppBar.min.js';
+        
+        // Initialize Top App Bar
+        const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+        if (topAppBarElement) {
+            new MDCTopAppBar(topAppBarElement);
+        }
+
+        // Initialize Ripples for all MDC Buttons and List Items
+        const buttons = document.querySelectorAll('.mdc-button');
+        buttons.forEach(button => new MDCRipple(button));
+
+        const listItems = document.querySelectorAll('.mdc-list-item');
+        listItems.forEach(item => new MDCRipple(item));
+    </script> -->
+</body>
+</html>

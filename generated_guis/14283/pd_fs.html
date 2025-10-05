@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Share Post</title>
+    <!-- Set viewport for proper mobile rendering -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the entire page, ensuring it acts as a flex container */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background, typical for social apps */
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            height: 100vh; /* Take full viewport height */
+            width: 375px; /* Fixed width for mobile simulation */
+            max-width: 100%; /* Ensures it doesn't overflow on wider screens, but respects 375px */
+            box-sizing: border-box; /* Include padding and border in element's total width/height */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* 1. Top Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Pushes items to the ends */
+            align-items: center; /* Vertically centers items */
+            padding: 15px;
+            background-color: #fff; /* White background for the header */
+            border-bottom: 1px solid #ddd; /* Subtle separator */
+            flex-shrink: 0; /* Prevents header from shrinking if content is too long */
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .post-button {
+            background-color: #1877f2; /* Facebook blue */
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none; /* Remove outline on focus */
+        }
+
+        /* 2. User Input Section */
+        .user-input-section {
+            padding: 15px;
+            flex-grow: 1; /* Allows this section to take up available vertical space */
+            display: flex; /* Make it a flex container for the textarea */
+            flex-direction: column;
+        }
+
+        .comment-input {
+            width: 100%; /* Take full width of parent padding */
+            height: 120px; /* Fixed height for multi-line input */
+            border: none; /* No border for a clean look */
+            font-size: 16px;
+            resize: none; /* Disable manual resizing by user */
+            outline: none; /* Remove focus outline */
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: transparent; /* Blends with parent section background */
+            line-height: 1.4;
+            color: #333;
+        }
+        .comment-input::placeholder {
+            color: #888; /* Styling for placeholder text */
+        }
+
+        /* 3. Pre-populated Post Preview Section */
+        .post-preview-section {
+            padding: 0 15px 15px 15px; /* Padding on sides and bottom */
+            flex-shrink: 0; /* Prevents preview section from shrinking */
+        }
+
+        .preview-card {
+            background-color: #fff; /* White background for the card */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column; /* Stack content vertically */
+            text-align: left;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle shadow for a card effect */
+        }
+
+        .preview-link {
+            color: #606770; /* Muted grey for links */
+            font-size: 12px;
+            margin-bottom: 5px;
+            overflow: hidden; /* Hide overflow content */
+            white-space: nowrap; /* Prevent text wrapping */
+            text-overflow: ellipsis; /* Add ellipsis for truncated text */
+        }
+
+        .preview-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .preview-description {
+            color: #606770;
+            font-size: 14px;
+            line-height: 1.4;
+            display: -webkit-box; /* For multi-line ellipsis */
+            -webkit-line-clamp: 2; /* Limit description to 2 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 4. Sharing Options Section */
+        .sharing-options-section {
+            display: flex;
+            justify-content: space-around; /* Distributes items evenly with space around them */
+            align-items: center; /* Vertically centers items */
+            padding: 10px 0;
+            border-top: 1px solid #ddd; /* Separator from content above */
+            background-color: #fff;
+            flex-shrink: 0; /* Prevents this section from shrinking */
+            margin-top: auto; /* Pushes this section to the bottom of the flex container */
+        }
+
+        .share-option-button {
+            background: none; /* Transparent background */
+            border: none;
+            font-size: 24px; /* Large enough for icons */
+            padding: 10px;
+            cursor: pointer;
+            color: #606770; /* Greyish icon color */
+            outline: none; /* Remove outline on focus */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Header Section -->
+    <div class="header">
+        <span class="user-name">John Doe</span>
+        <button class="post-button">Post</button>
+    </div>
+
+    <!-- 2. User Input Section -->
+    <div class="user-input-section">
+        <textarea class="comment-input" placeholder="Say something about this..."></textarea>
+    </div>
+
+    <!-- 3. Pre-populated Post Preview Section -->
+    <div class="post-preview-section">
+        <div class="preview-card">
+            <span class="preview-link">www.example.com/article-about-the-new-tech-gadgets-and-how-they-impact-our-lives</span>
+            <span class="preview-title">Your Article Title Here: A Deep Dive into Modern Technology</span>
+            <span class="preview-description">A brief summary of the shared content goes here, discussing the main points and key takeaways from the article. This description helps users understand what they are sharing.</span>
+        </div>
+    </div>
+
+    <!-- 4. Sharing Options Section -->
+    <div class="sharing-options-section">
+        <!-- Unicode characters used for icons -->
+        <button class="share-option-button tag-friends" title="Tag Friends">&#128100;</button> <!-- Person icon -->
+        <button class="share-option-button add-feeling" title="Add Feeling/Activity">&#128512;</button> <!-- Smiling emoji icon -->
+        <button class="share-option-button check-in" title="Check In Location">&#128205;</button> <!-- Location pin icon -->
+    </div>
+
+</body>
+</html>

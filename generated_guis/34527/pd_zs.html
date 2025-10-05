@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Filter Page</title>
+    <style>
+        /* Base styles for the entire page */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+            /* Ensure the body doesn't cause extra scroll */
+            overflow: hidden;
+            height: 100vh;
+            display: flex; /* Make body a flex container to contain the filter-screen */
+            justify-content: center; /* Center the filter screen horizontally */
+            align-items: center; /* Center the filter screen vertically */
+        }
+
+        /* Main container for the filter screen - Simulates a mobile device screen */
+        .filter-screen {
+            width: 375px; /* Fixed width for simulation */
+            height: 667px; /* Fixed height for simulation */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent content inside from spilling out */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            border-radius: 12px; /* Soften the edges for a device-like feel */
+        }
+
+        /* Screen Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            position: sticky; /* Sticky header */
+            top: 0;
+            z-index: 10; /* Ensure it stays above scrollable content */
+        }
+
+        .header .close-btn {
+            font-size: 24px;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            padding: 5px; /* Increase tappable area */
+            line-height: 1; /* Align 'X' visually */
+        }
+
+        .header .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            flex-grow: 1;
+            text-align: center;
+            margin-left: -24px; /* Counteract the close button's width for true center */
+        }
+
+        /* Main Content Area (Scrollable) */
+        .content-area {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 20px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Section Header Styling */
+        .section-header {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        .section-header:first-child {
+            margin-top: 0; /* No top margin for the very first section */
+        }
+
+        /* Divider Styling */
+        .divider {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 25px 0;
+        }
+
+        /* Budget Range Filter */
+        .budget-inputs {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px; /* Space between inputs and 'to' */
+        }
+
+        .budget-input-wrapper {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 12px;
+            background-color: #fefefe;
+        }
+
+        .budget-input-wrapper span {
+            color: #666;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        .budget-input-wrapper input {
+            border: none;
+            outline: none;
+            padding: 0;
+            font-size: 14px;
+            color: #333;
+            width: 100%; /* Take full width of its wrapper */
+            background-color: transparent;
+        }
+        .budget-input-wrapper input::placeholder {
+            color: #aaa;
+        }
+
+        .budget-inputs .separator {
+            color: #888;
+            font-size: 14px;
+            flex-shrink: 0; /* Prevent 'to' from shrinking */
+        }
+
+        /* Checkbox List Styling (Property Type, Posted By) */
+        .checkbox-list label {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+            font-size: 15px;
+            color: #444;
+            border-bottom: 1px solid #eee; /* Subtle separator for list items */
+        }
+        .checkbox-list label:last-of-type {
+            border-bottom: none; /* No border for the last item in a list */
+        }
+
+        .checkbox-list input[type="checkbox"] {
+            margin-right: 12px;
+            /* Custom checkbox styling (optional, using default for simplicity) */
+            width: 18px;
+            height: 18px;
+            accent-color: #007bff; /* Primary color for checked state */
+            cursor: pointer;
+        }
+
+        /* Number of Bedrooms Filter (Grid/Pill-shaped) */
+        .bedroom-options {
+            display: flex;
+            flex-wrap: wrap; /* Allows items to wrap to the next line */
+            gap: 10px; /* Space between grid items */
+        }
+
+        .bedroom-option {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px; /* Pill shape */
+            cursor: pointer;
+            background-color: #fefefe;
+            font-size: 14px;
+            color: #555;
+            transition: background-color 0.2s, border-color 0.2s;
+            position: relative; /* For custom checkbox styling if needed */
+        }
+
+        .bedroom-option input[type="checkbox"] {
+            position: absolute; /* Hide default checkbox visually */
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            z-index: 1; /* Make it clickable */
+        }
+
+        /* Visual feedback for selected bedroom options */
+        .bedroom-option input[type="checkbox"]:checked + span {
+            color: #fff;
+        }
+        .bedroom-option input[type="checkbox"]:checked {
+            background-color: #007bff; /* Primary color */
+            border-color: #007bff;
+        }
+        /* Style the parent div/label when checkbox is checked */
+        .bedroom-option input[type="checkbox"]:checked ~ .bedroom-label {
+            color: #fff; /* Text color when checked */
+        }
+        .bedroom-option input[type="checkbox"]:checked {
+            background-color: #007bff; /* Background for the checkbox */
+        }
+        .bedroom-option.checked { /* Class for parent when checked */
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .bedroom-option.checked .bedroom-label {
+            color: #fff;
+        }
+
+
+        /* Sticky Footer with Action Buttons */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            position: sticky; /* Sticky footer */
+            bottom: 0;
+            z-index: 10;
+            gap: 15px; /* Space between buttons */
+        }
+
+        .footer button {
+            flex: 1; /* Make buttons take equal width */
+            padding: 14px 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+            box-sizing: border-box; /* Crucial for flex items */
+        }
+
+        .footer .reset-btn {
+            background-color: #fff;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+        .footer .reset-btn:hover {
+            background-color: #e6f2ff;
+        }
+
+        .footer .apply-btn {
+            background-color: #007bff; /* Primary accent color */
+            color: #fff;
+            font-weight: 600;
+        }
+        .footer .apply-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="filter-screen">
+        <!-- Screen Header -->
+        <div class="header">
+            <span class="close-btn">X</span>
+            <div class="title">Filters</div>
+            <!-- Optional Reset button can go here too, but footer is preferred -->
+        </div>
+
+        <!-- Main Content Area (Scrollable Filter Options) -->
+        <div class="content-area">
+
+            <!-- Budget Range Filter -->
+            <h2 class="section-header">Budget Range</h2>
+            <div class="budget-inputs">
+                <div class="budget-input-wrapper">
+                    <span>₹</span>
+                    <input type="number" placeholder="Min. Budget">
+                </div>
+                <span class="separator">to</span>
+                <div class="budget-input-wrapper">
+                    <span>₹</span>
+                    <input type="number" placeholder="Max. Budget">
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Property Type Filter -->
+            <h2 class="section-header">Property Type</h2>
+            <div class="checkbox-list">
+                <label>
+                    <input type="checkbox" name="propertyType" value="flat">
+                    Flat
+                </label>
+                <label>
+                    <input type="checkbox" name="propertyType" value="houseVilla">
+                    House/Villa
+                </label>
+                <label>
+                    <input type="checkbox" name="propertyType" value="officeSpace">
+                    Office Space
+                </label>
+                <label>
+                    <input type="checkbox" name="propertyType" value="pgHostel">
+                    PG/Hostel
+                </label>
+                <label>
+                    <input type="checkbox" name="propertyType" value="otherCommercial">
+                    Other Commercial
+                </label>
+                <label>
+                    <input type="checkbox" name="propertyType" value="shopShowroom">
+                    Shop/Showroom
+                </label>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Number of Bedrooms Filter -->
+            <h2 class="section-header">Number of Bedrooms</h2>
+            <div class="bedroom-options">
+                <!-- Using JavaScript for dynamic 'checked' class for visual feedback -->
+                <label class="bedroom-option">
+                    <input type="checkbox" name="bedrooms" value="1" onclick="this.parentNode.classList.toggle('checked', this.checked)">
+                    <span class="bedroom-label">1</span>
+                </label>
+                <label class="bedroom-option">
+                    <input type="checkbox" name="bedrooms" value="2" onclick="this.parentNode.classList.toggle('checked', this.checked)">
+                    <span class="bedroom-label">2</span>
+                </label>
+                <label class="bedroom-option">
+                    <input type="checkbox" name="bedrooms" value="3" onclick="this.parentNode.classList.toggle('checked', this.checked)">
+                    <span class="bedroom-label">3</span>
+                </label>
+                <label class="bedroom-option">
+                    <input type="checkbox" name="bedrooms" value="4" onclick="this.parentNode.classList.toggle('checked', this.checked)">
+                    <span class="bedroom-label">4</span>
+                </label>
+                <label class="bedroom-option">
+                    <input type="checkbox" name="bedrooms" value="gt4" onclick="this.parentNode.classList.toggle('checked', this.checked)">
+                    <span class="bedroom-label">>4</span>
+                </label>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Posted By Filter -->
+            <h2 class="section-header">Posted By</h2>
+            <div class="checkbox-list">
+                <label>
+                    <input type="checkbox" name="postedBy" value="owner">
+                    Owner
+                </label>
+                <label>
+                    <input type="checkbox" name="postedBy" value="builder">
+                    Builder
+                </label>
+                <label>
+                    <input type="checkbox" name="postedBy" value="agent">
+                    Agent
+                </label>
+            </div>
+            
+            <!-- Adding some extra space at the bottom to demonstrate scrollability -->
+            <div style="height: 50px;"></div>
+
+        </div>
+
+        <!-- Sticky Footer with Action Buttons -->
+        <div class="footer">
+            <button type="button" class="reset-btn">Reset</button>
+            <button type="submit" class="apply-btn">Apply Filters</button>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make a Payment</title>
+    <!-- Essential for mobile responsiveness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen simulation */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8; /* Light background for the page */
+            height: 100vh; /* Make body fill the full viewport height */
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+
+            /* Confine the body content to simulate a 375px wide mobile device */
+            max-width: 375px; 
+            margin: 0 auto; /* Center the content horizontally */
+            /* Optional: Add a subtle border to visualize the device frame */
+            border-left: 1px solid #eee; 
+            border-right: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Soft shadow for device look */
+        }
+
+        /* 1. Header Section (Top of the Screen) */
+        .header {
+            padding: 20px 15px; /* Top/bottom and left/right padding */
+            text-align: center; /* Center the title text */
+            background-color: #ffffff; /* White background for header */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow at the bottom */
+            font-size: 5vw; /* Responsive font size based on viewport width */
+            font-weight: bold;
+            color: #333; /* Darker text color */
+        }
+
+        /* 2. Search Method Selector Section (Below Header) */
+        .search-method-selector {
+            display: flex; /* Use flexbox to align buttons side-by-side */
+            margin: 20px 15px; /* Margin around the segmented control */
+            border: 1px solid #007bff; /* Blue border */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Ensures child elements respect border-radius */
+            background-color: #e9ecef; /* Light background for inactive tabs */
+        }
+        .search-method-selector button {
+            flex: 1; /* Each button takes equal space */
+            padding: 12px 0; /* Vertical padding */
+            border: none; /* Remove default button border */
+            background-color: transparent; /* Default transparent background */
+            font-size: 4vw; /* Responsive font size */
+            color: #007bff; /* Blue text color */
+            cursor: pointer; /* Indicate clickable element */
+            outline: none; /* Remove outline on focus */
+            transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transitions */
+        }
+        .search-method-selector button.active {
+            background-color: #007bff; /* Blue background for active tab */
+            color: white; /* White text for active tab */
+            font-weight: bold;
+        }
+        .search-method-selector button:not(.active):hover {
+            background-color: #d0e7ff; /* Light blue on hover for inactive tabs */
+        }
+
+        /* 3. Main Input Section (Dynamic Content) */
+        .main-input-section {
+            flex-grow: 1; /* Allows this section to fill available vertical space */
+            padding: 0 15px; /* Horizontal padding */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            -webkit-overflow-scrolling: touch; /* Enhance scrolling experience on iOS */
+        }
+        .input-group {
+            margin-bottom: 15px; /* Space between input fields */
+            text-align: left;
+        }
+        .input-group label {
+            display: block; /* Make label take its own line */
+            margin-bottom: 5px; /* Space between label and input */
+            font-size: 3.5vw; /* Responsive font size */
+            color: #555; /* Darker gray text */
+            font-weight: 500;
+        }
+        .input-wrapper {
+            display: flex; /* Use flexbox to align input and help icon */
+            align-items: center; /* Vertically center items */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 5px; /* Slightly rounded corners */
+            background-color: white; /* White background for input fields */
+        }
+        .input-wrapper input {
+            flex-grow: 1; /* Input takes all available space */
+            padding: 12px 10px; /* Padding inside input field */
+            border: none; /* Remove default input border */
+            outline: none; /* Remove outline on focus */
+            font-size: 4vw; /* Responsive font size */
+            width: 100%; /* Ensure input takes full width of its wrapper */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        .help-icon {
+            padding: 0 10px; /* Padding around the icon */
+            font-size: 4.5vw; /* Responsive icon size */
+            color: #007bff; /* Blue color for the icon */
+            cursor: pointer; /* Indicate clickable */
+            user-select: none; /* Prevent text selection on the icon */
+        }
+
+        /* 4. Options Section (Below Input Fields) */
+        .options-section {
+            padding: 15px; /* Padding around the checkbox */
+            text-align: left;
+            border-top: 1px solid #eee; /* Separator line */
+            margin-top: 15px; /* Space above this section */
+        }
+        .options-section label {
+            display: flex; /* Use flexbox to align checkbox and text */
+            align-items: center; /* Vertically center them */
+            font-size: 3.8vw; /* Responsive font size */
+            color: #555;
+            cursor: pointer;
+        }
+        .options-section input[type="checkbox"] {
+            margin-right: 10px; /* Space between checkbox and text */
+            width: 4vw; /* Responsive width for checkbox */
+            height: 4vw; /* Responsive height for checkbox */
+            accent-color: #007bff; /* Custom color for the checkbox */
+        }
+
+        /* 5. Action Section (Bottom of the Screen) */
+        .action-section {
+            padding: 15px; /* Padding around the button */
+            background-color: #ffffff; /* White background for footer */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Subtle shadow at the top */
+        }
+        .continue-button {
+            width: 100%; /* Button spans full width */
+            padding: 15px 20px; /* Generous padding for easy tapping */
+            background-color: #007bff; /* Blue background */
+            color: white; /* White text */
+            border: none; /* Remove default button border */
+            border-radius: 8px; /* Rounded corners */
+            font-size: 4.5vw; /* Responsive font size */
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        .continue-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Utility class to hide elements */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Header Section -->
+    <div class="header">
+        Make a Payment
+    </div>
+
+    <!-- 2. Search Method Selector Section -->
+    <div class="search-method-selector">
+        <button id="serviceAddressTab" class="active">Service Address</button>
+        <button id="accountNumberTab">Account Number</button>
+    </div>
+
+    <!-- 3. Main Input Section (Dynamic Content) -->
+    <div class="main-input-section">
+        <!-- Fields for "Service Address" -->
+        <div id="serviceAddressFields">
+            <div class="input-group">
+                <label for="lastName">Account Holder's Last Name</label>
+                <div class="input-wrapper">
+                    <input type="text" id="lastName" placeholder="e.g. Smith">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="streetAddress">Street Address</label>
+                <div class="input-wrapper">
+                    <input type="text" id="streetAddress" placeholder="e.g. 123 Main St">
+                    <span class="help-icon" title="Need help finding your address?">&#x3F;</span> <!-- Question mark icon -->
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="aptSuite">Apt/Suite (Optional)</label>
+                <div class="input-wrapper">
+                    <input type="text" id="aptSuite" placeholder="e.g. Apt 4B">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="zipCode">Zip Code</label>
+                <div class="input-wrapper">
+                    <input type="text" id="zipCode" placeholder="e.g. 90210">
+                </div>
+            </div>
+        </div>
+
+        <!-- Fields for "Account Number" (initially hidden) -->
+        <div id="accountNumberFields" class="hidden">
+            <div class="input-group">
+                <label for="accountNumber">Account Number</label>
+                <div class="input-wrapper">
+                    <input type="text" id="accountNumber" placeholder="e.g. 123456789">
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Options Section -->
+        <div class="options-section">
+            <label for="rememberInfo">
+                <input type="checkbox" id="rememberInfo">
+                Remember this information
+            </label>
+        </div>
+    </div>
+
+    <!-- 5. Action Section -->
+    <div class="action-section">
+        <button class="continue-button">Continue</button>
+    </div>
+
+    <!-- JavaScript for dynamic tab switching -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const serviceAddressTab = document.getElementById('serviceAddressTab');
+            const accountNumberTab = document.getElementById('accountNumberTab');
+            const serviceAddressFields = document.getElementById('serviceAddressFields');
+            const accountNumberFields = document.getElementById('accountNumberFields');
+            const mainInputSection = document.querySelector('.main-input-section'); // To reset scroll
+
+            // Function to show Service Address fields
+            function showServiceAddress() {
+                serviceAddressTab.classList.add('active');
+                accountNumberTab.classList.remove('active');
+                serviceAddressFields.classList.remove('hidden');
+                accountNumberFields.classList.add('hidden');
+                mainInputSection.scrollTop = 0; // Reset scroll position when switching
+            }
+
+            // Function to show Account Number fields
+            function showAccountNumber() {
+                accountNumberTab.classList.add('active');
+                serviceAddressTab.classList.remove('active');
+                accountNumberFields.classList.remove('hidden');
+                serviceAddressFields.classList.add('hidden');
+                mainInputSection.scrollTop = 0; // Reset scroll position when switching
+            }
+
+            // Add event listeners to the tab buttons
+            serviceAddressTab.addEventListener('click', showServiceAddress);
+            accountNumberTab.addEventListener('click', showAccountNumber);
+
+            // Initialize the page to show Service Address fields by default
+            showServiceAddress();
+        });
+    </script>
+
+</body>
+</html>

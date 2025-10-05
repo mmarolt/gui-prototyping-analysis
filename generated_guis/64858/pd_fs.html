@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Fax Sending</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen simulation */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            /* Simulate a mobile screen size of 375x667 pixels */
+            width: 375px;
+            height: 667px;
+            overflow: hidden; /* Prevent body scroll, content will scroll */
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            /* Optional: Add a border to visually represent the device screen */
+            border: 1px solid #ddd;
+        }
+
+        /* 1. Top Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 50px; /* Ensures a good tap target height */
+            box-sizing: border-box;
+        }
+        /* Placeholder for potential left-aligned elements (e.g., back button) to help center the title */
+        .header-left-placeholder {
+            width: 40px; /* Match the width of the help button for perfect centering */
+            flex-shrink: 0;
+        }
+        .header .page-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center;
+        }
+        .header .help-button {
+            background: none;
+            border: none;
+            font-size: 1.5em; /* Visual size of the icon */
+            color: #007bff; /* A common blue for actionable items */
+            cursor: pointer;
+            padding: 0; /* Remove default button padding */
+            line-height: 1; /* Helps with vertical alignment of the icon */
+            width: 40px; /* Explicitly set width to ensure consistent spacing */
+            height: 40px; /* Make it a square tap target */
+            display: flex; /* To perfectly center the '?' inside the button area */
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            outline: none; /* Remove outline on focus for a cleaner look */
+        }
+        .header .help-button:active {
+            opacity: 0.7; /* Visual feedback on tap */
+        }
+
+        /* Main Scrollable Content Area */
+        .main-content {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Section Headings for visual separation */
+        .section-heading {
+            font-size: 1em;
+            font-weight: bold;
+            color: #555;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            text-align: left;
+            padding-left: 5px; /* Slight indent for visual clarity */
+        }
+
+        /* 2. Files Section */
+        .add-file-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #e0f7fa; /* Light blue background */
+            color: #007bff;
+            border: 1px dashed #007bff; /* Dashed border to suggest "add" */
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+        }
+        .add-file-button::before {
+            content: '+'; /* Plus icon */
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        .add-file-button:active {
+            background-color: #cceeff; /* Visual feedback on tap */
+        }
+
+        .file-item, .recipient-item {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+        }
+        .file-item .file-icon {
+            font-size: 1.5em; /* Size of the icon */
+            margin-right: 10px;
+            color: #6c757d; /* Grey icon color */
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+        .file-item .file-name, .recipient-item .recipient-detail {
+            flex-grow: 1; /* Allows text to take available space */
+            text-align: left;
+            font-size: 0.95em;
+            white-space: nowrap; /* Prevent text wrapping */
+            overflow: hidden; /* Hide overflowed text */
+            text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+        }
+        .file-item .remove-button, .recipient-item .remove-button {
+            background: none;
+            border: none;
+            color: #dc3545; /* Red for remove actions */
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0 5px; /* Make it easier to tap */
+            outline: none;
+            flex-shrink: 0; /* Prevent button from shrinking */
+        }
+        .file-item .remove-button:active, .recipient-item .remove-button:active {
+            opacity: 0.7;
+        }
+
+        /* 3. Recipients Section */
+        .fax-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .fax-input-group input[type="tel"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-right: 10px;
+            box-sizing: border-box;
+            outline: none; /* Remove default focus outline */
+        }
+        .fax-input-group input[type="tel"]:focus {
+            border-color: #007bff; /* Highlight on focus */
+        }
+        .add-from-contacts-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent button text from wrapping */
+            outline: none;
+            flex-shrink: 0; /* Prevent button from shrinking */
+        }
+        .add-from-contacts-button:active {
+            background-color: #0056b3; /* Darker blue on tap */
+        }
+
+        /* 4. Credits Balance Display */
+        .credits-display {
+            background-color: #e9ecef; /* Light grey background */
+            padding: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px; /* Adds space above bottom action bar */
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1em;
+            color: #555;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .credits-display strong {
+            color: #007bff; /* Highlight available credits */
+        }
+
+        /* 5. Bottom Action Bar */
+        .bottom-action-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Shadow above the bar */
+            min-height: 60px; /* Ensures good tap target height */
+            box-sizing: border-box;
+            flex-shrink: 0; /* Prevent bar from shrinking */
+        }
+        .clear-setup-button {
+            background: none;
+            border: 1px solid #ccc; /* Outlined style */
+            color: #6c757d;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            flex-basis: 35%; /* Smaller width for secondary action */
+            outline: none;
+        }
+        .clear-setup-button:active {
+            background-color: #f0f0f0; /* Light background on tap */
+        }
+        .continue-button {
+            background-color: #007bff; /* Primary action color */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            flex-basis: 60%; /* Larger width for primary action */
+            margin-left: 10px; /* Space between buttons */
+            outline: none;
+        }
+        .continue-button:active {
+            background-color: #0056b3; /* Darker blue on tap */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-left-placeholder"></div>
+        <span class="page-title">New Fax</span>
+        <button class="help-button">&#x3F;</button> <!-- Unicode question mark -->
+    </div>
+
+    <div class="main-content">
+        <!-- Files Section -->
+        <div class="section-heading">Files to Send</div>
+        <button class="add-file-button">Add File</button>
+        <div class="selected-files-list">
+            <div class="file-item">
+                <span class="file-icon">&#x1F4C4;</span> <!-- Document icon -->
+                <span class="file-name">Report_Q3_2023.pdf</span>
+                <button class="remove-button">&#x2716;</button> <!-- Multiplication X icon -->
+            </div>
+            <div class="file-item">
+                <span class="file-icon">&#x1F5BC;&#xFE0F;</span> <!-- Picture icon -->
+                <span class="file-name">Invoice_Scan_12345.jpg</span>
+                <button class="remove-button">&#x2716;</button>
+            </div>
+            <!-- More file items would be dynamically added here -->
+        </div>
+
+        <!-- Recipients Section -->
+        <div class="section-heading">Recipients</div>
+        <div class="fax-input-group">
+            <input type="tel" placeholder="Enter fax number" pattern="[0-9\-+() ]*">
+            <button class="add-from-contacts-button">Add from Contacts</button>
+        </div>
+        <div class="selected-recipients-list">
+            <div class="recipient-item">
+                <span class="recipient-detail">John Doe (1-555-123-4567)</span>
+                <button class="remove-button">&#x2716;</button>
+            </div>
+            <div class="recipient-item">
+                <span class="recipient-detail">Jane Smith (1-555-987-6543)</span>
+                <button class="remove-button">&#x2716;</button>
+            </div>
+            <!-- More recipient items would be dynamically added here -->
+        </div>
+
+        <!-- Credits Balance Display -->
+        <div class="credits-display">
+            Credits: <strong>10 available</strong>
+        </div>
+
+    </div> <!-- End main-content -->
+
+    <!-- Bottom Action Bar -->
+    <div class="bottom-action-bar">
+        <button class="clear-setup-button">Clear Setup</button>
+        <button class="continue-button">Continue</button>
+    </div>
+
+</body>
+</html>

@@ -1,196 +1,351 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Supplier List</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* Base styles for mobile screen simulation (375x667px) */
+        body, html {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            box-sizing: border-box;
-            width: 375px; /* Force width */
-            max-width: 100%; /* Prevent overflow on larger screens */
-            overflow-x: hidden; /* Hide horizontal scroll */
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            width: 375px; /* Target width for simulation */
+            max-width: 100%; /* Ensure it doesn't overflow on smaller actual screens */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
         }
 
-        /* Top Section */
-        .top-section {
+        /* 1. Top Header Section */
+        .header {
+            display: flex;
+            align-items: center; /* Vertically center items */
+            padding: 10px 15px;
             background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10; /* Ensure header is on top of other content */
         }
 
-        .back-button {
+        .header-button {
+            background: none;
+            border: none;
             font-size: 24px;
             cursor: pointer;
-            margin-bottom: 10px;
-            display: block; /* Ensure it takes full width if Search Bar is below */
+            padding: 0 5px; /* Adjust padding for better click area */
+            color: #333;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
         }
 
         .search-bar {
-            position: relative; /* For search icon positioning */
-            margin-bottom: 10px;
-        }
-
-        .search-input {
-            width: calc(100% - 30px); /* Adjust for icon */
-            padding: 8px 30px 8px 10px; /* Space for placeholder and icon */
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            box-sizing: border-box; /* Include padding and border in width */
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            font-size: 18px;
-            color: #777;
-        }
-
-        /* Filtering/Sorting */
-        .filter-sort {
-            display: flex;
-            justify-content: space-between;
+            flex-grow: 1; /* Allows the search bar to take available space */
+            margin: 0 10px;
+            position: relative;
+            background-color: #f0f0f0;
+            border-radius: 25px; /* Rounded corners for the search bar */
+            display: flex; /* Make search bar itself a flex container */
+            align-items: center;
             padding: 5px 10px;
-            background-color: #eee;
-            align-items: center;
         }
 
-        .filter-sort button {
-            padding: 8px 12px;
+        .search-bar input {
+            flex-grow: 1; /* Search input takes most of the space */
             border: none;
-            background-color: #ddd;
-            border-radius: 5px;
+            background: transparent;
+            padding: 5px 0;
+            font-size: 16px;
+            outline: none; /* Remove focus outline */
+        }
+
+        .voice-input-button {
+            background: none;
+            border: none;
+            font-size: 20px; /* Size for microphone icon */
             cursor: pointer;
-            font-size: 14px;
-        }
-
-        /* Supplier List */
-        .supplier-list {
-            padding: 10px;
-        }
-
-        .supplier-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .company-name {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .location {
-            font-size: 14px;
-            color: #777;
-            margin-bottom: 5px;
-        }
-
-        .description {
-            font-size: 12px;
             color: #555;
-            margin-bottom: 10px;
-            /* Add line clamping if needed */
-            /* Example: */
-            /* display: -webkit-box; */
-            /* -webkit-line-clamp: 2; */
-            /* -webkit-box-orient: vertical; */
-            /* overflow: hidden; */
+            padding-left: 5px;
+            flex-shrink: 0; /* Prevent icon from shrinking */
         }
 
-        /* Contact Options */
-        .contact-options {
+        /* 2. Control Bar (Below Header) */
+        .control-bar {
             display: flex;
-            justify-content: flex-end; /* Push buttons to right */
-            align-items: center;
+            justify-content: flex-end; /* Align view toggle to the right */
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #e0e0e0;
+            z-index: 5; /* Below header, above scrollable content */
         }
 
-        .contact-options button {
-            padding: 8px 12px;
+        .view-toggle button {
+            background: none;
             border: none;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 5px;
+            font-size: 20px;
             cursor: pointer;
-            font-size: 14px;
+            color: #777;
+            padding: 5px;
             margin-left: 5px;
         }
-
-        .contact-options .icon-button {
-            background-color: transparent;
-            color: #333;
-            font-size: 20px;
-            padding: 5px;
+        .view-toggle button.active {
+            color: #007bff; /* Highlight the currently active view mode */
         }
 
+        /* 3. Main Content Area (Scrollable Search Results) */
         .scrollable-content {
-          height: calc(100vh - 200px); /* Adjust value as needed */
-          overflow-y: auto; /* Enable vertical scrolling */
-          padding: 10px;
-          box-sizing: border-box;
+            flex-grow: 1; /* Takes all remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 10px;
+            background-color: #f8f8f8;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .search-result-item {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: flex-start; /* Align image and text block at the top */
+            position: relative; /* For positioning the favorite icon */
+        }
+
+        .thumbnail-image-container {
+            width: 90px;
+            height: 90px;
+            background-color: #e0e0e0; /* Placeholder color */
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 12px;
+            flex-shrink: 0; /* Prevent image from shrinking */
+            overflow: hidden; /* Hide overflow if image is larger than container */
+        }
+        .thumbnail-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover container while maintaining aspect ratio */
+            border-radius: 4px;
+        }
+
+        .product-info-block {
+            flex-grow: 1; /* Allows info block to take available space */
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .supplier-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .supplier-location {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff; /* Highlight price */
+            margin-bottom: 10px;
+        }
+
+        .favorite-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #ccc; /* Default unfavorited color */
+            cursor: pointer;
+            padding: 0;
+        }
+        .favorite-button.favorited {
+            color: #ffc107; /* Favorited color (e.g., yellow star) */
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            margin-top: auto; /* Pushes buttons to the bottom of the info block */
+        }
+
+        .action-buttons button {
+            flex: 1; /* Distribute space evenly between buttons */
+            padding: 8px 5px;
+            border-radius: 5px;
+            border: 1px solid #007bff;
+            background-color: #007bff;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent text wrapping inside buttons */
+        }
+        .action-buttons button:first-child { /* Style for "Call Now" */
+            background-color: #fff;
+            color: #007bff;
+        }
+
+
+        /* 4. Bottom Action Bar */
+        .bottom-action-bar {
+            position: fixed; /* Always visible at the bottom of the viewport */
+            bottom: 0;
+            left: 0;
+            width: 375px; /* Match body width for simulation */
+            max-width: 100%; /* Ensure responsiveness on smaller screens */
+            background-color: #007bff; /* Background for the action bar */
+            padding: 15px 20px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            z-index: 20; /* Ensure it's above all other content */
+            box-sizing: border-box; /* Include padding in total width/height */
+        }
+
+        .request-quote-button {
+            width: 100%;
+            padding: 12px 0;
+            background-color: #ffc107; /* Prominent color for primary action */
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
 
-    <div class="top-section">
-        <span class="back-button">&lt;</span>
+    <!-- 1. Top Header Section -->
+    <div class="header">
+        <button class="header-button">&#9776;</button> <!-- Hamburger Menu Icon -->
         <div class="search-bar">
-            <input type="text" class="search-input" placeholder="Supplier or Vitamin Capsule">
-            <span class="search-icon">&#x1F50D;</span>
+            <input type="text" placeholder="Search for products or suppliers (e.g., 'Vitamin Capsules')">
+            <button class="voice-input-button">&#127909;</button> <!-- Microphone Icon -->
+        </div>
+        <button class="header-button">&#x1F4CD;</button> <!-- Location Filter Icon -->
+    </div>
+
+    <!-- 2. Control Bar (Below Header) -->
+    <div class="control-bar">
+        <div class="view-toggle">
+            <button class="active">&#x2261;</button> <!-- List View Icon -->
+            <button>&#x25A6;</button> <!-- Grid View Icon -->
         </div>
     </div>
 
-    <div class="filter-sort">
-        <button>Filter</button>
-        <button>Sort</button>
+    <!-- 3. Main Content Area (Scrollable Search Results) -->
+    <div class="scrollable-content">
+        <!-- Search Result Item 1 -->
+        <div class="search-result-item">
+            <div class="thumbnail-image-container">
+                <!-- Replace with actual image: <img src="https://via.placeholder.com/90" alt="Product Thumbnail"> -->
+                Image
+            </div>
+            <div class="product-info-block">
+                <div class="supplier-name">HealthySupplies Co.</div>
+                <div class="supplier-location">New York, NY</div>
+                <div class="price">$25.99</div>
+                <div class="action-buttons">
+                    <button>Call Now</button>
+                    <button>Send Enquiry</button>
+                </div>
+            </div>
+            <button class="favorite-button">&#9733;</button> <!-- Star Icon -->
+        </div>
+
+        <!-- Search Result Item 2 -->
+        <div class="search-result-item">
+            <div class="thumbnail-image-container">
+                <!-- Replace with actual image: <img src="https://via.placeholder.com/90" alt="Product Thumbnail"> -->
+                Image
+            </div>
+            <div class="product-info-block">
+                <div class="supplier-name">VitaMax Distributors</div>
+                <div class="supplier-location">Los Angeles, CA</div>
+                <div class="price">$19.50</div>
+                <div class="action-buttons">
+                    <button>Call Now</button>
+                    <button>Send Enquiry</button>
+                </div>
+            </div>
+            <button class="favorite-button">&#9733;</button>
+        </div>
+
+        <!-- Search Result Item 3 -->
+        <div class="search-result-item">
+            <div class="thumbnail-image-container">
+                <!-- Replace with actual image: <img src="https://via.placeholder.com/90" alt="Product Thumbnail"> -->
+                Image
+            </div>
+            <div class="product-info-block">
+                <div class="supplier-name">Global Wellness Inc.</div>
+                <div class="supplier-location">Chicago, IL</div>
+                <div class="price">$32.00</div>
+                <div class="action-buttons">
+                    <button>Call Now</button>
+                    <button>Send Enquiry</button>
+                </div>
+            </div>
+            <button class="favorite-button">&#9733;</button>
+        </div>
+
+        <!-- More items to demonstrate scrolling -->
+        <div class="search-result-item">
+            <div class="thumbnail-image-container">Image</div>
+            <div class="product-info-block">
+                <div class="supplier-name">EcoPharm Solutions</div>
+                <div class="supplier-location">Houston, TX</div>
+                <div class="price">$17.75</div>
+                <div class="action-buttons">
+                    <button>Call Now</button>
+                    <button>Send Enquiry</button>
+                </div>
+            </div>
+            <button class="favorite-button">&#9733;</button>
+        </div>
+        <div class="search-result-item">
+            <div class="thumbnail-image-container">Image</div>
+            <div class="product-info-block">
+                <div class="supplier-name">PureLife Organics</div>
+                <div class="supplier-location">Miami, FL</div>
+                <div class="price">$28.99</div>
+                <div class="action-buttons">
+                    <button>Call Now</button>
+                    <button>Send Enquiry</button>
+                </div>
+            </div>
+            <button class="favorite-button">&#9733;</button>
+        </div>
+        <div class="search-result-item">
+            <div class="thumbnail-image-container">Image</div>
+            <div class="product-info-block">
+                <div class="supplier-name">HealthFirst Goods</div>
+                <div class="supplier-location">Denver, CO</div>
+                <div class="price">$22.49</div>
+                <div class="action-buttons">
+                    <button>Call Now</button>
+                    <button>Send Enquiry</button>
+                </div>
+            </div>
+            <button class="favorite-button">&#9733;</button>
+        </div>
     </div>
 
-    <div class="scrollable-content">
-      <div class="supplier-list">
-          <div class="supplier-item">
-              <div class="company-name">Acme Vitamins</div>
-              <div class="location">New York, NY</div>
-              <div class="description">Supplier of high-quality vitamin capsules.</div>
-              <div class="contact-options">
-                  <button>Contact Supplier</button>
-                  <button class="icon-button">&#x260E;</button>
-                  <button class="icon-button">&#x2709;</button>
-              </div>
-          </div>
-
-          <div class="supplier-item">
-              <div class="company-name">Global Supplements</div>
-              <div class="location">Los Angeles, CA</div>
-              <div class="description">Distributor of various health supplements.</div>
-              <div class="contact-options">
-                  <button>Contact Supplier</button>
-                  <button class="icon-button">&#x260E;</button>
-                  <button class="icon-button">&#x2709;</button>
-              </div>
-          </div>
-
-          <div class="supplier-item">
-              <div class="company-name">Health First Co.</div>
-              <div class="location">Chicago, IL</div>
-              <div class="description">Specializing in natural and organic supplements.</div>
-              <div class="contact-options">
-                  <button>Contact Supplier</button>
-                  <button class="icon-button">&#x260E;</button>
-                  <button class="icon-button">&#x2709;</button>
-              </div>
-          </div>
-      </div>
+    <!-- 4. Bottom Action Bar -->
+    <div class="bottom-action-bar">
+        <button class="request-quote-button">Request a Quote</button>
     </div>
 
 </body>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vehicle Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen simulation */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Fills the viewport height */
+            width: 375px; /* Fixed width for mobile simulation */
+            max-width: 100%; /* Ensures it doesn't overflow on smaller screens */
+            box-sizing: border-box;
+            overflow: hidden; /* Prevents body scrolling, inner containers will scroll */
+            margin-left: auto; /* Center the body if screen is wider than 375px */
+            margin-right: auto; /* Center the body if screen is wider than 375px */
+        }
+
+        /* 1. Top Section (Header & Primary Actions) */
+        .top-section {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative; /* Needed for absolute positioning of search icon */
+            z-index: 10; /* Ensure it's above other content */
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            color: #555;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+        }
+
+        .search-container {
+            flex-grow: 1; /* Allows search bar to take available space */
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: calc(100% - 40px); /* Adjust for icon padding */
+            padding: 10px 10px 10px 35px; /* Left padding for search icon */
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+            outline: none; /* Remove default focus outline */
+        }
+
+        .search-container .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 18px;
+        }
+
+        /* 2. Active Filters Display Section */
+        .active-filters-section {
+            display: flex;
+            overflow-x: auto; /* Enables horizontal scrolling */
+            white-space: nowrap; /* Prevents filter tags from wrapping */
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #eee;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            z-index: 9; /* Below header */
+        }
+
+        .filter-tag {
+            display: inline-flex; /* Allows content and close icon to be side-by-side */
+            align-items: center;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            padding: 5px 10px;
+            margin-right: 8px;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            flex-shrink: 0; /* Prevents tags from shrinking */
+        }
+
+        .filter-tag .close-tag {
+            margin-left: 5px;
+            font-weight: bold;
+            color: #777;
+            font-size: 16px;
+        }
+
+        /* 3. Main Content Area (Dynamic Search Button) */
+        .main-content-area {
+            flex-grow: 1; /* Takes up all available vertical space */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Pushes the search button to the bottom */
+            padding: 15px;
+            overflow-y: auto; /* Allows this section to scroll if content (results) overflows */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .dynamic-search-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px; /* Space above the button if content exists */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            flex-shrink: 0; /* Prevent button from shrinking */
+        }
+
+        /* 4. Bottom Section (Main Navigation Tabs) */
+        .navigation-tabs {
+            display: flex;
+            justify-content: space-around;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            z-index: 10; /* Ensure it's above other content */
+            flex-shrink: 0; /* Prevent navigation from shrinking */
+        }
+
+        .navigation-tabs button {
+            flex-grow: 1;
+            background: none;
+            border: none;
+            font-size: 14px;
+            color: #555;
+            padding: 10px 0;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .navigation-tabs button.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* 5. Filter Interface (Modal) */
+        .filter-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000; /* High z-index to overlay everything */
+            display: none; /* Hidden by default */
+            flex-direction: column;
+        }
+
+        .filter-modal.show {
+            display: flex; /* Show when 'show' class is added */
+        }
+
+        .filter-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 20px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .filter-modal-content {
+            flex-grow: 1; /* Allows filter content to scroll */
+            overflow-y: auto;
+            padding: 15px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .filter-category {
+            margin-bottom: 20px;
+        }
+
+        .filter-category h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .filter-options label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .filter-options select,
+        .filter-options input[type="number"] {
+            width: calc(100% - 10px); /* Adjust for padding/border */
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        .filter-options input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .filter-modal-footer {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .filter-modal-footer button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Section (Header & Primary Actions) -->
+    <div class="top-section">
+        <!-- Filter Button (Funnel Icon) -->
+        <button class="icon-button" onclick="toggleFilterModal()">&#x233B;</button> 
+        
+        <div class="search-container">
+            <!-- Magnifying Glass Icon -->
+            <span class="search-icon">&#x1F50D;</span> 
+            <input type="text" placeholder="Search for vehicles...">
+        </div>
+        
+        <!-- Scan Button (Antenna Bars as a generic scan icon) -->
+        <button class="icon-button">&#x1F4F6;</button> 
+    </div>
+
+    <!-- 2. Active Filters Display Section -->
+    <div class="active-filters-section">
+        <div class="filter-tag">
+            Automobile Type: Sedan <span class="close-tag">&times;</span>
+        </div>
+        <div class="filter-tag">
+            Make: Toyota <span class="close-tag">&times;</span>
+        </div>
+        <div class="filter-tag">
+            Price: &lt; $25k <span class="close-tag">&times;</span>
+        </div>
+        <div class="filter-tag">
+            Color: Blue <span class="close-tag">&times;</span>
+        </div>
+    </div>
+
+    <!-- 3. Main Content Area (Dynamic Search Button) -->
+    <div class="main-content-area">
+        <!-- Placeholder for Search Results would typically go here -->
+        <!-- For example:
+        <div style="height: 100px; background-color: #e9e9e9; margin-bottom: 15px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+            Search results would appear here.
+        </div>
+        <div style="height: 100px; background-color: #e9e9e9; margin-bottom: 15px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+            More results...
+        </div>
+        -->
+        <button class="dynamic-search-button">Search (123 results)</button>
+    </div>
+
+    <!-- 4. Bottom Section (Main Navigation Tabs) -->
+    <div class="navigation-tabs">
+        <button>My Account</button>
+        <button class="active">Vehicles</button>
+        <button>Auctions</button>
+        <button>Locations</button>
+    </div>
+
+    <!-- 5. Filter Interface (Modal - Initially hidden) -->
+    <div class="filter-modal" id="filterModal">
+        <div class="filter-modal-header">
+            <span>Filters</span>
+            <button class="icon-button" onclick="toggleFilterModal()">&#x2715;</button> <!-- Close Icon -->
+        </div>
+        <div class="filter-modal-content">
+            <div class="filter-category">
+                <h3>Automobile Type</h3>
+                <div class="filter-options">
+                    <label><input type="checkbox" checked> Sedan</label>
+                    <label><input type="checkbox"> SUV</label>
+                    <label><input type="checkbox"> Truck</label>
+                    <label><input type="checkbox"> Coupe</label>
+                </div>
+            </div>
+            <div class="filter-category">
+                <h3>Make</h3>
+                <div class="filter-options">
+                    <select>
+                        <option>Any</option>
+                        <option selected>Toyota</option>
+                        <option>Honda</option>
+                        <option>Ford</option>
+                        <option>BMW</option>
+                        <option>Mercedes-Benz</option>
+                        <option>Audi</option>
+                        <option>Nissan</option>
+                        <option>Hyundai</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-category">
+                <h3>Price Range</h3>
+                <div class="filter-options">
+                    <label>Min: <input type="number" value="0"></label>
+                    <label>Max: <input type="number" value="25000"></label>
+                    <!-- A more advanced slider would typically be implemented with JavaScript -->
+                </div>
+            </div>
+            <div class="filter-category">
+                <h3>Color</h3>
+                <div class="filter-options">
+                    <label><input type="checkbox"> Red</label>
+                    <label><input type="checkbox" checked> Blue</label>
+                    <label><input type="checkbox"> Black</label>
+                    <label><input type="checkbox"> White</label>
+                    <label><input type="checkbox"> Silver</label>
+                </div>
+            </div>
+        </div>
+        <div class="filter-modal-footer">
+            <button onclick="toggleFilterModal()">Apply Filters</button>
+        </div>
+    </div>
+
+    <script>
+        // Simple JavaScript to show/hide the filter modal
+        function toggleFilterModal() {
+            const modal = document.getElementById('filterModal');
+            modal.classList.toggle('show');
+        }
+    </script>
+
+</body>
+</html>

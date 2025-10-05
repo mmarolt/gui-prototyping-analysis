@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Forms App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto for Material Design Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset & Box Model */
+        body, html {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif; /* Fallback to sans-serif if Roboto fails */
+            background-color: #f0f0f0; /* Light background for the overall page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Center the mobile screen vertically */
+        }
+
+        /* Material Design Typography Classes */
+        .md-headline6 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 20px;
+            font-weight: 500; /* Medium */
+        }
+        .md-subtitle1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 400; /* Regular */
+            line-height: 24px; /* Standard Material Design line height */
+            letter-spacing: 0.15px; /* Standard Material Design letter spacing */
+        }
+        .md-body2 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 400; /* Regular */
+            line-height: 20px; /* Standard Material Design line height */
+            letter-spacing: 0.25px; /* Standard Material Design letter spacing */
+        }
+
+        /* Container for the mobile screen simulation */
+        #mobile-screen {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            border: 1px solid #ccc;
+            border-radius: 8px; /* Slightly rounded corners for app look */
+            overflow: hidden; /* Ensures content stays within bounds */
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Essential for FAB positioning */
+            background-color: #fff; /* Default background for the entire app area */
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            flex-shrink: 0; /* Prevents the screen from shrinking if parent is flex */
+        }
+
+        /* Hide scrollbar for aesthetics in the confined demo, but keep scrolling */
+        #mobile-screen main::-webkit-scrollbar {
+            width: 0px;
+            background: transparent; /* make scrollbar transparent */
+        }
+        #mobile-screen main {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        /* FAB specific styles for interaction */
+        #fab-button:hover {
+            background-color: #018786; /* Darker shade on hover */
+            box-shadow: 0px 5px 8px -1px rgba(0,0,0,0.2), 0px 8px 14px 0px rgba(0,0,0,0.14), 0px 3px 20px 0px rgba(0,0,0,0.12);
+        }
+        #fab-button:active {
+            background-color: #00685e; /* Even darker on press */
+            box-shadow: 0px 7px 10px -1px rgba(0,0,0,0.2), 0px 10px 16px 0px rgba(0,0,0,0.14), 0px 4px 22px 0px rgba(0,0,0,0.12);
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile-screen">
+        <!-- 1. Top App Bar (Header) -->
+        <header style="
+            background-color: #6200EE; /* Material Design Primary Color */
+            color: white;
+            height: 56px; /* Standard Material Design height for App Bar */
+            display: flex;
+            align-items: center;
+            padding: 0 16px; /* Standard horizontal padding */
+            justify-content: space-between;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        ">
+            <h1 class="md-headline6" style="margin: 0;">My Forms</h1>
+            <div style="display: flex; gap: 16px;">
+                <i class="material-icons" style="font-size: 24px; cursor: pointer;">search</i>
+                <i class="material-icons" style="font-size: 24px; cursor: pointer;">sort</i>
+                <i class="material-icons" style="font-size: 24px; cursor: pointer;">more_vert</i>
+                <!-- In a real app, 'more_vert' would trigger a menu/dropdown for
+                     "User Profile", "Information", "Messaging", "Export/Share All" -->
+            </div>
+        </header>
+
+        <!-- 2. Main Content Area (Forms List) -->
+        <main style="
+            flex-grow: 1; /* Allows main content to fill available space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            background-color: #F5F5F5; /* Light grey background for content area */
+            padding-bottom: 72px; /* To prevent FAB from obscuring last list item */
+        ">
+            <!-- Example List Item 1 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0; /* Subtle divider */
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px; /* Consistent height for list items */
+                background-color: white; /* Item background for contrast */
+                cursor: pointer; /* Indicate interactivity */
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Expense Report Q1 2023</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-26 14:30</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 2 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Client Onboarding Form</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-25 10:15</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 3 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Project Proposal Template</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-20 16:45</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 4 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Feedback Survey v2</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-18 09:00</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 5 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Invoice Template</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-15 11:30</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 6 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Meeting Notes - Q4 Planning</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-12 17:00</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 7 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Travel Request Form</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-10 08:45</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 8 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">New Employee Onboarding Checklist</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-10-05 13:00</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 9 -->
+            <div style="
+                padding: 16px;
+                border-bottom: 1px solid #E0E0E0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Quarterly Performance Review</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-09-30 16:00</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+            <!-- Example List Item 10 (no bottom border for the last item) -->
+            <div style="
+                padding: 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-height: 72px;
+                background-color: white;
+                cursor: pointer;
+            ">
+                <div>
+                    <div class="md-subtitle1" style="color: #212121;">Software License Renewal</div>
+                    <div class="md-body2" style="color: #757575; margin-top: 4px;">Last modified: 2023-09-28 10:00</div>
+                </div>
+                <i class="material-icons" style="color: #757575;">chevron_right</i>
+            </div>
+        </main>
+
+        <!-- 3. Floating Action Button (FAB) -->
+        <button id="fab-button" aria-label="Create New Document" style="
+            position: absolute; /* Positioned relative to #mobile-screen */
+            bottom: 16px; /* 16dp from bottom edge */
+            right: 16px; /* 16dp from right edge */
+            width: 56px; /* Standard FAB size */
+            height: 56px; /* Standard FAB size */
+            border-radius: 50%; /* Circular shape */
+            background-color: #03DAC5; /* Material Design Secondary Color */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12); /* Material Design shadow */
+            border: none;
+            cursor: pointer;
+            z-index: 1000; /* Ensures it floats above other content */
+            transition: background-color 0.2s, box-shadow 0.2s; /* Smooth transitions for hover/active states */
+        ">
+            <i class="material-icons" style="font-size: 24px;">add</i>
+        </button>
+    </div>
+</body>
+</html>

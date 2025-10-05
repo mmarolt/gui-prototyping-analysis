@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Task Manager Mobile</title>
+    <!-- Font Awesome for icons. This is a CDN link and is placed in the head,
+         while all styling is inline as requested. -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body style="
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6; /* Light gray background */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures body takes full viewport height */
+    color: #333; /* Default text color */
+    -webkit-font-smoothing: antialiased; /* Smoother fonts on WebKit browsers */
+    -moz-osx-font-smoothing: grayscale; /* Smoother fonts on Firefox */
+">
+
+    <!-- Top Navigation Bar -->
+    <div style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background-color: #ffffff; /* White background for nav bar */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+        position: sticky; /* Keeps nav bar at the top when scrolling */
+        top: 0;
+        z-index: 1000; /* Ensures nav bar is above other content */
+        border-bottom: 1px solid #eee; /* Light border at the bottom */
+    ">
+        <!-- Company Selector -->
+        <div style="
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            color: #3f51b5; /* Primary blue color for company name */
+            font-size: 1.1rem;
+            cursor: pointer; /* Indicates it's clickable */
+        ">
+            <span>My Company</span>
+            <i class="fas fa-chevron-down" style="
+                margin-left: 8px;
+                font-size: 0.8rem;
+                color: #555;
+            "></i>
+        </div>
+        <!-- Right-aligned Icons for Notifications, Search, Projects, Messaging -->
+        <div style="
+            display: flex;
+            gap: 20px; /* Space between icons */
+            font-size: 1.2rem;
+            color: #555;
+        ">
+            <i class="fas fa-bell" style="cursor: pointer;"></i> <!-- Notifications -->
+            <i class="fas fa-search" style="cursor: pointer;"></i> <!-- Search -->
+            <i class="fas fa-layer-group" style="cursor: pointer;"></i> <!-- Projects -->
+            <i class="fas fa-comments" style="cursor: pointer;"></i> <!-- Messaging -->
+        </div>
+    </div>
+
+    <!-- Main Content Area - Scrollable -->
+    <div style="
+        flex-grow: 1; /* Allows this section to take up remaining vertical space */
+        padding: 20px;
+        overflow-y: auto; /* Enables vertical scrolling if content overflows */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    ">
+
+        <!-- Task List Header -->
+        <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        ">
+            <h2 style="
+                margin: 0; /* Remove default margin for h2 */
+                font-size: 1.5rem;
+                color: #333;
+                font-weight: 600;
+            ">My Tasks</h2>
+            <i class="fas fa-info-circle" style="
+                font-size: 1.2rem;
+                color: #888;
+                cursor: pointer;
+            "></i> <!-- Info icon for task list details/help -->
+        </div>
+
+        <!-- Task List Container -->
+        <div style="
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Space between task items */
+        ">
+            <!-- Task Item 1 (New Task) -->
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #4CAF50; /* Green border for new task */
+            ">
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap; /* Allows task name and badge to wrap if long */
+                    flex-grow: 1; /* Allows task name section to take available space */
+                ">
+                    <span style="
+                        font-size: 1.1rem;
+                        font-weight: 500;
+                        color: #333;
+                        margin-right: 10px;
+                    ">Prepare Q3 Report</span>
+                    <span style="
+                        background-color: #4CAF50; /* Green background for 'New' badge */
+                        color: #fff;
+                        padding: 3px 8px;
+                        border-radius: 5px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                    ">New</span>
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap; /* Prevents due date from wrapping */
+                    margin-left: 10px; /* Space between task name and due date */
+                ">
+                    <span>Due: Fri, Oct 27</span>
+                </div>
+            </div>
+
+            <!-- Task Item 2 (Standard Task) -->
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #2196F3; /* Blue border for standard task */
+            ">
+                <div style="
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: #333;
+                    flex-grow: 1;
+                ">
+                    Review Marketing Strategy
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Mon, Oct 30</span>
+                </div>
+            </div>
+
+            <!-- Task Item 3 (Recently Updated Task) -->
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #FFC107; /* Amber border for updated task */
+            ">
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    flex-grow: 1;
+                ">
+                    <span style="
+                        font-size: 1.1rem;
+                        font-weight: 500;
+                        color: #333;
+                        margin-right: 10px;
+                    ">Client Onboarding Call</span>
+                    <span style="
+                        background-color: #FFC107; /* Amber background for 'Updated' badge */
+                        color: #333; /* Darker text for amber background */
+                        padding: 3px 8px;
+                        border-radius: 5px;
+                        font-size: 0.75rem;
+                        font-weight: 600;
+                        text-transform: uppercase;
+                    ">Updated</span>
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Tue, Oct 31</span>
+                </div>
+            </div>
+
+            <!-- More Task Items (Standard) -->
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #2196F3;
+            ">
+                <div style="
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: #333;
+                    flex-grow: 1;
+                ">
+                    Team Meeting Agenda
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Wed, Nov 1</span>
+                </div>
+            </div>
+
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #2196F3;
+            ">
+                <div style="
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: #333;
+                    flex-grow: 1;
+                ">
+                    Budget Review
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Thu, Nov 2</span>
+                </div>
+            </div>
+
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #2196F3;
+            ">
+                <div style="
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: #333;
+                    flex-grow: 1;
+                ">
+                    Follow up with Acme Corp.
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Fri, Nov 3</span>
+                </div>
+            </div>
+
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #2196F3;
+            ">
+                <div style="
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: #333;
+                    flex-grow: 1;
+                ">
+                    Update Website Content
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Mon, Nov 6</span>
+                </div>
+            </div>
+            
+            <div style="
+                background-color: #ffffff;
+                border-radius: 12px;
+                padding: 18px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-left: 5px solid #2196F3;
+            ">
+                <div style="
+                    font-size: 1.1rem;
+                    font-weight: 500;
+                    color: #333;
+                    flex-grow: 1;
+                ">
+                    Prepare for Investor Meeting
+                </div>
+                <div style="
+                    font-size: 0.9rem;
+                    color: #777;
+                    white-space: nowrap;
+                    margin-left: 10px;
+                ">
+                    <span>Due: Tue, Nov 7</span>
+                </div>
+            </div>
+
+        </div> <!-- End of Task List Container -->
+
+    </div> <!-- End of Main Content Area -->
+
+    <!-- Floating Action Button (FAB) for Create New -->
+    <div style="
+        position: fixed; /* Fixed position relative to the viewport */
+        bottom: 25px; /* 25px from the bottom */
+        right: 25px; /* 25px from the right */
+        width: 56px; /* Standard FAB size */
+        height: 56px;
+        border-radius: 50%; /* Makes it a perfect circle */
+        background-color: #3f51b5; /* Primary blue color */
+        color: #fff; /* White icon color */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem; /* Icon size */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2); /* Stronger shadow for floating effect */
+        cursor: pointer;
+        z-index: 1000; /* Ensures FAB is above all other content */
+    ">
+        <i class="fas fa-plus"></i> <!-- Plus icon -->
+    </div>
+
+</body>
+</html>

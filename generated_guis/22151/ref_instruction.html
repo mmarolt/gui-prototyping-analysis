@@ -2,193 +2,288 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Listing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Job Listings</title>
+    <!-- Material Icons CDN -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts for Roboto (standard Material Design font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,500,700&display=swap" rel="stylesheet">
     <style>
+        /* Global styles for the mobile screen container */
         body {
-            font-family: Roboto, sans-serif;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #F5F5F5; /* Matches the main content background color */
+            
+            /* Simulate mobile screen dimensions (667x375 portrait) */
+            width: 375px;
+            height: 667px;
+            overflow: hidden; /* Prevent body scrollbar, content will scroll within main */
+            position: relative; /* Provides context for absolute positioning of child elements */
+            
+            /* Optional: Add a border or shadow to visually frame the mobile device when viewed on a larger screen */
+            border: 1px solid #ddd;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            margin: 20px auto; /* Center the simulated device on a larger screen */
+        }
+
+        /* Basic resets for elements used, consistent with Material Design */
+        h1, h2, h3, h4, h5, h6, p, span {
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5; /* Light grey background */
         }
 
-        /* App Bar */
-        header {
-            height: 56px;
-            background-color: #6200EE;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-        }
-
-        header button {
-            background: none;
+        button {
             border: none;
-            color: white;
+            background: none;
             cursor: pointer;
-            padding: 8px; /* Increase padding for better touch target */
-            border-radius: 50%; /* Make it circular */
-            min-width: 48px; /* Ensure minimum touch target size */
-            height: 48px;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+            color: inherit;
             display: flex;
             align-items: center;
             justify-content: center;
+            outline: none; /* Remove focus outline for a cleaner look */
+            -webkit-tap-highlight-color: transparent; /* Remove highlight on tap for iOS */
+        }
+        button:active {
+            opacity: 0.8; /* Subtle visual feedback for button press */
         }
 
-        header h1 {
-            font-size: 18px;
-            font-weight: 500;
-            margin: 0;
+        /* Job Listings (Scrollable Content Area) - Container Styles */
+        .job-listings-main {
+            padding: 12px 16px; /* Spacing for cards within the screen */
+            overflow-y: auto; /* Enable vertical scrolling */
+            position: absolute; /* Position relative to the body (which is now a fixed-size container) */
+            top: 56px; /* Position below the top app bar (which has a height of 56px) */
+            bottom: 0; /* Extends to the bottom of the viewport */
+            left: 0;
+            right: 0;
+            background-color: #F5F5F5; /* Background color for the scrollable content area */
+            box-sizing: border-box; /* Include padding in the element's total width/height */
         }
 
-        /* Job Listing Card */
+        /* Job Card base styles */
         .job-card {
-            width: calc(100% - 32px); /* screen width - left and right margin */
-            margin: 8px 16px;
             background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* prevent content overflow */
+            border-radius: 8px; /* Rounded corners for the card */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* elevation 1dp shadow */
+            margin-bottom: 12px; /* Vertical spacing between cards */
+            padding: 16px; /* Internal padding within the card */
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease-in-out; /* Smooth shadow transition on interaction */
+            color: #333; /* Default text color for non-viewed jobs */
+        }
+        .job-card:active {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2); /* elevation 2dp on press */
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align badge/icon at the top right */
+            margin-bottom: 8px; /* Space between header and company name */
         }
 
         .job-card-title {
-            padding: 16px 16px 8px 16px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #212121;
+            font-size: 18px; /* headline6/subtitle1 typography */
+            font-weight: 600; /* Bold for prominence */
+            color: inherit; /* Inherit from card, or explicitly #333 */
+            line-height: 1.3;
+            flex-grow: 1; /* Allow title to take available space */
+            margin-right: 8px; /* Space between title and badge/icon */
+        }
+
+        .job-card-badge {
+            background-color: #F44336; /* Red for 'New' jobs */
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            white-space: nowrap; /* Prevent text wrap */
+            align-self: flex-start; /* Align badge with title's top */
         }
 
         .job-card-company {
-            padding: 0 16px 8px 16px;
-            font-size: 14px;
-            color: #757575;
-            display: flex;
-            align-items: center;
-        }
-
-        .job-card-company i {
-            font-size: 16px;
-            margin-right: 4px;
-        }
-
-        .job-card-salary {
-            padding: 0 16px 8px 16px;
-            font-size: 14px;
-            color: #757575;
-        }
-
-        .job-card-chips {
-            padding: 0 16px 8px 16px;
-            display: flex;
-            flex-wrap: wrap; /* Allow chips to wrap to the next line */
-        }
-
-        .job-card-chips span {
-            background-color: #e0e0e0;
-            padding: 4px 8px;
-            border-radius: 16px;
-            margin-right: 4px;
-            margin-bottom: 4px; /* add bottom margin */
-            font-size: 12px;
+            font-size: 14px; /* body2 typography */
             color: #555;
+            margin-bottom: 4px; /* Space between company and location/time */
         }
 
-        .job-card button {
-            background-color: #03DAC5;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 8px 16px 16px auto;
-            display: block;
-            font-size: 14px;
-            text-transform: uppercase; /* Make the button text uppercase */
-        }
-
-        /* FAB */
-        .fab {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background-color: #03DAC5;
-            color: white;
-            border: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
+        .job-card-footer {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            z-index: 100; /* Ensure it's above other elements */
         }
 
-        .fab i {
-            font-size: 24px;
+        .job-card-location, .job-card-time {
+            font-size: 12px; /* caption typography */
+            color: #777;
+            display: flex; /* For icon alignment */
+            align-items: center;
         }
 
-        /* Scrollable Content Area */
-        .content {
-            overflow-y: auto; /* Enable vertical scrolling */
-            padding-bottom: 72px; /* add padding to allow the last job card to be fully visible when FAB is present */
+        .job-card-icon-small {
+            font-size: 16px;
+            vertical-align: middle;
+            margin-right: 4px;
+            color: #777;
+        }
+
+        /* Viewed Job Card specific styles */
+        .job-card.viewed {
+            background-color: #ECEFF1; /* Lighter background for viewed jobs */
+        }
+
+        .job-card.viewed .job-card-title {
+            font-weight: 500; /* Slightly less prominent */
+            color: #777; /* Desaturated text */
+        }
+        .job-card.viewed .job-card-company {
+            color: #999;
+        }
+        .job-card.viewed .job-card-location,
+        .job-card.viewed .job-card-time {
+            color: #AAA;
+        }
+        .job-card.viewed .job-card-icon-small,
+        .job-card.viewed .job-card-visibility-icon {
+            color: #AAA;
+        }
+        .job-card.viewed .job-card-visibility-icon {
+            font-size: 18px;
+            margin-left: 8px;
+            align-self: flex-start; /* Align icon with title's top */
         }
     </style>
 </head>
 <body>
-
-    <header>
-        <button><i class="material-icons">arrow_back</i></button>
-        <h1>Teacher Jobs</h1>
-        <button><i class="material-icons">filter_list</i></button>
+    <!-- 1. Top App Bar & Search/Filter (Header) -->
+    <!-- Styles are applied inline as demonstrated in the prompt's example -->
+    <header style="width: 100%; height: 56px; background-color: #6200EE; color: white; display: flex; align-items: center; padding: 0 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); position: fixed; top: 0; left: 0; z-index: 100; box-sizing: border-box;">
+        <div style="flex-grow: 1; display: flex; align-items: center; background-color: rgba(255,255,255,0.15); border-radius: 28px; padding: 0 12px; margin-right: 12px; height: 40px;">
+            <i class="material-icons" style="font-size: 24px; color: rgba(255,255,255,0.7);">search</i>
+            <span style="margin-left: 8px; font-size: 16px; font-weight: 500; color: white; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                Software Engineer, New York
+            </span>
+        </div>
+        <button style="background: none; border: none; color: white; cursor: pointer; padding: 8px; display: flex; align-items: center; min-width: 48px; min-height: 48px; justify-content: center;">
+            <i class="material-icons" style="font-size: 24px;">tune</i> <!-- Filter icon -->
+        </button>
     </header>
 
-    <div class="content">
+    <!-- 2. Job Listings (Scrollable Content Area) -->
+    <!-- The main element uses a class for its container styles as it's a fixed part of the layout. -->
+    <main class="job-listings-main">
+        <!-- Example Job Card: New & Unviewed -->
         <div class="job-card">
-            <div class="job-card-title">Math Teacher</div>
-            <div class="job-card-company"><i class="material-icons">location_on</i>Springfield High</div>
-            <div class="job-card-salary">$50,000 - $60,000</div>
-            <div class="job-card-chips">
-                <span>Part-time</span>
-                <span>High School</span>
-                <span>Math</span>
+            <div class="job-card-header">
+                <h3 class="job-card-title">Senior Software Engineer - iOS</h3>
+                <span class="job-card-badge">New</span>
             </div>
-            <button>Apply Now</button>
+            <p class="job-card-company">Acme Technologies</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>San Francisco, CA</p>
+                <p class="job-card-time">1 hour ago</p>
+            </div>
+        </div>
+
+        <!-- Example Job Card: Viewed -->
+        <div class="job-card viewed">
+            <div class="job-card-header">
+                <h3 class="job-card-title">Product Designer (Remote)</h3>
+                <i class="material-icons job-card-visibility-icon">visibility</i> <!-- Viewed icon -->
+            </div>
+            <p class="job-card-company">Globex Inc.</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>Remote (Europe)</p>
+                <p class="job-card-time">2 days ago</p>
+            </div>
+        </div>
+
+        <!-- Additional Job Cards for scrollability demonstration -->
+        <div class="job-card">
+            <div class="job-card-header">
+                <h3 class="job-card-title">Frontend Developer - React Specialist</h3>
+                <span class="job-card-badge" style="background-color: #4CAF50;">Hiring Fast</span> <!-- Example of another badge color -->
+            </div>
+            <p class="job-card-company">Innovative Solutions Co.</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>Austin, TX</p>
+                <p class="job-card-time">5 hours ago</p>
+            </div>
+        </div>
+
+        <div class="job-card viewed">
+            <div class="job-card-header">
+                <h3 class="job-card-title">DevOps Engineer - AWS Focus</h3>
+                <i class="material-icons job-card-visibility-icon">visibility</i>
+            </div>
+            <p class="job-card-company">Cloud Architects</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>Seattle, WA</p>
+                <p class="job-card-time">3 days ago</p>
+            </div>
         </div>
 
         <div class="job-card">
-            <div class="job-card-title">English Teacher</div>
-            <div class="job-card-company"><i class="material-icons">location_on</i>Northwood Academy</div>
-            <div class="job-card-salary">$55,000 - $65,000</div>
-            <div class="job-card-chips">
-                <span>Full-time</span>
-                <span>Middle School</span>
-                <span>Literature</span>
+            <div class="job-card-header">
+                <h3 class="job-card-title">Data Scientist - Machine Learning Engineer</h3>
+                <span class="job-card-badge">New</span>
             </div>
-            <button>Apply Now</button>
+            <p class="job-card-company">AI Driven Analytics</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>Boston, MA</p>
+                <p class="job-card-time">1 day ago</p>
+            </div>
+        </div>
+
+        <div class="job-card viewed">
+            <div class="job-card-header">
+                <h3 class="job-card-title">Senior UX/UI Designer (Remote)</h3>
+                <i class="material-icons job-card-visibility-icon">visibility</i>
+            </div>
+            <p class="job-card-company">Digital Experience Studio</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>Remote (US)</p>
+                <p class="job-card-time">1 week ago</p>
+            </div>
         </div>
 
         <div class="job-card">
-            <div class="job-card-title">Science Teacher</div>
-            <div class="job-card-company"><i class="material-icons">location_on</i>Central High School</div>
-            <div class="job-card-salary">$48,000 - $58,000</div>
-            <div class="job-card-chips">
-                <span>Part-time</span>
-                <span>High School</span>
-                <span>Biology</span>
+            <div class="job-card-header">
+                <h3 class="job-card-title">Backend Engineer - Python/Django Expert</h3>
+                <span class="job-card-badge">New</span>
             </div>
-            <button>Apply Now</button>
+            <p class="job-card-company">LogicFlow Solutions</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>Chicago, IL</p>
+                <p class="job-card-time">4 hours ago</p>
+            </div>
         </div>
-    </div>
 
-    <button class="fab">
-        <i class="material-icons">add</i>
+        <div class="job-card viewed">
+            <div class="job-card-header">
+                <h3 class="job-card-title">Marketing Manager - Digital Campaigns</h3>
+                <i class="material-icons job-card-visibility-icon">visibility</i>
+            </div>
+            <p class="job-card-company">Growth Strategies Inc.</p>
+            <div class="job-card-footer">
+                <p class="job-card-location"><i class="material-icons job-card-icon-small">location_on</i>New York, NY</p>
+                <p class="job-card-time">4 days ago</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 3. Floating Action Button (FAB) -->
+    <!-- Styles are applied inline as demonstrated in the prompt's example -->
+    <button style="position: fixed; bottom: 16px; right: 16px; width: 56px; height: 56px; border-radius: 50%; background-color: #03DAC6; color: white; border: none; box-shadow: 0 3px 6px rgba(0,0,0,0.3); display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 200;">
+        <i class="material-icons" style="font-size: 24px;">add</i>
     </button>
-
 </body>
 </html>

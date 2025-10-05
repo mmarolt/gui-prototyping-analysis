@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Announcer App</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            background-color: #f0f2f5; /* Light grey background for the overall page */
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.5;
+        }
+
+        /* Container for mobile simulation */
+        /* This ensures the content is constrained to the specified mobile width */
+        .container {
+            max-width: 375px; /* Fixed width for the mobile device simulation */
+            margin: 0 auto; /* Center the container on larger screens */
+            min-height: 100vh; /* Ensure it takes full height of the viewport */
+            background-color: #ffffff; /* White background for the app content area */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for app boundaries */
+            box-sizing: border-box; /* Include padding in the element's total width and height */
+        }
+
+        /* Header/Title Bar Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #4CAF50; /* A pleasant green theme for the header */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Soft shadow beneath the header */
+        }
+
+        .app-title {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .social-share .facebook-share-btn {
+            background-color: #3b5998; /* Standard Facebook blue */
+            color: white;
+            text-decoration: none; /* Remove underline from link */
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+            white-space: nowrap; /* Prevent button text from wrapping */
+        }
+
+        .social-share .facebook-share-btn:hover {
+            background-color: #2d4373; /* Darker blue on hover */
+        }
+
+        /* Main Content Area Styles */
+        .main-content {
+            padding: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Setting Card Styles */
+        .setting-card {
+            background-color: #f9f9f9; /* Lighter background for individual setting cards */
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* Subtle shadow for card elevation */
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: #555;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee; /* Separator for card titles */
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Individual Setting Item Styles */
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        /* Add a border between setting items within the same card */
+        .setting-item + .setting-item {
+            border-top: 1px solid #eee;
+        }
+
+        .setting-label {
+            flex-grow: 1; /* Allows label to take available space */
+            font-size: 16px;
+            color: #333;
+            margin-right: 15px; /* Space between label and toggle */
+        }
+
+        /* Toggle Switch Styles (Standard CSS Toggle) */
+        /* The container for the switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px; /* Width of the switch */
+            height: 25px; /* Height of the switch */
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider (the actual track) */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc; /* Default background when off */
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        /* The circle inside the slider */
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px; /* Height of the circle */
+            width: 19px; /* Width of the circle */
+            left: 3px; /* Position from left */
+            bottom: 3px; /* Position from bottom */
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        /* When the input is checked, change background color of slider */
+        input:checked + .slider {
+            background-color: #4CAF50; /* Green when on */
+        }
+
+        /* Focus style */
+        input:focus + .slider {
+            box-shadow: 0 0 1px #4CAF50;
+        }
+
+        /* Move the circle when the input is checked */
+        input:checked + .slider:before {
+            -webkit-transform: translateX(20px); /* Move 20px to the right */
+            -ms-transform: translateX(20px);
+            transform: translateX(20px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 25px; /* Half of height + padding for a perfect rounded track */
+        }
+
+        .slider.round:before {
+            border-radius: 50%; /* Make the circle perfectly round */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header/Title Bar -->
+        <div class="header">
+            <h1 class="app-title">Voice Announcer</h1>
+            <div class="social-share">
+                <!-- Placeholder URL for sharing. In a real application, this would be your app's official link. -->
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://example.com/voice-announcer-app" target="_blank" class="facebook-share-btn">Share on Facebook</a>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <h2 class="section-title">Announcement Settings</h2>
+
+            <!-- Card/Section for Incoming Calls -->
+            <div class="setting-card">
+                <div class="setting-item">
+                    <label for="callerNameToggle" class="setting-label">Speak Caller Name (Incoming Calls)</label>
+                    <label class="switch">
+                        <input type="checkbox" id="callerNameToggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Card/Section for SMS Messages -->
+            <div class="setting-card">
+                <h3 class="card-title">SMS Messages</h3>
+                <div class="setting-item">
+                    <label for="smsSenderToggle" class="setting-label">Speak Sender Name</label>
+                    <label class="switch">
+                        <input type="checkbox" id="smsSenderToggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label for="smsContentToggle" class="setting-label">Speak SMS Content</label>
+                    <label class="switch">
+                        <input type="checkbox" id="smsContentToggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Card/Section for Charging Status -->
+            <div class="setting-card">
+                <div class="setting-item">
+                    <label for="chargingAlertToggle" class="setting-label">Charging Alert (When Plugged In)</label>
+                    <label class="switch">
+                        <input type="checkbox" id="chargingAlertToggle" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

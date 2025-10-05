@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home - Alerts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the entire page */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the page */
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Occupy full viewport height */
+            width: 100vw;  /* Occupy full viewport width */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            overflow: hidden; /* Prevent body scrollbars, scrollable content handled by specific div */
+        }
+
+        /* 1. Top Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Distribute items with space between */
+            align-items: center; /* Vertically align items in the middle */
+            padding: 15px 20px; /* Padding around header content */
+            background-color: #ffffff; /* White background for header */
+            border-bottom: 1px solid #e0e0e0; /* Subtle separator line at the bottom */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Soft shadow for a subtle lifted effect */
+        }
+
+        /* Page Title/Heading */
+        .header-title {
+            font-size: 20px; /* Prominent title size */
+            font-weight: bold;
+            color: #333333;
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center; /* Center the title text within its flex item */
+            margin: 0; /* Remove default heading margins */
+        }
+
+        /* Refresh Icon Button */
+        .refresh-button {
+            font-size: 24px; /* Icon size */
+            background: none; /* No background */
+            border: none; /* No border */
+            cursor: pointer; /* Indicates clickable */
+            color: #555555; /* Dark grey color for the icon */
+            padding: 0; /* No internal padding */
+            line-height: 1; /* Ensure icon is vertically centered correctly */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        /* Placeholder to balance the refresh button and keep title truly centered */
+        .header-placeholder {
+            width: 24px; /* Match refresh button width */
+            height: 24px; /* Match refresh button height */
+            visibility: hidden; /* Keep space but hide content */
+        }
+
+        /* 2. Main Content Section (Alerts List) */
+        .scrollable-container {
+            flex-grow: 1; /* Takes all available vertical space between header and bottom */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 10px; /* Padding around the alerts list */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
+        }
+
+        /* 3. Individual Alert Items (within the Scrollable Container) */
+        .alert-item {
+            display: flex;
+            justify-content: space-between; /* Text on left, button on right */
+            align-items: center; /* Vertically align content */
+            background-color: #ffffff; /* White background for each alert card */
+            margin-bottom: 10px; /* Space between alert items */
+            padding: 15px; /* Internal padding for alert content */
+            border-radius: 8px; /* Rounded corners for a card-like appearance */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Soft shadow for depth */
+            transition: transform 0.2s ease; /* Smooth animation for tap effect */
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1); /* Subtle tap highlight */
+        }
+
+        /* Visual feedback for tapping an alert item */
+        .alert-item:active {
+            transform: scale(0.98); /* Slightly scale down on tap */
+        }
+
+        /* Descriptive Text Label */
+        .alert-text {
+            font-size: 15px; /* Readable text size */
+            color: #333333; /* Dark text color */
+            text-align: left;
+            flex-grow: 1; /* Allow text to take most of the space */
+            margin-right: 10px; /* Space between text and button */
+            line-height: 1.4; /* Improve readability of text */
+        }
+
+        /* Action Buttons (ENROLL, ENABLE) */
+        .action-button {
+            background-color: #007bff; /* Standard blue for action buttons */
+            color: white; /* White text on button */
+            padding: 10px 15px; /* Padding inside the button */
+            border: none; /* No border */
+            border-radius: 5px; /* Slightly rounded corners for buttons */
+            font-size: 14px; /* Button text size */
+            cursor: pointer; /* Indicates clickable */
+            white-space: nowrap; /* Prevent button text from wrapping */
+            min-width: 80px; /* Ensure buttons have a consistent minimum width */
+            text-transform: uppercase; /* Make button text uppercase */
+            font-weight: bold;
+            transition: background-color 0.2s ease; /* Smooth background color change on hover/tap */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        /* Darker blue on hover for desktop, or active state on mobile */
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+        .action-button:active {
+            background-color: #004085;
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header Section -->
+    <div class="header">
+        <!-- Placeholder to balance the refresh button and keep "Home" title centered -->
+        <span class="header-placeholder"></span>
+        <h1 class="header-title">Home</h1>
+        <!-- Refresh Icon Button (Unicode for a clockwise arrow) -->
+        <button class="refresh-button">&#x21BB;</button>
+    </div>
+
+    <!-- Main Content Section (Alerts List) -->
+    <div class="scrollable-container">
+        <!-- Enrollment Alert Item -->
+        <div class="alert-item">
+            <span class="alert-text">Your device is not enrolled in a managed network.</span>
+            <button class="action-button">ENROLL</button>
+        </div>
+
+        <!-- Mobile Data Usage Alert Item -->
+        <div class="alert-item">
+            <span class="alert-text">Mobile data usage history is not enabled.</span>
+            <button class="action-button">ENABLE</button>
+        </div>
+
+        <!-- Device Administrator Alert Item -->
+        <div class="alert-item">
+            <span class="alert-text">Device administrator privileges are not enabled.</span>
+            <button class="action-button">ENABLE</button>
+        </div>
+
+        <!-- Additional alerts for demonstrating scrollability -->
+        <div class="alert-item">
+            <span class="alert-text">Location services are disabled for important features.</span>
+            <button class="action-button">ENABLE</button>
+        </div>
+        <div class="alert-item">
+            <span class="alert-text">Security updates are pending. Please update your device.</span>
+            <button class="action-button">UPDATE</button>
+        </div>
+        <div class="alert-item">
+            <span class="alert-text">Low storage space detected. Free up some space.</span>
+            <button class="action-button">CLEAN</button>
+        </div>
+        <div class="alert-item">
+            <span class="alert-text">Your password is weak. Please change it to a stronger one.</span>
+            <button class="action-button">CHANGE</button>
+        </div>
+        <div class="alert-item">
+            <span class="alert-text">Backup is not configured for your important data.</span>
+            <button class="action-button">SETUP</button>
+        </div>
+    </div>
+
+</body>
+</html>

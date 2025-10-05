@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Design App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for mobile simulation and overall layout */
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            -webkit-font-smoothing: antialiased; /* Improve font rendering */
+            -moz-osx-font-smoothing: grayscale;
+            overscroll-behavior-y: contain; /* Prevent pull-to-refresh on mobile */
+        }
+
+        body {
+            /* Simulate a mobile screen size of 375x667 pixels */
+            width: 375px; 
+            height: 667px;
+            margin: auto; /* Centers the body on larger screens (e.g., desktop browser) */
+            display: flex;
+            flex-direction: column; /* Stacks header, canvas, and toolbar vertically */
+            background-color: #f0f0f0;
+            overflow: hidden; /* Prevent body scrolling; internal sections will scroll if needed */
+            position: relative; /* Needed for positioning the Layers Panel overlay */
+        }
+
+        /* General styling for all buttons */
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 1.1em;
+            color: #333;
+            display: flex; /* Allows content (icon/text) to be centered/aligned */
+            align-items: center;
+            justify-content: center;
+            outline: none; /* Remove focus outline */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+        button:active {
+            opacity: 0.7; /* Visual feedback on tap */
+        }
+
+        /* 1. Top Bar (Header) */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Distributes items to left, center, right */
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10; /* Ensures header is above other content */
+            min-height: 48px; /* Standard mobile header height */
+        }
+
+        .header-left-group, .header-right-group {
+            display: flex;
+            gap: 5px; /* Spacing between buttons within groups */
+        }
+
+        .header .save-button {
+            font-weight: bold;
+            color: #007bff; /* Prominent color for Save action */
+            font-size: 1.2em; /* Slightly larger for prominence */
+        }
+        .header button {
+            font-size: 1.4em; /* Icon size for header buttons */
+        }
+
+        /* 2. Design Canvas Area (Main Content) */
+        .design-canvas {
+            flex-grow: 1; /* Takes up all available vertical space between header and toolbar */
+            background-color: #f8f8f8;
+            position: relative;
+            overflow: hidden; /* Canvas content will not scroll by default */
+            
+            /* Dotted Grid Overlay Styling */
+            background-image: radial-gradient(circle at 1px 1px, #ccc 1px, transparent 1px);
+            background-size: 20px 20px; /* Adjust dot size and spacing as desired */
+        }
+
+        /* 3. Bottom Toolbar (Creation Tools) */
+        .bottom-toolbar {
+            display: flex;
+            justify-content: space-around; /* Distributes buttons evenly */
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            z-index: 10; /* Ensures toolbar is above other content */
+            min-height: 56px; /* Standard mobile bottom bar height */
+        }
+
+        .bottom-toolbar button {
+            flex: 1; /* Allows buttons to take equal width */
+            font-size: 1.6em; /* Larger icons for bottom toolbar */
+            color: #555;
+        }
+
+        /* 4. Layers Panel (Collapsible Overlay) */
+        .layers-panel {
+            position: fixed; /* Positions relative to the viewport (or body in this case) */
+            top: 0;
+            right: 0; /* Set to 0 to make it visible for demonstration */
+            width: 260px; /* Fixed width for the panel */
+            height: 100%; /* Full height of the parent body */
+            background-color: #fff;
+            box-shadow: -4px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000; /* Ensures it's on top of all other content */
+            display: flex;
+            flex-direction: column;
+            
+            /* To make it initially hidden and slide in/out, uncomment these: */
+            /* transform: translateX(100%); */
+            /* transition: transform 0.3s ease-out; */
+            /* A JavaScript toggle would add/remove a class like 'is-open' to change 'transform' */
+            /* .layers-panel.is-open { transform: translateX(0); } */
+        }
+
+        .layers-panel h3 {
+            margin: 0;
+            padding: 15px;
+            font-size: 1.2em;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            background-color: #f8f8f8;
+        }
+
+        .layer-list {
+            flex-grow: 1; /* Allows the list to take up remaining height */
+            overflow-y: auto; /* Enables vertical scrolling if layers exceed panel height */
+            padding: 10px 0;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-bottom: 1px solid #eee;
+            cursor: grab; /* Indicates reorderability */
+            user-select: none; /* Prevent text selection during drag */
+        }
+        .layer-item:last-child {
+            border-bottom: none; /* No border on the last item */
+        }
+        .layer-item:hover {
+            background-color: #f5f5f5; /* Hover effect for items */
+        }
+
+        .layer-item .thumbnail {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-right: 10px;
+            flex-shrink: 0; /* Prevent thumbnail from shrinking */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            color: #666;
+            overflow: hidden; /* For actual image thumbnails */
+        }
+
+        .layer-item .name {
+            flex-grow: 1; /* Allows name to take available space */
+            font-size: 0.95em;
+            color: #333;
+            white-space: nowrap; /* Prevent name from wrapping */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncate long names with ellipsis */
+        }
+
+        .layer-item .controls {
+            display: flex;
+            gap: 5px;
+            margin-left: 10px;
+            flex-shrink: 0; /* Prevent controls from shrinking */
+        }
+
+        .layer-item .controls button {
+            font-size: 1em;
+            color: #666;
+            padding: 4px 6px;
+            border-radius: 3px;
+            background-color: #f0f0f0;
+        }
+        .layer-item .controls button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Bar (Header) -->
+    <div class="header">
+        <div class="header-left-group">
+            <button class="undo-button" title="Undo">&#x21BA;</button> <!-- Undo icon (⤺) -->
+            <button class="redo-button" title="Redo">&#x21BB;</button> <!-- Redo icon (⤼) -->
+            <button class="layers-toggle-button" title="Toggle Layers Panel">&#x1F5C3;</button> <!-- Layers icon (🗃️) -->
+        </div>
+        <button class="save-button" title="Save">Save</button>
+        <div class="header-right-group">
+            <button class="share-button" title="Share">&#x1F4E4;</button> <!-- Share icon (📤) -->
+        </div>
+    </div>
+
+    <!-- 2. Design Canvas Area (Main Content) -->
+    <div class="design-canvas">
+        <!-- User's design elements would be placed here -->
+    </div>
+
+    <!-- 3. Bottom Toolbar (Creation Tools) -->
+    <div class="bottom-toolbar">
+        <button class="shape-tool" title="Add Shape">&#x25A0;</button> <!-- Shape icon (■) -->
+        <button class="text-tool" title="Add Text">T</button>
+        <button class="import-image-tool" title="Import Image">&#x1F5BC;</button> <!-- Image icon (🖼️) -->
+    </div>
+
+    <!-- 4. Layers Panel (Collapsible Overlay) -->
+    <div class="layers-panel">
+        <h3>Layers</h3>
+        <div class="layer-list">
+            <!-- Example Layer Items -->
+            <div class="layer-item">
+                <span class="thumbnail">L3</span>
+                <span class="name">Rectangle Shape</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button> <!-- Up arrow (▲) -->
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button> <!-- Down arrow (▼) -->
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button> <!-- Eye icon (👁️) -->
+                </div>
+            </div>
+            <div class="layer-item">
+                <span class="thumbnail">L2</span>
+                <span class="name">Main Heading Text</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button>
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button>
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button>
+                </div>
+            </div>
+            <div class="layer-item">
+                <span class="thumbnail">L1</span>
+                <span class="name">Background Image</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button>
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button>
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button>
+                </div>
+            </div>
+            <div class="layer-item">
+                <span class="thumbnail">L4</span>
+                <span class="name">Circle Icon</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button>
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button>
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button>
+                </div>
+            </div>
+            <div class="layer-item">
+                <span class="thumbnail">L5</span>
+                <span class="name">Call to Action Button</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button>
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button>
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button>
+                </div>
+            </div>
+            <div class="layer-item">
+                <span class="thumbnail">L6</span>
+                <span class="name">Small Text Label</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button>
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button>
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button>
+                </div>
+            </div>
+            <div class="layer-item">
+                <span class="thumbnail">L7</span>
+                <span class="name">Footer Navigation</span>
+                <div class="controls">
+                    <button class="reorder-up" title="Move Up">&#x25B2;</button>
+                    <button class="reorder-down" title="Move Down">&#x25BC;</button>
+                    <button class="visibility-toggle" title="Toggle Visibility">&#x1F441;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

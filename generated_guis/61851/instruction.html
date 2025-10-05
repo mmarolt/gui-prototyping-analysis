@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHL News & Updates</title>
+    <style>
+        /* Basic Reset & Body Styles */
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif; /* Modern, clean font */
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8; /* Very light background */
+            color: #333;
+            -webkit-text-size-adjust: 100%; /* Prevent text scaling on orientation change */
+            line-height: 1.6;
+        }
+
+        /* Main Container - Designed for 375px mobile width */
+        .container {
+            max-width: 375px; /* Target mobile width */
+            margin: 0 auto; /* Center on larger screens */
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.08); /* Subtle shadow */
+            min-height: 100vh; /* Ensure it takes full height */
+            padding: 20px 15px; /* Add some padding around the content */
+            box-sizing: border-box; /* Include padding in width/height */
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee; /* Light separator */
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px; /* Adjust logo size for mobile */
+            height: auto;
+            display: block; /* Remove extra space below image */
+        }
+
+        .logout-btn {
+            background-color: #D40511; /* DHL Red */
+            color: #fff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px; /* More rounded button */
+            text-decoration: none;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #a7040e;
+            transform: translateY(-1px);
+        }
+
+        /* Personalized Greeting */
+        .greeting {
+            font-size: 1.8em;
+            color: #222;
+            margin-top: 0;
+            margin-bottom: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .greeting-subtext {
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column; /* Stack label and select */
+            gap: 8px;
+        }
+
+        .category-filter label {
+            font-size: 0.95em;
+            color: #555;
+            font-weight: 500;
+        }
+
+        #category-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px; /* Rounded input field */
+            font-size: 1em;
+            background-color: #fefefe;
+            -webkit-appearance: none; /* Remove default dropdown arrow */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%01-5%2013.9L156.4%20287.4c-2.7%202.7-6.5%204-10.3%204s-7.6-1.3-10.3-4L5%2083.4a17.6%2017.6%200%2001-5-13.9c0-10.3%208.3-18.6%2018.6-18.6h255.8c10.3%200%2018.6%208.3%2018.6%2018.6z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 10px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); /* Inner shadow for depth */
+        }
+
+        /* News Articles Section */
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Space between articles */
+        }
+
+        .news-article {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px; /* Slightly more rounded corners */
+            overflow: hidden; /* Ensures image corners are rounded */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* More prominent shadow */
+            padding-bottom: 15px; /* Padding for text content */
+            transition: transform 0.2s ease;
+        }
+
+        .news-article:hover {
+            transform: translateY(-3px); /* Slight lift on hover */
+        }
+
+        .news-image {
+            width: 100%;
+            height: 180px; /* Fixed height for images */
+            object-fit: cover; /* Cover the area, crop if necessary */
+            display: block; /* Remove extra space below image */
+            margin-bottom: 15px;
+        }
+
+        .news-article h3 {
+            font-size: 1.4em;
+            color: #222;
+            margin: 0 15px 8px 15px; /* Horizontal padding for text */
+            font-weight: bold;
+        }
+
+        .news-article p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            color: #555;
+            margin: 0 15px 15px 15px; /* Horizontal padding for text */
+        }
+
+        .news-article .read-more {
+            display: inline-block;
+            background-color: #FFCC00; /* DHL Yellow */
+            color: #222;
+            padding: 8px 15px;
+            border-radius: 20px; /* Rounded button */
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-left: 15px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        .news-article .read-more:hover {
+            background-color: #e6b800; /* Darker yellow on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <!-- Using the official DHL logo from a public CDN for better visual representation. -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/DHL_Logo.svg/100px-DHL_Logo.svg.png" alt="DHL Logo" class="logo">
+            <a href="#" class="logout-btn">Log Out</a>
+        </div>
+
+        <!-- Personalized Greeting -->
+        <h1 class="greeting">Hello, Sarah!</h1>
+        <p class="greeting-subtext">Your latest DHL news & updates.</p>
+
+        <!-- Category Filter -->
+        <div class="category-filter">
+            <label for="category-select">Filter News:</label>
+            <select id="category-select">
+                <option value="all">All News</option>
+                <option value="f1">Formula 1</option>
+                <option value="esports">eSports & Gaming</option>
+                <option value="logistics">Logistics Innovations</option>
+                <option value="sustainability">Sustainability</option>
+                <option value="events">Sponsored Events</option>
+            </select>
+            <!-- Note: In a real application, JavaScript would be used to implement the filtering logic. -->
+        </div>
+
+        <!-- News Articles Section -->
+        <div class="news-list">
+            <!-- News Article 1: Formula 1 -->
+            <div class="news-article">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+F1+Logistics" alt="DHL Formula 1 Logistics" class="news-image">
+                <h3 class="news-title">DHL Powers Formula 1 Logistics for 2024 Season</h3>
+                <p class="news-description">DHL continues its vital role as official logistics partner for Formula 1, ensuring seamless global transport for race cars and equipment across 24 Grand Prix events. Read more about the precision and speed involved...</p>
+                <a href="#" class="read-more">Read all...</a>
+            </div>
+
+            <!-- News Article 2: eSports -->
+            <div class="news-article">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+eSports+Partnership" alt="DHL eSports Tournament" class="news-image">
+                <h3 class="news-title">DHL Elevates eSports: New Partnership with Global Gaming League</h3>
+                <p class="news-description">Discover how DHL is supporting the rapidly growing eSports industry, delivering high-tech gaming equipment and ensuring events run smoothly worldwide, connecting fans and players. Explore the future of gaming logistics...</p>
+                <a href="#" class="read-more">Read all...</a>
+            </div>
+
+            <!-- News Article 3: Logistics Events -->
+            <div class="news-article">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+Innovation+Forum" alt="DHL Innovation Forum" class="news-image">
+                <h3 class="news-title">Highlights from the DHL Global Logistics Innovation Forum</h3>
+                <p class="news-description">Catch up on the latest insights from DHL's annual innovation forum, where industry leaders discussed sustainable supply chains, AI-driven solutions, and the future of global trade. Key takeaways and presentations available...</p>
+                <a href="#" class="read-more">Read all...</a>
+            </div>
+
+            <!-- News Article 4: Sustainability -->
+            <div class="news-article">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+Green+Initiatives" alt="DHL Green Logistics" class="news-image">
+                <h3 class="news-title">Driving Towards Green: DHL's Latest Sustainability Report</h3>
+                <p class="news-description">Explore DHL's ambitious commitment to sustainability, from expanding its fleet of electric vehicles to investing in eco-friendly packaging and carbon-neutral operations. Learn about our progress and future goals...</p>
+                <a href="#" class="read-more">Read all...</a>
+            </div>
+
+            <!-- News Article 5: Sponsored Events (General Sports) -->
+            <div class="news-article">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+Sports+Sponsorship" alt="DHL Sports Event" class="news-image">
+                <h3 class="news-title">DHL Supports Major Marathon Event for Community Engagement</h3>
+                <p class="news-description">DHL proudly sponsored the City Marathon, providing essential logistics support and engaging with local communities. See how we help bring major sporting events to life and foster local talent...</p>
+                <a href="#" class="read-more">Read all...</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -3,290 +3,442 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Manager</title>
+    <title>Mobile File Manager App</title>
+    <!-- Material Icons CDN -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto (for Material Design typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* General Styles */
+        /* General styles and Material Design theme */
+        :root {
+            /* Material Design Color Palette */
+            --md-primary-color: #6200EE;           /* Deep Purple */
+            --md-primary-dark-color: #5300DA;      /* Slightly darker purple for tabs background */
+            --md-accent-color: #03DAC6;            /* Teal (for indicators, progress, active states) */
+            --md-on-primary: #FFFFFF;             /* White text/icons on primary background */
+            --md-on-surface: #212121;             /* Black for primary text on white/light backgrounds */
+            --md-on-surface-secondary: #757575;   /* Gray for secondary text, inactive icons */
+            --md-on-surface-muted: #BDBDBD;       /* Lighter gray for unfavorited star */
+            --md-divider-color: #E0E0E0;          /* Light gray for borders */
+            --md-background-color: #F5F5F5;       /* Light gray general app background */
+            --md-shadow-color: rgba(0, 0, 0, 0.2); /* Darker shadow for pronounced elements */
+            --md-shadow-color-light: rgba(0, 0, 0, 0.1); /* Lighter shadow for subtle elements */
+            --md-star-favorited-color: #FFC107;   /* Amber for favorited star */
+        }
+
+        /* Universal box-sizing for consistent layout */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f8f8f8; /* Light grey background */
-            color: #212121; /* Dark grey primary text color */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
-        }
-
-        .container {
-            width: 375px; /* Mobile screen width */
-            height: 667px; /* Mobile screen height */
-            overflow: hidden;
-            position: relative; /* Required for absolute positioning of FAB */
-        }
-
-        /* App Bar Styles */
-        .app-bar {
-            background-color: #2196F3; /* Primary app color (Blue) */
-            color: white;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased; /* Better font rendering on macOS/iOS */
+            -moz-osx-font-smoothing: grayscale; /* Better font rendering on macOS */
+            background-color: #f0f0f0; /* Host page background */
             display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Center the mobile screen vertically */
+            overflow: hidden; /* Prevent body scroll if content overflows the centered div */
+        }
+
+        /* Mobile screen simulation container */
+        .mobile-screen {
+            width: 375px;  /* Matches the 375dp width specified */
+            height: 667px; /* Matches the 667dp height specified */
+            background-color: var(--md-background-color);
+            box-shadow: 0 4px 8px var(--md-shadow-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content within doesn't exceed screen bounds */
+            border-radius: 8px; /* Slightly rounded corners for app aesthetic */
+        }
+
+        /* --- 1. Top Bar: Storage Overview & Navigation Tabs --- */
+        .top-bar {
+            width: 100%;
+            height: 110px; /* As per description's example (100-120dp, using 110px) */
+            background-color: var(--md-primary-color);
+            color: var(--md-on-primary);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 4px var(--md-shadow-color);
+            z-index: 10; /* Ensures shadow is visible over scrolling content */
+        }
+
+        .storage-info {
+            padding: 12px 16px;
+            font-size: 14px; /* Material Design body1/subtitle2 equivalent */
+            display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
-            padding: 0 16px;
-            height: 56px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Slight shadow */
-            z-index: 10; /* Ensure app bar stays on top */
         }
 
-        .app-bar-leading {
-            cursor: pointer;
+        .storage-progress-container {
+            width: 80px; /* Fixed width for visual consistency */
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3); /* Translucent white background for track */
+            border-radius: 3px;
+            overflow: hidden; /* Ensures the progress bar stays within bounds */
         }
 
-        .app-bar-title {
-            font-size: 20px;
-            font-weight: 500; /* Roboto Medium */
+        .storage-progress-bar {
+            height: 100%;
+            width: 60%; /* Example: 60% used. Calculated dynamically in HTML for the example. */
+            background-color: var(--md-accent-color);
+            border-radius: 3px;
         }
 
-        .app-bar-actions {
+        .navigation-tabs {
             display: flex;
-            align-items: center;
+            width: 100%;
+            height: 48px; /* Standard Material Design tab bar height */
+            background-color: var(--md-primary-dark-color); /* Slightly darker for contrast */
         }
 
-        .app-bar-actions i {
-            margin-left: 16px;
+        .tab {
+            flex-grow: 1; /* Distributes tabs equally */
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7); /* Inactive tab color */
+            font-size: 14px;
+            font-weight: 500; /* Medium weight for tab labels */
+            text-transform: uppercase;
+            position: relative;
             cursor: pointer;
+            display: flex;
+            flex-direction: column; /* Stack icon and text */
+            align-items: center;
+            justify-content: center;
+            gap: 2px; /* Small space between icon and text */
+            transition: color 0.2s ease-in-out;
+            -webkit-tap-highlight-color: transparent; /* Remove default tap highlight on mobile */
         }
 
-        /* Content Area Styles */
-        .content-area {
-            padding: 8px 0;
+        .tab:hover:not(.active) {
+            color: rgba(255, 255, 255, 0.9); /* Subtle hover effect for inactive tabs */
+        }
+
+        .tab.active {
+            color: var(--md-on-primary); /* Active tab color */
+        }
+
+        .tab .indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--md-accent-color);
+            visibility: hidden; /* Hide by default */
+            transform: scaleX(0); /* Start scaled down for animation */
+            transition: transform 0.2s ease-in-out, visibility 0.2s ease-in-out;
+            transform-origin: center; /* Scale from center */
+        }
+
+        .tab.active .indicator {
+            visibility: visible;
+            transform: scaleX(1); /* Scale up when active */
+        }
+
+        .tab .material-icons {
+            font-size: 20px; /* Slightly smaller icons for tabs */
+        }
+
+        /* --- 2. Main Content Area: File & Directory List --- */
+        .main-content-area {
+            flex-grow: 1; /* Takes remaining vertical space */
             overflow-y: auto; /* Enable vertical scrolling */
-            height: calc(667px - 56px - 56px); /*Adjust height based on app bar and bottom nav bar*/
-            /*height: 555px; /* Calculate available height */
+            background-color: var(--md-background-color);
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
         }
 
         .list-item {
+            width: 100%;
+            height: 72px; /* Standard Material Design list item height */
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid #e0e0e0; /* Subtle divider */
-            cursor: pointer; /* Indicate item is clickable */
+            border-bottom: 1px solid var(--md-divider-color);
+            background-color: var(--md-on-primary); /* White background for list items */
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
         }
 
-        .list-item:last-child {
-            border-bottom: none;
+        .list-item:hover {
+            background-color: #F0F0F0; /* Subtle hover effect */
         }
 
-        .list-item-icon {
+        .list-item .material-icons.leading-icon {
+            font-size: 24px; /* Standard icon size */
+            color: var(--md-on-surface-secondary);
             margin-right: 16px;
-            color: #757575; /* Grey icon color */
         }
 
-        .list-item-icon i {
-            font-size: 24px; /* Increased size for better visibility */
+        .list-item .text-content {
+            flex-grow: 1; /* Allows text to take available space */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensures ellipsis works */
         }
 
-        .list-item-content {
-            flex-grow: 1;
+        .list-item .primary-text {
+            font-size: 16px; /* Material Design body1 */
+            color: var(--md-on-surface);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncate long names */
         }
 
-        .list-item-title {
-            font-size: 16px;
-            font-weight: 400; /* Roboto Regular */
+        .list-item .secondary-text {
+            font-size: 14px; /* Material Design body2 */
+            color: var(--md-on-surface-secondary);
+            margin-top: 2px; /* Small space between primary and secondary */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .list-item-subtitle {
-            font-size: 12px;
-            font-weight: 300; /* Roboto Light */
-            color: #757575; /* Secondary text color */
-        }
-
-        .list-item-action {
-            margin-left: 16px;
-            color: #757575;
-            cursor: pointer;
-        }
-
-        /* FAB Styles */
-        .fab {
-            position: absolute;
-            bottom: 24px;
-            right: 24px;
-            background-color: #FF4081; /* Accent color (Pink) */
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Pronounced shadow */
-            cursor: pointer;
+        .list-item .trailing-icons {
             display: flex;
             align-items: center;
-            justify-content: center;
-            outline: none; /* Remove default focus outline */
-            z-index: 15; /* Ensure FAB stays on top */
+            margin-left: 8px; /* Space from text content */
+            flex-shrink: 0; /* Prevent icons from shrinking */
         }
 
-        .fab i {
-            font-size: 24px;
+        .list-item .material-icons.action-icon {
+            font-size: 20px; /* Smaller than leading icon */
+            padding: 8px; /* Enlarged tap target area */
+            cursor: pointer;
+            border-radius: 50%; /* For a circular ripple effect hint */
+            transition: background-color 0.15s ease-in-out;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .list-item .material-icons.action-icon:hover {
+            background-color: rgba(0, 0, 0, 0.04); /* Subtle ripple effect simulation */
         }
 
-        /* Bottom Navigation Styles */
-        .bottom-nav {
-            background-color: white;
+        .list-item .material-icons.lock-icon {
+            color: var(--md-on-surface-secondary);
+        }
+
+        .list-item .material-icons.favorite-icon {
+            color: var(--md-on-surface-muted); /* Unfavorited color */
+            margin-left: 4px; /* Space between lock and favorite */
+        }
+        .list-item .material-icons.favorite-icon.favorited {
+            color: var(--md-star-favorited-color); /* Amber for favorited star */
+        }
+
+        /* --- 3. Bottom Navigation Bar: File Actions --- */
+        .bottom-navigation {
+            width: 100%;
+            height: 56px; /* Standard Material Design bottom navigation height */
+            background-color: var(--md-on-primary); /* White background */
+            border-top: 1px solid var(--md-divider-color);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            height: 56px;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Shadow at the top */
-            position: relative;
-            z-index: 10;
-
+            box-shadow: 0 -2px 4px var(--md-shadow-color-light); /* Shadow above the bar */
+            z-index: 10; /* Ensures shadow is visible over scrolling content */
         }
 
-        .bottom-nav-item {
+        .nav-item {
+            background: none;
+            border: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #757575; /* Grey icon color */
-            text-decoration: none;
-            font-size: 12px;
-            padding: 8px;
-            border: none;
+            justify-content: center;
+            color: var(--md-on-surface-secondary); /* Inactive color */
+            font-size: 12px; /* Material Design caption text */
+            font-weight: 400;
+            text-transform: none;
+            cursor: pointer;
+            padding: 6px 0; /* Vertical padding to occupy space and enlarge tap target */
+            flex: 1; /* Distribute items evenly */
+            transition: color 0.2s ease-in-out;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .bottom-nav-item.active {
-            color: #2196F3; /* Highlighted color */
+        .nav-item:hover {
+            color: var(--md-on-surface); /* Darker on hover */
         }
 
-        .bottom-nav-item i {
+        /* Example of an active nav item */
+        .nav-item.active {
+            color: var(--md-primary-color); /* Primary color for active icon/label */
+        }
+
+        .nav-item .material-icons {
             font-size: 24px;
-            margin-bottom: 4px;
-        }
-
-        /* Empty State Styles */
-        .empty-state {
-            text-align: center;
-            padding: 20px;
-            color: #757575;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 10px;
+            margin-bottom: 2px; /* Small space between icon and text */
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- App Bar -->
-        <div class="app-bar">
-            <div class="app-bar-leading">
-                <i class="material-icons">menu</i>
+
+    <div class="mobile-screen">
+
+        <!-- 1. Top Bar: Storage Overview & Navigation Tabs -->
+        <div class="top-bar">
+            <div class="storage-info">
+                <span>Total: 128 GB | Available: 75 GB</span>
+                <div class="storage-progress-container">
+                    <!-- Progress bar width calculated based on (used / total * 100%) -->
+                    <div class="storage-progress-bar" style="width: calc((128 - 75) / 128 * 100%);"></div>
+                </div>
             </div>
-            <div class="app-bar-title">SD Card</div>
-            <div class="app-bar-actions">
+
+            <div class="navigation-tabs">
+                <button class="tab active">
+                    <i class="material-icons">folder_open</i>
+                    Root
+                    <span class="indicator"></span>
+                </button>
+                <button class="tab">
+                    <i class="material-icons">sd_card</i>
+                    SD Card
+                    <span class="indicator"></span>
+                </button>
+                <button class="tab">
+                    <i class="material-icons">store</i>
+                    App store
+                    <span class="indicator"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. Main Content Area: File & Directory List -->
+        <div class="main-content-area">
+            <!-- Directory Item Example -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">folder</i>
+                <div class="text-content">
+                    <span class="primary-text">Documents</span>
+                    <span class="secondary-text">12 items</span>
+                </div>
+                <div class="trailing-icons">
+                    <i class="material-icons action-icon lock-icon">lock_open</i>
+                    <i class="material-icons action-icon favorite-icon">star_border</i>
+                </div>
+            </div>
+            <!-- Directory Item Example (Favorited) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">folder</i>
+                <div class="text-content">
+                    <span class="primary-text">Photos (Vacation 2023)</span>
+                    <span class="secondary-text">245 items</span>
+                </div>
+                <div class="trailing-icons">
+                    <i class="material-icons action-icon lock-icon">lock_open</i>
+                    <i class="material-icons action-icon favorite-icon favorited">star</i>
+                </div>
+            </div>
+            <!-- File Item Example (PDF) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">picture_as_pdf</i>
+                <div class="text-content">
+                    <span class="primary-text">Project_Report_Q3_Final.pdf</span>
+                    <span class="secondary-text">3.2 MB &bull; 2023-09-15</span>
+                </div>
+                <!-- Lock and favorite icons typically apply to directories, omitted for files as per description's primary focus -->
+            </div>
+            <!-- File Item Example (Image) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">image</i>
+                <div class="text-content">
+                    <span class="primary-text">sunset_beach_panorama.jpg</span>
+                    <span class="secondary-text">1.5 MB &bull; 2023-10-01</span>
+                </div>
+            </div>
+            <!-- Directory Item Example -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">folder</i>
+                <div class="text-content">
+                    <span class="primary-text">Downloads</span>
+                    <span class="secondary-text">8 items</span>
+                </div>
+                <div class="trailing-icons">
+                    <i class="material-icons action-icon lock-icon">lock_open</i>
+                    <i class="material-icons action-icon favorite-icon">star_border</i>
+                </div>
+            </div>
+            <!-- File Item Example (Document) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">description</i>
+                <div class="text-content">
+                    <span class="primary-text">meeting_notes_2023_11_05.docx</span>
+                    <span class="secondary-text">56 KB &bull; 2023-11-05</span>
+                </div>
+            </div>
+            <!-- Directory Item Example (Locked & Favorited) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">folder</i>
+                <div class="text-content">
+                    <span class="primary-text">Private Files (Locked)</span>
+                    <span class="secondary-text">3 items</span>
+                </div>
+                <div class="trailing-icons">
+                    <i class="material-icons action-icon lock-icon">lock</i>
+                    <i class="material-icons action-icon favorite-icon favorited">star</i>
+                </div>
+            </div>
+            <!-- File Item Example (Audio) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">audiotrack</i>
+                <div class="text-content">
+                    <span class="primary-text">favorite_playlist_song.mp3</span>
+                    <span class="secondary-text">4.1 MB &bull; 2022-03-10</span>
+                </div>
+            </div>
+            <!-- Directory Item Example -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">folder</i>
+                <div class="text-content">
+                    <span class="primary-text">Work Projects (Current)</span>
+                    <span class="secondary-text">20 items</span>
+                </div>
+                <div class="trailing-icons">
+                    <i class="material-icons action-icon lock-icon">lock_open</i>
+                    <i class="material-icons action-icon favorite-icon">star_border</i>
+                </div>
+            </div>
+            <!-- File Item Example (Video) -->
+            <div class="list-item">
+                <i class="material-icons leading-icon">videocam</i>
+                <div class="text-content">
+                    <span class="primary-text">trip_highlights_2023.mp4</span>
+                    <span class="secondary-text">80.5 MB &bull; 2023-07-22</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Bottom Navigation Bar: File Actions -->
+        <div class="bottom-navigation">
+            <button class="nav-item">
+                <i class="material-icons">file_download</i>
+                <span>Download</span>
+            </button>
+            <button class="nav-item">
                 <i class="material-icons">search</i>
-                <i class="material-icons">more_vert</i>
-            </div>
+                <span>Search</span>
+            </button>
+            <button class="nav-item">
+                <i class="material-icons">create_new_folder</i>
+                <span>New Folder</span>
+            </button>
+            <button class="nav-item">
+                <i class="material-icons">sort</i>
+                <span>Sort</span>
+            </button>
         </div>
 
-        <!-- Content Area -->
-        <div class="content-area">
-            <!-- List Items -->
-            <div class="list-item">
-                <div class="list-item-icon">
-                    <i class="material-icons">folder</i>
-                </div>
-                <div class="list-item-content">
-                    <div class="list-item-title">Documents</div>
-                    <div class="list-item-subtitle">12 items</div>
-                </div>
-                <div class="list-item-action">
-                    <i class="material-icons">more_vert</i>
-                </div>
-            </div>
-
-            <div class="list-item">
-                <div class="list-item-icon">
-                    <i class="material-icons">image</i>
-                </div>
-                <div class="list-item-content">
-                    <div class="list-item-title">Photos</div>
-                    <div class="list-item-subtitle">25 MB</div>
-                </div>
-                <div class="list-item-action">
-                    <i class="material-icons">more_vert</i>
-                </div>
-            </div>
-
-             <div class="list-item">
-                <div class="list-item-icon">
-                    <i class="material-icons">music_note</i>
-                </div>
-                <div class="list-item-content">
-                    <div class="list-item-title">Music</div>
-                    <div class="list-item-subtitle">10 MB</div>
-                </div>
-                <div class="list-item-action">
-                    <i class="material-icons">more_vert</i>
-                </div>
-            </div>
-
-            <div class="list-item">
-                <div class="list-item-icon">
-                    <i class="material-icons">insert_drive_file</i>
-                </div>
-                <div class="list-item-content">
-                    <div class="list-item-title">Report.pdf</div>
-                    <div class="list-item-subtitle">2.5 MB</div>
-                </div>
-                <div class="list-item-action">
-                    <i class="material-icons">more_vert</i>
-                </div>
-            </div>
-
-            <div class="list-item">
-                <div class="list-item-icon">
-                    <i class="material-icons">insert_drive_file</i>
-                </div>
-                <div class="list-item-content">
-                    <div class="list-item-title">Presentation.pptx</div>
-                    <div class="list-item-subtitle">5 MB</div>
-                </div>
-                <div class="list-item-action">
-                    <i class="material-icons">more_vert</i>
-                </div>
-            </div>
-            <!-- More list items can be added here -->
-
-            <!-- Example of Empty State -->
-            <!--
-            <div class="empty-state">
-                <i class="material-icons">folder_open</i>
-                <p>This folder is empty.</p>
-            </div>
-            -->
-        </div>
-
-        <!-- Floating Action Button -->
-        <button class="fab">
-            <i class="material-icons">add</i>
-        </button>
-
-        <!-- Bottom Navigation -->
-        <div class="bottom-nav">
-            <a href="#" class="bottom-nav-item active">
-                <i class="material-icons">home</i>
-                <span>Home</span>
-            </a>
-            <a href="#" class="bottom-nav-item">
-                <i class="material-icons">storage</i>
-                <span>Storage</span>
-            </a>
-            <a href="#" class="bottom-nav-item">
-                <i class="material-icons">settings</i>
-                <span>Settings</span>
-            </a>
-        </div>
     </div>
+
 </body>
 </html>

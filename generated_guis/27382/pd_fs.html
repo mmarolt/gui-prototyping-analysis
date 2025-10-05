@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Announcement</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Make body fill viewport height */
+            box-sizing: border-box;
+            width: 375px; /* Target width for dev tools simulation */
+            max-width: 100%; /* Ensure it doesn't exceed actual device width */
+            margin-left: auto; /* Center body if screen is wider than 375px */
+            margin-right: auto;
+            overflow: hidden; /* Prevent body scroll, let inner containers scroll */
+            color: #333;
+        }
+
+        /* 1. Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Prevent header from shrinking */
+            position: relative; /* For absolute positioning of elements if needed, though flex handles it */
+            z-index: 10; /* Ensure header is above scrolling content */
+        }
+        .header-placeholder { /* Used to balance the Dashboard link's width */
+            width: 70px; /* Roughly match dashboard link's space */
+        }
+        .page-title {
+            font-size: 22px; /* Large font size for prominence */
+            font-weight: bold;
+            margin: 0;
+            flex-grow: 1; /* Allows title to take available space and center */
+            text-align: center;
+        }
+        .dashboard-link {
+            font-size: 15px;
+            color: #007bff;
+            text-decoration: none;
+            padding: 5px 10px;
+            min-width: 70px; /* Ensure enough touch target area */
+            text-align: right;
+        }
+
+        /* Wrapper for scrollable and input content, takes up remaining vertical space */
+        .main-content-wrapper {
+            flex-grow: 1; /* Takes all available vertical space */
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Allow this entire wrapper to scroll if its content exceeds height */
+            padding: 15px;
+            background-color: #f8f8f8;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* 2. Recipient Group Selection Section */
+        .recipient-selection-section {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 15px;
+            flex-shrink: 0; /* Don't let this section shrink */
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            text-align: left;
+            color: #333;
+        }
+        .recipient-groups-container {
+            max-height: 200px; /* Limit height for scrollability demo */
+            overflow-y: auto; /* Make this specific container scrollable */
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fff;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .group-item:last-child {
+            border-bottom: none;
+        }
+        .group-label {
+            display: flex;
+            align-items: baseline; /* Align text baselines */
+            cursor: pointer;
+            flex-grow: 1;
+            text-align: left;
+            margin-right: 10px; /* Space before checkbox */
+        }
+        .group-name {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        .group-count {
+            font-size: 13px;
+            color: #666;
+            margin-left: 8px; /* Space after group name */
+        }
+        .group-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0; /* Prevent checkbox from shrinking */
+        }
+
+        /* 3. Announcement Details Section */
+        .announcement-details-section {
+            flex-grow: 1; /* Takes remaining space in main-content-wrapper */
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 15px;
+            margin-bottom: 15px; /* Spacing before footer if main-content-wrapper scrolls */
+        }
+        .title-input {
+            width: 100%; /* Full width minus padding */
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Include padding in width */
+            outline: none; /* Remove default focus outline */
+        }
+        .title-input::placeholder {
+            color: #999;
+        }
+        .content-textarea {
+            width: 100%; /* Full width minus padding */
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            resize: vertical; /* Allow only vertical resizing */
+            flex-grow: 1; /* Takes remaining vertical space in its parent */
+            min-height: 120px; /* Minimum height for textarea */
+            box-sizing: border-box; /* Include padding in width */
+            outline: none; /* Remove default focus outline */
+        }
+        .content-textarea::placeholder {
+            color: #999;
+        }
+
+        /* 4. Action Button Section (Bottom) */
+        .action-button-section {
+            flex-shrink: 0; /* Prevent footer from shrinking */
+            padding: 15px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            z-index: 10; /* Ensure footer is above scrolling content */
+        }
+        .send-button {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease;
+        }
+        .send-button:active {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-placeholder"></div> <!-- Placeholder for left alignment balance -->
+        <h1 class="page-title">Send Announcement</h1>
+        <a href="#" class="dashboard-link">Dashboard</a>
+    </div>
+
+    <div class="main-content-wrapper">
+
+        <div class="recipient-selection-section">
+            <h3 class="section-title">Select Recipient Groups</h3>
+            <div class="recipient-groups-container">
+                <!-- Group Item 1 -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">All Users</span>
+                        <span class="group-count">(150)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox" checked>
+                </div>
+                <!-- Group Item 2 -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">Admins</span>
+                        <span class="group-count">(5)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox">
+                </div>
+                <!-- Group Item 3 -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">Marketing Team</span>
+                        <span class="group-count">(12)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox">
+                </div>
+                <!-- Group Item 4 (for scrollability demo) -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">Developers</span>
+                        <span class="group-count">(20)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox">
+                </div>
+                <!-- Group Item 5 (for scrollability demo) -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">Support Staff</span>
+                        <span class="group-count">(30)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox">
+                </div>
+                <!-- Group Item 6 (for scrollability demo) -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">Beta Testers</span>
+                        <span class="group-count">(250)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox">
+                </div>
+                <!-- Group Item 7 (for scrollability demo) -->
+                <div class="group-item">
+                    <label class="group-label">
+                        <span class="group-name">New Registrations</span>
+                        <span class="group-count">(80)</span>
+                    </label>
+                    <input type="checkbox" class="group-checkbox">
+                </div>
+            </div>
+        </div>
+
+        <div class="announcement-details-section">
+            <input type="text" class="title-input" placeholder="Enter announcement title">
+            <textarea class="content-textarea" placeholder="Type your announcement content here..."></textarea>
+        </div>
+
+    </div>
+
+    <div class="action-button-section">
+        <button class="send-button">Send Announcement</button>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reward App</title>
+</head>
+<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f7f6; color: #333;">
+
+    <!-- This div acts as the mobile device frame for simulation. 
+         It constrains the content to 375px width and centers it. -->
+    <div style="max-width: 375px; margin: 0 auto; background-color: #ffffff; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+        <!-- Header Section: Displays coin balance and Cash Out button -->
+        <header style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #4CAF50; color: white; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+            <div style="display: flex; align-items: center;">
+                <span style="font-size: 24px; font-weight: bold; margin-right: 8px;">💰</span>
+                <span style="font-size: 24px; font-weight: bold;">1250 Coins</span>
+            </div>
+            <button style="background-color: #FFC107; color: #333; border: none; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                Cash Out
+            </button>
+        </header>
+
+        <!-- Main Content Area -->
+        <main style="padding: 20px;">
+
+            <!-- Section: Social Offers to Share -->
+            <section style="background-color: #e8f5e9; padding: 15px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h2 style="font-size: 18px; color: #2E7D32; margin-top: 0; margin-bottom: 15px;">Social Offers to Share</h2>
+
+                <!-- Offer Item 1: Invite a friend -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #c8e6c9;">
+                    <div style="flex-grow: 1;">
+                        <p style="margin: 0; font-size: 15px; font-weight: 500;">Invite a friend</p>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Earn 500 coins</p>
+                    </div>
+                    <button style="background-color: #4CAF50; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer;">
+                        Share
+                    </button>
+                </div>
+
+                <!-- Offer Item 2: Share app on Facebook -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #c8e6c9;">
+                    <div style="flex-grow: 1;">
+                        <p style="margin: 0; font-size: 15px; font-weight: 500;">Share app on Facebook</p>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Earn 100 coins</p>
+                    </div>
+                    <button style="background-color: #4CAF50; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer;">
+                        Share
+                    </button>
+                </div>
+
+                <!-- Offer Item 3: Post a review -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                    <div style="flex-grow: 1;">
+                        <p style="margin: 0; font-size: 15px; font-weight: 500;">Post a review on Google Play</p>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Earn 200 coins</p>
+                    </div>
+                    <button style="background-color: #4CAF50; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer;">
+                        Share
+                    </button>
+                </div>
+            </section>
+
+            <!-- Section: More Ways to Earn -->
+            <section style="background-color: #e3f2fd; padding: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <h2 style="font-size: 18px; color: #1976D2; margin-top: 0; margin-bottom: 15px;">More Ways to Earn</h2>
+
+                <!-- Earning Opportunity 1: Login with Facebook -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #bbdefb;">
+                    <div style="flex-grow: 1;">
+                        <p style="margin: 0; font-size: 15px; font-weight: 500;">Login with Facebook</p>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Earn 200 coins</p>
+                    </div>
+                    <button style="background-color: #2196F3; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer;">
+                        Earn
+                    </button>
+                </div>
+
+                <!-- Earning Opportunity 2: Enable Lock Screen Offer -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #bbdefb;">
+                    <div style="flex-grow: 1;">
+                        <p style="margin: 0; font-size: 15px; font-weight: 500;">Enable Lock Screen Offer</p>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Earn 50 daily coins</p>
+                    </div>
+                    <button style="background-color: #2196F3; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer;">
+                        Enable
+                    </button>
+                </div>
+
+                <!-- Earning Opportunity 3: Complete Simple Offers -->
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                    <div style="flex-grow: 1;">
+                        <p style="margin: 0; font-size: 15px; font-weight: 500;">Complete Simple Offers</p>
+                        <p style="margin: 3px 0 0 0; font-size: 13px; color: #666;">Earn 50-500 coins</p>
+                    </div>
+                    <button style="background-color: #2196F3; color: white; border: none; padding: 7px 12px; border-radius: 20px; font-size: 13px; cursor: pointer;">
+                        Start
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+</body>
+</html>

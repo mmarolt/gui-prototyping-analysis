@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Search App</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            color: #333;
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Allow main content to take up available space */
+            padding: 15px;
+            overflow-y: auto; /* Enable scrolling for content if it exceeds screen height */
+            padding-bottom: 70px; /* Make space for fixed bottom navigation */
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.4em;
+            color: #007bff;
+        }
+
+        /* Search Bar Section */
+        .search-section {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .search-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .search-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: #999;
+        }
+        .scan-button {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .scan-button:active {
+            background-color: #5a6268;
+        }
+        .search-button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+        .search-button:active {
+            background-color: #0056b3;
+        }
+
+        /* Section Headings */
+        .section-heading {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* Selected Filters Section */
+        .selected-filters-section {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .selected-filters-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 30px; /* Ensure some height even if empty */
+            align-items: center;
+        }
+        .filter-tag {
+            background-color: #e9f5ff;
+            color: #007bff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #b3d7ff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .filter-tag .remove-tag {
+            background: none;
+            border: none;
+            color: #007bff;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 0;
+            font-size: 1em;
+            line-height: 1;
+        }
+        .no-filters {
+            color: #777;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        /* Available Filters Section */
+        .available-filters-section {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
+            gap: 10px;
+        }
+        .filter-item {
+            background-color: #f8f9fa;
+            border: 1px solid #eee;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95em;
+            color: #555;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+        }
+        .filter-item:hover {
+            background-color: #e2e6ea;
+            border-color: #d6d8db;
+        }
+        .filter-item:active {
+            background-color: #d6d8db;
+            border-color: #c6c8cb;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            padding: 5px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+        }
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d;
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: color 0.2s;
+        }
+        .nav-item.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .nav-item:active {
+            background-color: #f0f2f5;
+        }
+        .nav-item .icon {
+            font-size: 1.5em; /* Placeholder for actual icons */
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Vehicle Search</h1>
+    </div>
+
+    <div class="main-content">
+        <!-- Search Section -->
+        <div class="search-section">
+            <h2 class="section-heading">Search Vehicles</h2>
+            <div class="search-input-group">
+                <input type="text" class="search-input" placeholder="Enter keywords (e.g., Ford F-150)">
+                <button class="scan-button">Scan</button>
+            </div>
+            <button class="search-button">Search (123 Results)</button>
+        </div>
+
+        <!-- Selected Filters Section -->
+        <div class="selected-filters-section">
+            <h2 class="section-heading">Selected Filters</h2>
+            <div class="selected-filters-list" id="selectedFiltersList">
+                <!-- Example filters, can be dynamically added/removed -->
+                <div class="filter-tag">Automobile Type: SUV <button class="remove-tag">x</button></div>
+                <div class="filter-tag">Make: Toyota <button class="remove-tag">x</button></div>
+                <div class="filter-tag">Transmission: Automatic <button class="remove-tag">x</button></div>
+                <!-- <span class="no-filters">No filters applied yet.</span> -->
+            </div>
+        </div>
+
+        <!-- Available Filters Section -->
+        <div class="available-filters-section">
+            <h2 class="section-heading">Available Filters</h2>
+            <div class="filter-grid">
+                <div class="filter-item">Automobile Type</div>
+                <div class="filter-item">Make</div>
+                <div class="filter-item">Loss Type</div>
+                <div class="filter-item">Transmission</div>
+                <div class="filter-item">Sale Document</div>
+                <div class="filter-item">Buyer Type</div>
+                <div class="filter-item">Odometer</div>
+                <div class="filter-item">Primary Damage</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item">
+            <span class="icon">👤</span>
+            <span>My Account</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <span class="icon">🚗</span>
+            <span>Vehicles</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon"> gavel</span>
+            <span>Auctions</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon">📍</span>
+            <span>Locations</span>
+        </a>
+    </nav>
+
+</body>
+</html>

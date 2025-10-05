@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Page Layout</title>
+</head>
+<body style="
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f0f2f5;
+    box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
+">
+
+    <!-- I. Fixed Top Header (Always Visible) -->
+    <div style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 1000; /* Ensures header stays on top of other content */
+        padding: 0 15px; /* Horizontal padding, vertical controlled by height */
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 56px; /* Standard mobile header height */
+        box-sizing: border-box;
+    ">
+        <!-- Prominent Search Bar -->
+        <div style="
+            flex-grow: 1; /* Allows search bar to take up available space */
+            margin-right: 10px;
+            position: relative;
+            height: 36px; /* Fixed height for the search input container */
+        ">
+            <input type="text" placeholder="Search products or suppliers..." style="
+                width: 100%;
+                height: 100%; /* Input fills its container */
+                padding: 8px 12px 8px 35px; /* Left padding for magnifying glass icon */
+                border: 1px solid #ddd;
+                border-radius: 20px; /* Rounded corners for search bar */
+                font-size: 14px;
+                outline: none; /* Remove focus outline */
+                box-sizing: border-box;
+                background-color: #f5f5f5;
+                color: #333;
+            ">
+            <span style="
+                position: absolute;
+                left: 12px;
+                top: 50%;
+                transform: translateY(-50%); /* Vertically center icon */
+                color: #888;
+                font-size: 16px;
+            ">🔍</span> <!-- Magnifying glass icon -->
+        </div>
+
+        <!-- Favorites Button -->
+        <button style="
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            margin-right: 10px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%; /* Circular button */
+            transition: background-color 0.2s;
+            -webkit-tap-highlight-color: transparent; /* Removes default tap highlight on mobile */
+        ">
+            <span style="font-size: 22px; color: #555;">❤️</span> <!-- Heart icon -->
+        </button>
+
+        <!-- Messages Button -->
+        <button style="
+            background-color: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            position: relative;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%; /* Circular button */
+            transition: background-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        ">
+            <span style="font-size: 22px; color: #555;">✉️</span> <!-- Message icon -->
+            <span style="
+                position: absolute;
+                top: -2px;
+                right: -2px;
+                background-color: #ff4d4f; /* Red badge color */
+                color: white;
+                font-size: 10px;
+                font-weight: bold;
+                border-radius: 50%;
+                padding: 2px 5px;
+                min-width: 12px;
+                text-align: center;
+                line-height: 1; /* Ensures text is vertically centered */
+                box-shadow: 0 0 0 2px #ffffff; /* White border for badge */
+            ">3</span> <!-- Notification badge with count -->
+        </button>
+    </div>
+
+    <!-- II. Scrollable Main Content Area -->
+    <div style="
+        padding-top: 56px; /* Space for the fixed top header */
+        padding-bottom: 56px; /* Space for the fixed bottom navigation bar */
+        overflow-y: auto; /* Enables vertical scrolling */
+        -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+        height: calc(100vh - 56px - 56px); /* Calculates height to fill remaining viewport */
+        box-sizing: border-box;
+        width: 100%;
+    ">
+        <!-- Primary Action Section: "Get Quotations" Button -->
+        <div style="padding: 15px 0;">
+            <button style="
+                width: 90%;
+                margin: 0 auto; /* Center the button horizontally */
+                display: flex; /* Use flex for icon and text alignment */
+                align-items: center;
+                justify-content: center;
+                gap: 10px; /* Space between icon and text */
+                padding: 15px 20px;
+                background-color: #ff6600; /* Prominent brand color */
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                box-shadow: 0 4px 8px rgba(255,102,0,0.2);
+                -webkit-tap-highlight-color: transparent;
+            ">
+                <span style="font-size: 20px;">📝</span> Get Quotations
+            </button>
+        </div>
+
+        <!-- Content Discovery Sections -->
+
+        <!-- "What's Popular" Section -->
+        <div style="margin-bottom: 20px;">
+            <h2 style="
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin: 0 15px 10px 15px; /* Margin for heading */
+            ">What's Popular</h2>
+            <div style="
+                display: flex;
+                overflow-x: scroll; /* Enables horizontal scrolling for carousel */
+                -webkit-overflow-scrolling: touch;
+                padding: 0 15px; /* Horizontal padding for the scrollable content */
+                gap: 15px; /* Space between product cards */
+            ">
+                <!-- Product Card 1 -->
+                <div style="
+                    flex: 0 0 auto; /* Prevents cards from stretching/shrinking */
+                    width: 150px; /* Fixed width for cards */
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 10px;
+                    text-align: center;
+                ">
+                    <img src="https://via.placeholder.com/120x120?text=Product+1" alt="Smartwatch X Pro" style="
+                        width: 100%;
+                        height: 120px;
+                        object-fit: cover; /* Ensures image covers the area without distortion */
+                        border-radius: 4px;
+                        margin-bottom: 8px;
+                    ">
+                    <p style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #333;
+                        margin: 0 0 4px 0;
+                        white-space: nowrap; /* Prevents text wrap */
+                        overflow: hidden;
+                        text-overflow: ellipsis; /* Adds ellipsis for overflowed text */
+                    ">Smartwatch X Pro</p>
+                    <p style="
+                        font-size: 13px;
+                        color: #ff6600; /* Price in brand color */
+                        margin: 0;
+                        font-weight: bold;
+                    ">$129.99</p>
+                </div>
+                <!-- Product Card 2 -->
+                <div style="
+                    flex: 0 0 auto;
+                    width: 150px;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 10px;
+                    text-align: center;
+                ">
+                    <img src="https://via.placeholder.com/120x120?text=Product+2" alt="Wireless Earbuds" style="
+                        width: 100%;
+                        height: 120px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                        margin-bottom: 8px;
+                    ">
+                    <p style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #333;
+                        margin: 0 0 4px 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    ">Wireless Earbuds</p>
+                    <p style="
+                        font-size: 13px;
+                        color: #ff6600;
+                        margin: 0;
+                        font-weight: bold;
+                    ">$49.50</p>
+                </div>
+                <!-- Product Card 3 -->
+                <div style="
+                    flex: 0 0 auto;
+                    width: 150px;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 10px;
+                    text-align: center;
+                ">
+                    <img src="https://via.placeholder.com/120x120?text=Product+3" alt="Portable Speaker" style="
+                        width: 100%;
+                        height: 120px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                        margin-bottom: 8px;
+                    ">
+                    <p style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #333;
+                        margin: 0 0 4px 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    ">Portable Speaker</p>
+                    <p style="
+                        font-size: 13px;
+                        color: #ff6600;
+                        margin: 0;
+                        font-weight: bold;
+                    ">$75.00</p>
+                </div>
+                <!-- Product Card 4 -->
+                <div style="
+                    flex: 0 0 auto;
+                    width: 150px;
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 10px;
+                    text-align: center;
+                ">
+                    <img src="https://via.placeholder.com/120x120?text=Product+4" alt="Gaming Headset" style="
+                        width: 100%;
+                        height: 120px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                        margin-bottom: 8px;
+                    ">
+                    <p style="
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: #333;
+                        margin: 0 0 4px 0;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    ">Gaming Headset</p>
+                    <p style="
+                        font-size: 13px;
+                        color: #ff6600;
+                        margin: 0;
+                        font-weight: bold;
+                    ">$99.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- "Don't Miss" Section -->
+        <div style="margin-bottom: 20px;">
+            <h2 style="
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin: 0 15px 10px 15px; /* Margin for heading */
+            ">Don't Miss</h2>
+            <div style="
+                padding: 0 15px; /* Horizontal padding for the grid content */
+                display: grid;
+                grid-template-columns: 1fr; /* Single column for vertical stacking */
+                gap: 15px; /* Space between items */
+            ">
+                <!-- Don't Miss Item 1 (Banner-like) -->
+                <div style="
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                ">
+                    <img src="https://via.placeholder.com/80x80?text=Deal+1" alt="Limited Time Offer" style="
+                        width: 80px;
+                        height: 80px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    ">
+                    <div style="flex-grow: 1;">
+                        <h3 style="
+                            font-size: 16px;
+                            font-weight: bold;
+                            color: #333;
+                            margin: 0 0 5px 0;
+                        ">Limited Time Offer!</h3>
+                        <p style="
+                            font-size: 13px;
+                            color: #666;
+                            margin: 0 0 10px 0;
+                        ">Up to 50% off on selected electronics.</p>
+                        <button style="
+                            background-color: #007bff; /* Call to action color */
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            padding: 8px 12px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            -webkit-tap-highlight-color: transparent;
+                        ">Shop Now</button>
+                    </div>
+                </div>
+                <!-- Don't Miss Item 2 (Banner-like) -->
+                <div style="
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                ">
+                    <img src="https://via.placeholder.com/80x80?text=New+Arrival" alt="New Arrival" style="
+                        width: 80px;
+                        height: 80px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    ">
+                    <div style="flex-grow: 1;">
+                        <h3 style="
+                            font-size: 16px;
+                            font-weight: bold;
+                            color: #333;
+                            margin: 0 0 5px 0;
+                        ">New Arrivals Daily!</h3>
+                        <p style="
+                            font-size: 13px;
+                            color: #666;
+                            margin: 0 0 10px 0;
+                        ">Discover the latest trends and products.</p>
+                        <button style="
+                            background-color: #007bff;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            padding: 8px 12px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            -webkit-tap-highlight-color: transparent;
+                        ">Explore</button>
+                    </div>
+                </div>
+                 <!-- Don't Miss Item 3 (Banner-like) -->
+                 <div style="
+                    background-color: #ffffff;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    padding: 15px;
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                ">
+                    <img src="https://via.placeholder.com/80x80?text=Premium" alt="Premium Suppliers" style="
+                        width: 80px;
+                        height: 80px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    ">
+                    <div style="flex-grow: 1;">
+                        <h3 style="
+                            font-size: 16px;
+                            font-weight: bold;
+                            color: #333;
+                            margin: 0 0 5px 0;
+                        ">Premium Suppliers</h3>
+                        <p style="
+                            font-size: 13px;
+                            color: #666;
+                            margin: 0 0 10px 0;
+                        ">High-quality products from verified suppliers.</p>
+                        <button style="
+                            background-color: #007bff;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            padding: 8px 12px;
+                            font-size: 13px;
+                            cursor: pointer;
+                            -webkit-tap-highlight-color: transparent;
+                        ">View Suppliers</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder content to ensure scrollability -->
+        <div style="padding: 15px; text-align: center; color: #999; font-size: 14px;">
+            <p style="margin-top: 0;">End of content for demonstration. Scroll up!</p>
+            <p>More sections would follow here...</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p style="margin-bottom: 0;">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+        </div>
+    </div>
+
+    <!-- III. Fixed Bottom Navigation Bar (Always Visible) -->
+    <div style="
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Shadow for separation from content */
+        z-index: 1000; /* Ensures footer stays on top */
+        display: flex;
+        justify-content: space-around; /* Distributes items evenly */
+        align-items: center;
+        height: 56px; /* Standard mobile footer height */
+        box-sizing: border-box;
+    ">
+        <!-- Home Tab (Active) -->
+        <a href="#" style="
+            display: flex;
+            flex-direction: column; /* Stack icon and text vertically */
+            align-items: center;
+            text-decoration: none;
+            color: #ff6600; /* Active tab color */
+            font-size: 12px;
+            font-weight: bold;
+            flex: 1; /* Each tab takes equal width */
+            padding: 5px 0;
+            -webkit-tap-highlight-color: transparent;
+        ">
+            <span style="font-size: 24px; margin-bottom: 2px;">🏠</span> <!-- Home icon -->
+            Home
+        </a>
+        <!-- Discover Tab -->
+        <a href="#" style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888; /* Inactive tab color */
+            font-size: 12px;
+            flex: 1;
+            padding: 5px 0;
+            -webkit-tap-highlight-color: transparent;
+        ">
+            <span style="font-size: 24px; margin-bottom: 2px;">🔍</span> <!-- Discover icon -->
+            Discover
+        </a>
+        <!-- Easy Sourcing Tab -->
+        <a href="#" style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 12px;
+            flex: 1;
+            padding: 5px 0;
+            -webkit-tap-highlight-color: transparent;
+        ">
+            <span style="font-size: 24px; margin-bottom: 2px;">💡</span> <!-- Easy Sourcing icon -->
+            Easy Sourcing
+        </a>
+        <!-- My Account Tab -->
+        <a href="#" style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 12px;
+            flex: 1;
+            padding: 5px 0;
+            -webkit-tap-highlight-color: transparent;
+        ">
+            <span style="font-size: 24px; margin-bottom: 2px;">👤</span> <!-- My Account icon -->
+            My Account
+        </a>
+    </div>
+
+</body>
+</html>

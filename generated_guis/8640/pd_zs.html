@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Voice Announcer App</title>
+    <!-- Global styles for the mobile frame and basic typography -->
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f2f5; /* Light grey background for the overall page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Prevent body scrollbar */
+        }
+
+        /* Simulate a mobile device frame */
+        .mobile-frame {
+            width: 375px; /* Specified mobile width */
+            height: 667px; /* Specified mobile height */
+            border: 10px solid #333; /* Device bezel */
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            overflow: hidden; /* Content inside the frame */
+            position: relative; /* For absolute positioning of screens */
+            background-color: white; /* Default background for screens */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+        <!-- Screen 1: Main Dashboard / Home Screen -->
+        <div id="mainDashboard" style="
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5; /* Light grey background for content */
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease-in-out; /* Smooth transition for screen changes */
+            transform: translateX(0%); /* Initially visible */
+        ">
+            <!-- AppBar -->
+            <div style="
+                background-color: #6200ee; /* Deep purple, common for Android */
+                color: white;
+                padding: 0 16px;
+                height: 56px; /* Standard AppBar height */
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                flex-shrink: 0; /* Prevent AppBar from shrinking */
+            ">
+                <span style="font-size: 20px; font-weight: 500;">Voice Announcer</span>
+                <button onclick="alert('Sharing to Facebook!');" style="
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 24px;
+                    cursor: pointer;
+                    padding: 8px;
+                    border-radius: 50%;
+                    transition: background-color 0.2s;
+                ">&#x1F4E3;</button> <!-- Megaphone icon (Unicode) -->
+            </div>
+
+            <!-- Main Content Area (ScrollView) -->
+            <div style="
+                flex-grow: 1; /* Occupy remaining space */
+                overflow-y: auto; /* Enable vertical scrolling */
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+            ">
+                <!-- Global Announcement Status Indicator -->
+                <div style="
+                    background-color: #e8f5e9; /* Light green */
+                    border-left: 4px solid #4caf50; /* Green accent */
+                    padding: 12px 16px;
+                    margin-bottom: 20px;
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                ">
+                    <span style="font-size: 24px; margin-right: 12px; color: #4caf50;">&#x2714;</span> <!-- Checkmark icon -->
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Voice Announcements: <span id="globalStatusText" style="color: #4caf50;">ON</span></span>
+                </div>
+
+                <!-- Global Enable/Disable All Announcements Toggle -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: white;
+                    padding: 16px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                ">
+                    <span style="font-size: 16px; color: #333;">Enable All Voice Announcements</span>
+                    <!-- Custom Toggle Switch -->
+                    <div id="globalToggleSwitch" onclick="toggleGlobalSwitch(this)" style="
+                        width: 50px;
+                        height: 28px;
+                        border-radius: 14px;
+                        background-color: #4caf50; /* ON state color */
+                        position: relative;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    ">
+                        <div style="
+                            position: absolute;
+                            width: 24px;
+                            height: 24px;
+                            border-radius: 50%;
+                            background-color: white;
+                            top: 2px;
+                            left: 24px; /* ON state position */
+                            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                            transition: left 0.3s;
+                        "></div>
+                    </div>
+                </div>
+
+                <!-- Quick Access Cards for Detailed Settings -->
+                <h2 style="font-size: 18px; color: #555; margin-top: 0; margin-bottom: 12px; font-weight: 500;">Quick Access</h2>
+
+                <div onclick="showScreen('detailedSettings', 'Call Announcements');" style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    padding: 16px;
+                    margin-bottom: 12px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: transform 0.2s;
+                ">
+                    <span style="font-size: 16px; color: #333;">Manage Call Announcements</span>
+                    <span style="font-size: 20px; color: #bbb;">&rarr;</span>
+                </div>
+
+                <div onclick="showScreen('detailedSettings', 'SMS Announcements');" style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    padding: 16px;
+                    margin-bottom: 12px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: transform 0.2s;
+                ">
+                    <span style="font-size: 16px; color: #333;">Manage SMS Announcements</span>
+                    <span style="font-size: 20px; color: #bbb;">&rarr;</span>
+                </div>
+
+                <div onclick="showScreen('detailedSettings', 'Charging Alerts');" style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    padding: 16px;
+                    margin-bottom: 12px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    transition: transform 0.2s;
+                ">
+                    <span style="font-size: 16px; color: #333;">Manage Charging Alerts</span>
+                    <span style="font-size: 20px; color: #bbb;">&rarr;</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Screen 2: Detailed Settings Screen -->
+        <div id="detailedSettings" style="
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f2f5;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease-in-out; /* Smooth transition for screen changes */
+            transform: translateX(100%); /* Initially hidden, off-screen to the right */
+        ">
+            <!-- AppBar -->
+            <div style="
+                background-color: #6200ee;
+                color: white;
+                padding: 0 16px;
+                height: 56px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                flex-shrink: 0;
+            ">
+                <button onclick="showScreen('mainDashboard');" style="
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 24px;
+                    cursor: pointer;
+                    padding: 8px;
+                    border-radius: 50%;
+                    transition: background-color 0.2s;
+                    margin-left: -8px; /* Adjust for visual alignment */
+                ">&larr;</button> <!-- Left arrow icon -->
+                <span id="detailedSettingsTitle" style="font-size: 20px; font-weight: 500; flex-grow: 1; text-align: center; margin-left: -32px;">Settings</span>
+                <button onclick="alert('Sharing to Facebook!');" style="
+                    background: none;
+                    border: none;
+                    color: white;
+                    font-size: 24px;
+                    cursor: pointer;
+                    padding: 8px;
+                    border-radius: 50%;
+                    transition: background-color 0.2s;
+                ">&#x1F4E3;</button> <!-- Megaphone icon -->
+            </div>
+
+            <!-- Main Content Area (ScrollView) -->
+            <div id="detailedSettingsScroll" style="
+                flex-grow: 1;
+                overflow-y: auto;
+                padding: 16px;
+                display: flex;
+                flex-direction: column;
+            ">
+                <!-- Section 1: Call Announcements -->
+                <h3 id="section-call-announcements" style="font-size: 18px; color: #555; margin-top: 0; margin-bottom: 12px; font-weight: 500;">Call Announcements</h3>
+                <div style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    padding: 16px;
+                    margin-bottom: 16px;
+                ">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Announce Incoming Calls</span>
+                        <div onclick="toggleSwitch(this)" style="
+                            width: 50px;
+                            height: 28px;
+                            border-radius: 14px;
+                            background-color: #ccc; /* OFF state color */
+                            position: relative;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        ">
+                            <div style="
+                                position: absolute;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                background-color: white;
+                                top: 2px;
+                                left: 2px; /* OFF state position */
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                                transition: left 0.3s;
+                            "></div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; color: #777; margin: 0;">Audibly announces the name of the caller.</p>
+                </div>
+
+                <!-- Section 2: SMS Announcements -->
+                <h3 id="section-sms-announcements" style="font-size: 18px; color: #555; margin-top: 0; margin-bottom: 12px; font-weight: 500;">SMS Announcements</h3>
+                <div style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    padding: 16px;
+                    margin-bottom: 12px;
+                ">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Announce SMS Sender Name</span>
+                        <div onclick="toggleSwitch(this)" style="
+                            width: 50px;
+                            height: 28px;
+                            border-radius: 14px;
+                            background-color: #4caf50; /* ON state color */
+                            position: relative;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        ">
+                            <div style="
+                                position: absolute;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                background-color: white;
+                                top: 2px;
+                                left: 24px; /* ON state position */
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                                transition: left 0.3s;
+                            "></div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; color: #777; margin: 0;">Reads out who sent you an SMS message.</p>
+                </div>
+
+                <div style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    padding: 16px;
+                    margin-bottom: 16px;
+                ">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Announce SMS Message Content</span>
+                        <div onclick="toggleSwitch(this)" style="
+                            width: 50px;
+                            height: 28px;
+                            border-radius: 14px;
+                            background-color: #ccc; /* OFF state color */
+                            position: relative;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        ">
+                            <div style="
+                                position: absolute;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                background-color: white;
+                                top: 2px;
+                                left: 2px; /* OFF state position */
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                                transition: left 0.3s;
+                            "></div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; color: #777; margin: 0;">Reads out the full text of incoming SMS messages.</p>
+                </div>
+
+                <!-- Section 3: Charging Alerts -->
+                <h3 id="section-charging-alerts" style="font-size: 18px; color: #555; margin-top: 0; margin-bottom: 12px; font-weight: 500;">Charging Alerts</h3>
+                <div style="
+                    background-color: white;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    padding: 16px;
+                    margin-bottom: 16px;
+                ">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Announce Charging Status</span>
+                        <div onclick="toggleSwitch(this)" style="
+                            width: 50px;
+                            height: 28px;
+                            border-radius: 14px;
+                            background-color: #4caf50; /* ON state color */
+                            position: relative;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                        ">
+                            <div style="
+                                position: absolute;
+                                width: 24px;
+                                height: 24px;
+                                border-radius: 50%;
+                                background-color: white;
+                                top: 2px;
+                                left: 24px; /* ON state position */
+                                box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+                                transition: left 0.3s;
+                            "></div>
+                        </div>
+                    </div>
+                    <p style="font-size: 13px; color: #777; margin: 0;">Notifies you when the device starts or stops charging.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store the state of the global switch
+        let isGlobalAnnouncementsOn = true;
+
+        // Function to toggle the global switch appearance and state
+        function toggleGlobalSwitch(switchElement) {
+            const thumb = switchElement.children[0];
+            const globalStatusText = document.getElementById('globalStatusText');
+            const statusIndicator = document.querySelector('#mainDashboard > div:nth-child(2) > div:nth-child(1)'); // Selects the status card
+            const statusIcon = statusIndicator.querySelector('span:nth-child(1)');
+
+            if (isGlobalAnnouncementsOn) {
+                // Turn OFF
+                switchElement.style.backgroundColor = '#ccc';
+                thumb.style.left = '2px';
+                globalStatusText.textContent = 'OFF';
+                globalStatusText.style.color = '#f44336'; // Red
+                statusIndicator.style.backgroundColor = '#ffebee'; // Light red
+                statusIndicator.style.borderLeftColor = '#f44336';
+                statusIcon.innerHTML = '&#x2716;'; // X mark
+                statusIcon.style.color = '#f44336';
+            } else {
+                // Turn ON
+                switchElement.style.backgroundColor = '#4caf50';
+                thumb.style.left = '24px';
+                globalStatusText.textContent = 'ON';
+                globalStatusText.style.color = '#4caf50';
+                statusIndicator.style.backgroundColor = '#e8f5e9'; // Light green
+                statusIndicator.style.borderLeftColor = '#4caf50';
+                statusIcon.innerHTML = '&#x2714;'; // Checkmark
+                statusIcon.style.color = '#4caf50';
+            }
+            isGlobalAnnouncementsOn = !isGlobalAnnouncementsOn;
+        }
+
+        // Function to toggle individual switches appearance
+        function toggleSwitch(switchElement) {
+            const thumb = switchElement.children[0];
+            const isOn = thumb.style.left === '24px'; // Check current state
+
+            if (isOn) {
+                // Turn OFF
+                switchElement.style.backgroundColor = '#ccc';
+                thumb.style.left = '2px';
+            } else {
+                // Turn ON
+                switchElement.style.backgroundColor = '#4caf50';
+                thumb.style.left = '24px';
+            }
+        }
+
+        // Function to switch between screens with a sliding animation
+        function showScreen(screenId, sectionToScrollTo = null) {
+            const mainDashboard = document.getElementById('mainDashboard');
+            const detailedSettings = document.getElementById('detailedSettings');
+            const detailedSettingsTitle = document.getElementById('detailedSettingsTitle');
+            const detailedSettingsScroll = document.getElementById('detailedSettingsScroll');
+
+            if (screenId === 'mainDashboard') {
+                mainDashboard.style.transform = 'translateX(0%)';
+                detailedSettings.style.transform = 'translateX(100%)';
+            } else if (screenId === 'detailedSettings') {
+                mainDashboard.style.transform = 'translateX(-100%)';
+                detailedSettings.style.transform = 'translateX(0%)';
+
+                // Update title based on the card clicked
+                if (sectionToScrollTo) {
+                    detailedSettingsTitle.textContent = sectionToScrollTo;
+                    // Scroll to the relevant section after the screen transition completes
+                    setTimeout(() => {
+                        const targetElement = document.getElementById('section-' + sectionToScrollTo.toLowerCase().replace(/\s/g, '-'));
+                        if (targetElement) {
+                            // Calculate scroll position relative to the scrollable container's top
+                            detailedSettingsScroll.scrollTo({
+                                top: targetElement.offsetTop - detailedSettingsScroll.offsetTop - 16, // Adjust for padding above the section
+                                behavior: 'smooth'
+                            });
+                        }
+                    }, 300); // Match transition duration
+                } else {
+                    detailedSettingsTitle.textContent = 'Settings'; // Default title if not from a specific card
+                    detailedSettingsScroll.scrollTo(0, 0); // Scroll to top if no specific section
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

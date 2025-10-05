@@ -1,201 +1,482 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<style>
-/* Basic Styling - Replace with your actual CSS */
-body {
-  font-family: 'Roboto', sans-serif; /* Material Design font */
-  margin: 0;
-  padding: 0;
-  background-color: #f0f2f5; /* Light grey background */
-  overflow: hidden; /* Prevent scrollbars when bottom sheet is visible */
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Slide Editor</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font for Material Design -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Reset and Base Styles for Material Design */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f0f0; /* Overall body background for contrast */
+        }
 
-.app-bar {
-  background-color: #6200ee; /* Primary color */
-  color: white;
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Elevation */
-  z-index: 10; /* Ensure app bar is above other content */
-}
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
 
-.app-bar h1 {
-  font-size: 20px;
-  margin: 0;
-  font-weight: 500;
-}
+        /* Material Design Color Palette Variables */
+        :root {
+            --mdc-theme-primary: #6200ee;
+            --mdc-theme-secondary: #03dac6;
+            --mdc-theme-on-primary: #ffffff;
+            --mdc-theme-on-surface: #000000;
+            --mdc-theme-surface: #ffffff;
+            --mdc-theme-background: #fdfdfd;
+            --mdc-theme-text-primary-on-surface: rgba(0, 0, 0, 0.87);
+            --mdc-theme-text-secondary-on-surface: rgba(0, 0, 0, 0.60);
+            --mdc-theme-text-disabled-on-surface: rgba(0, 0, 0, 0.38);
+            --mdc-theme-divider: rgba(0, 0, 0, 0.12);
+        }
 
-.app-bar a {
-  color: white;
-  text-decoration: none;
-  padding: 8px;
-  border-radius: 50%; /* Circular touch target */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 48px;
-  min-height: 48px;
-}
+        /* Mobile App Container - Simulates a Phone Screen */
+        .mobile-app-container {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            background-color: var(--mdc-theme-background);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content stays within bounds */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25); /* More prominent shadow for device feel */
+            border-radius: 12px; /* Rounded corners for the device mock */
+            position: relative;
+        }
 
-.app-bar a i {
-  font-size: 24px;
-}
+        /* Base styles for interactive elements */
+        button {
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+            transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
+        }
+        .material-icons {
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+        }
 
-.app-bar > div {
-    display: flex;
-    gap: 8px;
-}
+        /* Utility class to hide scrollbars */
+        .no-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
 
-.content-area {
-  padding: 16px;
-  height: calc(100vh - 56px - 72px); /* Adjust height for app bar and bottom sheet */
-  /* Ensure content area takes up most of the screen */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        /* --- 1. Top App Bar (Page-Level Actions) --- */
+        .top-app-bar {
+            width: 100%;
+            height: 56px; /* Standard Material Design height for Top App Bar */
+            background-color: var(--mdc-theme-surface);
+            border-bottom: 1px solid var(--mdc-theme-divider);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-sizing: border-box;
+            z-index: 10; /* Ensure it stays on top */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08); /* Subtle shadow for depth */
+        }
 
-.slide-canvas {
-  width: 335px; /* Adjusted for padding and margins within the 375px width */
-  height: 535px; /* Adjusted for screen height and other elements */
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: #888;
-}
+        .top-app-bar .left-section,
+        .top-app-bar .right-section {
+            display: flex;
+            align-items: center;
+        }
 
-.slide-canvas p {
-  margin: 10px;
-}
+        .top-app-bar .material-icons {
+            font-size: 24px;
+            color: var(--mdc-theme-text-primary-on-surface);
+        }
+        .top-app-bar .material-icons.disabled {
+            color: var(--mdc-theme-text-disabled-on-surface);
+            cursor: default;
+        }
+        .top-app-bar .material-icons:not(.disabled):hover {
+            color: var(--mdc-theme-primary); /* Hint on hover for active icons */
+        }
 
-.slide-canvas i {
-  font-size: 48px;
-}
+        .top-app-bar h1 {
+            font-size: 18px;
+            margin: 0;
+            margin-left: 16px;
+            font-weight: 500;
+            color: var(--mdc-theme-text-primary-on-surface);
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            max-width: 120px; /* Limits title width to prevent overflow */
+            cursor: pointer;
+        }
+        .top-app-bar h1:hover {
+            color: var(--mdc-theme-primary);
+        }
 
-/* Bottom Sheet Styles */
-.bottom-sheet {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: white;
-  box-shadow: 0 -2px 4px rgba(0,0,0,0.2);
-  z-index: 20;
-  padding: 16px;
-  border-top: 1px solid #eee;
-  /* Initial state - hidden */
-  transform: translateY(100%); /* Slide up from bottom */
-  transition: transform 0.3s ease-in-out;
-}
+        .top-app-bar .done-button {
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 16px; /* Spacing from redo icon */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .top-app-bar .done-button:hover {
+            background-color: #7b1fa2; /* Darker primary on hover */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+        }
 
-.bottom-sheet.show {
-  transform: translateY(0); /* Slide into view */
-}
+        /* --- 2. Slide Thumbnail Strip (Presentation Navigation) --- */
+        .slide-thumbnail-strip {
+            width: 100%;
+            height: 80px;
+            background-color: #eee; /* Light background for the strip */
+            border-bottom: 1px solid var(--mdc-theme-divider);
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            box-sizing: border-box;
+            box-shadow: inset 0 -1px 2px rgba(0,0,0,0.05); /* Subtle inner shadow */
+        }
 
-.bottom-sheet ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        .slide-thumbnail-strip .slide-thumb {
+            display: inline-block;
+            width: 60px;
+            height: 45px;
+            margin: 0 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: var(--mdc-theme-surface);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            color: var(--mdc-theme-text-primary-on-surface);
+            flex-shrink: 0; /* Prevent shrinking in scroll view */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .slide-thumbnail-strip .slide-thumb:hover {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
 
-.bottom-sheet li {
-  padding: 12px 16px;
-  border-radius: 4px;
-}
+        .slide-thumbnail-strip .slide-thumb.active {
+            border: 2px solid var(--mdc-theme-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
 
-.bottom-sheet li:hover {
-  background-color: #eee;
-  cursor: pointer;
-}
+        .slide-thumbnail-strip .slide-thumb .preview-area {
+            width: 90%;
+            height: 70%;
+            background-color: #f0f0f0;
+            border: 1px dashed #ccc;
+            margin-bottom: 2px;
+            overflow: hidden; /* To simulate content clipping */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 8px;
+            color: #888;
+        }
 
-.bottom-sheet a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #333;
-  gap: 16px; /* Space between icon and text */
-}
+        .slide-thumbnail-strip .add-slide-fab {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 48px;
+            height: 48px;
+            margin-left: 16px;
+            background-color: var(--mdc-theme-secondary);
+            color: var(--mdc-theme-on-primary);
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .slide-thumbnail-strip .add-slide-fab:hover {
+            background-color: #018786; /* Darker secondary on hover */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+        }
 
-.bottom-sheet i {
-  font-size: 24px;
-  color: #6200ee; /* Consistent with primary color */
-}
+        /* --- 3. Slide Canvas (Main Editing Area) --- */
+        .slide-canvas {
+            flex-grow: 1; /* Takes all available vertical space */
+            background-color: #fafafa; /* Light background for the canvas area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+            position: relative; /* For containing absolutely positioned elements */
+        }
 
-/* Example Button (replace with actual button element if needed) */
-.add-element-button {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  background-color: #6200ee;
-  color: white;
-  border: none;
-  padding: 12px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+        .slide-display-area {
+            width: 330px;
+            height: 185.625px; /* ~16:9 aspect ratio (330 / (16/9) = 185.625) */
+            background-color: var(--mdc-theme-surface);
+            border: 1px solid #ccc;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden; /* Elements outside this area should be clipped */
+            border-radius: 2px;
+        }
 
-.add-element-button i {
-  font-size: 20px;
-}
+        /* Example elements on the canvas */
+        .slide-element {
+            position: absolute;
+            box-sizing: border-box;
+            cursor: move;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: border 0.1s; /* Smooth transition for selection border */
+        }
 
-.hidden {
-  display: none;
-}
+        .slide-element.selected {
+            border: 2px solid var(--mdc-theme-primary);
+        }
 
-</style>
+        .slide-element .resize-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--mdc-theme-primary);
+            border-radius: 50%;
+            border: 1px solid var(--mdc-theme-surface); /* White border for visibility */
+            z-index: 1; /* Above the element content */
+        }
+        /* Cursors for resize handles */
+        .resize-handle.tl { top: -6px; left: -6px; cursor: nwse-resize; }
+        .resize-handle.tr { top: -6px; right: -6px; cursor: nesw-resize; }
+        .resize-handle.bl { bottom: -6px; left: -6px; cursor: nesw-resize; }
+        .resize-handle.br { bottom: -6px; right: -6px; cursor: nwse-resize; }
+
+        .slide-element.text-box {
+            padding: 8px;
+        }
+        .slide-element.text-box p {
+            margin: 0;
+            font-size: 18px;
+            color: var(--mdc-theme-text-primary-on-surface);
+            text-align: center;
+        }
+
+        .slide-element.shape {
+            background-color: var(--mdc-theme-secondary);
+            border: 1px solid #018786; /* Darker secondary for border */
+            opacity: 0.8;
+            border-radius: 4px;
+        }
+
+        /* --- 4. Bottom Bar (Contextual Editing & Insertion) --- */
+        .bottom-bar {
+            width: 100%;
+            height: 56px; /* Standard Material Design height for Bottom App Bar */
+            background-color: var(--mdc-theme-surface);
+            border-top: 1px solid var(--mdc-theme-divider);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Elements align to the left */
+            padding: 0 8px;
+            box-sizing: border-box;
+            overflow-x: auto; /* Enable horizontal scrolling for tools */
+            white-space: nowrap;
+            z-index: 10;
+            box-shadow: 0 -1px 2px rgba(0,0,0,0.08); /* Subtle shadow for depth */
+        }
+
+        .bottom-bar .action-button {
+            background: none;
+            border: none;
+            color: var(--mdc-theme-text-primary-on-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 56px; /* Material Design touch target size */
+            height: 56px;
+            margin: 0 4px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .bottom-bar .action-button:hover {
+            background-color: rgba(0,0,0,0.04); /* Subtle hover effect */
+        }
+
+        .bottom-bar .action-button .material-icons {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        .bottom-bar .action-button span {
+            font-size: 10px;
+            line-height: 1;
+        }
+
+        /* Styles for contextual editing buttons (icon only) - currently commented out in HTML */
+        /*
+        .bottom-bar .icon-only-button {
+            background: none;
+            border: none;
+            color: var(--mdc-theme-text-primary-on-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            height: 48px;
+            margin: 0 4px;
+            flex-shrink: 0;
+            border-radius: 50%;
+        }
+        .bottom-bar .icon-only-button:hover {
+            background-color: rgba(0,0,0,0.04);
+        }
+        .bottom-bar .icon-only-button.active .material-icons {
+            color: var(--mdc-theme-primary);
+        }
+        .bottom-bar .separator {
+            width: 1px;
+            height: 24px;
+            background-color: var(--mdc-theme-divider);
+            margin: 0 8px;
+            flex-shrink: 0;
+        }
+        */
+    </style>
 </head>
 <body>
+    <div class="mobile-app-container">
+        <!-- 1. Top App Bar (Page-Level Actions) -->
+        <header class="top-app-bar">
+            <div class="left-section">
+                <!-- Close or Back arrow - `arrow_back` for navigation within app, `close` for modal-like editing exit -->
+                <span class="material-icons">arrow_back</span>
+                <!-- Presentation Title -->
+                <h1>My Business Pitch</h1>
+            </div>
+            <div class="right-section">
+                <!-- Undo/Redo icons - disabled by default, enabled by user actions -->
+                <span class="material-icons disabled">undo</span>
+                <span class="material-icons disabled" style="margin-left: 16px;">redo</span>
+                <!-- Done Button - Primary action to save and exit -->
+                <button class="done-button">Done</button>
+            </div>
+        </header>
 
-<div class="app-bar">
-    <a href="#"><i class="material-icons">arrow_back</i></a>
-    <h1>New Slide</h1>
-    <div>
-        <a href="#"><i class="material-icons">save</i></a>
-        <a href="#"><i class="material-icons">more_vert</i></a>
+        <!-- 2. Slide Thumbnail Strip (Presentation Navigation) -->
+        <nav class="slide-thumbnail-strip no-scrollbar">
+            <!-- Active Slide Thumbnail -->
+            <div class="slide-thumb active">
+                <div class="preview-area">Title Slide</div>
+                <span>1/5</span>
+            </div>
+            <!-- Inactive Slide Thumbnails -->
+            <div class="slide-thumb">
+                <div class="preview-area">Intro</div>
+                <span>2/5</span>
+            </div>
+            <div class="slide-thumb">
+                <div class="preview-area">Key Metrics</div>
+                <span>3/5</span>
+            </div>
+            <div class="slide-thumb">
+                <div class="preview-area">Team</div>
+                <span>4/5</span>
+            </div>
+            <div class="slide-thumb">
+                <div class="preview-area">Contact</div>
+                <span>5/5</span>
+            </div>
+            <!-- Add Slide Floating Action Button -->
+            <button class="add-slide-fab">
+                <span class="material-icons">add</span>
+            </button>
+        </nav>
+
+        <!-- 3. Slide Canvas (Main Editing Area) -->
+        <main class="slide-canvas">
+            <div class="slide-display-area">
+                <!-- Example Text Box (selected state for demonstration) -->
+                <div class="slide-element text-box selected" style="top: 20px; left: 30px; width: 200px; height: auto; min-height: 48px;">
+                    <p>Double Tap to Edit Text</p>
+                    <!-- Resize Handles (conceptual, would be dynamic with JS) -->
+                    <div class="resize-handle tl"></div>
+                    <div class="resize-handle tr"></div>
+                    <div class="resize-handle bl"></div>
+                    <div class="resize-handle br"></div>
+                </div>
+                <!-- Example Shape -->
+                <div class="slide-element shape" style="bottom: 30px; right: 40px; width: 80px; height: 60px;"></div>
+            </div>
+        </main>
+
+        <!-- 4. Bottom Bar (Contextual Editing & Insertion) -->
+        <footer class="bottom-bar no-scrollbar">
+            <!-- Insertion Mode (default state when no element is selected) -->
+            <button class="action-button">
+                <span class="material-icons">text_fields</span>
+                <span>Text</span>
+            </button>
+            <button class="action-button">
+                <span class="material-icons">crop_square</span>
+                <span>Shape</span>
+            </button>
+            <button class="action-button">
+                <span class="material-icons">image</span>
+                <span>Image</span>
+            </button>
+
+            <!-- Contextual Editing Mode (example when text or shape is selected) -->
+            <!--
+                These elements would dynamically replace the "Insertion Mode" buttons
+                based on the currently selected element on the canvas via JavaScript.
+                For this static HTML, they are commented out as the description
+                explicitly states dynamic content switching.
+
+                <div class="separator"></div>
+
+                <button class="icon-only-button"><span class="material-icons">font_download</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_size</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_color_text</span></button>
+                <button class="icon-only-button active"><span class="material-icons">format_bold</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_italic</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_underline</span></button>
+
+                <div class="separator"></div>
+
+                <button class="icon-only-button active"><span class="material-icons">format_align_left</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_align_center</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_align_right</span></button>
+                <button class="icon-only-button"><span class="material-icons">format_align_justify</span></button>
+
+                <div class="separator"></div>
+
+                <button class="icon-only-button"><span class="material-icons">content_cut</span></button>
+                <button class="icon-only-button"><span class="material-icons">content_copy</span></button>
+                <button class="icon-only-button"><span class="material-icons">delete</span></button>
+            -->
+        </footer>
     </div>
-</div>
-
-<div class="content-area">
-    <div class="slide-canvas">
-        <p>Tap here to add title</p>
-        <div><i class="material-icons">image</i></div>
-    </div>
-</div>
-
-<div class="bottom-sheet">
-    <ul>
-        <li><a href="#"><i class="material-icons">text_fields</i> Text</a></li>
-        <li><a href="#"><i class="material-icons">image</i> Image</a></li>
-        <li><a href="#"><i class="material-icons">rounded_corner</i> Shape</a></li>
-    </ul>
-</div>
-
-<button class="add-element-button" onclick="toggleBottomSheet()">
-    <i class="material-icons">add</i> Add Element
-</button>
-
-<script>
-    const bottomSheet = document.querySelector('.bottom-sheet');
-
-    function toggleBottomSheet() {
-        bottomSheet.classList.toggle('show');
-    }
-</script>
-
 </body>
 </html>

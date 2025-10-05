@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Property Listing - Mobile App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Optional: Roboto font for a more authentic Material Design look -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Material Design elements */
+        :root {
+            /* Colors (using Material Design default palette as a base) */
+            --md-sys-color-primary: #6200EE;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-secondary: #03DAC6;
+            --md-sys-color-on-secondary: #000000;
+            --md-sys-color-surface: #FFFFFF; /* Used for backgrounds of cards, app bars */
+            --md-sys-color-on-surface: #000000; /* Text on surface */
+            --md-sys-color-background: #F5F5F5; /* Page background color (subtle grey) */
+            --md-sys-color-outline: #C4C4C4; /* For borders, dividers */
+
+            /* Typography Scale (approximations of Material Design type scale) */
+            --md-sys-typescale-headline4-size: 34px;
+            --md-sys-typescale-headline4-weight: 400; /* Regular */
+            --md-sys-typescale-headline6-size: 20px;
+            --md-sys-typescale-headline6-weight: 500; /* Medium */
+            --md-sys-typescale-subtitle1-size: 16px;
+            --md-sys-typescale-subtitle1-weight: 400;
+            --md-sys-typescale-subtitle2-size: 14px;
+            --md-sys-typescale-subtitle2-weight: 500;
+            --md-sys-typescale-body1-size: 16px;
+            --md-sys-typescale-body1-weight: 400;
+            --md-sys-typescale-body2-size: 14px;
+            --md-sys-typescale-body2-weight: 400;
+            --md-sys-typescale-button-size: 14px;
+            --md-sys-typescale-button-weight: 500; /* Medium */
+
+            /* Spacing (based on 8dp grid) */
+            --md-sys-spacing-unit: 8px; /* Base spacing unit */
+            --md-sys-spacing-2x: calc(var(--md-sys-spacing-unit) * 2); /* 16px */
+            --md-sys-spacing-3x: calc(var(--md-sys-spacing-unit) * 3); /* 24px */
+
+            /* Elevation Shadows (Material Design standard shadows) */
+            --md-sys-elevation-0: none;
+            --md-sys-elevation-1: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12);
+            --md-sys-elevation-2: 0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12);
+            --md-sys-elevation-3: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+            --md-sys-elevation-8: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+        }
+
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif; /* Material Design preferred font */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #e0e0e0; /* A slightly darker background to visually contain the app screen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent body scroll, only app container should scroll */
+        }
+
+        /* App Screen Container (667x375px simulation) */
+        .app-container {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            background-color: var(--md-sys-color-background); /* Light grey page background */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Manage internal scrolling */
+            border-radius: 12px; /* Slight rounded corners for the app screen */
+            box-shadow: var(--md-sys-elevation-8); /* General app elevation to lift it off the body */
+            position: relative; /* For fixed elements inside */
+        }
+
+        /* 1. Top App Bar (Small Top App Bar) */
+        .top-app-bar {
+            height: 56px; /* Standard Material Design height for small top app bar */
+            background-color: var(--md-sys-color-surface);
+            box-shadow: var(--md-sys-elevation-1); /* Subtle elevation */
+            display: flex;
+            align-items: center;
+            padding: 0 var(--md-sys-spacing-unit); /* Padding on sides */
+            z-index: 100; /* Ensure it's above other content */
+        }
+
+        .top-app-bar .material-icons {
+            font-size: 24px; /* Standard icon size */
+            color: var(--md-sys-color-on-surface);
+            cursor: pointer;
+            padding: var(--md-sys-spacing-unit); /* Touch target area */
+            border-radius: 50%; /* Make it look like an icon button */
+            transition: background-color 0.2s; /* Hover effect */
+        }
+
+        .top-app-bar .material-icons:hover {
+            background-color: rgba(0, 0, 0, 0.04); /* Light hover effect */
+        }
+
+        .top-app-bar .leading-icon {
+            margin-right: var(--md-sys-spacing-2x); /* Space after back icon */
+            padding-left: 0; /* Align with app edge */
+        }
+
+        .top-app-bar .trailing-icons {
+            margin-left: auto; /* Push trailing icons to the right */
+            display: flex;
+            gap: var(--md-sys-spacing-unit); /* Space between icons */
+        }
+
+        /* Main Scrollable Content Area */
+        .main-content {
+            flex-grow: 1; /* Takes all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+            padding-bottom: 72px; /* Space for the fixed bottom action bar (64px height + 8px margin) */
+        }
+
+        /* 2. Property Media (Hero Image/Carousel) */
+        .property-media {
+            width: 100%;
+            height: 220px; /* Substantial height for visual impact (200-240dp from desc) */
+            position: relative;
+            overflow: hidden;
+            background-color: #ddd; /* Placeholder background */
+        }
+
+        .property-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures image covers the area without distortion */
+            display: block;
+        }
+
+        /* 3. Property Overview & Key Details */
+        .property-overview {
+            background-color: var(--md-sys-color-surface);
+            padding: var(--md-sys-spacing-2x); /* Generous padding */
+        }
+
+        .property-overview h1.price {
+            font-size: var(--md-sys-typescale-headline4-size); /* Material Headline 4 */
+            font-weight: var(--md-sys-typescale-headline4-weight);
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: var(--md-sys-spacing-unit);
+            line-height: 1.2;
+        }
+
+        .property-overview p.details {
+            font-size: var(--md-sys-typescale-headline6-size); /* Material Headline 6 */
+            font-weight: var(--md-sys-typescale-headline6-weight);
+            color: var(--md-sys-color-on-surface);
+            opacity: 0.87; /* Standard text opacity */
+            margin-bottom: var(--md-sys-spacing-unit);
+        }
+
+        .property-overview p.post-date {
+            font-size: var(--md-sys-typescale-body2-size); /* Material Body 2 */
+            color: var(--md-sys-color-on-surface);
+            opacity: 0.6; /* Secondary text opacity */
+            margin-bottom: var(--md-sys-spacing-2x); /* Space before divider */
+        }
+
+        /* Material Divider */
+        .material-divider {
+            border: none;
+            border-top: 1px solid var(--md-sys-color-outline);
+            height: 1px;
+            margin: var(--md-sys-spacing-unit) 0; /* Add vertical margin around the divider */
+            opacity: 0.5; /* Lighter divider */
+        }
+
+        /* General Section Styling for content blocks */
+        .section-block {
+            background-color: var(--md-sys-color-surface);
+            margin: var(--md-sys-spacing-2x) 0; /* Space between sections */
+            padding: var(--md-sys-spacing-2x);
+            /* For Material "Surfaces", a slight border-radius is common, though not always a strong shadow */
+            border-radius: 4px;
+        }
+        .section-block:first-of-type {
+            margin-top: 0; /* No top margin if it follows immediately after a non-card section like property overview */
+        }
+
+        /* 4. Property Specifications & Costs */
+        .property-specs-costs .address {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--md-sys-spacing-2x);
+            font-size: var(--md-sys-typescale-body1-size);
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .property-specs-costs .address .material-icons {
+            margin-right: var(--md-sys-spacing-unit);
+            color: var(--md-sys-color-on-surface);
+            opacity: 0.6;
+            font-size: 20px; /* Slightly smaller icon to match text */
+        }
+
+        .property-specs-costs h3 {
+            font-size: var(--md-sys-typescale-subtitle2-size); /* Material Subtitle 2 */
+            font-weight: var(--md-sys-typescale-subtitle2-weight);
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: var(--md-sys-spacing-unit);
+        }
+
+        .property-specs-costs .cost-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--md-sys-spacing-unit);
+            font-size: var(--md-sys-typescale-body1-size); /* Material Body 1 */
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.5; /* For readability */
+        }
+
+        .property-specs-costs .cost-item span:first-child {
+            opacity: 0.87;
+        }
+
+        .property-specs-costs .cost-item span:last-child {
+            font-weight: var(--md-sys-typescale-subtitle1-weight); /* Slightly bolder for values */
+            opacity: 0.87;
+        }
+
+        /* Material Text Button */
+        .material-text-button {
+            background: none;
+            border: none;
+            color: var(--md-sys-color-primary);
+            padding: var(--md-sys-spacing-unit) calc(var(--md-sys-spacing-unit) * 1.5); /* 8px 12px padding */
+            cursor: pointer;
+            font-size: var(--md-sys-typescale-button-size);
+            font-weight: var(--md-sys-typescale-button-weight);
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--md-sys-spacing-unit); /* Space between icon and text */
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            line-height: 1; /* For consistent height */
+            margin-top: var(--md-sys-spacing-unit); /* Space above button */
+        }
+
+        .material-text-button:hover {
+            background-color: rgba(98, 0, 238, 0.08); /* Primary color with 8% opacity for hover */
+        }
+        .material-text-button .material-icons {
+            font-size: 18px; /* Slightly smaller icon for text buttons */
+            color: inherit; /* Inherit color from button text */
+        }
+
+        /* 5. Location Map */
+        .location-map .map-placeholder {
+            width: 100%;
+            height: 180px; /* Fixed height for map area */
+            background-color: #e0e0e0;
+            background-image: url('https://via.placeholder.com/375x180/ADD8E6/000000?text=Map+Placeholder'); /* Placeholder map image */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: var(--md-sys-spacing-unit); /* Space between map and button */
+        }
+
+        /* Material Icon for the pin overlay */
+        .location-map .map-placeholder::after {
+            content: "\e0c8"; /* Unicode for 'location_on' Material Icon */
+            font-family: 'Material Icons';
+            font-size: 40px;
+            color: #D32F2F; /* Red color for the pin */
+            position: absolute;
+            transform: translate(-50%, -80%); /* Adjust to position pin's base at the center */
+            left: 50%;
+            top: 50%;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5); /* Shadow for better visibility */
+        }
+        .location-map .map-placeholder:hover {
+            cursor: pointer;
+        }
+
+
+        /* 6. Action Bar (Fixed Bottom Navigation) */
+        .bottom-action-bar {
+            position: fixed; /* Fixed at the bottom of the app-container */
+            bottom: 0;
+            width: 100%; /* Spans the full width of the app-container */
+            height: 64px; /* Standard Material Design Bottom App Bar height */
+            background-color: var(--md-sys-color-surface);
+            box-shadow: var(--md-sys-elevation-8); /* High elevation to float above content */
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 var(--md-sys-spacing-unit);
+            z-index: 100; /* Ensure it's above main content */
+        }
+
+        /* Common Button Styles (for outlined and filled) */
+        .material-outlined-button,
+        .material-filled-button {
+            padding: var(--md-sys-spacing-unit) var(--md-sys-spacing-2x);
+            font-size: var(--md-sys-typescale-button-size);
+            font-weight: var(--md-sys-typescale-button-weight);
+            text-transform: uppercase;
+            border-radius: 20px; /* Pill shape for buttons */
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s;
+            height: 40px; /* Standard button height */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--md-sys-spacing-unit);
+            line-height: 1; /* For consistent height */
+            flex-grow: 1; /* Allow buttons to expand horizontally */
+            margin: 0 var(--md-sys-spacing-unit); /* Space between buttons */
+            max-width: 120px; /* Limit individual button width (except primary action) */
+        }
+
+        /* Material Outlined Button */
+        .material-outlined-button {
+            background-color: transparent;
+            border: 1px solid var(--md-sys-color-outline);
+            color: var(--md-sys-color-primary);
+            box-shadow: none;
+        }
+
+        .material-outlined-button:hover {
+            background-color: rgba(98, 0, 238, 0.08); /* Primary color with 8% opacity for hover */
+            border-color: var(--md-sys-color-primary); /* Darken border on hover */
+        }
+
+        .material-outlined-button .material-icons {
+            font-size: 18px;
+            color: var(--md-sys-color-primary);
+        }
+
+        /* Material Filled Button (Primary Action) */
+        .material-filled-button {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            border: none;
+            box-shadow: var(--md-sys-elevation-1); /* Initial elevation */
+            max-width: unset; /* Remove max-width constraint for the primary action button */
+        }
+
+        .material-filled-button:hover {
+            background-color: #6d1ee8; /* Slightly darker primary on hover */
+            box-shadow: var(--md-sys-elevation-2); /* Increase elevation on hover */
+        }
+
+        .material-filled-button .material-icons {
+            font-size: 18px;
+            color: var(--md-sys-color-on-primary);
+        }
+        /* Make 'Enquire Now' button wider */
+        .bottom-action-bar > .material-filled-button {
+             flex-grow: 1.5; /* Give 'Enquire Now' a bit more space, making it wider */
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 1. Top App Bar (Navigation & Page Actions) -->
+        <header class="top-app-bar">
+            <i class="material-icons leading-icon">arrow_back</i>
+            <!-- Optional: Page Title -->
+            <!-- <span class="app-bar-title">Property Details</span> -->
+            <div class="trailing-icons">
+                <i class="material-icons">favorite_border</i> <!-- Favorite/Save icon -->
+                <i class="material-icons">share</i>          <!-- Share icon -->
+            </div>
+        </header>
+
+        <!-- Main Scrollable Content Area -->
+        <main class="main-content">
+            <!-- 2. Property Media (Hero Image/Carousel) -->
+            <section class="property-media">
+                <img src="https://via.placeholder.com/375x220/87CEEB/FFFFFF?text=Property+Hero+Image" alt="Stunning view of the property">
+                <!-- If implementing a carousel, pagination dots would go here:
+                <div class="pagination-dots">
+                    <span class="active"></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                -->
+            </section>
+
+            <!-- 3. Property Overview & Key Details -->
+            <section class="property-overview">
+                <h1 class="price">₹ 2,50,000 / month</h1>
+                <p class="details">Apartment | 1200 sqft</p>
+                <p class="post-date">Posted 3 days ago</p>
+                <hr class="material-divider">
+            </section>
+
+            <!-- 4. Property Specifications & Costs -->
+            <section class="section-block property-specs-costs">
+                <div class="address">
+                    <i class="material-icons">location_on</i>
+                    <span>Flat 4B, Green Park Residency, Sector 14, Noida, UP 201301</span>
+                </div>
+                <hr class="material-divider">
+                <h3>Cost Breakdown:</h3>
+                <div class="cost-item">
+                    <span>Rent:</span>
+                    <span>₹ 2,50,000</span>
+                </div>
+                <div class="cost-item">
+                    <span>Security Deposit:</span>
+                    <span>₹ 5,00,000</span>
+                </div>
+                <div class="cost-item">
+                    <span>Maintenance:</span>
+                    <span>₹ 5,000 / month</span>
+                </div>
+                <button class="material-text-button">
+                    <i class="material-icons">info</i>
+                    View Other Charges
+                </button>
+            </section>
+
+            <!-- 5. Location Map -->
+            <section class="section-block location-map">
+                <div class="map-placeholder" role="img" aria-label="Location map of the property">
+                    <!-- The location pin is added via CSS ::after pseudo-element -->
+                </div>
+                <button class="material-text-button">
+                    <i class="material-icons">map</i>
+                    View on Google Maps
+                </button>
+            </section>
+        </main>
+
+        <!-- 6. Action Bar (Fixed Bottom Navigation) -->
+        <footer class="bottom-action-bar">
+            <button class="material-outlined-button">
+                <i class="material-icons">chat</i>
+                Chat
+            </button>
+            <button class="material-outlined-button">
+                <i class="material-icons">call</i>
+                Call
+            </button>
+            <button class="material-filled-button">
+                Enquire Now
+            </button>
+        </footer>
+    </div>
+</body>
+</html>

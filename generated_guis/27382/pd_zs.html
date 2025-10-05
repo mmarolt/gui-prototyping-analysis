@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create/Send Announcement</title>
+    <!-- 
+        All CSS is implemented inline as requested.
+        No external stylesheets or <style> tags are used.
+        The meta viewport tag is crucial for proper mobile scaling.
+    -->
+</head>
+<body style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; height: 100vh; display: flex; flex-direction: column;">
+
+    <!-- 1. Fixed Header (Top) -->
+    <!-- This div is fixed at the top, has padding, and uses flexbox for internal alignment. -->
+    <!-- min-height: 56px ensures a minimum height for the content, padding adds visual space. -->
+    <!-- box-sizing: border-box ensures padding is included within the element's total dimensions. -->
+    <div style="position: fixed; top: 0; left: 0; right: 0; background-color: #ffffff; padding: 15px 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 1000; min-height: 56px; box-sizing: border-box;">
+        <!-- Back Button -->
+        <button style="background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 0; min-width: 44px; min-height: 44px; display: flex; justify-content: center; align-items: center;">&larr;</button>
+        
+        <!-- Page Title -->
+        <h1 style="font-size: 20px; font-weight: bold; color: #333; margin: 0; text-align: center; flex-grow: 1;">Send New Announcement</h1>
+        
+        <!-- Dashboard/Advanced Options Button -->
+        <button style="background: none; border: none; font-size: 24px; cursor: pointer; color: #333; padding: 0; min-width: 44px; min-height: 44px; display: flex; justify-content: center; align-items: center;">⚙</button>
+    </div>
+
+    <!-- 2. Scrollable Content Area (Middle) -->
+    <!-- flex-grow: 1 allows this section to take up all available vertical space between header and footer. -->
+    <!-- overflow-y: auto makes the content scrollable if it exceeds the screen height. -->
+    <!-- margin-top and margin-bottom are crucial to prevent content from being obscured by the fixed header and footer. -->
+    <!-- Header's total height (min-height + padding) is 56px + 15px + 15px = 86px. -->
+    <!-- Footer's total height (min-height + padding) is approx 50px + 20px + 20px = 90px. -->
+    <div style="flex-grow: 1; overflow-y: auto; padding: 20px; margin-top: 86px; margin-bottom: 90px; -webkit-overflow-scrolling: touch;">
+
+        <!-- 2.1. Recipient Selection Section -->
+        <!-- This section is styled as a card with a subtle shadow and rounded corners. -->
+        <div style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 20px; margin-bottom: 25px;">
+            <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-top: 0; margin-bottom: 15px;">Select Recipients</h2>
+
+            <!-- Predefined Group List -->
+            <div style="display: flex; flex-direction: column;">
+                <!-- Each list item is a <label> to make the entire row clickable for the checkbox. -->
+                <!-- min-height: 44px and padding ensure a large tap target. -->
+                <!-- The checkbox's dynamic visual state on selection cannot be achieved with pure inline CSS without JS. -->
+                
+                <!-- List Item 1: All Attendees -->
+                <label for="groupAll" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; min-height: 44px; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">All Attendees</span>
+                        <span style="font-size: 14px; color: #666; margin-left: 8px;">(1500)</span>
+                    </div>
+                    <input type="checkbox" id="groupAll" name="recipients" value="all" style="width: 22px; height: 22px; margin-left: 10px; flex-shrink: 0; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; vertical-align: middle;">
+                </label>
+                
+                <!-- List Item 2: Speakers -->
+                <label for="groupSpeakers" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; min-height: 44px; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Speakers</span>
+                        <span style="font-size: 14px; color: #666; margin-left: 8px;">(50)</span>
+                    </div>
+                    <input type="checkbox" id="groupSpeakers" name="recipients" value="speakers" style="width: 22px; height: 22px; margin-left: 10px; flex-shrink: 0; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; vertical-align: middle;">
+                </label>
+                
+                <!-- List Item 3: Volunteers -->
+                <label for="groupVolunteers" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; min-height: 44px; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Volunteers</span>
+                        <span style="font-size: 14px; color: #666; margin-left: 8px;">(20)</span>
+                    </div>
+                    <input type="checkbox" id="groupVolunteers" name="recipients" value="volunteers" style="width: 22px; height: 22px; margin-left: 10px; flex-shrink: 0; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; vertical-align: middle;">
+                </label>
+                
+                <!-- List Item 4: Staff (no bottom border for the last item) -->
+                <label for="groupStaff" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; cursor: pointer; min-height: 44px; box-sizing: border-box;">
+                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                        <span style="font-size: 16px; color: #333; font-weight: 500;">Staff</span>
+                        <span style="font-size: 14px; color: #666; margin-left: 8px;">(10)</span>
+                    </div>
+                    <input type="checkbox" id="groupStaff" name="recipients" value="staff" style="width: 22px; height: 22px; margin-left: 10px; flex-shrink: 0; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; vertical-align: middle;">
+                </label>
+            </div>
+        </div>
+
+        <!-- 2.2. Message Composition Section -->
+        <!-- Another card-like section for message input. -->
+        <div style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 20px;">
+            <!-- Message Title Input Field -->
+            <div style="margin-bottom: 20px;">
+                <label for="messageTitle" style="display: block; font-size: 16px; font-weight: bold; color: #333; margin-bottom: 8px;">Message Title</label>
+                <input type="text" id="messageTitle" placeholder="Enter announcement title" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; -webkit-appearance: none; appearance: none;">
+            </div>
+
+            <!-- Message Content Input Field -->
+            <div style="margin-bottom: 10px;">
+                <label for="messageContent" style="display: block; font-size: 16px; font-weight: bold; color: #333; margin-bottom: 8px;">Message Content</label>
+                <textarea id="messageContent" placeholder="Type your announcement here..." rows="6" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; resize: vertical; min-height: 120px; box-sizing: border-box; -webkit-appearance: none; appearance: none;"></textarea>
+                <!-- Character Count (static for this example, dynamic update requires JavaScript) -->
+                <div style="font-size: 13px; color: #888; text-align: right; margin-top: 5px;">0/500 characters</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3. Fixed Footer (Bottom) -->
+    <!-- This div is fixed at the bottom, contains the primary action button. -->
+    <!-- min-height: 50px ensures space for the button, padding adds visual space. -->
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background-color: #ffffff; padding: 20px; box-shadow: 0 -2px 4px rgba(0,0,0,0.1); display: flex; justify-content: center; align-items: center; z-index: 1000; min-height: 50px; box-sizing: border-box;">
+        <!-- Primary Action Button -->
+        <!-- The button is styled in a disabled state as per requirement for initial load. -->
+        <!-- Dynamic enabling/disabling would require JavaScript. -->
+        <button id="sendAnnouncementBtn" style="background-color: #cccccc; color: #ffffff; padding: 15px 25px; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: not-allowed; width: 100%; max-width: 300px; transition: background-color 0.3s ease;">Send Announcement</button>
+    </div>
+
+</body>
+</html>

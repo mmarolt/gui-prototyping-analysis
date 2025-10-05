@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* General Body and HTML styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A clean, modern font */
+            background-color: #f0f2f5; /* Light background for the page */
+            height: 100vh; /* Full viewport height */
+            width: 375px; /* Specific width for Google Chrome Developer Tools simulation */
+            max-width: 100%; /* Ensures it doesn't overflow on smaller actual screens */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            display: flex;
+            flex-direction: column; /* Stack sections vertically */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            margin: 0 auto; /* Center the page on larger screens when not in dev tools */
+        }
+
+        /* 1. Header Section */
+        .header {
+            background-color: #ffffff;
+            padding: 15px 0; /* Vertical padding for the header content */
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Subtle shadow for depth */
+        }
+
+        .header h1 {
+            font-size: 22px; /* Prominent font size */
+            font-weight: bold;
+            color: #333333;
+            margin: 0; /* Remove default margin from h1 */
+        }
+
+        /* 2. Control Section - Storage Location Switcher */
+        .control-section {
+            background-color: #ffffff;
+            padding: 15px 20px; /* Padding around the switcher */
+            margin-top: 10px; /* Space from the header */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Subtle shadow */
+        }
+
+        .storage-switcher {
+            display: flex;
+            border: 1px solid #e0e0e0; /* Border for the segmented control */
+            border-radius: 8px; /* Rounded corners for the control */
+            overflow: hidden; /* Ensures inner buttons respect border-radius */
+        }
+
+        .switcher-btn {
+            flex: 1; /* Equal width for both buttons */
+            padding: 12px 0;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            cursor: pointer;
+            color: #555555;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-appearance: none; /* Remove default button styles for iOS */
+            -moz-appearance: none; /* Remove default button styles for Firefox */
+            appearance: none; /* Remove default button styles */
+            outline: none; /* Remove outline on focus */
+        }
+
+        .switcher-btn:first-child {
+            border-right: 1px solid #e0e0e0; /* Separator line between buttons */
+        }
+
+        .switcher-btn.active {
+            background-color: #007bff; /* Highlight color for the active segment */
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        /* 3. Main Content Section (Category Overview) */
+        .main-content {
+            flex-grow: 1; /* Takes up all remaining vertical space */
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two columns with equal width */
+            gap: 15px; /* Space between the category tiles */
+            padding: 15px 20px;
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Category Tiles */
+        .category-tile {
+            background-color: #ffffff; /* Default background, will be overridden by specific colors */
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #ffffff; /* Default text color for contrast with colored tiles */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* More prominent shadow for card-like appearance */
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth hover/tap effects */
+            min-height: 100px; /* Ensure a minimum height for consistent tile size */
+        }
+
+        .category-tile:active {
+            transform: scale(0.97); /* Visual feedback on tap */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Smaller shadow on tap */
+        }
+
+        .category-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .file-count {
+            font-size: 14px;
+            opacity: 0.9; /* Slightly faded count for visual hierarchy */
+        }
+
+        /* Category Color Coding */
+        .category-tile.docs { background-color: #3498db; } /* Blue */
+        .category-tile.video { background-color: #2ecc71; } /* Green */
+        .category-tile.audio { background-color: #e74c3c; } /* Red */
+        .category-tile.images { background-color: #f1c40f; } /* Yellow */
+        .category-tile.rar { background-color: #9b59b6; } /* Purple */
+        .category-tile.downloads { background-color: #e67e22; } /* Orange */
+    </style>
+</head>
+<body>
+
+    <!-- 1. Header Section -->
+    <div class="header">
+        <h1>File Manager</h1>
+    </div>
+
+    <!-- 2. Control Section -->
+    <div class="control-section">
+        <div class="storage-switcher">
+            <button class="switcher-btn active">Local Folder</button>
+            <button class="switcher-btn">SD Card</button>
+        </div>
+    </div>
+
+    <!-- 3. Main Content Section (Category Overview) -->
+    <div class="main-content">
+        <!-- Docs Category Tile -->
+        <div class="category-tile docs">
+            <div class="category-name">Docs</div>
+            <div class="file-count">120 files</div>
+        </div>
+        <!-- Video Category Tile -->
+        <div class="category-tile video">
+            <div class="category-name">Video</div>
+            <div class="file-count">45 files</div>
+        </div>
+        <!-- Audio Category Tile -->
+        <div class="category-tile audio">
+            <div class="category-name">Audio</div>
+            <div class="file-count">30 files</div>
+        </div>
+        <!-- Images Category Tile -->
+        <div class="category-tile images">
+            <div class="category-name">Images</div>
+            <div class="file-count">200 files</div>
+        </div>
+        <!-- RAR Category Tile -->
+        <div class="category-tile rar">
+            <div class="category-name">RAR</div>
+            <div class="file-count">5 files</div>
+        </div>
+        <!-- Downloads Category Tile -->
+        <div class="category-tile downloads">
+            <div class="category-name">Downloads</div>
+            <div class="file-count">75 files</div>
+        </div>
+    </div>
+
+</body>
+</html>

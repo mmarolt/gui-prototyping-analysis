@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vehicles Search & Filter</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts for Roboto (Material Design default) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,500,700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic Reset & Variables for Material Design look */
+        :root {
+            --mdc-theme-primary: #6200EE;
+            --mdc-theme-secondary: #03DAC6;
+            --mdc-theme-on-primary: #FFFFFF;
+            --mdc-theme-on-secondary: #000000;
+            --mdc-theme-surface: #FFFFFF; /* Cards, sheets, menus */
+            --mdc-theme-on-surface: #000000;
+            --mdc-theme-background: #F5F5F5; /* Main app background */
+            --mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+            --mdc-theme-text-secondary-on-background: rgba(0, 0, 0, 0.60);
+            --mdc-theme-text-hint-on-background: rgba(0, 0, 0, 0.38);
+            --mdc-theme-divider-color: rgba(0, 0, 0, 0.12);
+
+            /* Standard Material Design dimensions */
+            --mdc-top-app-bar-height: 56px;
+            --mdc-bottom-navigation-height: 56px;
+            --mdc-fab-extended-height: 48px;
+        }
+
+        /* Global styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box;
+            background-color: var(--mdc-theme-background);
+            color: var(--mdc-theme-text-primary-on-background);
+            overflow: hidden; /* Prevent body scrolling, let content scroll within app container */
+        }
+
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+
+        /* Mobile App Container - Simulates a 375x667px phone screen */
+        .mobile-app-container {
+            width: 375px; /* Fixed width as per screen description */
+            height: 667px; /* Fixed height as per screen description */
+            border: 1px solid #ccc; /* Visual border for the phone frame */
+            margin: 20px auto; /* Center on larger screens for demonstration */
+            background-color: var(--mdc-theme-surface);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Important: Keep all content inside this container */
+            position: relative; /* For absolute positioning of FAB */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            border-radius: 8px; /* Slightly rounded corners for the 'device' */
+        }
+
+        /* 1. Top App Bar (Search & Scan) */
+        .mdc-top-app-bar {
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            height: var(--mdc-top-app-bar-height);
+            display: flex;
+            align-items: center;
+            padding: 0 4px 0 16px; /* Adjust padding for search input alignment and app bar padding */
+            box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+            z-index: 10; /* Ensure it stays on top */
+            flex-shrink: 0; /* Prevent app bar from shrinking */
+        }
+
+        .mdc-top-app-bar__row {
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+
+        .mdc-top-app-bar__section {
+            display: flex;
+            align-items: center;
+        }
+
+        .mdc-top-app-bar__section--align-start {
+            flex-grow: 1; /* Search input takes available space */
+            margin-right: 8px; /* Space between search field and scan icon */
+        }
+
+        /* MDC Text Field (Simplified for static HTML/CSS) */
+        .mdc-text-field {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.15); /* Transparent white for filled variant */
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            height: 40px; /* Standard input height */
+            padding: 0 12px;
+            color: var(--mdc-theme-on-primary);
+            width: 100%; /* Ensures it fills its container */
+        }
+
+        .mdc-text-field__input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--mdc-theme-on-primary);
+            width: 100%;
+            padding: 0;
+            flex-grow: 1;
+        }
+
+        .mdc-text-field__input::placeholder {
+            color: rgba(255, 255, 255, 0.7); /* Lighter placeholder text for visibility */
+        }
+
+        .mdc-text-field__icon {
+            color: rgba(255, 255, 255, 0.7);
+            margin-right: 8px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* MDC Icon Button */
+        .mdc-icon-button {
+            border: none;
+            background: none;
+            color: var(--mdc-theme-on-primary);
+            padding: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mdc-icon-button:hover {
+            background-color: rgba(255, 255, 255, 0.08); /* Hover effect */
+        }
+
+        /* 2. Selected Filters Display */
+        .selected-filters-container {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--mdc-theme-divider-color);
+            background-color: var(--mdc-theme-surface);
+            flex-shrink: 0; /* Prevent from shrinking */
+        }
+
+        /* MDC Button (Simplified) */
+        .mdc-button {
+            text-transform: uppercase;
+            font-weight: 500;
+            font-size: 14px;
+            padding: 0 8px;
+            height: 36px;
+            border-radius: 4px;
+            border: none;
+            outline: none;
+            background: none;
+            color: var(--mdc-theme-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mdc-button--dense {
+            height: 32px;
+            padding: 0 8px;
+            font-size: 13px;
+        }
+
+        .mdc-button:hover {
+            background-color: rgba(var(--mdc-theme-primary), 0.08); /* Hover effect using primary color */
+        }
+
+        .filter-chips-scroll-area {
+            overflow-x: auto; /* Enable horizontal scrolling */
+            white-space: nowrap; /* Keep chips on a single line */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            flex-grow: 1; /* Take remaining space */
+        }
+
+        .mdc-chip-set {
+            display: flex;
+            flex-wrap: nowrap; /* Prevent chips from wrapping */
+            padding: 0;
+            margin: 0;
+            height: 32px; /* Set height to align with chips */
+        }
+
+        /* MDC Chip (Simplified) */
+        .mdc-chip {
+            display: inline-flex;
+            align-items: center;
+            height: 32px;
+            padding: 0 12px;
+            border-radius: 16px; /* Pill shape */
+            background-color: rgba(0, 0, 0, 0.08); /* Default chip background */
+            margin-right: 8px; /* Space between chips */
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--mdc-theme-text-primary-on-background);
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1; /* Ensure text is vertically centered */
+        }
+
+        .mdc-chip--selected {
+            background-color: rgba(var(--mdc-theme-primary), 0.12); /* Selected chip with primary color tint */
+            color: var(--mdc-theme-primary);
+        }
+
+        .mdc-chip__primary-action {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            outline: none;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .mdc-chip__text {
+            white-space: nowrap;
+        }
+
+        .mdc-chip__icon.mdc-chip__icon--trailing {
+            margin-left: 8px;
+            font-size: 18px;
+            color: rgba(0, 0, 0, 0.38); /* Icon color */
+            cursor: pointer;
+            transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mdc-chip--selected .mdc-chip__icon.mdc-chip__icon--trailing {
+            color: var(--mdc-theme-primary); /* Selected chip icon color */
+        }
+
+        /* 3. Filter Categories List */
+        .filter-categories-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1; /* Takes remaining vertical space */
+            overflow-y: auto; /* Make it vertically scrollable */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            background-color: var(--mdc-theme-surface);
+            /* Add padding at the bottom to prevent content from being hidden by FAB/Bottom Nav */
+            padding-bottom: calc(var(--mdc-fab-extended-height) + 16px + var(--mdc-bottom-navigation-height) + 16px);
+            position: relative; /* Needed for padding-bottom in flex item with overflow */
+        }
+
+        /* MDC List Item (Simplified) */
+        .mdc-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            min-height: 48px; /* Standard list item height */
+            cursor: pointer;
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--mdc-theme-text-primary-on-background);
+        }
+
+        .mdc-list-item:hover {
+            background-color: rgba(0, 0, 0, 0.04); /* Hover effect */
+        }
+
+        .mdc-list-item__text {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mdc-list-item__primary-text {
+            font-size: 16px;
+            line-height: 24px;
+            font-weight: 400;
+        }
+
+        .mdc-list-item__secondary-text {
+            font-size: 14px;
+            line-height: 20px;
+            color: var(--mdc-theme-text-secondary-on-background);
+        }
+
+        .mdc-list-item__meta {
+            margin-left: 16px;
+            color: var(--mdc-theme-text-hint-on-background);
+            font-size: 24px;
+        }
+
+        /* MDC List Divider */
+        .mdc-list-divider {
+            height: 1px;
+            background-color: var(--mdc-theme-divider-color);
+            margin: 0 16px; /* Indented divider */
+        }
+
+        /* 4. Floating Action Button (FAB) */
+        .mdc-fab {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute; /* Positioned relative to .mobile-app-container */
+            right: 16px;
+            /* 16px above bottom nav */
+            bottom: calc(var(--mdc-bottom-navigation-height) + 16px);
+            height: var(--mdc-fab-extended-height);
+            padding: 0 20px; /* Horizontal padding for text */
+            border-radius: calc(var(--mdc-fab-extended-height) / 2); /* Pill shape */
+            background-color: var(--mdc-theme-secondary);
+            color: var(--mdc-theme-on-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.0892857em;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+            z-index: 5; /* Ensure it's above content but below top bar */
+            transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mdc-fab:hover {
+            background-color: #03DAC6; /* Slightly darker shade on hover */
+            box-shadow: 0 5px 8px -1px rgba(0,0,0,.2), 0 8px 12px 0 rgba(0,0,0,.14), 0 1px 22px 0 rgba(0,0,0,.12);
+        }
+
+        .mdc-fab__icon {
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        .mdc-fab__label {
+            white-space: nowrap; /* Prevent text from wrapping */
+        }
+
+        /* 5. Bottom Navigation Bar */
+        .mdc-bottom-navigation {
+            background-color: var(--mdc-theme-surface);
+            border-top: 1px solid var(--mdc-theme-divider-color);
+            height: var(--mdc-bottom-navigation-height);
+            display: flex;
+            width: 100%;
+            flex-shrink: 0; /* Prevent from shrinking */
+            z-index: 10; /* Ensure it stays on top */
+        }
+
+        .mdc-bottom-navigation__navigation {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Bottom Navigation Item */
+        .mdc-bottom-navigation__nav-item {
+            flex-grow: 1; /* Distribute space evenly */
+            flex-basis: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+            font-size: 12px;
+            color: var(--mdc-theme-text-secondary-on-background);
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mdc-bottom-navigation__nav-item--active {
+            color: var(--mdc-theme-primary); /* Active tab color */
+        }
+
+        .mdc-bottom-navigation__nav-item-icon {
+            font-size: 24px;
+            margin-bottom: 4px; /* Space between icon and text */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Main container to simulate the mobile screen -->
+    <div class="mobile-app-container">
+
+        <!-- 1. Top App Bar (Search & Scan) -->
+        <header class="mdc-top-app-bar">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <div class="mdc-text-field mdc-text-field--filled mdc-text-field--with-leading-icon search-input">
+                        <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
+                        <input class="mdc-text-field__input" type="text" placeholder="Search for vehicles, VIN...">
+                        <!-- The mdc-line-ripple is typically for filled text field focus/hover effects, not styled here for brevity -->
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                </section>
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                    <button class="mdc-icon-button material-icons" aria-label="Scan">qr_code_scanner</button>
+                </section>
+            </div>
+        </header>
+
+        <!-- 2. Selected Filters Display -->
+        <div class="selected-filters-container">
+            <button class="mdc-button mdc-button--dense" style="margin-right: 8px;">
+                <span class="mdc-button__label">Clear All</span>
+            </button>
+            <div class="filter-chips-scroll-area">
+                <div class="mdc-chip-set mdc-chip-set--filter" role="grid">
+                    <div class="mdc-chip mdc-chip--selected" role="row">
+                        <div class="mdc-chip__primary-action" role="option" tabindex="0">
+                            <span class="mdc-chip__text">Automobile Type: SUV</span>
+                        </div>
+                        <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+                    </div>
+                    <div class="mdc-chip mdc-chip--selected" role="row">
+                        <div class="mdc-chip__primary-action" role="option" tabindex="0">
+                            <span class="mdc-chip__text">Make: Toyota</span>
+                        </div>
+                        <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+                    </div>
+                    <div class="mdc-chip mdc-chip--selected" role="row">
+                        <div class="mdc-chip__primary-action" role="option" tabindex="0">
+                            <span class="mdc-chip__text">Odometer: &lt; 50k mi</span>
+                        </div>
+                        <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+                    </div>
+                    <!-- Additional chips to demonstrate horizontal scrolling -->
+                    <div class="mdc-chip mdc-chip--selected" role="row">
+                        <div class="mdc-chip__primary-action" role="option" tabindex="0">
+                            <span class="mdc-chip__text">Color: Red</span>
+                        </div>
+                        <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+                    </div>
+                    <div class="mdc-chip mdc-chip--selected" role="row">
+                        <div class="mdc-chip__primary-action" role="option" tabindex="0">
+                            <span class="mdc-chip__text">Year: 2020+</span>
+                        </div>
+                        <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Filter Categories List -->
+        <ul class="mdc-list filter-categories-list">
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Automobile Type</span>
+                    <span class="mdc-list-item__secondary-text">SUV, Truck (2 selected)</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Make</span>
+                    <span class="mdc-list-item__secondary-text">Honda</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Loss Type</span>
+                    <span class="mdc-list-item__secondary-text">Collision, Flood (2 selected)</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Transmission</span>
+                    <span class="mdc-list-item__secondary-text">Automatic</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Sale Document</span>
+                    <span class="mdc-list-item__secondary-text">Title</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Buyer Type</span>
+                    <span class="mdc-list-item__secondary-text">Public</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Odometer</span>
+                    <span class="mdc-list-item__secondary-text">0 - 50,000 miles</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Primary Damage</span>
+                    <span class="mdc-list-item__secondary-text">Front End</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <!-- More categories could be added here and they will scroll -->
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Location</span>
+                    <span class="mdc-list-item__secondary-text">Within 50 miles of 90210</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+            <li role="separator" class="mdc-list-divider"></li>
+            <li class="mdc-list-item" tabindex="0">
+                <span class="mdc-list-item__text">
+                    <span class="mdc-list-item__primary-text">Fuel Type</span>
+                    <span class="mdc-list-item__secondary-text">Gasoline, Electric (2 selected)</span>
+                </span>
+                <i class="material-icons mdc-list-item__meta" aria-hidden="true">chevron_right</i>
+            </li>
+        </ul>
+
+        <!-- 4. Floating Action Button (FAB) for Search Results -->
+        <button class="mdc-fab mdc-fab--extended">
+            <!-- The mdc-fab__ripple is a placeholder for the Material Design ripple effect -->
+            <div class="mdc-fab__ripple"></div>
+            <i class="material-icons mdc-fab__icon">search</i>
+            <span class="mdc-fab__label">Search (1,234 Results)</span>
+        </button>
+
+        <!-- 5. Bottom Navigation Bar -->
+        <footer class="mdc-bottom-navigation">
+            <nav class="mdc-bottom-navigation__navigation" role="tablist">
+                <!-- 'Vehicles' tab is active -->
+                <button class="mdc-bottom-navigation__nav-item mdc-bottom-navigation__nav-item--active" data-route="vehicles" aria-label="Vehicles" aria-current="page">
+                    <div class="mdc-bottom-navigation__nav-item-icon material-icons">directions_car</div>
+                    <span class="mdc-bottom-navigation__nav-item-text">Vehicles</span>
+                </button>
+                <button class="mdc-bottom-navigation__nav-item" data-route="auctions" aria-label="Auctions">
+                    <div class="mdc-bottom-navigation__nav-item-icon material-icons">gavel</div>
+                    <span class="mdc-bottom-navigation__nav-item-text">Auctions</span>
+                </button>
+                <button class="mdc-bottom-navigation__nav-item" data-route="locations" aria-label="Locations">
+                    <div class="mdc-bottom-navigation__nav-item-icon material-icons">location_on</div>
+                    <span class="mdc-bottom-navigation__nav-item-text">Locations</span>
+                </button>
+                <button class="mdc-bottom-navigation__nav-item" data-route="my-account" aria-label="My Account">
+                    <div class="mdc-bottom-navigation__nav-item-icon material-icons">account_circle</div>
+                    <span class="mdc-bottom-navigation__nav-item-text">My Account</span>
+                </button>
+            </nav>
+        </footer>
+
+    </div>
+</body>
+</html>

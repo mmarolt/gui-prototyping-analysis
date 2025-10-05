@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Earn Coins App - Mobile Page</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto (Material Design's default typeface) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* General Reset & Base Styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #333;
+            background-color: #f5f5f5; /* Light grey background for content areas */
+            -webkit-font-smoothing: antialiased; /* Smoother text rendering */
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+        }
+
+        /* Simulate the mobile screen size (375px width, 667px height for portrait) */
+        body {
+            width: 375px;
+            height: 667px;
+            overflow-y: auto; /* Enable vertical scrolling within the body */
+            position: relative; /* For fixed header positioning relative to this container */
+            /* Optional: Add a border/shadow to visualize the screen boundary in a desktop browser */
+            /* border: 1px solid #ccc; */
+            /* box-shadow: 0 0 15px rgba(0,0,0,0.1); */
+            /* margin: 20px auto; /* Center on larger screens */
+        }
+
+        /* Material Design Elevation Shadows */
+        /* These classes help apply consistent shadows for Material components */
+        .elevation-0 { box-shadow: none; }
+        .elevation-1 { box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12); }
+        .elevation-2 { box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2), 0px 3px 4px 0px rgba(0,0,0,0.14), 0px 1px 8px 0px rgba(0,0,0,0.12); }
+        .elevation-4 { box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12); } /* For app bar */
+
+        /* ------------------------------------- */
+        /* 1. App Header with Coin Balance & Cash Out */
+        /* ------------------------------------- */
+        .app-header {
+            position: fixed; /* Stays at the top while content scrolls */
+            top: 0;
+            left: 0;
+            width: 100%; /* Spans the full width of the mobile screen (375px) */
+            height: 56px; /* Standard Material Design Top App Bar height */
+            background-color: #6200EE; /* Material Design Primary Purple */
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            z-index: 1000; /* Ensures header is always on top */
+            box-sizing: border-box; /* Ensures padding is included in the fixed width/height */
+        }
+
+        .app-header .material-icons {
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .app-header .coin-balance {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            font-weight: 500; /* Medium weight for important text */
+        }
+
+        .app-header .coin-balance .material-icons {
+            font-size: 20px;
+            margin-right: 4px;
+        }
+
+        .app-header .cash-out-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .app-header .cash-out-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+        }
+
+        /* Wrapper for main content to offset fixed header */
+        .content-wrapper {
+            padding-top: 56px; /* Space equal to header height */
+            /* flex-grow: 1; /* Not strictly needed if body handles scroll, but good for layout */
+        }
+
+        /* Common style for section titles */
+        .section-title {
+            font-size: 20px;
+            font-weight: 500; /* Medium weight as per Material Design */
+            margin: 0 0 16px 0;
+            color: #333;
+        }
+
+        /* ------------------------------------- */
+        /* 2. Social Offers to Share */
+        /* ------------------------------------- */
+        .social-offers-section {
+            padding: 16px; /* Consistent padding around the section */
+        }
+
+        .offer-card-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Vertical spacing between cards */
+        }
+
+        .offer-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Spacing between internal elements of the card */
+            box-sizing: border-box;
+        }
+
+        .offer-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .offer-card-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1; /* Allow info to take available space */
+        }
+
+        .offer-card-info img {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            margin-right: 12px;
+            object-fit: cover; /* Ensures image fills its container */
+            flex-shrink: 0; /* Prevents image from shrinking */
+        }
+
+        .offer-card-title {
+            font-weight: 500;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.3;
+            flex-grow: 1;
+        }
+
+        .offer-card-coins {
+            font-weight: 700; /* Bolder for emphasis */
+            color: #4CAF50; /* Green for positive earnings */
+            font-size: 15px;
+            flex-shrink: 0; /* Prevents coin text from shrinking */
+            margin-left: 8px; /* Space between title and coins */
+        }
+
+        .offer-card-description {
+            font-size: 13px; /* Slightly smaller for secondary text */
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .share-button {
+            background-color: #6200EE; /* Primary button color */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px; /* Space above the button */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            text-transform: uppercase;
+        }
+
+        .share-button:hover {
+            background-color: #7933ec; /* Slightly lighter on hover */
+        }
+
+        .share-button .material-icons {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+
+        /* ------------------------------------- */
+        /* 3. More Ways to Earn */
+        /* ------------------------------------- */
+        .more-ways-section {
+            padding: 16px;
+            margin-top: 24px; /* More spacing to visually separate sections */
+        }
+
+        .earning-item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Vertical spacing between list items */
+        }
+
+        .earning-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .earning-item:hover {
+            background-color: #fafafa; /* Subtle hover effect */
+        }
+
+        .earning-item-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .earning-item .material-icons.icon-left {
+            font-size: 28px;
+            margin-right: 16px;
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+
+        .earning-item-text {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .earning-item-title {
+            font-weight: 500;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.3;
+        }
+
+        .earning-item-description {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .earning-item .material-icons.icon-right {
+            font-size: 24px;
+            color: #757575; /* Standard grey for chevron */
+            flex-shrink: 0;
+            margin-left: 8px; /* Space between text and icon */
+        }
+
+        /* Specific icon colors for branding/emphasis */
+        .earning-item .material-icons.facebook-color { color: #1877F2; } /* Facebook Blue */
+        .earning-item .material-icons.lock-screen-color { color: #FF9800; } /* Orange for Lock Screen */
+        .earning-item .material-icons.offers-color { color: #2196F3; } /* Blue for General Offers */
+        .earning-item .material-icons.toggle-on-color { color: #4CAF50; } /* Green for Toggle On */
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. App Header with Coin Balance & Cash Out -->
+    <header class="app-header elevation-4">
+        <i class="material-icons">menu</i> <!-- Menu/Hamburger Icon -->
+        <div class="coin-balance">
+            <i class="material-icons">monetization_on</i> <!-- Coin Icon -->
+            <span>1,234 Coins</span>
+        </div>
+        <button class="cash-out-btn">Cash Out</button>
+    </header>
+
+    <!-- Main content wrapper to account for the fixed header -->
+    <div class="content-wrapper">
+        <!-- 2. Social Offers to Share -->
+        <section class="social-offers-section">
+            <h2 class="section-title">Social Offers to Share</h2>
+            <div class="offer-card-list">
+                <!-- Example Offer Card 1 -->
+                <div class="offer-card elevation-1">
+                    <div class="offer-card-header">
+                        <div class="offer-card-info">
+                            <img src="https://via.placeholder.com/48/81C784/FFFFFF?text=APP1" alt="GameBlast App Icon">
+                            <span class="offer-card-title">Invite friends to 'GameBlast'</span>
+                        </div>
+                        <span class="offer-card-coins">+200 Coins</span>
+                    </div>
+                    <p class="offer-card-description">Get coins when your friends join and complete their first offer!</p>
+                    <button class="share-button">
+                        <i class="material-icons">share</i>
+                        SHARE NOW
+                    </button>
+                </div>
+
+                <!-- Example Offer Card 2 -->
+                <div class="offer-card elevation-1">
+                    <div class="offer-card-header">
+                        <div class="offer-card-info">
+                            <img src="https://via.placeholder.com/48/64B5F6/FFFFFF?text=APP2" alt="Cool App Icon">
+                            <span class="offer-card-title">Spread the word about 'Cool App'</span>
+                        </div>
+                        <span class="offer-card-coins">+150 Coins</span>
+                    </div>
+                    <p class="offer-card-description">Your network, your rewards! Refer friends to download.</p>
+                    <button class="share-button">
+                        <i class="material-icons">share</i>
+                        SHARE NOW
+                    </button>
+                </div>
+
+                <!-- Example Offer Card 3 -->
+                <div class="offer-card elevation-1">
+                    <div class="offer-card-header">
+                        <div class="offer-card-info">
+                            <img src="https://via.placeholder.com/48/FFB74D/FFFFFF?text=APP3" alt="StudyBuddy App Icon">
+                            <span class="offer-card-title">Refer 'StudyBuddy' to students</span>
+                        </div>
+                        <span class="offer-card-coins">+250 Coins</span>
+                    </div>
+                    <p class="offer-card-description">Help friends study smarter, earn coins for every new user.</p>
+                    <button class="share-button">
+                        <i class="material-icons">share</i>
+                        SHARE NOW
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. More Ways to Earn -->
+        <section class="more-ways-section">
+            <h2 class="section-title">More Ways to Earn</h2>
+            <div class="earning-item-list">
+                <!-- Example Earning Opportunity Item: Connect Facebook -->
+                <div class="earning-item elevation-0">
+                    <div class="earning-item-content">
+                        <i class="material-icons icon-left facebook-color">facebook</i>
+                        <div class="earning-item-text">
+                            <div class="earning-item-title">Connect with Facebook</div>
+                            <div class="earning-item-description">Earn 100 Coins instantly by linking your account!</div>
+                        </div>
+                    </div>
+                    <i class="material-icons icon-right">chevron_right</i>
+                </div>
+
+                <!-- Example Earning Opportunity Item: Enable Lock Screen Offers -->
+                <div class="earning-item elevation-0">
+                    <div class="earning-item-content">
+                        <i class="material-icons icon-left lock-screen-color">screen_lock_portrait</i>
+                        <div class="earning-item-text">
+                            <div class="earning-item-title">Daily Coins: Enable Lock Screen Offers</div>
+                            <div class="earning-item-description">Earn 50 Coins every day just by enabling!</div>
+                        </div>
+                    </div>
+                    <i class="material-icons icon-right toggle-on-color">toggle_on</i>
+                </div>
+
+                <!-- Example Earning Opportunity Item: Complete Simple Offers -->
+                <div class="earning-item elevation-0">
+                    <div class="earning-item-content">
+                        <i class="material-icons icon-left offers-color">task_alt</i>
+                        <div class="earning-item-text">
+                            <div class="earning-item-title">Complete Simple Offers</div>
+                            <div class="earning-item-description">Discover surveys, app installs, and more to earn!</div>
+                        </div>
+                    </div>
+                    <i class="material-icons icon-right">chevron_right</i>
+                </div>
+
+                <!-- Example Earning Opportunity Item: Watch Short Videos -->
+                <div class="earning-item elevation-0">
+                    <div class="earning-item-content">
+                        <i class="material-icons icon-left offers-color">play_circle_filled</i>
+                        <div class="earning-item-text">
+                            <div class="earning-item-title">Watch Short Videos</div>
+                            <div class="earning-item-description">Earn coins by watching sponsored videos!</div>
+                        </div>
+                    </div>
+                    <i class="material-icons icon-right">chevron_right</i>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>

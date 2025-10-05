@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Recorder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* General Body and HTML styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            width: 375px; /* Target mobile screen width for simulation */
+            margin: 0 auto; /* Center the page in wider browser windows */
+            overflow: hidden; /* Prevent scrolling on the body itself */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Takes up all available space between header and footer */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+            justify-content: center; /* Default: center content vertically (Idle state) */
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative; /* For absolutely positioned buttons */
+        }
+
+        /* IDLE STATE ELEMENTS */
+        .microphone-graphic {
+            font-size: 150px; /* Large icon size */
+            color: #555;
+            margin-bottom: 20px;
+            /* Transition for potential JS interaction, though display is instant */
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .recording-time-display {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            /* Transitions for changes in active state */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .record-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%; /* Circular button */
+            background-color: #ff3b30; /* Red FAB */
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 40px;
+            color: white;
+            position: absolute; /* Position relative to .main-content */
+            bottom: 100px; /* Above bottom navigation (60px) + some space */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            /* Transitions for potential JS interaction */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 1; /* Visible by default */
+            pointer-events: auto; /* Clickable by default */
+        }
+
+        /* ACTIVE STATE ELEMENTS (Hidden by default) */
+        .audio-waveform {
+            width: 90%;
+            height: 100px;
+            /* Simple gradient to simulate a waveform visualization */
+            background: linear-gradient(to right, #ccc 10%, #eee 20%, #ccc 30%, #eee 40%, #ccc 50%, #eee 60%, #ccc 70%, #eee 80%, #ccc 90%);
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            margin-top: 30px; /* Space below time display */
+            display: none; /* Hidden by default */
+            opacity: 0; /* Fade in when active */
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .stop-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 15px; /* Square-like button */
+            background-color: #ff3b30; /* Red */
+            border: none;
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 40px;
+            color: white;
+            position: absolute; /* Position relative to .main-content */
+            bottom: 100px; /* Same position as record button */
+            left: 50%;
+            transform: translateX(-50%); /* Center horizontally */
+            /* Transitions for potential JS interaction */
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+            opacity: 0; /* Hidden by default */
+            pointer-events: none; /* Not clickable by default */
+        }
+
+        /* BOTTOM NAVIGATION */
+        .bottom-navigation {
+            display: flex;
+            width: 100%;
+            height: 60px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            box-sizing: border-box;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            flex: 1; /* Each item takes equal space */
+            text-align: center;
+            padding: 10px 0;
+            color: #888;
+            text-decoration: none; /* Remove underline from links */
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #ff3b30; /* Highlight active tab */
+            font-weight: bold;
+        }
+
+        /* STATE MANAGEMENT: Add class="recording" to <body> to see this state */
+        body.recording .main-content {
+            justify-content: flex-start; /* Align content to top when recording */
+        }
+
+        body.recording .microphone-graphic {
+            display: none; /* Hide microphone graphic */
+            opacity: 0;
+        }
+
+        body.recording .recording-time-display {
+            font-size: 60px; /* More prominent font size */
+            color: #ff3b30; /* Red color for active recording */
+            margin-top: 20px; /* Space from top edge of main-content */
+        }
+
+        body.recording .record-button {
+            opacity: 0; /* Fade out record button */
+            pointer-events: none; /* Disable interaction */
+        }
+
+        body.recording .audio-waveform {
+            display: block; /* Show waveform visualization */
+            opacity: 1; /* Fade in waveform */
+        }
+
+        body.recording .stop-button {
+            display: flex; /* Show stop button */
+            opacity: 1; /* Fade in stop button */
+            pointer-events: auto; /* Enable interaction */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-content">
+        <!-- Microphone Graphic (Idle State) -->
+        <div class="microphone-graphic">&#127909;</div> <!-- Unicode microphone icon -->
+
+        <!-- Recording Time Display (Visible in both states, styles change) -->
+        <div class="recording-time-display">00:00</div>
+
+        <!-- Audio Waveform Visualization (Active State - initially hidden) -->
+        <div class="audio-waveform"></div>
+
+        <!-- Record Button (Idle State) -->
+        <button class="record-button">&#9679;</button> <!-- Unicode circle icon for record -->
+
+        <!-- Stop Button (Active State - initially hidden) -->
+        <button class="stop-button">&#9632;</button> <!-- Unicode square icon for stop -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-navigation">
+        <a href="#" class="nav-item active">Recorder</a>
+        <a href="#" class="nav-item">Voice Memos</a>
+    </div>
+
+</body>
+</html>

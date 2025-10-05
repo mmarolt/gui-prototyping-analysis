@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weekly Calendar & Activities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* General Body and HTML Reset */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            height: 100%; /* Ensure body takes full viewport height */
+            width: 100%;
+            overflow: hidden; /* Prevent body scroll, sections will scroll */
+            box-sizing: border-box; /* Include padding/border in element's total width and height */
+        }
+
+        /* Main layout using flexbox for vertical arrangement */
+        body {
+            display: flex;
+            flex-direction: column;
+            max-width: 100vw; /* Ensure body doesn't overflow horizontally */
+        }
+
+        /* 1. Top Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 50px; /* Ensure header has a minimum height */
+        }
+        .header > div:first-child { /* Placeholder for balancing flex items */
+            width: 24px; /* Give it a width similar to the search button for centering */
+            visibility: hidden; /* Keep it invisible but occupy space */
+        }
+        .month-year {
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1; /* Allows it to take up space for centering */
+            text-align: center;
+            color: #333;
+        }
+        .search-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0; /* Reset padding */
+            color: #555;
+            line-height: 1; /* Adjust line-height for better icon alignment */
+        }
+
+        /* 2. Weekly Calendar View Section */
+        .weekly-calendar {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee;
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 10px; /* Padding for click area */
+            color: #555;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+        }
+        .day-container {
+            flex-grow: 1;
+            display: flex; /* Use flex for day items */
+            overflow-x: scroll; /* Horizontal scroll */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+            padding: 0 5px; /* Padding for scrollable area */
+        }
+        .day-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+        }
+        .day-item {
+            flex-shrink: 0; /* Prevent items from shrinking */
+            width: 50px; /* Fixed width for each day item */
+            text-align: center;
+            padding: 8px 0;
+            margin: 0 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+        }
+        .day-item:hover {
+            background-color: #e0e0e0;
+        }
+        .day-of-week {
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .date-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .current-day {
+            background-color: #007bff; /* Highlight color */
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+        }
+
+        /* 3. Daily Activity List Section */
+        .activity-list-container {
+            flex-grow: 1; /* Takes remaining vertical space */
+            overflow-y: auto; /* Vertical scroll */
+            padding: 15px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .initial-message {
+            text-align: center;
+            color: #888;
+            margin-top: 50px;
+            font-size: 16px;
+        }
+        .activity-item {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: flex-start; /* Align content to the top */
+            text-align: left;
+        }
+        .activity-time {
+            font-size: 14px;
+            color: #007bff;
+            font-weight: bold;
+            flex-shrink: 0; /* Prevent time from shrinking */
+            width: 70px; /* Fixed width for time */
+            margin-right: 15px; /* Space between time and details */
+        }
+        .activity-details {
+            flex-grow: 1;
+        }
+        .activity-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.2; /* Adjust line height for better readability */
+        }
+        .activity-type {
+            font-size: 12px;
+            color: #888;
+            background-color: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block; /* Allows padding and border-radius */
+        }
+
+        /* 4. Floating Action Button (FAB) */
+        .fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 56px; /* Slightly smaller for mobile */
+            height: 56px;
+            font-size: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 1000; /* Ensure it's above other content */
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .fab:hover {
+            background-color: #0056b3;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Header Section -->
+    <div class="header">
+        <!-- Placeholder div to balance the flex items and center the month-year text -->
+        <div></div> 
+        <div class="month-year">October 2023</div>
+        <button class="search-button">&#128269;</button> <!-- Unicode search icon -->
+    </div>
+
+    <!-- 2. Weekly Calendar View Section -->
+    <div class="weekly-calendar">
+        <button class="nav-button">&lt;</button> <!-- Left Arrow -->
+        <div class="day-container">
+            <!-- Day Item Containers (7 instances + some extra for scroll demo) -->
+            <div class="day-item">
+                <span class="day-of-week">Mon</span>
+                <span class="date-number">23</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Tue</span>
+                <span class="date-number">24</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Wed</span>
+                <span class="date-number">25</span>
+            </div>
+            <div class="day-item current-day">
+                <span class="day-of-week">Thu</span>
+                <span class="date-number">26</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Fri</span>
+                <span class="date-number">27</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Sat</span>
+                <span class="date-number">28</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Sun</span>
+                <span class="date-number">29</span>
+            </div>
+            <!-- Additional days for demonstrating horizontal scroll -->
+            <div class="day-item">
+                <span class="day-of-week">Mon</span>
+                <span class="date-number">30</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Tue</span>
+                <span class="date-number">31</span>
+            </div>
+            <div class="day-item">
+                <span class="day-of-week">Wed</span>
+                <span class="date-number">1</span>
+            </div>
+        </div>
+        <button class="nav-button">&gt;</button> <!-- Right Arrow -->
+    </div>
+
+    <!-- 3. Daily Activity List Section -->
+    <div class="activity-list-container">
+        <!-- <p class="initial-message">Select a day to view activities</p> -->
+
+        <!-- Example Activity Items (these would be populated dynamically based on selected day) -->
+        <div class="activity-item">
+            <span class="activity-time">09:00 AM</span>
+            <div class="activity-details">
+                <span class="activity-title">Project Sync-up with Team Alpha</span>
+                <span class="activity-type">Meeting</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">10:30 AM</span>
+            <div class="activity-details">
+                <span class="activity-title">Review Q4 Marketing Report</span>
+                <span class="activity-type">Task</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">01:00 PM</span>
+            <div class="activity-details">
+                <span class="activity-title">Lunch with Client - John Doe</span>
+                <span class="activity-type">Event</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">03:00 PM</span>
+            <div class="activity-details">
+                <span class="activity-title">Prepare Presentation for Board Meeting</span>
+                <span class="activity-type">Task</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">05:00 PM</span>
+            <div class="activity-details">
+                <span class="activity-title">Gym Session - Cardio & Weights</span>
+                <span class="activity-type">Personal</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">07:00 PM</span>
+            <div class="activity-details">
+                <span class="activity-title">Dinner with Family at Restaurant</span>
+                <span class="activity-type">Event</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">08:30 PM</span>
+            <div class="activity-details">
+                <span class="activity-title">Read "The Martian" by Andy Weir</span>
+                <span class="activity-type">Leisure</span>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-time">10:00 PM</span>
+            <div class="activity-details">
+                <span class="activity-title">Prepare for tomorrow's tasks</span>
+                <span class="activity-type">Task</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Floating Action Button (FAB) -->
+    <button class="fab">+</button>
+
+</body>
+</html>

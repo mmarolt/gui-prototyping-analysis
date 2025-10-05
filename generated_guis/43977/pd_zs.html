@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Profile Page</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body style="margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #f0f2f5;">
+
+    <!-- Simulating the mobile device screen for 375x667 pixels -->
+    <div class="mobile-screen" style="width: 375px; height: 667px; background-color: white; box-shadow: 0 0 20px rgba(0,0,0,0.25); border-radius: 25px; overflow: hidden; display: flex; flex-direction: column;">
+
+        <!-- III. Navigation & Context Features (Top Section) -->
+        <div class="top-nav-bar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background-color: #fff; border-bottom: 1px solid #eee; min-height: 56px; box-sizing: border-box;">
+            <!-- 13. Menu Icon -->
+            <i class="fas fa-bars" style="font-size: 24px; color: #555;"></i>
+            <!-- 15. Profile Sequence Indicator -->
+            <div class="profile-sequence-indicator" style="font-size: 14px; color: #888; font-weight: bold;">1/10</div>
+            <!-- 14. Messaging Icon -->
+            <div style="position: relative; display: flex; align-items: center;">
+                <i class="fas fa-comment-dots" style="font-size: 24px; color: #555;"></i>
+                <span class="badge" style="position: absolute; top: -5px; right: -5px; background-color: #ff3b30; color: white; border-radius: 50%; padding: 3px 6px; font-size: 10px; line-height: 1; text-align: center; min-width: 18px; box-sizing: border-box;">3</span>
+            </div>
+        </div>
+
+        <!-- I. Profile Display Features (Central Section) -->
+        <div class="central-content-area" style="flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 20px; background-color: #f9f9f9;">
+            <!-- 1. Profile Display Area (The "Card") -->
+            <div class="profile-card" style="background-color: #fff; border-radius: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); width: 100%; max-width: 320px; height: 100%; max-height: 420px; display: flex; flex-direction: column; align-items: center; padding: 25px; box-sizing: border-box; position: relative; overflow: hidden;">
+                
+                <!-- 2. Professional Photo Display -->
+                <img src="https://via.placeholder.com/120x120/FFD700/FFFFFF?text=Photo" alt="Professional Photo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 4px solid #FFD700;">
+                
+                <!-- 3. Professional Name Display -->
+                <h2 style="margin: 0 0 8px 0; font-size: 24px; color: #333; text-align: center; font-weight: 600;">Jane Doe</h2>
+                
+                <!-- 4. Distance Display -->
+                <div style="font-size: 15px; color: #777; margin-bottom: 12px; display: flex; align-items: center;">
+                    <i class="fas fa-map-marker-alt" style="margin-right: 6px; color: #FFD700;"></i> 5 miles away
+                </div>
+                
+                <!-- 5. Job Title Display -->
+                <div style="font-size: 17px; color: #555; font-weight: 500; margin-bottom: 18px; text-align: center;">Senior UX Designer</div>
+                
+                <!-- 6. Short Bio Display -->
+                <p style="font-size: 14px; color: #666; text-align: left; line-height: 1.6; margin: 0 0 20px 0; overflow-y: auto; flex-grow: 1; max-height: 100px; /* Limits bio height for scrollability within card */ width: 100%; padding: 0 5px; box-sizing: border-box;">
+                    Passionate about creating intuitive and user-friendly digital experiences. I love solving complex problems and bringing innovative ideas to life. Always learning and exploring new design trends, focusing on accessibility and user research.
+                </p>
+                
+                <!-- 7. Interests/Hashtags Display -->
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; padding: 0 5px; margin-top: auto; /* Pushes tags to the bottom */">
+                    <span style="background-color: #e0f7fa; color: #00796b; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;">#UXDesign</span>
+                    <span style="background-color: #e3f2fd; color: #1976d2; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;">#Prototyping</span>
+                    <span style="background-color: #fbe9e7; color: #d84315; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;">#Research</span>
+                    <span style="background-color: #e8f5e9; color: #388e3c; padding: 7px 14px; border-radius: 20px; font-size: 13px; font-weight: 500;">#Figma</span>
+                </div>
+
+                <!-- 10. Swipe Left Gesture Support (Visual Feedback - conceptual) -->
+                <div class="swipe-indicator pass" style="position: absolute; top: 50%; left: 20px; transform: translateY(-50%) rotate(-25deg); font-size: 44px; color: #ff3b30; font-weight: bold; opacity: 0; pointer-events: none; /* Hidden by default, shown on swipe */ text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">PASS</div>
+                <!-- 11. Swipe Right Gesture Support (Visual Feedback - conceptual) -->
+                <div class="swipe-indicator meet" style="position: absolute; top: 50%; right: 20px; transform: translateY(-50%) rotate(25deg); font-size: 44px; color: #4cd964; font-weight: bold; opacity: 0; pointer-events: none; /* Hidden by default, shown on swipe */ text-shadow: 2px 2px 4px rgba(0,0,0,0.1);">MEET</div>
+
+            </div>
+        </div>
+
+        <!-- II. Interaction Features (Bottom Section) -->
+        <div class="bottom-action-area" style="display: flex; justify-content: space-around; align-items: center; padding: 15px 20px; background-color: #fff; border-top: 1px solid #eee; min-height: 70px; box-sizing: border-box;">
+            <!-- 9. 'Pass' Button -->
+            <button style="background-color: #ff3b30; color: white; border: none; border-radius: 50%; width: 65px; height: 65px; font-size: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 6px 15px rgba(255, 59, 48, 0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; outline: none;">
+                <i class="fas fa-times"></i>
+            </button>
+            <!-- 8. 'Meet' Button -->
+            <button style="background-color: #4cd964; color: white; border: none; border-radius: 50%; width: 65px; height: 65px; font-size: 30px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 6px 15px rgba(76, 217, 100, 0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; outline: none;">
+                <i class="fas fa-heart"></i>
+            </button>
+        </div>
+
+    </div>
+
+</body>
+</html>

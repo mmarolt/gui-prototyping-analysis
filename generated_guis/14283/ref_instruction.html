@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share to Facebook</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font for Material Design Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles for the entire page */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the overall page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            color: #212121; /* Default text color */
+        }
+
+        /* Mobile screen container */
+        .mobile-screen {
+            width: 375px;
+            height: 667px;
+            background-color: #f8f9fa; /* Slightly off-white for the app background */
+            border-radius: 24px;
+            overflow: hidden; /* Crucial for containing children and their shadows/fixed positions */
+            box-shadow: 0 0 20px rgba(0,0,0,0.15); /* Prominent shadow for the device frame */
+            display: flex;
+            flex-direction: column; /* Stacks children vertically */
+        }
+
+        /* 1. App Bar (Top Navigation) */
+        .app-bar {
+            background-color: #ffffff;
+            padding: 0 16px;
+            height: 56px; /* Standard Material Design App Bar height */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle elevation */
+            flex-shrink: 0; /* Prevents app bar from shrinking when content scrolls */
+            z-index: 100; /* Ensures it stays above scrolling content */
+        }
+
+        .app-bar h1 {
+            font-size: 18px; /* Material Design Headline6 adjusted for smaller screen */
+            font-weight: 500;
+            color: #212121;
+            margin: 0;
+            text-align: center;
+            flex-grow: 1; /* Allows title to take available space and center */
+        }
+
+        .app-bar button {
+            background: none;
+            border: none;
+            color: #6200EE; /* Material Design Primary color */
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 12px;
+            min-width: 64px; /* Material Design minimum tap target size */
+            outline: none; /* Remove default outline on focus */
+        }
+
+        .app-bar .post-button:disabled {
+            color: rgba(98, 0, 238, 0.4); /* Faded primary color for disabled state */
+            cursor: not-allowed;
+        }
+
+        /* Main Scrollable Content Area */
+        .content-scrollable {
+            flex-grow: 1; /* Allows content area to take all remaining space */
+            overflow-y: auto; /* Enables vertical scrolling if content overflows */
+            padding: 16px; /* Consistent padding around all content sections */
+            display: flex;
+            flex-direction: column; /* Arranges content sections vertically */
+            gap: 16px; /* Spacing between content sections */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+        }
+
+        /* Card-like components within content */
+        .content-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle elevation for content cards */
+            overflow: hidden; /* Ensures rounded corners apply to children like images */
+        }
+
+        /* 5. User Account Information (Bottom Bar/Footer) */
+        .footer {
+            background-color: #ffffff;
+            padding: 12px 16px;
+            text-align: center;
+            border-top: 1px solid #eee; /* Subtle separator */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Elevation from content */
+            flex-shrink: 0; /* Prevents footer from shrinking */
+            z-index: 100; /* Ensures it stays above scrolling content */
+        }
+
+        .footer p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px; /* Material Design Body2 */
+            color: #616161; /* Desaturated text color */
+            margin: 0;
+        }
+
+        .footer strong {
+            color: #212121; /* Darker color for emphasis */
+            font-weight: 500; /* Material Design Subtitle2/Button */
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- 1. App Bar (Top Navigation) -->
+        <header class="app-bar">
+            <button>Cancel</button>
+            <h1>Share to Facebook</h1>
+            <button class="post-button" disabled>Post</button>
+        </header>
+
+        <!-- Main Scrollable Content Area -->
+        <div class="content-scrollable">
+            <!-- 2. User Comment Input Area -->
+            <div class="content-card" style="padding: 16px;">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <img src="https://via.placeholder.com/40" alt="User Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0;">
+                    <textarea placeholder="Say something about this..." style="flex-grow: 1; border: none; outline: none; resize: none; font-family: 'Roboto', sans-serif; font-size: 16px; line-height: 24px; color: #212121; min-height: 80px; padding: 0;"></textarea>
+                </div>
+            </div>
+
+            <!-- 3. Facebook Sharing Enhancements -->
+            <div class="content-card" style="display: flex; justify-content: space-around; padding: 8px 0;">
+                <button style="background: none; border: none; color: #616161; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: 'Roboto', sans-serif; font-size: 12px; cursor: pointer; padding: 8px; outline: none;">
+                    <i class="material-icons" style="font-size: 24px;">person_add</i>
+                    Tag friends
+                </button>
+                <button style="background: none; border: none; color: #616161; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: 'Roboto', sans-serif; font-size: 12px; cursor: pointer; padding: 8px; outline: none;">
+                    <i class="material-icons" style="font-size: 24px;">sentiment_satisfied_alt</i>
+                    Feeling/Activity
+                </button>
+                <button style="background: none; border: none; color: #616161; display: flex; flex-direction: column; align-items: center; gap: 4px; font-family: 'Roboto', sans-serif; font-size: 12px; cursor: pointer; padding: 8px; outline: none;">
+                    <i class="material-icons" style="font-size: 24px;">location_on</i>
+                    Check in
+                </button>
+            </div>
+
+            <!-- 4. Content Preview Card -->
+            <div class="content-card" style="box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #e0e0e0;">
+                <img src="https://via.placeholder.com/375x150/EEEEEE/9E9E9E?text=Link+Preview+Image" alt="Preview Image" style="width: 100%; height: 150px; object-fit: cover;">
+                <div style="padding: 12px 16px;">
+                    <h3 style="font-family: 'Roboto', sans-serif; font-size: 16px; font-weight: 500; color: #212121; margin-top: 0; margin-bottom: 4px; line-height: 20px;">Pre-populated Link Title Example</h3>
+                    <p style="font-family: 'Roboto', sans-serif; font-size: 14px; color: #616161; margin-top: 0; margin-bottom: 8px; line-height: 18px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">This is a descriptive summary of the shared content, which might be truncated if it's too long to fit comfortably within the preview area.</p>
+                    <p style="font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E; margin: 0;">example.com/shared-article-link</p>
+                </div>
+            </div>
+            <!-- Additional content to ensure scrollability on some devices/browsers -->
+            <div style="height: 40px; background-color: transparent;"></div>
+        </div>
+
+        <!-- 5. User Account Information (Bottom Bar/Footer) -->
+        <footer class="footer">
+            <p>Sharing as: <strong>John Doe (Facebook)</strong></p>
+        </footer>
+    </div>
+</body>
+</html>

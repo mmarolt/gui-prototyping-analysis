@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - Mobile App</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font CDN (for Material Design Typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base Styles & Resets */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #EEEEEE; /* Overall background, matches main content area */
+            color: #212121;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex; /* Use flexbox for the main layout to manage vertical space */
+            flex-direction: column;
+            height: 100vh; /* Make body take full viewport height */
+            width: 100vw; /* And full viewport width */
+            max-width: 375px; /* Confine to mobile screen width as specified */
+            margin: 0 auto; /* Center the app on larger screens for demonstration */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Simulate phone screen edges */
+            overflow: hidden; /* Prevent body scroll, let specific sections scroll */
+        }
+
+        /* Material Design Color Palette Variables (for easier theme management) */
+        :root {
+            --md-primary-color: #6200EE;
+            --md-primary-variant: #3700B3;
+            --md-secondary-color: #03DAC6;
+            --md-background-color: #EEEEEE; /* Main content area background */
+            --md-surface-color: #FFFFFF; /* Cards, app bar background */
+            --md-error-color: #B00020;
+
+            /* On-colors for text/icons on various surfaces */
+            --md-on-primary: #FFFFFF;
+            --md-on-secondary: #000000;
+            --md-on-background: #000000;
+            --md-on-surface: #000000;
+            --md-on-error: #FFFFFF;
+
+            /* Standard text colors */
+            --md-text-primary-dark: #212121; /* For headlines, main content */
+            --md-text-secondary-dark: #616161; /* For subheadings, helper text */
+            --md-text-hint-dark: #9E9E9E; /* For placeholder text */
+
+            /* Border colors */
+            --md-border-light: #BDBDBD;
+        }
+
+        /* --- 1. Top App Bar (Header with Search) --- */
+        .top-app-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px; /* Standard Material Design App Bar height */
+            padding: 0 16px;
+            background-color: var(--md-surface-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for elevation */
+            flex-shrink: 0; /* Prevent app bar from shrinking when content grows */
+            position: relative; /* For search overlay positioning */
+            z-index: 10; /* Ensure it stays on top */
+        }
+
+        .top-app-bar h1 {
+            font-size: 20px; /* Material Design H6 equivalent */
+            font-weight: 500; /* Roboto Medium */
+            color: var(--md-text-primary-dark);
+            margin: 0;
+            white-space: nowrap; /* Prevent title wrapping */
+            overflow: hidden; /* Hide overflow if title is too long */
+            text-overflow: ellipsis; /* Add ellipsis for clipped text */
+            transition: opacity 0.2s ease-out; /* Smooth transition for title hide/show */
+        }
+
+        .top-app-bar .search-icon {
+            font-size: 24px;
+            color: var(--md-text-secondary-dark);
+            cursor: pointer;
+            padding: 8px; /* For a larger tap target, as recommended by Material Design */
+            line-height: 1; /* Helps vertical alignment of the icon */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Search input field (initially hidden, slides down) */
+        .search-input-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px; /* Same height as app bar */
+            background-color: var(--md-surface-color);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateY(-100%); /* Initially hide by moving it up */
+            transition: transform 0.2s ease-out; /* Smooth slide transition */
+            z-index: 11; /* Ensure search bar is above the regular app bar */
+        }
+        .search-input-container.active {
+            transform: translateY(0); /* Show when active */
+        }
+        .search-input-container input {
+            flex-grow: 1; /* Take up available space */
+            border: none;
+            outline: none;
+            font-size: 16px; /* Material Design Body1 */
+            padding: 8px 0;
+            margin-right: 8px;
+            color: var(--md-text-primary-dark);
+        }
+        .search-input-container input::placeholder {
+            color: var(--md-text-hint-dark);
+        }
+        .search-input-container .material-icons {
+            cursor: pointer;
+            color: var(--md-text-secondary-dark);
+            font-size: 24px;
+            padding: 8px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        /* --- 2. Category Filter Chips --- */
+        .category-filter-chips {
+            display: flex;
+            overflow-x: auto; /* Allows horizontal scrolling for many chips */
+            padding: 12px 16px;
+            gap: 8px; /* Space between chips */
+            background-color: #F5F5F5; /* A light background for the filter section */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            flex-shrink: 0; /* Prevent chips section from shrinking */
+            border-bottom: 1px solid #E0E0E0; /* Subtle separator from content below */
+            min-height: 50px; /* Ensure a consistent height for the calc below */
+        }
+        /* Hide scrollbar for Webkit browsers (Chrome, Safari) */
+        .category-filter-chips::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chip {
+            display: inline-flex; /* Use inline-flex for content centering and sizing */
+            align-items: center;
+            padding: 6px 14px;
+            border-radius: 20px; /* Rounded pill shape */
+            font-size: 14px; /* Material Design Caption or Button typography */
+            font-weight: 500; /* Roboto Medium */
+            white-space: nowrap; /* Prevent text wrapping within the chip */
+            cursor: pointer;
+            transition: background-color 0.1s ease-out, color 0.1s ease-out, border-color 0.1s ease-out, box-shadow 0.1s ease-out;
+            user-select: none; /* Prevent text selection on tap */
+        }
+
+        .chip.selected {
+            background-color: var(--md-primary-color);
+            color: var(--md-on-primary);
+            border: 1px solid var(--md-primary-color); /* Maintain border for consistency even when filled */
+        }
+
+        .chip:not(.selected) {
+            background-color: var(--md-surface-color);
+            color: var(--md-text-secondary-dark);
+            border: 1px solid var(--md-border-light);
+        }
+
+        .chip:active {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle press effect */
+            transform: translateY(1px);
+        }
+
+        /* --- 3. Event List (Scrollable Content Area) --- */
+        .event-list-container {
+            padding: 8px 16px; /* Vertical padding for the list, horizontal for card positioning */
+            background-color: var(--md-background-color); /* Matches body background */
+            overflow-y: auto; /* Enable vertical scrolling */
+            flex-grow: 1; /* Occupy all remaining vertical space */
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+
+        .event-card {
+            background-color: var(--md-surface-color);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); /* Material elevation */
+            margin-bottom: 16px; /* Space between cards */
+            overflow: hidden; /* Ensures image corners are rounded correctly */
+            cursor: pointer;
+            transition: transform 0.1s ease-out, box-shadow 0.1s ease-out;
+        }
+        .event-card:active {
+            transform: translateY(1px); /* Slight press effect for tactile feedback */
+            box-shadow: 0 0px 1px rgba(0,0,0,0.1), 0 0px 1px rgba(0,0,0,0.1);
+        }
+
+        .event-card img {
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            display: block;
+            object-fit: cover; /* Ensures image covers the area, cropping if necessary */
+            max-height: 193px; /* Example max height for the image, as per description */
+            aspect-ratio: 16 / 9; /* Modern way to suggest aspect ratio */
+        }
+
+        .event-card .card-content {
+            padding: 16px; /* Consistent padding inside the card text content */
+        }
+
+        .event-card h2 {
+            font-size: 18px; /* Material Design Subtitle1 */
+            font-weight: 500;
+            color: var(--md-text-primary-dark);
+            margin: 0 0 8px 0;
+            line-height: 1.3; /* Improved readability for titles */
+        }
+
+        .event-card p {
+            font-size: 14px; /* Material Design Body2 */
+            color: var(--md-text-secondary-dark);
+            margin: 0;
+            display: flex; /* Use flex for icon alignment with text */
+            align-items: center;
+            line-height: 1.4; /* Better readability for body text */
+        }
+        .event-card p:not(:last-child) {
+            margin-bottom: 4px; /* Space between date and location */
+        }
+
+        .event-card .material-icons {
+            font-size: 16px;
+            vertical-align: middle; /* Fallback for older browsers for icon alignment */
+            margin-right: 6px; /* Space between icon and text */
+            color: #757575; /* A slightly darker gray for icons for contrast */
+            flex-shrink: 0; /* Prevent icon from shrinking if text is long */
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for the app, useful for centering/framing on larger screens -->
+    <div id="app">
+        <!-- 1. Top App Bar (Header with Search) -->
+        <header class="top-app-bar">
+            <h1 id="app-title">Events</h1>
+            <span class="material-icons search-icon" id="search-toggle">search</span>
+
+            <!-- Search input field overlay (initially hidden) -->
+            <div class="search-input-container" id="search-bar">
+                <input type="text" placeholder="Search events..." aria-label="Search events">
+                <span class="material-icons" id="search-close">close</span>
+            </div>
+        </header>
+
+        <!-- 2. Category Filter Chips -->
+        <nav class="category-filter-chips">
+            <span class="chip selected">All Upcoming</span>
+            <span class="chip">Coming Soon</span>
+            <span class="chip">Past</span>
+            <span class="chip">Workshops</span>
+            <span class="chip">Conferences</span>
+            <span class="chip">Meetups</span>
+            <span class="chip">Webinars</span>
+            <span class="chip">Networking</span>
+            <span class="chip">Exhibitions</span>
+        </nav>
+
+        <!-- 3. Event List (Scrollable Content Area) -->
+        <main class="event-list-container">
+            <!-- Example Event Card 1 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/6200EE/FFFFFF?text=Tech+Summit+Image" alt="Tech Summit Event Image">
+                <div class="card-content">
+                    <h2>Annual Tech Innovation Summit</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Oct 26 - Oct 28, 2023
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        Virtual - Online
+                    </p>
+                </div>
+            </div>
+
+            <!-- Example Event Card 2 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/03DAC6/000000?text=Design+Conf+Image" alt="Design Conference Event Image">
+                <div class="card-content">
+                    <h2>Global UX/UI Design Conference</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Nov 15 - Nov 17, 2023
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        New York, USA
+                    </p>
+                </div>
+            </div>
+
+            <!-- Example Event Card 3 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/BB86FC/FFFFFF?text=Dev+Meetup+Image" alt="Developer Meetup Event Image">
+                <div class="card-content">
+                    <h2>Local Developer Meetup: AI in Practice</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Dec 5, 2023
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        Community Hall
+                    </p>
+                </div>
+            </div>
+
+            <!-- Example Event Card 4 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/FF5252/FFFFFF?text=Marketing+Webinar" alt="Marketing Webinar Event Image">
+                <div class="card-content">
+                    <h2>Digital Marketing Strategies Webinar</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Jan 10, 2024
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        Online
+                    </p>
+                </div>
+            </div>
+
+            <!-- Example Event Card 5 -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/00C853/FFFFFF?text=Startup+Pitch" alt="Startup Pitch Event Image">
+                <div class="card-content">
+                    <h2>Startup Pitch Competition & Networking</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Feb 20 - Feb 21, 2024
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        Innovation Hub
+                    </p>
+                </div>
+            </div>
+
+             <!-- More Event Cards for scrolling demo -->
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/FFC107/FFFFFF?text=Art+Fair+Image" alt="Art Fair Event Image">
+                <div class="card-content">
+                    <h2>Annual City Art & Culture Fair</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Mar 1 - Mar 3, 2024
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        Downtown Exhibition Center
+                    </p>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <img src="https://via.placeholder.com/343x193/9C27B0/FFFFFF?text=Music+Festival+Image" alt="Music Festival Event Image">
+                <div class="card-content">
+                    <h2>Summer Music Festival 2024</h2>
+                    <p>
+                        <span class="material-icons">event</span>
+                        Jul 12 - Jul 14, 2024
+                    </p>
+                    <p>
+                        <span class="material-icons">location_on</span>
+                        City Park Arena
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = searchBar.querySelector('input');
+            const searchClose = document.getElementById('search-close');
+            const appTitle = document.getElementById('app-title');
+
+            // --- Search Bar Interaction ---
+            searchToggle.addEventListener('click', () => {
+                searchBar.classList.add('active'); // Show search bar
+                appTitle.style.opacity = '0'; // Hide title with fade effect
+                searchInput.focus(); // Focus on input field
+            });
+
+            searchClose.addEventListener('click', () => {
+                searchBar.classList.remove('active'); // Hide search bar
+                appTitle.style.opacity = '1'; // Show title with fade effect
+                searchInput.value = ''; // Clear search input
+            });
+
+            // --- Category Chip Selection ---
+            const chips = document.querySelectorAll('.chip');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    // Deselect all chips
+                    chips.forEach(c => c.classList.remove('selected'));
+                    // Select the clicked chip
+                    chip.classList.add('selected');
+                    // In a real application, this would trigger a data filter and re-render the event list
+                    console.log(`Selected category: ${chip.textContent}`);
+                });
+            });
+
+            // --- Event Card Click Interaction ---
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const title = card.querySelector('h2').textContent;
+                    alert(`Navigating to details page for: "${title}"`);
+                    // In a real app, this would be a client-side navigation or redirect
+                });
+            });
+        });
+    </script>
+</body>
+</html>

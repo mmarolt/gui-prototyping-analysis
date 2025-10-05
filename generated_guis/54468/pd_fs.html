@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Forms</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the entire page */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif; /* Modern font choice */
+            background-color: #f5f5f5; /* Light grey background */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column; /* Stack header, content, FAB vertically */
+            width: 100%; /* Take full width of its container */
+            max-width: 375px; /* Constrain width for mobile simulation */
+            margin-left: auto; /* Center the body on wider screens */
+            margin-right: auto; /* Center the body on wider screens */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            overflow: hidden; /* Prevent body scroll, content will scroll */
+        }
+
+        /* Top App Bar (Header Section) */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the title */
+            padding: 10px 15px;
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            position: relative; /* For absolute positioning of icons */
+            min-height: 56px; /* Standard app bar height */
+            box-sizing: border-box;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333333; /* Dark grey text */
+            text-align: center; /* Ensure title text is centered within its flex item */
+            flex-grow: 1; /* Allows title to take available space */
+        }
+
+        .header-icons {
+            position: absolute; /* Position icons independently of title centering */
+            right: 15px; /* Align to the right edge, matching header padding */
+            top: 50%; /* Vertically center the icon group */
+            transform: translateY(-50%); /* Adjust for the icon group's height */
+            display: flex;
+            gap: 10px; /* Space between icons */
+            align-items: center;
+        }
+
+        .header-icon-button {
+            background: none;
+            border: none;
+            font-size: 22px; /* Icon size */
+            cursor: pointer;
+            color: #555555; /* Medium grey icon color */
+            padding: 5px; /* Padding around icon for easier tapping */
+            position: relative; /* For badge positioning */
+            line-height: 1; /* Ensures vertical alignment of icon */
+            display: flex; /* For better icon centering */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-icon-button:active {
+            opacity: 0.7; /* Visual feedback on tap */
+        }
+
+        .badge {
+            position: absolute;
+            top: -2px; /* Adjust badge position */
+            right: -2px; /* Adjust badge position */
+            background-color: #ff3b30; /* Red for notifications */
+            color: white;
+            font-size: 10px;
+            border-radius: 50%;
+            padding: 2px 5px;
+            line-height: 1;
+            min-width: 10px; /* Ensure badge is visible for single digit */
+            text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content Area (Form List Display) */
+        .form-list-container {
+            flex-grow: 1; /* Takes up all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 10px;
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .form-item {
+            background-color: #ffffff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for each item */
+            text-align: left; /* Ensure text aligns left within item */
+            cursor: pointer;
+            transition: transform 0.1s ease-in-out; /* Smooth hover/tap effect */
+        }
+
+        .form-item:active {
+            transform: scale(0.99); /* Slight press animation */
+        }
+
+        .form-item-name {
+            font-size: 17px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 4px;
+        }
+
+        .form-item-date {
+            font-size: 12px;
+            color: #777777; /* Lighter grey for secondary info */
+        }
+
+        /* Floating Action Button (FAB) */
+        .fab {
+            position: fixed; /* Fixed position relative to viewport */
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background-color: #007bff; /* Primary blue color */
+            color: white;
+            border-radius: 50%; /* Makes it circular */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: normal; /* Ensure '+' looks like a plus sign */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Stronger shadow for floating effect */
+            cursor: pointer;
+            z-index: 1000; /* Ensure it's above other content */
+            border: none; /* Remove default button border */
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        .fab:active {
+            background-color: #0056b3; /* Darker blue on press */
+            transform: scale(0.95); /* Slight press animation */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top App Bar (Header Section) -->
+    <div class="header">
+        <div class="header-title">My Forms</div>
+        <div class="header-icons">
+            <!-- Sorting Control (Unicode for up-down arrows) -->
+            <button class="header-icon-button" title="Sort">&#x21C5;</button> 
+            <!-- Search Icon (Unicode for magnifying glass) -->
+            <button class="header-icon-button" title="Search">&#x1F50D;</button> 
+            <!-- Messaging/Notifications Icon (Unicode for bell) with Badge -->
+            <button class="header-icon-button" title="Notifications">
+                &#x1F514; 
+                <span class="badge">3</span>
+            </button>
+            <!-- Information/Help Icon (Unicode for information symbol) -->
+            <button class="header-icon-button" title="Help">&#x2139;</button> 
+            <!-- User Profile Icon (Unicode for person silhouette) -->
+            <button class="header-icon-button" title="Profile">&#x1F464;</button> 
+        </div>
+    </div>
+
+    <!-- 2. Main Content Area (Form List Display) -->
+    <div class="form-list-container">
+        <!-- Example Form Item 1 -->
+        <div class="form-item">
+            <div class="form-item-name">Client Onboarding Form</div>
+            <div class="form-item-date">Last Modified: 2023-10-26</div>
+        </div>
+        <!-- Example Form Item 2 -->
+        <div class="form-item">
+            <div class="form-item-name">Project Proposal</div>
+            <div class="form-item-date">Last Modified: 2023-10-25</div>
+        </div>
+        <!-- Example Form Item 3 -->
+        <div class="form-item">
+            <div class="form-item-name">Expense Report Q3</div>
+            <div class="form-item-date">Last Modified: 2023-10-24</div>
+        </div>
+        <!-- More example items for scrollability -->
+        <div class="form-item">
+            <div class="form-item-name">Employee Feedback Survey</div>
+            <div class="form-item-date">Last Modified: 2023-10-23</div>
+        </div>
+        <div class="form-item">
+            <div class="form-item-name">Weekly Status Update</div>
+            <div class="form-item-date">Last Modified: 2023-10-22</div>
+        </div>
+        <div class="form-item">
+            <div class="form-item-name">Vacation Request</div>
+            <div class="form-item-date">Last Modified: 2023-10-21</div>
+        </div>
+        <div class="form-item">
+            <div class="form-item-name">New Product Idea Submission</div>
+            <div class="form-item-date">Last Modified: 2023-10-20</div>
+        </div>
+        <div class="form-item">
+            <div class="form-item-name">Customer Satisfaction Survey</div>
+            <div class="form-item-date">Last Modified: 2023-10-19</div>
+        </div>
+        <div class="form-item">
+            <div class="form-item-name">Quarterly Business Review</div>
+            <div class="form-item-date">Last Modified: 2023-10-18</div>
+        </div>
+    </div>
+
+    <!-- 3. Floating Action Button (Primary Action) -->
+    <button class="fab" title="Create New Document">+</button>
+
+</body>
+</html>

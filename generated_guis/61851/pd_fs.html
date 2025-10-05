@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DHL News</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light grey background for the page */
+            width: 375px; /* Fixed width for Google Chrome Dev Tools simulation */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column; /* Stack sections vertically */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        /* 1. Top Header Section */
+        .header-section {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr; /* Left empty space, title, right button */
+            align-items: center;
+            padding: 15px;
+            background-color: #fff; /* White background for the header */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+        .header-section .page-title {
+            grid-column: 2; /* Place in the middle column of the grid */
+            font-size: 20px;
+            margin: 0;
+            color: #CC0000; /* DHL Red */
+            font-weight: bold;
+        }
+        .header-section .logout-button {
+            grid-column: 3; /* Place in the right column of the grid */
+            text-align: right;
+            font-size: 14px;
+            color: #CC0000; /* DHL Red */
+            text-decoration: none;
+            padding: 5px 0; /* Vertical padding for better click area */
+            cursor: pointer;
+        }
+
+        /* 2. Personalized Greeting & Filter Bar */
+        .greeting-filter-section {
+            display: flex;
+            justify-content: space-between; /* Distribute items with space between */
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f8f8; /* Slightly darker background than page */
+            border-bottom: 1px solid #eee; /* Separator line */
+            flex-shrink: 0; /* Prevent this section from shrinking */
+        }
+        .greeting-filter-section .greeting {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            color: #333;
+        }
+        .greeting-filter-section .categories-button {
+            background-color: #FFCC00; /* DHL Yellow */
+            color: #333;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* 3. Main Content - News Article List */
+        .news-articles-container {
+            flex-grow: 1; /* Allows this container to take up all remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for content that exceeds height */
+            padding: 10px;
+            background-color: #f4f4f4;
+            -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS devices */
+        }
+        .article-item {
+            background-color: #fff; /* White background for each article card */
+            margin-bottom: 15px; /* Space between articles */
+            padding: 15px;
+            border-radius: 8px; /* Rounded corners for the card */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Soft shadow for card effect */
+            text-align: left;
+            display: flex;
+            flex-direction: column; /* Stack image, title, description, link vertically */
+        }
+        .article-item .article-image {
+            width: 100%; /* Image takes full width of its container */
+            height: 180px; /* Fixed height for visual consistency */
+            object-fit: cover; /* Crops image to fit without distortion */
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .article-item .article-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        .article-item .article-description {
+            font-size: 14px;
+            color: #666;
+            margin: 0 0 10px 0;
+            line-height: 1.4;
+            flex-grow: 1; /* Allows description to take up available space, pushing link to bottom */
+        }
+        .article-item .read-more-link {
+            color: #CC0000; /* DHL Red */
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            align-self: flex-end; /* Aligns to the bottom-right within the flex column */
+            margin-top: 10px; /* Space above the link */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Top Header Section -->
+    <div class="header-section">
+        <!-- Empty div acts as a spacer for the grid layout to center the title -->
+        <div></div> 
+        <h1 class="page-title">DHL News</h1>
+        <a href="#" class="logout-button">Logout</a>
+    </div>
+
+    <!-- 2. Personalized Greeting & Filter Bar -->
+    <div class="greeting-filter-section">
+        <p class="greeting">Hello John Doe</p>
+        <button class="categories-button">Categories</button>
+    </div>
+
+    <!-- 3. Main Content - News Article List (Scrollable Container) -->
+    <div class="news-articles-container">
+        <!-- Example Article 1 -->
+        <div class="article-item">
+            <img src="https://via.placeholder.com/335x180/FFCC00/000000?text=DHL+News+Image+1" alt="Article Image" class="article-image">
+            <h2 class="article-title">DHL Expands Global Network</h2>
+            <p class="article-description">DHL announces new logistics hubs in Asia, boosting delivery speeds and capacity for international shipments and enhancing customer service.</p>
+            <a href="#" class="read-more-link">Read all...</a>
+        </div>
+
+        <!-- Example Article 2 -->
+        <div class="article-item">
+            <img src="https://via.placeholder.com/335x180/FFCC00/000000?text=DHL+News+Image+2" alt="Article Image" class="article-image">
+            <h2 class="article-title">Sustainable Shipping Initiatives</h2>
+            <p class="article-description">Learn about DHL's latest efforts in sustainable logistics, including electric vehicle fleets, green warehouses, and carbon-neutral shipping options.</p>
+            <a href="#" class="read-more-link">Read all...</a>
+        </div>
+
+        <!-- Example Article 3 -->
+        <div class="article-item">
+            <img src="https://via.placeholder.com/335x180/FFCC00/000000?text=DHL+News+Image+3" alt="Article Image" class="article-image">
+            <h2 class="article-title">Innovation in Parcel Tracking</h2>
+            <p class="article-description">Discover the advanced tracking technologies DHL is implementing to provide real-time updates and enhanced security for all your shipments.</p>
+            <a href="#" class="read-more-link">Read all...</a>
+        </div>
+
+        <!-- Example Article 4 (added for scroll demonstration) -->
+        <div class="article-item">
+            <img src="https://via.placeholder.com/335x180/FFCC00/000000?text=DHL+News+Image+4" alt="Article Image" class="article-image">
+            <h2 class="article-title">E-commerce Growth Report</h2>
+            <p class="article-description">DHL's new report highlights key trends and challenges in the rapidly expanding global e-commerce market, offering insights for businesses.</p>
+            <a href="#" class="read-more-link">Read all...</a>
+        </div>
+
+        <!-- Example Article 5 (added for scroll demonstration) -->
+        <div class="article-item">
+            <img src="https://via.placeholder.com/335x180/FFCC00/000000?text=DHL+News+Image+5" alt="Article Image" class="article-image">
+            <h2 class="article-title">Logistics for Humanitarian Aid</h2>
+            <p class="article-description">Explore how DHL leverages its global network to support humanitarian efforts and deliver essential supplies to communities in need worldwide.</p>
+            <a href="#" class="read-more-link">Read all...</a>
+        </div>
+    </div>
+</body>
+</html>

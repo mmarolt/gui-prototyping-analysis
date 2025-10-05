@@ -1,234 +1,408 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vitamin Capsules Suppliers</title>
-<style>
-/* General Styles */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f8f8;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Search & Discovery Page</title>
+    <style>
+        /* Basic reset and box-sizing for consistent layout */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
 
-/* App Bar */
-.app-bar {
-  background-color: #007bff; /* Example primary color */
-  color: white;
-  padding: 10px;
-  text-align: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100; /* Ensure it stays on top */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light grey background for the whole page */
+            overflow: hidden; /* Prevent body scroll if mobile-screen is centered */
+        }
 
-.app-bar h1 {
-  margin: 0;
-  font-size: 1.2em;
-  flex-grow: 1; /* Allow title to take up available space */
-}
+        /* Mobile screen simulation container */
+        .mobile-screen {
+            width: 375px; /* Fixed width for the mobile device as per requirement */
+            height: 667px; /* Fixed height for the mobile device as per requirement */
+            background-color: #fff; /* White background for the app content */
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Important for containing absolute positioned children */
+            position: relative; /* Crucial for absolute positioning of children */
+            display: flex; /* Using flexbox for overall layout */
+            flex-direction: column; /* Stack children vertically */
+        }
 
-.app-bar .back-button, .app-bar .search-icon, .app-bar .cart-icon {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5em;
-  cursor: pointer;
-  padding: 5px;
-}
+        /* I. Top Header / Navigation Bar */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #4CAF50; /* Green header */
+            color: white;
+            height: 60px; /* Fixed height for header */
+            position: absolute; /* Positioned relative to .mobile-screen */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; /* Ensure it stays on top */
+            justify-content: space-between;
+        }
 
-.app-bar .back-button {
-  margin-right: auto; /* Push title to the center */
-}
+        .header .menu-icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
 
-.app-bar .search-icon, .app-bar .cart-icon {
-  margin-left: auto; /* Push icons to the right */
-}
+        .header .search-area {
+            display: flex;
+            flex-grow: 1; /* Allows search bar to take available space */
+            margin: 0 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            padding: 5px 10px;
+            align-items: center;
+        }
 
-/* Search Bar */
-.search-bar {
-  background-color: white;
-  padding: 10px;
-  position: absolute;
-  top: 50px; /* Adjust based on app bar height */
-  left: 0;
-  width: 100%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  display: none; /* Initially hidden */
-}
+        .header .search-input {
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #333;
+            flex-grow: 1;
+            font-size: 16px;
+            padding: 0 5px;
+        }
 
-.search-bar.active {
-  display: block; /* Show when active */
-}
+        .header .search-input::placeholder {
+            color: #888;
+        }
 
-.search-bar input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
-}
+        .header .voice-input,
+        .header .location-filter {
+            font-size: 20px;
+            cursor: pointer;
+            color: #555; /* Default icon color within search bar */
+            padding: 0 5px;
+        }
 
-/* Filter/Sort Section */
-.filter-sort {
-  background-color: #fff;
-  padding: 10px;
-  margin-top: 60px; /* Adjust based on app bar height */
-  display: flex;
-  justify-content: space-around;
-  border-bottom: 1px solid #eee;
-}
+        .header .location-filter {
+            color: white; /* Make location filter prominent */
+            font-size: 24px;
+            margin-left: 5px;
+            padding: 5px;
+        }
 
-.filter-sort button {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+        /* II. Search Controls / Filters Bar */
+        .filters-bar {
+            display: flex;
+            justify-content: flex-end; /* Align to the right */
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #f8f8f8; /* Light background for filter bar */
+            border-bottom: 1px solid #eee;
+            height: 40px; /* Fixed height for filter bar */
+            position: absolute; /* Positioned relative to .mobile-screen */
+            top: 60px; /* Below the header (60px) */
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
 
-/* Supplier List */
-.supplier-list {
-  padding: 10px;
-  margin-top: 0; /* Adjust as needed */
-}
+        .filters-bar .view-toggle {
+            font-size: 22px;
+            color: #555;
+            cursor: pointer;
+            padding: 5px;
+        }
 
-.supplier-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 10px;
-  padding: 15px;
-}
+        /* III. Search Results Display Area */
+        .results-area {
+            flex-grow: 1; /* Takes all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for the results */
+            padding: 15px; /* Base padding for content */
+            padding-top: 100px; /* Space for fixed header (60px) + filter bar (40px) */
+            padding-bottom: 80px; /* Space for the floating action button (FAB) */
+            background-color: #f0f2f5; /* Light background for results area */
+            /* Since header and filters-bar are absolute, results-area occupies full height,
+               and these paddings create the necessary offsets. */
+        }
 
-.supplier-card h2 {
-  font-size: 1.1em;
-  margin-top: 0;
-  margin-bottom: 5px;
-}
+        /* Individual Search Result Item */
+        .result-item {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
 
-.supplier-card p {
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 10px;
-}
+        .result-item-top {
+            display: flex;
+            align-items: flex-start; /* Align items to the top for vertical text stack */
+            margin-bottom: 10px;
+            position: relative; /* For favorite icon positioning */
+        }
 
-.supplier-card button {
-  background-color: #28a745; /* Example success color */
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
+        .result-item .thumbnail {
+            width: 80px;
+            height: 80px;
+            background-color: #e0e0e0; /* Placeholder color */
+            border-radius: 8px;
+            margin-right: 15px;
+            flex-shrink: 0; /* Prevent thumbnail from shrinking */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
 
-/* Empty State */
-.empty-state {
-  text-align: center;
-  padding: 20px;
-  color: #777;
-}
+        .result-item .supplier-info {
+            flex-grow: 1; /* Allows supplier info to take remaining horizontal space */
+            display: flex;
+            flex-direction: column;
+        }
 
-/* Media Query for Mobile (375x667) - Optional, but good practice */
-@media (max-width: 375px) {
-  .app-bar h1 {
-    font-size: 1em; /* Adjust for smaller screens */
-  }
-  .filter-sort button {
-    font-size: 0.8em; /* Adjust button text size */
-    padding: 6px 10px;
-  }
-  .supplier-card h2 {
-    font-size: 1em;
-  }
-  .supplier-card p {
-    font-size: 0.85em;
-  }
-}
+        .result-item .supplier-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 3px;
+        }
 
-/* Pagination Styles (Example) */
-.pagination {
-  text-align: center;
-  margin-top: 15px;
-}
+        .result-item .location {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 3px;
+        }
 
-.pagination button {
-  padding: 8px 12px;
-  margin: 0 5px;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
-  border-radius: 4px;
-  cursor: pointer;
-}
-</style>
+        .result-item .price {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4CAF50; /* Green price for emphasis */
+        }
+
+        .result-item .favorite-icon {
+            font-size: 24px;
+            color: #ccc; /* Default grey heart */
+            cursor: pointer;
+            position: absolute; /* Position relative to .result-item-top */
+            top: 0;
+            right: 0;
+            padding: 5px; /* Add padding for easier tapping */
+        }
+
+        .result-item .favorite-icon.active {
+            color: #ff6347; /* Red heart when active */
+        }
+
+        .result-item-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Space between buttons */
+            margin-top: 10px;
+        }
+
+        .result-item-actions button {
+            flex-grow: 1; /* Buttons share available space equally */
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            white-space: nowrap; /* Prevent text wrapping on buttons */
+        }
+
+        .result-item-actions .call-button {
+            background-color: #4CAF50; /* Green filled button */
+            color: white;
+            border: 1px solid #4CAF50;
+        }
+
+        .result-item-actions .call-button:hover {
+            background-color: #45a049;
+        }
+
+        .result-item-actions .enquiry-button {
+            background-color: white; /* White outline button */
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+        }
+
+        .result-item-actions .enquiry-button:hover {
+            background-color: #e8f5e9;
+        }
+
+        /* IV. Global Actions / Floating Button */
+        .fab {
+            position: absolute; /* Positioned relative to .mobile-screen */
+            bottom: 25px; /* Spacing from bottom */
+            right: 25px; /* Spacing from right */
+            background-color: #FF9800; /* Orange FAB */
+            color: white;
+            border-radius: 30px; /* Pill shape */
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            z-index: 1001; /* Ensure it floats above everything */
+            display: flex; /* Use flex to center text */
+            align-items: center;
+            justify-content: center;
+            line-height: 1; /* Adjust line height for better text centering */
+            border: none;
+            outline: none;
+            text-decoration: none; /* Remove underline from anchor tag */
+            transition: background-color 0.2s;
+        }
+
+        .fab:hover {
+            background-color: #e68900;
+        }
+    </style>
 </head>
 <body>
 
-<div class="app-bar">
-  <button class="back-button">Back</button>
-  <h1>Vitamin Capsules</h1>
-  <button class="search-icon" onclick="toggleSearch()">Search</button>
-  <button class="cart-icon">Cart</button>
-</div>
+    <div class="mobile-screen">
 
-<div class="search-bar">
-  <input type="text" placeholder="Search suppliers...">
-</div>
+        <!-- I. Top Header / Navigation Bar -->
+        <div class="header">
+            <span class="menu-icon">☰</span> <!-- 1. Main Navigation Menu (Hamburger Icon) -->
+            <div class="search-area">
+                <input type="text" class="search-input" placeholder="Search for services or products..."> <!-- 2. Prominent Search Bar -->
+                <span class="voice-input">🎤</span> <!-- 3. Voice Input for Search (Microphone Icon) -->
+            </div>
+            <span class="location-filter">📍</span> <!-- 4. Location Filter Option (Location Icon) -->
+        </div>
 
-<div class="filter-sort">
-  <button>Filters</button>
-  <button>Sort By</button>
-</div>
+        <!-- II. Search Controls / Filters Bar -->
+        <div class="filters-bar">
+            <!-- 5. Toggle for Grid View (Using a bar chart icon as an example for list/grid toggle) -->
+            <span class="view-toggle">📊</span> 
+        </div>
 
-<div class="supplier-list">
-  <div class="supplier-card">
-    <h2>Supplier A</h2>
-    <p>Location: City A</p>
-    <p>Specializes in: Vitamin Capsules</p>
-    <button>Contact Supplier</button>
-  </div>
+        <!-- III. Search Results Display Area -->
+        <div class="results-area">
 
-  <div class="supplier-card">
-    <h2>Supplier B</h2>
-    <p>Location: City B</p>
-    <p>Specializes in: High-Quality Vitamin Capsules</p>
-    <button>Contact Supplier</button>
-  </div>
+            <!-- 6. Search Result Item (Container) - Example 1 -->
+            <div class="result-item">
+                <div class="result-item-top">
+                    <div class="thumbnail">Image</div> <!-- 6a. Thumbnail Image -->
+                    <div class="supplier-info">
+                        <div class="supplier-name">Supplier A Ltd.</div> <!-- 6b. Supplier Name -->
+                        <div class="location">London, UK</div> <!-- 6b. Location -->
+                        <div class="price">£120/hr</div> <!-- 6b. Price -->
+                    </div>
+                    <span class="favorite-icon">❤️</span> <!-- 6c. Favorite/Bookmark Option -->
+                </div>
+                <div class="result-item-actions">
+                    <button class="call-button">📞 Call Now</button> <!-- 6d. "Call Now" Button -->
+                    <button class="enquiry-button">✉️ Send Enquiry</button> <!-- 6e. "Send Enquiry" Button -->
+                </div>
+            </div>
 
-  <div class="supplier-card">
-    <h2>Supplier C</h2>
-    <p>Location: City C</p>
-    <p>Specializes in: Organic Vitamin Capsules</p>
-    <button>Contact Supplier</button>
-  </div>
+            <!-- 6. Search Result Item (Container) - Example 2 -->
+            <div class="result-item">
+                <div class="result-item-top">
+                    <div class="thumbnail">Image</div>
+                    <div class="supplier-info">
+                        <div class="supplier-name">Creative Solutions Inc.</div>
+                        <div class="location">Manchester, UK</div>
+                        <div class="price">£850/project</div>
+                    </div>
+                    <span class="favorite-icon">❤️</span>
+                </div>
+                <div class="result-item-actions">
+                    <button class="call-button">📞 Call Now</button>
+                    <button class="enquiry-button">✉️ Send Enquiry</button>
+                </div>
+            </div>
 
-  <!-- More supplier cards here -->
-</div>
+            <!-- 6. Search Result Item (Container) - Example 3 (with active favorite) -->
+            <div class="result-item">
+                <div class="result-item-top">
+                    <div class="thumbnail">Image</div>
+                    <div class="supplier-info">
+                        <div class="supplier-name">QuickFix Services</div>
+                        <div class="location">Birmingham, UK</div>
+                        <div class="price">£50/visit</div>
+                    </div>
+                    <span class="favorite-icon active">❤️</span> 
+                </div>
+                <div class="result-item-actions">
+                    <button class="call-button">📞 Call Now</button>
+                    <button class="enquiry-button">✉️ Send Enquiry</button>
+                </div>
+            </div>
 
-<div class="empty-state" style="display: none;">
-  <p>No suppliers found matching your criteria.</p>
-</div>
+            <!-- More results to make the area scrollable -->
+            <div class="result-item">
+                <div class="result-item-top">
+                    <div class="thumbnail">Image</div>
+                    <div class="supplier-info">
+                        <div class="supplier-name">Tech Innovators</div>
+                        <div class="location">Edinburgh, UK</div>
+                        <div class="price">£200/hr</div>
+                    </div>
+                    <span class="favorite-icon">❤️</span>
+                </div>
+                <div class="result-item-actions">
+                    <button class="call-button">📞 Call Now</button>
+                    <button class="enquiry-button">✉️ Send Enquiry</button>
+                </div>
+            </div>
 
-<div class="pagination">
-    <button>Previous</button>
-    <button>1</button>
-    <button>2</button>
-    <button>Next</button>
-</div>
+            <div class="result-item">
+                <div class="result-item-top">
+                    <div class="thumbnail">Image</div>
+                    <div class="supplier-info">
+                        <div class="supplier-name">Design Masters Co.</div>
+                        <div class="location">Glasgow, UK</div>
+                        <div class="price">£1500/package</div>
+                    </div>
+                    <span class="favorite-icon">❤️</span>
+                </div>
+                <div class="result-item-actions">
+                    <button class="call-button">📞 Call Now</button>
+                    <button class="enquiry-button">✉️ Send Enquiry</button>
+                </div>
+            </div>
 
-<script>
-function toggleSearch() {
-  var searchBar = document.querySelector('.search-bar');
-  searchBar.classList.toggle('active');
-}
-</script>
+            <div class="result-item">
+                <div class="result-item-top">
+                    <div class="thumbnail">Image</div>
+                    <div class="supplier-info">
+                        <div class="supplier-name">Event Planners Pro</div>
+                        <div class="location">Cardiff, UK</div>
+                        <div class="price">£1000/event</div>
+                    </div>
+                    <span class="favorite-icon">❤️</span>
+                </div>
+                <div class="result-item-actions">
+                    <button class="call-button">📞 Call Now</button>
+                    <button class="enquiry-button">✉️ Send Enquiry</button>
+                </div>
+            </div>
+
+        </div> <!-- End .results-area -->
+
+        <!-- IV. Global Actions / Floating Button -->
+        <a href="#" class="fab">
+            Request a Quote
+        </a>
+
+    </div> <!-- End .mobile-screen -->
 
 </body>
 </html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Events Directory</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto (Material Design's default typeface) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Global Styles & Material Design Color Palette */
+        :root {
+            --md-sys-color-primary: #6200EE;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-surface: #F8F8F8; /* Light gray for main content background */
+            --md-sys-color-on-surface: #1C1B1F; /* Dark text on surface */
+            --md-sys-color-on-surface-variant: #49454F; /* Muted text on surface */
+            --md-sys-color-card-background: #FFFFFF; /* White for event cards */
+        }
+
+        /* Reset and Box Sizing */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Disable tap highlight on iOS */
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Mock mobile screen container */
+        body {
+            width: 375px;
+            height: 667px;
+            overflow: hidden; /* Prevent body scroll, content scrolls within .event-list-container */
+            border: 1px solid #ddd; /* Visual border for the mock screen */
+            margin: 20px auto; /* Center the mock screen on a larger viewport */
+            position: relative;
+            background-color: #f0f0f0; /* Background outside the mock screen */
+        }
+
+        /* Main application page layout */
+        .app-page {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background-color: var(--md-sys-color-surface); /* Page background */
+        }
+
+        /* Section 1: Top App Bar */
+        .top-app-bar {
+            height: 56px; /* Standard Material Design height for mobile */
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 16px; /* Horizontal padding */
+            position: fixed; /* Stays at the top of the mock screen */
+            top: 0;
+            left: 0;
+            width: 100%; /* Spans the full width of the app-page */
+            z-index: 10; /* Ensures it's above scrolling content */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* 4dp elevation shadow */
+        }
+
+        .app-title {
+            flex-grow: 1; /* Pushes action icons to the right */
+            font-size: 20px; /* Material Design headline6 */
+            font-weight: 500; /* Medium weight for titles */
+            letter-spacing: 0.15px;
+        }
+
+        .app-bar-actions {
+            display: flex;
+            gap: 16px; /* Space between icons */
+        }
+
+        .app-bar-icon {
+            font-size: 24px; /* Standard icon size */
+            color: var(--md-sys-color-on-primary);
+            cursor: pointer;
+            padding: 8px; /* Increase touch target area */
+            margin: -8px; /* Offset padding to keep visual icon centered */
+            border-radius: 50%; /* For circular ripple effect */
+            position: relative; /* For ripple effect positioning */
+            overflow: hidden; /* Hide ripple overflow */
+            user-select: none; /* Prevent text selection on tap */
+        }
+        /* Visual feedback for active state on icons (simple, JS handles ripple) */
+        .app-bar-icon:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Animation for spinning icons */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .app-bar-icon .material-icons.spin-animation {
+            animation: spin 1s linear infinite;
+        }
+
+
+        /* Section 2: Event List */
+        .event-list-container {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-top: 8px; /* Padding above the first card */
+            padding-bottom: 8px; /* Padding below the last card */
+            margin-top: 56px; /* Offset for the fixed Top App Bar */
+            background-color: var(--md-sys-color-surface);
+        }
+
+        /* Pull-to-refresh Indicator */
+        .pull-to-refresh-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 0; /* Initially hidden, controlled by JS */
+            padding-top: 0;
+            color: var(--md-sys-color-primary);
+            visibility: hidden; /* Hidden by default */
+            opacity: 0;
+            transition: height 0.3s ease-out, opacity 0.3s ease-out, padding-top 0.3s ease-out;
+            pointer-events: none; /* Do not block interaction below */
+        }
+        .pull-to-refresh-indicator.visible {
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .pull-to-refresh-indicator .material-icons {
+            font-size: 28px; /* Larger icon for indicator */
+            color: var(--md-sys-color-primary);
+        }
+        .pull-to-refresh-indicator .material-icons.spin-animation {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Event Card */
+        .event-card {
+            background-color: var(--md-sys-color-card-background);
+            margin: 8px 16px; /* Vertical margin between cards, horizontal margin from screen edges */
+            padding: 16px; /* Internal padding for content */
+            border-radius: 12px; /* Subtle rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 2dp elevation shadow */
+            position: relative; /* For ripple effect and indicator icons positioning */
+            cursor: pointer;
+            transition: background-color 0.1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            gap: 6px; /* Spacing between lines of text content */
+            user-select: none;
+        }
+        .event-card:active {
+            background-color: rgba(0,0,0,0.04); /* Subtle press effect */
+        }
+
+        .event-name {
+            font-size: 18px; /* Material Design subtitle1 or headline6 */
+            font-weight: 500; /* Semi-bold */
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 4px; /* Space before detail lines */
+        }
+
+        .event-detail {
+            display: flex;
+            align-items: center;
+            font-size: 14px; /* Material Design body2 */
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .event-detail .material-icons {
+            font-size: 18px; /* Slightly smaller than default, to align with text */
+            margin-right: 8px;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .indicator-icons {
+            position: absolute;
+            top: 16px; /* Aligned with card's top padding */
+            right: 16px; /* Aligned with card's right padding */
+            display: flex;
+            gap: 6px; /* Space between indicator icons */
+        }
+
+        .indicator-icons .material-icons {
+            font-size: 18px; /* Small icon size */
+            color: var(--md-sys-color-on-surface-variant);
+            opacity: 0.7; /* Make them subtle */
+        }
+
+        /* Basic Ripple Effect (CSS & JS) */
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle ripple color */
+            animation: ripple 0.6s linear forwards; /* Run animation and stay at final state */
+            transform: scale(0);
+            pointer-events: none; /* Don't block interaction */
+            opacity: 1;
+        }
+
+        @keyframes ripple {
+            from {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            to {
+                transform: scale(4); /* Adjust based on max expected ripple size */
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-page">
+        <!-- Section 1: Top App Bar -->
+        <header class="top-app-bar">
+            <h1 class="app-title">Events Directory</h1>
+            <div class="app-bar-actions">
+                <div class="app-bar-icon" aria-label="Search">
+                    <i class="material-icons">search</i>
+                </div>
+                <div class="app-bar-icon" aria-label="Refresh">
+                    <i class="material-icons">refresh</i>
+                </div>
+            </div>
+            <!--
+                UX Note: When the search icon is tapped, the Top App Bar would transform.
+                The title and refresh icon would fade out, and a TextField (input field)
+                with a leading 'search' icon and a trailing 'clear' icon would expand to fill
+                most of the App Bar's width. This dynamic behavior requires JavaScript.
+                For static HTML, we show the initial state with icons.
+            -->
+            <!-- Example of the search field placeholder (hidden by default)
+            <div class="search-field-placeholder">
+                <i class="material-icons">search</i>
+                <input type="text" placeholder="Search events...">
+                <i class="material-icons">clear</i>
+            </div>
+            -->
+        </header>
+
+        <!-- Section 2: Event List -->
+        <main class="event-list-container">
+            <!-- Pull-to-refresh Indicator (initially hidden, shown by JS interaction) -->
+            <div class="pull-to-refresh-indicator" aria-live="polite">
+                <i class="material-icons">autorenew</i>
+            </div>
+
+            <!-- Example Event Items (Cards) -->
+            <div class="event-card">
+                <div class="indicator-icons">
+                    <i class="material-icons" aria-label="Password Protected">lock</i>
+                    <i class="material-icons" aria-label="Downloadable Resources">cloud_download</i>
+                </div>
+                <h2 class="event-name">Global Tech Summit 2024</h2>
+                <div class="event-detail">
+                    <i class="material-icons">location_on</i>
+                    <span>San Francisco, CA</span>
+                </div>
+                <div class="event-detail">
+                    <i class="material-icons">event</i>
+                    <span>Oct 15 - Oct 17, 2024</span>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="indicator-icons">
+                    <i class="material-icons" aria-label="Downloadable Resources">cloud_download</i>
+                </div>
+                <h2 class="event-name">Innovate & Create Conference</h2>
+                <div class="event-detail">
+                    <i class="material-icons">location_on</i>
+                    <span>Virtual Event</span>
+                </div>
+                <div class="event-detail">
+                    <i class="material-icons">event</i>
+                    <span>Nov 5, 2024</span>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="indicator-icons">
+                    <i class="material-icons" aria-label="Password Protected">lock</i>
+                </div>
+                <h2 class="event-name">Design Thinking Workshop</h2>
+                <div class="event-detail">
+                    <i class="material-icons">location_on</i>
+                    <span>New York, NY</span>
+                </div>
+                <div class="event-detail">
+                    <i class="material-icons">event</i>
+                    <span>Dec 1 - Dec 2, 2024</span>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="indicator-icons">
+                    <!-- No specific indicators for this one -->
+                </div>
+                <h2 class="event-name">Community Art Fair</h2>
+                <div class="event-detail">
+                    <i class="material-icons">location_on</i>
+                    <span>Central Park, NYC</span>
+                </div>
+                <div class="event-detail">
+                    <i class="material-icons">event</i>
+                    <span>Dec 10, 2024</span>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="indicator-icons">
+                    <i class="material-icons" aria-label="Password Protected">lock</i>
+                    <i class="material-icons" aria-label="Downloadable Resources">cloud_download</i>
+                </div>
+                <h2 class="event-name">Future of AI Summit</h2>
+                <div class="event-detail">
+                    <i class="material-icons">location_on</i>
+                    <span>London, UK</span>
+                </div>
+                <div class="event-detail">
+                    <i class="material-icons">event</i>
+                    <span>Jan 20 - Jan 22, 2025</span>
+                </div>
+            </div>
+
+             <div class="event-card">
+                <div class="indicator-icons">
+                    <!-- No specific indicators for this one -->
+                </div>
+                <h2 class="event-name">Local Food Festival</h2>
+                <div class="event-detail">
+                    <i class="material-icons">location_on</i>
+                    <span>Town Square</span>
+                </div>
+                <div class="event-detail">
+                    <i class="material-icons">event</i>
+                    <span>Feb 14, 2025</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Basic JavaScript for simulated pull-to-refresh and ripple effect -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const eventList = document.querySelector('.event-list-container');
+            const refreshIndicator = document.querySelector('.pull-to-refresh-indicator');
+            const refreshIndicatorIcon = refreshIndicator.querySelector('.material-icons');
+            const appBarRefreshIcon = document.querySelector('.app-bar-actions .material-icons:last-child');
+            const tappableElements = document.querySelectorAll('.event-card, .app-bar-icon');
+
+            // --- Simulate Pull-to-Refresh functionality ---
+            let startY;
+            let currentY;
+            let pulling = false;
+            let refreshThreshold = 60; // Height in pixels to trigger refresh
+
+            eventList.addEventListener('touchstart', (e) => {
+                if (eventList.scrollTop === 0) { // Only enable if at the very top of the list
+                    startY = e.touches[0].clientY;
+                    pulling = true;
+                }
+            }, { passive: false }); // Use { passive: false } to allow preventDefault
+
+            eventList.addEventListener('touchmove', (e) => {
+                if (!pulling) return;
+
+                currentY = e.touches[0].clientY;
+                const diff = currentY - startY;
+
+                if (diff > 0 && eventList.scrollTop === 0) {
+                    e.preventDefault(); // Prevent body/page scrolling
+                    const indicatorHeight = Math.min(diff / 2, refreshThreshold); // Reduce pull distance
+                    refreshIndicator.style.height = `${indicatorHeight}px`;
+                    refreshIndicator.style.paddingTop = `${indicatorHeight > 0 ? 16 : 0}px`; /* Add padding when visible */
+                    refreshIndicator.style.opacity = `${indicatorHeight / refreshThreshold}`;
+                    refreshIndicator.classList.add('visible'); // Show indicator as it expands
+                } else {
+                    // Reset if user scrolls down or not pulling enough
+                    pulling = false;
+                    refreshIndicator.classList.remove('visible');
+                    refreshIndicator.style.height = '0px';
+                    refreshIndicator.style.paddingTop = '0px';
+                    refreshIndicator.style.opacity = '0';
+                }
+            }, { passive: false });
+
+            eventList.addEventListener('touchend', () => {
+                if (pulling && parseFloat(refreshIndicator.style.height) >= refreshThreshold) {
+                    // Trigger refresh action
+                    console.log('Refreshing content...');
+                    refreshIndicatorIcon.classList.add('spin-animation'); // Start spin animation
+                    // Simulate data fetching
+                    setTimeout(() => {
+                        console.log('Content refreshed!');
+                        refreshIndicatorIcon.classList.remove('spin-animation'); // Stop spin
+                        refreshIndicator.classList.remove('visible');
+                        refreshIndicator.style.height = '0px';
+                        refreshIndicator.style.paddingTop = '0px';
+                        refreshIndicator.style.opacity = '0';
+                    }, 2000); // 2 seconds simulated fetch
+                } else {
+                    // Snap back if not pulled enough or pulling was false
+                    refreshIndicator.classList.remove('visible');
+                    refreshIndicator.style.height = '0px';
+                    refreshIndicator.style.paddingTop = '0px';
+                    refreshIndicator.style.opacity = '0';
+                }
+                pulling = false;
+            });
+
+            // --- App Bar Refresh Icon click animation ---
+            appBarRefreshIcon.parentNode.addEventListener('click', () => {
+                appBarRefreshIcon.classList.add('spin-animation');
+                console.log('App bar refresh icon clicked!');
+                // Simulate refresh duration
+                setTimeout(() => {
+                    appBarRefreshIcon.classList.remove('spin-animation');
+                }, 1500);
+            });
+
+            // --- Simple Ripple Effect for tappable elements ---
+            tappableElements.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    // Determine ripple size based on the larger dimension of the element
+                    const size = Math.max(rect.width, rect.height) * 2; // Make ripple larger than element
+                    // Calculate click position relative to the element
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    const ripple = document.createElement('span');
+                    ripple.className = 'ripple-effect';
+                    ripple.style.width = ripple.style.height = `${size}px`;
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+
+                    // Append ripple to the clicked element
+                    this.appendChild(ripple);
+
+                    // Remove ripple after its animation finishes
+                    ripple.addEventListener('animationend', () => {
+                        ripple.remove();
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

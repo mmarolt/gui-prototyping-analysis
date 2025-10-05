@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Calendar App</title>
+    <style>
+        /* General body styling for mobile-first approach */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #f4f7f6; /* Light background for the overall page */
+            display: flex;
+            justify-content: center; /* Center the calendar container horizontally */
+            align-items: flex-start; /* Align to the top of the screen vertically */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+            -webkit-font-smoothing: antialiased; /* Improve font rendering */
+            -moz-osx-font-smoothing: grayscale; /* Improve font rendering */
+        }
+
+        /* Main calendar container styling */
+        .calendar-container {
+            width: 100%; /* Take full width of parent (body's flex item) */
+            max-width: 375px; /* Confine to the target mobile width */
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            overflow: hidden; /* Ensures border-radius applies to children */
+            box-sizing: border-box;
+            margin-top: 20px; /* Space from the top of the mobile screen */
+            margin-bottom: 80px; /* Space for the floating action button */
+        }
+
+        /* Calendar Header: Month/Year and navigation */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #4CAF50; /* Green header background */
+            color: white;
+        }
+
+        .nav-button {
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 5px 10px;
+            user-select: none; /* Prevent text selection on navigation buttons */
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-button:hover {
+            opacity: 1;
+        }
+
+        .current-month-year {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0; /* Remove default margin from h2 */
+        }
+
+        /* Days of the week labels (Sun, Mon, etc.) */
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 equal columns */
+            text-align: center;
+            padding: 10px 0;
+            background-color: #e0e0e0; /* Lighter background for weekdays row */
+            font-size: 14px;
+            color: #555;
+            border-bottom: 1px solid #eee;
+        }
+
+        .weekdays span {
+            padding: 5px 0;
+            font-weight: 500;
+        }
+
+        /* Calendar Grid for the days of the month */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 equal columns for days */
+            gap: 1px; /* Small gap between day cells */
+            padding: 5px;
+            background-color: #f0f0f0; /* Slightly different background for grid area */
+        }
+
+        .day {
+            background-color: #ffffff;
+            text-align: center;
+            padding: 15px 0; /* Vertical padding to give height to cells */
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            flex-direction: column; /* Stack number and potential event dot */
+            align-items: center;
+            justify-content: center;
+            position: relative; /* Needed for positioning the event dot */
+            border-radius: 4px; /* Slightly rounded corners for day cells */
+            min-height: 45px; /* Ensure a minimum height for all cells */
+            box-sizing: border-box;
+            cursor: pointer; /* Indicate interactivity */
+            transition: background-color 0.2s ease;
+        }
+
+        .day:hover {
+            background-color: #f5f5f5;
+        }
+
+        .day.inactive {
+            color: #b0b0b0; /* Grey out days from previous/next months */
+            background-color: #f9f9f9;
+            cursor: default;
+        }
+        .day.inactive:hover {
+            background-color: #f9f9f9; /* No hover effect for inactive days */
+        }
+
+        /* Styling for dates with events */
+        .day.has-event {
+            background-color: #e8f5e9; /* Light green background for event days */
+            color: #2e7d32; /* Darker green for text on event days */
+            font-weight: 600;
+        }
+
+        .day.has-event::after {
+            content: ''; /* Create a pseudo-element for the event dot */
+            position: absolute;
+            bottom: 5px; /* Position at the bottom of the cell */
+            left: 50%;
+            transform: translateX(-50%); /* Center the dot horizontally */
+            width: 6px;
+            height: 6px;
+            background-color: #4CAF50; /* Green dot */
+            border-radius: 50%; /* Make it a perfect circle */
+        }
+
+        /* Prominent '+' button for adding new events */
+        .add-event-button {
+            position: fixed; /* Fixed position relative to the viewport */
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%; /* Make it circular */
+            background-color: #FF5722; /* Vibrant orange-red for action button */
+            color: white;
+            font-size: 36px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow for prominence */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1; /* Ensure '+' character is perfectly centered */
+            z-index: 1000; /* Ensure it's above all other content */
+            user-select: none; /* Prevent text selection */
+            outline: none; /* Remove focus outline */
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .add-event-button:hover {
+            background-color: #e64a19; /* Darker orange on hover */
+            transform: scale(1.05); /* Slight scale effect on hover */
+        }
+
+        .add-event-button:active {
+            transform: scale(0.95); /* Slight press effect on click */
+        }
+    </style>
+</head>
+<body>
+    <div class="calendar-container">
+        <!-- Calendar Header: Current Month and Year with navigation buttons -->
+        <div class="calendar-header">
+            <span class="nav-button">&lt;</span>
+            <h2 class="current-month-year">October 2023</h2>
+            <span class="nav-button">&gt;</span>
+        </div>
+
+        <!-- Days of the week labels -->
+        <div class="weekdays">
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+        </div>
+
+        <!-- Calendar Grid for the days of the month -->
+        <div class="calendar-grid">
+            <!-- Inactive days from the previous month (September 2023) -->
+            <div class="day inactive">28</div>
+            <div class="day inactive">29</div>
+            <div class="day inactive">30</div>
+            
+            <!-- Days of the current month (October 2023) -->
+            <div class="day">1</div>
+            <div class="day">2</div>
+            <div class="day">3</div>
+            <div class="day has-event">4</div> <!-- Example: Date with an event -->
+            <div class="day">5</div>
+            <div class="day">6</div>
+            <div class="day">7</div>
+            <div class="day">8</div>
+            <div class="day">9</div>
+            <div class="day">10</div>
+            <div class="day">11</div>
+            <div class="day has-event">12</div> <!-- Example: Date with an event -->
+            <div class="day">13</div>
+            <div class="day">14</div>
+            <div class="day">15</div>
+            <div class="day">16</div>
+            <div class="day">17</div>
+            <div class="day">18</div>
+            <div class="day">19</div>
+            <div class="day">20</div>
+            <div class="day">21</div>
+            <div class="day">22</div>
+            <div class="day has-event">23</div> <!-- Example: Date with an event -->
+            <div class="day">24</div>
+            <div class="day">25</div>
+            <div class="day">26</div>
+            <div class="day">27</div>
+            <div class="day">28</div>
+            <div class="day">29</div>
+            <div class="day">30</div>
+            <div class="day">31</div>
+
+            <!-- Inactive days from the next month (November 2023) -->
+            <!-- October 31st is a Tuesday, so November starts on Wednesday -->
+            <div class="day inactive">1</div>
+            <div class="day inactive">2</div>
+            <div class="day inactive">3</div>
+            <div class="day inactive">4</div>
+            <div class="day inactive">5</div>
+            <div class="day inactive">6</div>
+            <div class="day inactive">7</div>
+            <div class="day inactive">8</div>
+        </div>
+    </div>
+
+    <!-- Prominent floating action button for adding new events -->
+    <button class="add-event-button">+</button>
+</body>
+</html>

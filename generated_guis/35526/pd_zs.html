@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn & Redeem Hub</title>
+    <style>
+        /* General Reset & Mobile-First Base Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the page */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent body scroll, main content will scroll */
+        }
+
+        /* I.1. Top Header Bar */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            height: 60px; /* Fixed height for header */
+            box-sizing: border-box; /* Include padding in height */
+        }
+
+        .header-left, .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Profile/Settings Icon */
+        .profile-icon {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            padding: 5px; /* Increase tap target */
+        }
+
+        /* Coin Balance Display */
+        .coin-display {
+            display: flex;
+            align-items: center;
+            background-color: #e0f7fa; /* Light blue background for coin balance */
+            border-radius: 20px;
+            padding: 8px 12px;
+            cursor: pointer;
+            margin-left: 10px; /* Space from profile icon if it were on the right */
+        }
+
+        .coin-icon {
+            font-size: 18px;
+            color: #ffc107; /* Gold color for coin icon */
+            margin-right: 5px;
+        }
+
+        .coin-label {
+            font-size: 14px;
+            color: #555;
+            margin-right: 5px;
+        }
+
+        .coin-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* II. Main Scrollable Content Area */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-top: 80px; /* Offset for fixed header (header height + some margin) */
+            padding-bottom: 90px; /* Offset for fixed footer (footer height + some margin) */
+            padding-left: 15px;
+            padding-right: 15px;
+            box-sizing: border-box;
+            background-color: #f0f2f5; /* Ensure main content background is consistent */
+        }
+
+        .section {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Offer Cards Styling */
+        .offer-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap; /* Allow content to wrap on smaller screens if needed */
+        }
+
+        .offer-card-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .offer-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        .offer-details {
+            flex-grow: 1;
+        }
+
+        .offer-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .offer-description {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .offer-coin-value {
+            font-size: 15px;
+            font-weight: bold;
+            color: #4CAF50; /* Green for positive coin value */
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+        
+        /* General Call to Action Buttons */
+        .cta-button {
+            background-color: #007bff; /* Primary blue button */
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-align: center;
+            white-space: nowrap; /* Prevent button text from wrapping */
+            flex-shrink: 0;
+        }
+
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* II.1. Social Offers Carousel */
+        .social-offers-carousel {
+            display: flex;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 10px; /* Space for scrollbar */
+            margin-left: -15px; /* Adjust for section padding to make cards edge-to-edge */
+            margin-right: -15px; /* Adjust for section padding */
+            padding-left: 15px; /* Align with section padding */
+            padding-right: 15px; /* Align with section padding */
+        }
+
+        .social-offers-carousel::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        .social-offers-carousel::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 5px;
+        }
+
+        .social-offers-carousel .offer-card {
+            flex-direction: column;
+            align-items: flex-start;
+            min-width: 180px; /* Fixed width for horizontal cards */
+            margin-right: 15px;
+            padding: 15px;
+            flex-shrink: 0; /* Prevent cards from shrinking */
+        }
+        .social-offers-carousel .offer-image {
+            margin-bottom: 10px;
+            margin-right: 0; /* No right margin for vertical stack within card */
+        }
+        .social-offers-carousel .offer-details {
+            margin-bottom: 10px;
+            width: 100%; /* Take full width */
+        }
+        .social-offers-carousel .offer-coin-value {
+            margin-left: 0;
+            margin-bottom: 10px;
+        }
+        .social-offers-carousel .cta-button {
+            width: 100%; /* Full width button */
+        }
+
+        /* II.3. More Ways to Earn Section */
+        .facebook-button {
+            background-color: #3b5998; /* Facebook blue */
+            color: #ffffff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .facebook-button .icon {
+            margin-right: 10px;
+            font-size: 20px; /* For a 'f' icon */
+        }
+
+        .lockscreen-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-top: 1px solid #eee; /* Separator */
+        }
+        .lockscreen-option:first-child {
+             border-top: none; /* No top border for the first item */
+        }
+
+        .lockscreen-text {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .lockscreen-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .lockscreen-description {
+            font-size: 13px;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        .info-icon {
+            font-size: 18px;
+            color: #777;
+            margin-left: 10px;
+            cursor: pointer;
+            padding: 5px; /* Increase tap target */
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4CAF50; /* Green when active */
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #4CAF50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* I.2. Bottom Navigation Bar */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #ffffff;
+            padding: 10px 20px;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            height: 70px; /* Fixed height for footer */
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center; /* Center the cash out button */
+            align-items: center;
+        }
+
+        /* Cash Out Button */
+        .cashout-button {
+            background-color: #FF5722; /* Prominent orange/red for Cash Out */
+            color: #ffffff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 30px; /* More rounded, like a FAB */
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px; /* Ensure button is wide enough */
+            box-shadow: 0 4px 8px rgba(255, 87, 34, 0.3);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .cashout-button:hover {
+            background-color: #e64a19;
+            transform: translateY(-2px);
+        }
+
+        .cashout-button .icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+
+        /* III. Redemption/Cash Out Flow (Simulated Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            width: 90%;
+            max-width: 350px; /* Max width for modal on mobile */
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .modal-header {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-coin-balance {
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .modal-coin-balance span {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .redemption-option-card {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .redemption-option-card:hover {
+            background-color: #e9ecef;
+        }
+
+        .redemption-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-right: 15px;
+        }
+
+        .redemption-details {
+            flex-grow: 1;
+        }
+
+        .redemption-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .redemption-value {
+            font-size: 13px;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        .redemption-select-button {
+            background-color: #28a745; /* Green for select/choose */
+            color: #ffffff;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .redemption-select-button:hover {
+            background-color: #218838;
+        }
+        
+        .modal-close-button {
+            background-color: #6c757d; /* Grey for close/back */
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .modal-close-button:hover {
+            background-color: #5a6268;
+        }
+
+        /* Utility classes for icons (using generic Unicode characters for simplicity) */
+        .icon-hamburger::before { content: "☰"; }
+        .icon-coin::before { content: "💰"; }
+        .icon-share::before { content: "📤"; }
+        .icon-dollar::before { content: "💲"; }
+        .icon-facebook::before { content: "f"; }
+        .icon-info::before { content: "ⓘ"; }
+        .icon-paypal::before { content: "🅿️"; }
+        .icon-amazon::before { content: "📦"; } /* A generic box for Amazon */
+        .icon-google-play::before { content: "▶️"; }
+
+        /* Media query for specific device size (375x667) */
+        @media (max-width: 375px) {
+            body {
+                width: 375px;
+                height: 667px;
+                overflow: hidden; /* Ensure no extra scrollbars */
+            }
+            .header, .footer-nav {
+                width: 375px;
+            }
+            .main-content {
+                width: 375px;
+                padding-left: 10px;
+                padding-right: 10px;
+                box-sizing: border-box;
+            }
+            .section {
+                padding: 15px;
+            }
+            .section-header {
+                font-size: 18px;
+            }
+            .offer-card {
+                padding: 10px;
+            }
+            .offer-image {
+                width: 40px;
+                height: 40px;
+                margin-right: 10px;
+            }
+            .offer-title {
+                font-size: 15px;
+            }
+            .offer-description {
+                font-size: 12px;
+            }
+            .offer-coin-value {
+                font-size: 14px;
+            }
+            .cta-button {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            .facebook-button {
+                font-size: 15px;
+                padding: 10px 15px;
+            }
+            .lockscreen-title {
+                font-size: 15px;
+            }
+            .lockscreen-description {
+                font-size: 12px;
+            }
+            .cashout-button {
+                font-size: 16px;
+                padding: 10px 25px;
+                min-width: 160px;
+            }
+            .modal-content {
+                width: 95%; /* Slightly wider for the 375px screen */
+                padding: 20px;
+            }
+            .modal-header {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- I. Persistent Global Elements - Top Header Bar -->
+    <header class="header">
+        <div class="header-left">
+            <span class="profile-icon icon-hamburger" role="button" aria-label="Profile and Settings"></span>
+        </div>
+        <div class="header-right">
+            <div class="coin-display" role="button" aria-label="View Coin Balance and History">
+                <span class="coin-icon icon-coin"></span>
+                <span class="coin-label">Coins:</span>
+                <span class="coin-value">1,234</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- II. Main Scrollable Content Area -->
+    <main class="main-content">
+
+        <!-- II.1. "Social Offers to Share" Section -->
+        <section class="section">
+            <h2 class="section-header">Social Offers to Share</h2>
+            <div class="social-offers-carousel">
+                <!-- Offer Card 1 -->
+                <div class="offer-card">
+                    <img src="https://via.placeholder.com/48/FFD700/000000?text=AppX" alt="App X Icon" class="offer-image">
+                    <div class="offer-details">
+                        <div class="offer-title">Invite a Friend to App X</div>
+                        <div class="offer-description">Share your unique link and earn!</div>
+                    </div>
+                    <div class="offer-coin-value">+50 Coins</div>
+                    <button class="cta-button" onclick="alert('Share App X now!');">
+                        <span class="icon-share"></span> Share Now
+                    </button>
+                </div>
+                <!-- Offer Card 2 -->
+                <div class="offer-card">
+                    <img src="https://via.placeholder.com/48/87CEEB/000000?text=Feat" alt="New Feature Icon" class="offer-image">
+                    <div class="offer-details">
+                        <div class="offer-title">Share our new feature!</div>
+                        <div class="offer-description">Tell your friends about our cool new feature.</div>
+                    </div>
+                    <div class="offer-coin-value">+30 Coins</div>
+                    <button class="cta-button" onclick="alert('Sharing new feature!');">
+                        <span class="icon-share"></span> Share
+                    </button>
+                </div>
+                <!-- Offer Card 3 -->
+                <div class="offer-card">
+                    <img src="https://via.placeholder.com/48/FF6347/FFFFFF?text=Quiz" alt="Quiz Icon" class="offer-image">
+                    <div class="offer-details">
+                        <div class="offer-title">Invite to Daily Quiz</div>
+                        <div class="offer-description">Get coins for every friend who joins.</div>
+                    </div>
+                    <div class="offer-coin-value">+40 Coins</div>
+                    <button class="cta-button" onclick="alert('Invite to Quiz!');">
+                        <span class="icon-share"></span> Invite
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- II.2. "List of Simple Offers" Section -->
+        <section class="section">
+            <h2 class="section-header">Simple Offers</h2>
+            <!-- Offer Card 1 -->
+            <div class="offer-card">
+                <div class="offer-card-content">
+                    <img src="https://via.placeholder.com/48/4CAF50/FFFFFF?text=Vid" alt="Video Icon" class="offer-image">
+                    <div class="offer-details">
+                        <div class="offer-title">Watch a short video</div>
+                        <div class="offer-description">Earn coins by watching a 30-second ad.</div>
+                    </div>
+                </div>
+                <div class="offer-coin-value">+20 Coins</div>
+                <button class="cta-button" onclick="alert('Playing video...');">Complete Offer</button>
+            </div>
+            <!-- Offer Card 2 -->
+            <div class="offer-card">
+                <div class="offer-card-content">
+                    <img src="https://via.placeholder.com/48/9C27B0/FFFFFF?text=AppY" alt="App Y Icon" class="offer-image">
+                    <div class="offer-details">
+                        <div class="offer-title">Install and open App Y</div>
+                        <div class="offer-description">Download App Y from the store and launch it.</div>
+                    </div>
+                </div>
+                <div class="offer-coin-value">+80 Coins</div>
+                <button class="cta-button" onclick="alert('Redirecting to App Store...');">Start Now</button>
+            </div>
+            <!-- Offer Card 3 -->
+            <div class="offer-card">
+                <div class="offer-card-content">
+                    <img src="https://via.placeholder.com/48/FF9800/FFFFFF?text=Survey" alt="Survey Icon" class="offer-image">
+                    <div class="offer-details">
+                        <div class="offer-title">Complete a quick survey</div>
+                        <div class="offer-description">Share your opinion and get rewarded.</div>
+                    </div>
+                </div>
+                <div class="offer-coin-value">+60 Coins</div>
+                <button class="cta-button" onclick="alert('Starting survey...');">Earn Coins</button>
+            </div>
+        </section>
+
+        <!-- II.3. "More Ways to Earn" Section -->
+        <section class="section">
+            <h2 class="section-header">More Ways to Earn</h2>
+            <!-- Facebook Login/Connect Button (6) -->
+            <button class="facebook-button" onclick="alert('Connecting with Facebook!');">
+                <span class="icon-facebook icon"></span> Connect with Facebook
+            </button>
+            <!-- Lock Screen Offer Enablement Option (7) -->
+            <div class="lockscreen-option">
+                <div class="lockscreen-text">
+                    <div class="lockscreen-title">Enable Lock Screen Offers</div>
+                    <div class="lockscreen-description">Get +10 coins daily by enabling lock screen ads.</div>
+                </div>
+                <span class="info-icon icon-info" role="button" aria-label="More information about Lock Screen Offers" onclick="alert('Lock screen offers display ads on your lock screen for daily coin rewards.');"></span>
+                <label class="switch">
+                    <input type="checkbox" id="lockScreenToggle" onchange="alert(this.checked ? 'Lock Screen Offers Enabled!' : 'Lock Screen Offers Disabled!');">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- I.2. Bottom Navigation Bar -->
+    <footer class="footer-nav">
+        <!-- "Cash Out" Button (9) -->
+        <button class="cashout-button" onclick="document.getElementById('redemptionModal').style.display = 'flex';">
+            <span class="icon-dollar icon"></span> Cash Out
+        </button>
+        <!-- Other tabs would go here if they existed -->
+    </footer>
+
+    <!-- III. Redemption/Cash Out Flow (Simulated Modal for Redemption Options) -->
+    <div id="redemptionModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-header">Redeem Your Coins</h3>
+            <p class="modal-coin-balance">Current Balance: <span class="coin-value">1,234</span> Coins</p>
+
+            <!-- Redemption Option 1: PayPal -->
+            <div class="redemption-option-card" onclick="alert('Proceeding to PayPal redemption details...');">
+                <span class="redemption-icon icon-paypal"></span>
+                <div class="redemption-details">
+                    <div class="redemption-name">PayPal</div>
+                    <div class="redemption-value">Min. 1000 Coins ($10)</div>
+                </div>
+                <button class="redemption-select-button">Select</button>
+            </div>
+
+            <!-- Redemption Option 2: Amazon Gift Card -->
+            <div class="redemption-option-card" onclick="alert('Proceeding to Amazon Gift Card redemption details...');">
+                <span class="redemption-icon icon-amazon"></span>
+                <div class="redemption-details">
+                    <div class="redemption-name">Amazon Gift Card</div>
+                    <div class="redemption-value">Min. 500 Coins ($5)</div>
+                </div>
+                <button class="redemption-select-button">Select</button>
+            </div>
+
+            <!-- Redemption Option 3: Google Play Gift Card -->
+            <div class="redemption-option-card" onclick="alert('Proceeding to Google Play Gift Card redemption details...');">
+                <span class="redemption-icon icon-google-play"></span>
+                <div class="redemption-details">
+                    <div class="redemption-name">Google Play Gift Card</div>
+                    <div class="redemption-value">Min. 750 Coins ($7.50)</div>
+                </div>
+                <button class="redemption-select-button">Select</button>
+            </div>
+
+            <button class="modal-close-button" onclick="document.getElementById('redemptionModal').style.display = 'none';">Back / Cancel</button>
+        </div>
+    </div>
+
+</body>
+</html>

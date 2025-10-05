@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caller ID App</title>
+    <style>
+        /* Basic Resets and Box Sizing */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the overall browser page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure the body takes full viewport height */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* Mobile Device Frame Simulation */
+        .mobile-frame {
+            width: 375px; /* Fixed width for the simulated mobile screen */
+            height: 667px; /* Fixed height for the simulated mobile screen */
+            background-color: #ffffff; /* Background color of the app itself */
+            border-radius: 20px; /* Rounded corners for the device frame */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Soft shadow to give depth */
+            overflow: hidden; /* Hide content that overflows due to rounded corners */
+            display: flex;
+            flex-direction: column; /* Arrange content vertically */
+            padding: 20px; /* Internal padding for the app content */
+            position: relative; /* For potential absolute positioning of elements inside */
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333; /* Dark grey text */
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Phone icon for the header */
+        .header::before {
+            content: '📞'; /* Unicode phone icon */
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        /* Search Field and Microphone Button Container */
+        .search-container {
+            display: flex; /* Use flexbox for horizontal layout */
+            margin-bottom: 30px;
+            gap: 10px; /* Space between the input and the button */
+        }
+
+        .search-input {
+            flex-grow: 1; /* Allow the input field to take up available space */
+            padding: 12px 15px;
+            border: 1px solid #ddd; /* Light grey border */
+            border-radius: 25px; /* Rounded corners for the input field */
+            font-size: 16px;
+            outline: none; /* Remove default outline on focus */
+            transition: border-color 0.3s ease; /* Smooth transition for border color */
+        }
+
+        .search-input:focus {
+            border-color: #007bff; /* Blue border on focus */
+        }
+
+        .microphone-button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%; /* Make it a circle */
+            background-color: #007bff; /* Blue background */
+            color: #fff; /* White icon color */
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer; /* Indicate it's clickable */
+            transition: background-color 0.3s ease;
+            flex-shrink: 0; /* Prevent the button from shrinking */
+        }
+
+        .microphone-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        
+        /* Unicode Microphone Icon */
+        .microphone-button::before {
+            content: '🎤'; /* Unicode microphone icon */
+        }
+
+        /* Social Media Section */
+        .social-media-header {
+            text-align: center;
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .social-buttons {
+            display: flex; /* Use flexbox for horizontal layout of buttons */
+            justify-content: space-around; /* Distribute space evenly */
+            flex-wrap: wrap; /* Allow buttons to wrap to the next line if space is limited */
+            gap: 10px; /* Space between social buttons */
+            margin-bottom: 30px;
+        }
+
+        .social-button {
+            flex: 1 1 auto; /* Allow buttons to grow and shrink, but maintain minimum width */
+            min-width: 70px; /* Minimum width for each button */
+            padding: 10px 5px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+            text-align: center;
+            text-decoration: none; /* Remove underline from links */
+            transition: opacity 0.3s ease;
+        }
+
+        .social-button:hover {
+            opacity: 0.9; /* Slight transparency on hover */
+        }
+
+        /* Specific Social Button Colors (simulating brand colors) */
+        .social-button.google { background-color: #db4437; } /* Google+ red */
+        .social-button.facebook { background-color: #3b5998; } /* Facebook blue */
+        .social-button.twitter { background-color: #1da1f2; } /* Twitter blue */
+        .social-button.linkedin { background-color: #0077b5; } /* LinkedIn blue */
+
+        /* Global Network Section (World Map Simulation) */
+        .network-section {
+            text-align: center;
+            margin-top: auto; /* Push this section to the bottom of the flex container */
+        }
+
+        .network-header {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .world-map-container {
+            width: 180px; /* Size of the simulated map/globe */
+            height: 180px;
+            /* Radial gradient to give a spherical, global appearance */
+            background: radial-gradient(circle at 30% 30%, #5d9cec, #3c7de0); 
+            border-radius: 50%; /* Make it a perfect circle */
+            margin: 0 auto; /* Center the map horizontally */
+            position: relative; /* For positioning connection dots inside */
+            overflow: hidden; /* Ensure dots don't spill outside the circle */
+            border: 2px solid rgba(255, 255, 255, 0.3); /* Light border for definition */
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3); /* Inner shadow for depth */
+        }
+
+        /* Network Connection Dots (Simulated) */
+        .connection-dot {
+            position: absolute; /* Position dots relative to the map container */
+            width: 8px;
+            height: 8px;
+            background-color: #fff; /* White dots */
+            border-radius: 50%;
+            opacity: 0.8;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Glowing effect */
+        }
+
+        /* Positioning of dots to simulate a network on a globe */
+        .connection-dot:nth-child(1) { top: 20%; left: 30%; }
+        .connection-dot:nth-child(2) { top: 50%; left: 70%; }
+        .connection-dot:nth-child(3) { top: 70%; left: 20%; }
+        .connection-dot:nth-child(4) { top: 35%; left: 85%; }
+        .connection-dot:nth-child(5) { top: 85%; left: 50%; }
+        .connection-dot:nth-child(6) { top: 10%; left: 60%; }
+        .connection-dot:nth-child(7) { top: 60%; left: 10%; }
+        .connection-dot:nth-child(8) { top: 40%; left: 50%; } /* Central dot */
+
+        /* Optional: Add some faint lines for connections */
+        .connection-line {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3); /* Semi-transparent white lines */
+            height: 1px;
+            transform-origin: 0 0; /* Rotate from the top-left corner */
+        }
+        /* Example lines, positioned and rotated to connect dots visually */
+        .connection-line:nth-child(9) { top: 25%; left: 32%; width: 60px; transform: rotate(30deg); }
+        .connection-line:nth-child(10) { top: 52%; left: 70%; width: 45px; transform: rotate(-60deg); }
+        .connection-line:nth-child(11) { top: 72%; left: 22%; width: 50px; transform: rotate(90deg); }
+        .connection-line:nth-child(12) { top: 38%; left: 80%; width: 30px; transform: rotate(0deg); }
+
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+        <div class="header">Caller ID</div>
+
+        <div class="search-container">
+            <input type="search" class="search-input" placeholder="Enter name or phone number...">
+            <button class="microphone-button" aria-label="Voice search"></button>
+        </div>
+
+        <div class="social-media-header">Connect through social media</div>
+        <div class="social-buttons">
+            <a href="#" class="social-button google">Google+</a>
+            <a href="#" class="social-button facebook">Facebook</a>
+            <a href="#" class="social-button twitter">Twitter</a>
+            <a href="#" class="social-button linkedin">LinkedIn</a>
+        </div>
+
+        <div class="network-section">
+            <div class="network-header">Global Network & Connections</div>
+            <div class="world-map-container">
+                <!-- Simulated connection dots -->
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <div class="connection-dot"></div>
+                <!-- Simulated connection lines -->
+                <div class="connection-line"></div>
+                <div class="connection-line"></div>
+                <div class="connection-line"></div>
+                <div class="connection-line"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

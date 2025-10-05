@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Finder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen simulation */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            width: 375px; /* Fixed width for Google Chrome Dev Tools simulation */
+            max-width: 100%; /* Ensures it doesn't break on smaller physical screens */
+            background-color: #f8f8f8;
+            box-sizing: border-box; /* Include padding in element's total width and height */
+            overflow-x: hidden; /* Prevent horizontal scroll issues */
+        }
+
+        /* 1. Header / Search Bar Section */
+        .search-section {
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+        .search-input-container {
+            flex-grow: 1; /* Allows the input to take available width */
+            position: relative; /* For positioning the microphone icon */
+        }
+        .search-field {
+            width: calc(100% - 20px); /* Adjust for padding and icon space */
+            padding: 10px;
+            padding-right: 40px; /* Space for microphone icon */
+            border: 1px solid #ddd;
+            border-radius: 25px; /* Rounded corners for search bar */
+            font-size: 16px;
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .microphone-icon {
+            position: absolute;
+            right: 15px; /* Position relative to the search-input-container */
+            top: 50%;
+            transform: translateY(-50%); /* Vertically center the icon */
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #555;
+            padding: 0; /* Remove default button padding */
+        }
+
+        /* 2. Social Connection Section */
+        .social-section {
+            display: flex;
+            justify-content: space-around; /* Distributes items evenly with space around them */
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #eee;
+        }
+        .social-button {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon text and label */
+            color: #333; /* Default text color */
+        }
+        /* Simple branding for social buttons using pseudo-elements */
+        .social-button.google::before { content: "G+"; color: #db4437; font-weight: bold; }
+        .social-button.facebook::before { content: "f"; color: #3b5998; font-weight: bold; font-size: 18px; }
+        .social-button.twitter::before { content: "t"; color: #1da1f2; font-weight: bold; font-size: 18px; }
+        .social-button.linkedin::before { content: "in"; color: #0077b5; font-weight: bold; }
+
+        /* 3. Global Network Visualization Section */
+        .map-section {
+            flex-grow: 1; /* Takes up all remaining vertical space */
+            background-color: #e0f2f7; /* Light blue for a map/globe feel */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-size: 18px;
+            text-align: center;
+            padding: 20px;
+            position: relative; /* Crucial for positioning the contact results overlay */
+            overflow: hidden; /* Ensures child elements don't overflow */
+        }
+        .map-section::before {
+            content: "Global Network Visualization"; /* Placeholder text */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the text */
+            opacity: 0.7;
+            font-size: 20px;
+            color: #333;
+            z-index: 1; /* Ensure text is below the contact results if they overlap */
+        }
+
+        /* 4. Contact Information Display (Dynamic/Conditional) */
+        /* This section is designed to appear as an overlay from the bottom of the map-section */
+        .contact-results-container {
+            display: none; /* Hidden by default */
+            /* The .visible class will make it appear */
+        }
+        .contact-results-container.visible {
+            display: block;
+            position: absolute; /* Positioned relative to .map-section */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto; /* Height adapts to content */
+            max-height: 50%; /* Limits the maximum height to half of the map-section */
+            z-index: 10; /* Ensures it's above the map placeholder text */
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1); /* Stronger shadow for overlay effect */
+            overflow-y: auto; /* Makes the contact list scrollable */
+            padding: 0; /* No padding on the container itself, items have padding */
+            box-sizing: border-box;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center; /* Vertically aligns items in the card */
+            padding: 10px 15px;
+            border-bottom: 1px solid #eee; /* Separator between contacts */
+            text-align: left;
+        }
+        .contact-item:last-child {
+            border-bottom: none; /* No separator for the last item */
+        }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%; /* Circular profile picture */
+            background-color: #ccc; /* Placeholder background */
+            margin-right: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 20px;
+            overflow: hidden; /* Ensures image fits within the circle */
+        }
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Covers the area without distortion */
+        }
+        .contact-info {
+            display: flex;
+            flex-direction: column; /* Stacks name, phone, other details vertically */
+        }
+        .contact-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+        }
+        .contact-phone {
+            font-size: 14px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .contact-other {
+            font-size: 12px;
+            color: #999;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-section">
+        <div class="search-input-container">
+            <input type="text" class="search-field" placeholder="Search by name or phone number.">
+            <button class="microphone-icon">&#127897;</button> <!-- Unicode for microphone icon -->
+        </div>
+    </div>
+
+    <div class="social-section">
+        <button class="social-button google">Google+</button>
+        <button class="social-button facebook">Facebook</button>
+        <button class="social-button twitter">Twitter</button>
+        <button class="social-button linkedin">LinkedIn</button>
+    </div>
+
+    <div class="map-section">
+        <!-- Placeholder for interactive map/globe -->
+
+        <!-- Contact Information Display (dynamically appears when search results are available) -->
+        <!-- For demonstration, the 'visible' class is added to show example contacts -->
+        <div class="contact-results-container visible">
+            <div class="contact-item">
+                <div class="profile-pic">
+                    <img src="https://via.placeholder.com/50/FF5733/FFFFFF?text=JD" alt="Profile Pic">
+                </div>
+                <div class="contact-info">
+                    <span class="contact-name">John Doe</span>
+                    <span class="contact-phone">+1 123-456-7890</span>
+                    <span class="contact-other">john.doe@example.com</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="profile-pic">
+                    <img src="https://via.placeholder.com/50/33FF57/FFFFFF?text=JS" alt="Profile Pic">
+                </div>
+                <div class="contact-info">
+                    <span class="contact-name">Jane Smith</span>
+                    <span class="contact-phone">+1 987-654-3210</span>
+                    <span class="contact-other">jane.smith@company.com</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="profile-pic">
+                    <img src="https://via.placeholder.com/50/3357FF/FFFFFF?text=MB" alt="Profile Pic">
+                </div>
+                <div class="contact-info">
+                    <span class="contact-name">Mike Brown</span>
+                    <span class="contact-phone">+1 555-123-4567</span>
+                    <span class="contact-other">mike.b@startup.io</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="profile-pic">
+                    <img src="https://via.placeholder.com/50/FFFF33/000000?text=AL" alt="Profile Pic">
+                </div>
+                <div class="contact-info">
+                    <span class="contact-name">Anna Lee</span>
+                    <span class="contact-phone">+1 444-999-0000</span>
+                    <span class="contact-other">anna.lee@anotherco.net</span>
+                </div>
+            </div>
+            <div class="contact-item">
+                <div class="profile-pic">
+                    <img src="https://via.placeholder.com/50/FF33FF/FFFFFF?text=CD" alt="Profile Pic">
+                </div>
+                <div class="contact-info">
+                    <span class="contact-name">Chris Davis</span>
+                    <span class="contact-phone">+1 777-888-9999</span>
+                    <span class="contact-other">chris.d@example.org</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

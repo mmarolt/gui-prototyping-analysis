@@ -1,413 +1,493 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Search Filters</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Job Search</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased; /* Enhance text rendering */
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-/* Header */
-.header {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 1.2em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow */
-  position: sticky;
-  top: 0;
-  z-index: 100; /* Ensure it stays on top */
-}
+        /* Overall Page Container (Vertical Scroll View) */
+        .page-container {
+            width: 100%;
+            max-width: 375px; /* Simulating mobile device width (e.g., iPhone SE/8) */
+            margin: 0 auto; /* Center on larger screens (for dev tools view) */
+            background-color: #fff;
+            min-height: 100vh; /* Ensure it takes full viewport height */
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Enable vertical scrolling */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for visual separation */
+            position: relative; /* For fixed button positioning context */
+            padding-bottom: 90px; /* Space for the fixed search button container */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
 
-/* Form Container */
-.form-container {
-  padding: 15px;
-}
+        /* Base Section Styling */
+        .section {
+            padding: 16px;
+            margin-bottom: 8px; /* Space between sections */
+            background-color: #fff;
+        }
+        .section-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            padding: 0 16px; /* Align with section padding */
+        }
 
-/* Input Fields */
-.input-group {
-  margin-bottom: 15px;
-}
+        /* UI Element Styling - Input Groups */
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
 
-.input-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
+        /* Text Input and Dropdown Field Common Styles */
+        .text-input,
+        .dropdown-field {
+            width: calc(100% - 32px); /* Full width minus 2x16px padding */
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #333;
+            -webkit-appearance: none; /* Remove default browser styles */
+            -moz-appearance: none;
+            appearance: none;
+            box-sizing: border-box;
+            background-color: #fff;
+            min-height: 44px; /* Ensure good tap target */
+        }
+        .text-input::placeholder {
+            color: #aaa;
+        }
+        .text-input:focus,
+        .dropdown-field:focus {
+            outline: none;
+            border-color: #007bff; /* Focus color */
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
 
-.input-group input[type="text"],
-.input-group input[type="number"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Important for width calculation */
-}
+        /* Dropdown Specific Styles (simulated) */
+        .dropdown-field {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+        .dropdown-field span {
+            flex-grow: 1;
+            color: #333;
+        }
+        .dropdown-field .placeholder {
+            color: #aaa;
+        }
+        .dropdown-field .arrow {
+            font-size: 16px;
+            color: #888;
+            margin-left: 10px;
+        }
 
-/* Location */
-.location-group {
-  position: relative;
-}
+        /* Recent Searches Chips */
+        .recent-searches-list {
+            display: flex;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding: 0 16px 16px 16px; /* Padding for chips, left/right for section */
+            gap: 8px; /* Space between chips */
+            white-space: nowrap; /* Prevent chips from wrapping */
+            margin-left: -16px; /* Counteract section padding for full-width scroll */
+            margin-right: -16px;
+        }
+        .recent-searches-list::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for a cleaner look */
+        }
+        .recent-search-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: #e9ecef;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            border: 1px solid #dee2e6;
+            min-height: 32px; /* Ensure good tap target */
+            box-sizing: border-box;
+            flex-shrink: 0; /* Prevent chips from shrinking */
+        }
+        .recent-search-chip:active { /* Visual feedback on tap */
+            background-color: #dee2e6;
+            border-color: #c0c8cf;
+        }
 
-.location-group button {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
-  background-color: #eee;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  cursor: pointer;
-}
+        /* Expandable Section Header */
+        .expandable-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 16px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+            min-height: 48px; /* Good tap target */
+        }
+        .expandable-header .toggle-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+        .expandable-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .advanced-filters-content {
+            padding: 16px;
+            display: none; /* Hidden by default, toggled by JS */
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+        }
+        .advanced-filters-content.visible {
+            display: block;
+        }
 
-/* Category */
-.category-group {
-  margin-bottom: 15px;
-}
+        /* Checkbox Group */
+        .checkbox-group {
+            margin-bottom: 16px;
+        }
+        .checkbox-group > label { /* Target the main label, not option labels */
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+            font-weight: 500;
+        }
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            min-height: 32px; /* Good tap target */
+        }
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 10px;
+            min-width: 18px; /* Ensure checkbox is tappable */
+            min-height: 18px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+            flex-shrink: 0; /* Prevent checkbox from shrinking */
+        }
+        .checkbox-option input[type="checkbox"]:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .checkbox-option input[type="checkbox"]:checked::before {
+            content: 'âœ“'; /* Checkmark symbol */
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 12px;
+            line-height: 1;
+        }
+        .checkbox-option span {
+            font-size: 14px;
+            color: #333;
+        }
 
-.category-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
+        /* Toggle Switch (Remote Work) */
+        .toggle-switch-group {
+            margin-bottom: 16px;
+        }
+        .toggle-switch-group > label { /* Target the main label */
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0; /* Add padding for tap target */
+            min-height: 44px;
+            box-sizing: border-box;
+            cursor: pointer; /* Make the whole container tappable */
+        }
+        .toggle-container span {
+            font-size: 14px;
+            color: #333;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 28px;
+            flex-shrink: 0; /* Prevent switch from shrinking */
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #007bff;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #007bff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
 
-.category-chips {
-  display: flex;
-  flex-wrap: wrap;
-}
+        /* Action Buttons Container (Fixed at bottom) */
+        .action-buttons-container {
+            padding: 16px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            position: fixed; /* Fixed at the bottom */
+            bottom: 0;
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for centering */
+            width: 100%;
+            max-width: 375px; /* Match page container width */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between buttons */
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); /* Shadow above buttons */
+            z-index: 1000; /* Ensure it's above other content */
+        }
 
-.category-chip {
-  background-color: #e9ecef;
-  padding: 8px 12px;
-  border-radius: 20px;
-  margin-right: 8px;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
+        /* Clear All Button (Secondary) */
+        .clear-all-button {
+            width: 100%;
+            padding: 12px 20px;
+            background-color: transparent;
+            color: #007bff; /* Primary color for text */
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            min-height: 44px; /* Good tap target */
+            -webkit-tap-highlight-color: transparent;
+        }
+        .clear-all-button:active {
+            background-color: #e7f3ff;
+        }
 
-.category-chip.selected {
-  background-color: #007bff;
-  color: white;
-}
-
-
-/* Salary Range */
-.salary-range {
-  display: flex;
-  gap: 10px;
-}
-
-.salary-range input {
-  width: 100%; /* Take up remaining space */
-}
-
-
-/* Job Type */
-.job-type-group {
-  margin-bottom: 15px;
-}
-
-.job-type-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.job-type-options {
-  display: flex;
-  flex-direction: column;
-}
-
-.job-type-options label {
-  font-weight: normal;
-  margin-bottom: 5px;
-}
-
-/* Experience Level */
-.experience-group {
-  margin-bottom: 15px;
-}
-
-.experience-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.experience-options {
-  display: flex;
-  flex-direction: column;
-}
-
-.experience-options label {
-  font-weight: normal;
-  margin-bottom: 5px;
-}
-
-
-/* Buttons */
-.button-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.button-container button {
-  background-color: #28a745;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  margin: 0 10px;
-}
-
-.button-container button:hover {
-  background-color: #218838;
-}
-
-.button-container button.clear-filters {
-    background-color: #dc3545;
-}
-
-.button-container button.clear-filters:hover {
-    background-color: #c82333;
-}
-
-
-
-/* Loading Indicator */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.loading-overlay.active {
-  display: flex;
-}
-
-.loading-spinner {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #3498db;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 2s linear infinite;
-  margin-right: 10px;
-}
-
-.loading-text {
-  color: white;
-  font-size: 1.2em;
-}
-
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Clear Button in Input */
-.input-group .clear-input {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: #888;
-    display: none; /* Hidden by default */
-}
-
-.input-group input[type="text"]:valid + .clear-input,
-.input-group input[type="number"]:valid + .clear-input {
-    display: block; /* Show when input is not empty */
-}
-
-.input-group {
-    position: relative;
-}
-
-
-
-</style>
+        /* Search Button (Primary) */
+        .search-button {
+            width: 100%;
+            padding: 14px 20px;
+            background-color: #007bff; /* Primary accent color */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            min-height: 52px; /* Prominent tap target */
+            -webkit-tap-highlight-color: transparent;
+        }
+        .search-button:active {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
+    <div class="page-container">
+        <!-- I. Top Section: Recent Searches (Convenience & Quick Access) -->
+        <div class="section">
+            <div class="section-header">Recent Searches</div>
+            <div class="recent-searches-list">
+                <div class="recent-search-chip">Software Engineer, NYC</div>
+                <div class="recent-search-chip">Marketing Manager, Remote</div>
+                <div class="recent-search-chip">Data Analyst, SF Bay</div>
+                <div class="recent-search-chip">UX Designer, Entry Level</div>
+                <div class="recent-search-chip">Product Manager, London</div>
+                <div class="recent-search-chip">Accountant, Chicago</div>
+            </div>
+        </div>
 
-<div class="header">
-  Job Search Filters
-</div>
+        <!-- II. Primary Search Inputs (Core Search Criteria) -->
+        <div class="section">
+            <div class="input-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" class="text-input" placeholder="e.g., Software Engineer, Marketing Manager">
+            </div>
 
-<div class="form-container">
-  <form id="filterForm">
-    <div class="input-group">
-      <label for="keywords">Keywords:</label>
-      <input type="text" id="keywords" name="keywords" placeholder="e.g., 'Software Engineer', 'Manager'" required>
-      <button type="button" class="clear-input" onclick="clearInput('keywords')">×</button>
+            <div class="input-group">
+                <label for="industryCompany">Industry/Company</label>
+                <!-- This div simulates a tappable dropdown that would open a modal/bottom sheet -->
+                <div id="industryCompany" class="dropdown-field">
+                    <span class="placeholder">Select Industry/Company</span>
+                    <span class="arrow">&#x25BC;</span> <!-- Down arrow icon -->
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="location">Location</label>
+                <div id="location" class="dropdown-field">
+                    <span class="placeholder">Select Location</span>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="salaryRange">Salary Range</label>
+                <div id="salaryRange" class="dropdown-field">
+                    <span class="placeholder">Select Salary Range</span>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- III. Advanced Filters Section (Refinement & Granularity) -->
+        <!-- The onclick handler for toggling visibility -->
+        <div class="expandable-header" onclick="toggleAdvancedFilters()">
+            <span>More Options</span>
+            <span class="toggle-icon" id="toggleIcon">&#x25BC;</span> <!-- Toggle icon -->
+        </div>
+
+        <!-- Content of the expandable section, initially hidden -->
+        <div class="advanced-filters-content" id="advancedFilters">
+            <div class="checkbox-group">
+                <label>Employment Type</label>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="fullTime">
+                    <span>Full-time</span>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="partTime">
+                    <span>Part-time</span>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="contract">
+                    <span>Contract</span>
+                </div>
+                <div class="checkbox-option">
+                    <input type="checkbox" id="internship">
+                    <span>Internship</span>
+                </div>
+            </div>
+
+            <div class="toggle-switch-group">
+                <label>Remote Work</label>
+                <div class="toggle-container" onclick="document.getElementById('remoteWorkToggle').click()">
+                    <span>Enable Remote Only</span>
+                    <label class="switch">
+                        <input type="checkbox" id="remoteWorkToggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="experienceLevel">Experience Level</label>
+                <div id="experienceLevel" class="dropdown-field">
+                    <span class="placeholder">Select Experience Level</span>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="postedWithin">Posted Within</label>
+                <div id="postedWithin" class="dropdown-field">
+                    <span class="placeholder">Select Date Range</span>
+                    <span class="arrow">&#x25BC;</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- A flexible space to push content up, ensuring scrollability above the fixed footer -->
+        <div style="flex-grow: 1;"></div>
+
     </div>
 
-    <div class="input-group location-group">
-      <label for="location">Location:</label>
-      <input type="text" id="location" name="location" placeholder="e.g., 'New York, NY'">
-      <button type="button" onclick="getLocation()">Use Current Location</button>
+    <!-- IV. Action Buttons (Search & Reset) - Fixed at bottom -->
+    <div class="action-buttons-container">
+        <button class="clear-all-button">Clear All</button>
+        <button class="search-button">Search</button>
     </div>
 
-    <div class="input-group">
-      <label for="radius">Radius (miles):</label>
-      <input type="number" id="radius" name="radius" value="25">
-    </div>
+    <script>
+        // Simple JavaScript to toggle the visibility of the advanced filters section
+        function toggleAdvancedFilters() {
+            const advancedFilters = document.getElementById('advancedFilters');
+            const header = document.querySelector('.expandable-header');
+            const toggleIcon = document.getElementById('toggleIcon');
 
-    <div class="category-group">
-      <label>Job Category:</label>
-      <div class="category-chips">
-        <div class="category-chip" data-category="all" onclick="selectCategory(this)">All</div>
-        <div class="category-chip" data-category="software" onclick="selectCategory(this)">Software Development</div>
-        <div class="category-chip" data-category="marketing" onclick="selectCategory(this)">Marketing</div>
-        <div class="category-chip" data-category="sales" onclick="selectCategory(this)">Sales</div>
-        <!-- Add more categories as needed -->
-      </div>
-    </div>
-
-    <div class="input-group salary-range">
-      <div>
-        <label for="minSalary">Min. Salary:</label>
-        <input type="number" id="minSalary" name="minSalary" placeholder="e.g., 50000">
-      </div>
-      <div>
-        <label for="maxSalary">Max. Salary:</label>
-        <input type="number" id="maxSalary" name="maxSalary" placeholder="e.g., 100000">
-      </div>
-    </div>
-
-    <div class="job-type-group">
-      <label>Job Type:</label>
-      <div class="job-type-options">
-        <label><input type="radio" name="jobType" value="fulltime"> Full-time</label>
-        <label><input type="radio" name="jobType" value="parttime"> Part-time</label>
-        <label><input type="radio" name="jobType" value="contract"> Contract</label>
-        <label><input type="radio" name="jobType" value="internship"> Internship</label>
-      </div>
-    </div>
-
-    <div class="experience-group">
-      <label>Experience Level:</label>
-      <div class="experience-options">
-        <label><input type="radio" name="experience" value="entry"> Entry Level (0-2 years)</label>
-        <label><input type="radio" name="experience" value="mid"> Mid Level (2-5 years)</label>
-        <label><input type="radio" name="experience" value="senior"> Senior Level (5+ years)</label>
-      </div>
-    </div>
-
-    <div class="button-container">
-      <button type="button" onclick="applyFilters()">Apply Filters</button>
-      <button type="button" class="clear-filters" onclick="clearAllFilters()">Clear Filters</button>
-    </div>
-  </form>
-</div>
-
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">Searching...</div>
-</div>
-
-
-<script>
-function clearInput(inputId) {
-    document.getElementById(inputId).value = "";
-}
-
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition, handleLocationError);
-  } else {
-    alert("Geolocation is not supported by this browser.");
-  }
-}
-
-function showPosition(position) {
-  // For simplicity, just update the location field with coordinates.
-  // In a real app, you'd likely use reverse geocoding to get the city/state.
-  const locationInput = document.getElementById("location");
-  locationInput.value = position.coords.latitude + ", " + position.coords.longitude;
-}
-
-function handleLocationError(error) {
-  let errorMessage = "Unable to retrieve your location. ";
-  switch(error.code) {
-    case error.PERMISSION_DENIED:
-      errorMessage += "User denied the request for Geolocation.";
-      break;
-    case error.POSITION_UNAVAILABLE:
-      errorMessage += "Location information is unavailable.";
-      break;
-    case error.TIMEOUT:
-      errorMessage += "The request to get user location timed out.";
-      break;
-    case error.UNKNOWN_ERROR:
-      errorMessage += "An unknown error occurred.";
-      break;
-  }
-  alert(errorMessage);
-}
-
-
-
-function selectCategory(element) {
-  // Deselect all other chips
-  const chips = document.querySelectorAll('.category-chip');
-  chips.forEach(chip => chip.classList.remove('selected'));
-
-  // Select the clicked chip
-  element.classList.add('selected');
-}
-
-function applyFilters() {
-  // Show loading indicator
-  document.getElementById("loadingOverlay").classList.add("active");
-
-  // Simulate a delay for the search process (replace with actual API call)
-  setTimeout(function() {
-    // Hide loading indicator
-    document.getElementById("loadingOverlay").classList.remove("active");
-
-    // Get form data (for demonstration)
-    const formData = new FormData(document.getElementById("filterForm"));
-    const formValues = Object.fromEntries(formData.entries());
-
-    // Log the form data to the console (replace with actual search logic)
-    console.log("Applying filters:", formValues);
-    alert("Applying filters (see console for data). In a real app, this would trigger a job search.");
-
-  }, 1500); // Simulate 1.5 seconds loading
-}
-
-
-function clearAllFilters() {
-    if (confirm("Are you sure you want to clear all filters?")) {
-      document.getElementById("filterForm").reset();
-      // Deselect category chips
-      const chips = document.querySelectorAll('.category-chip');
-      chips.forEach(chip => chip.classList.remove('selected'));
-    }
-}
-
-</script>
-
+            if (advancedFilters.classList.contains('visible')) {
+                advancedFilters.classList.remove('visible');
+                header.classList.remove('expanded');
+                toggleIcon.innerHTML = '&#x25BC;'; // Down arrow
+            } else {
+                advancedFilters.classList.add('visible');
+                header.classList.add('expanded');
+                toggleIcon.innerHTML = '&#x25B2;'; // Up arrow
+            }
+        }
+    </script>
 </body>
 </html>

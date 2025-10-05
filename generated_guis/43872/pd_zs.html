@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Task Management View</title>
+    <!-- Include Google Material Icons for a modern look -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body style="margin: 0; font-family: 'Roboto', sans-serif; background-color: #f0f2f5;">
+
+    <!-- Main Screen Container (Root View) - Simulates a mobile device frame -->
+    <div id="mobile-screen-container" style="
+        width: 375px; /* Mobile screen width */
+        height: 667px; /* Mobile screen height */
+        margin: 20px auto; /* Center the mobile frame on larger screens */
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        overflow: hidden; /* Crucial to contain absolute/fixed children within this frame */
+        position: relative; /* Context for absolutely positioned children (FAB, Mini Menu) */
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column; /* Vertical layout for header, content */
+        background-color: white;
+    ">
+
+        <!-- Top Navigation Bar Container (Fixed Header) -->
+        <div style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: #3f51b5; /* Deep Purple */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10; /* Ensure it's above scrollable content */
+        ">
+            <!-- Page Title / App Logo -->
+            <span style="font-size: 18px; font-weight: bold;">My Tasks</span>
+            
+            <!-- Navigation Icons -->
+            <div style="display: flex; gap: 15px;">
+                <!-- Notifications Icon with Badge -->
+                <div style="position: relative; cursor: pointer;">
+                    <i class="material-icons" style="font-size: 24px;">notifications</i>
+                    <span style="position: absolute; top: -5px; right: -5px; background-color: #f44336; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px; line-height: 1; text-align: center;">3</span>
+                </div>
+                <!-- Search Icon -->
+                <i class="material-icons" style="font-size: 24px; cursor: pointer;">search</i>
+                <!-- Projects Icon -->
+                <i class="material-icons" style="font-size: 24px; cursor: pointer;">folder</i>
+                <!-- Messaging Icon with Badge -->
+                <div style="position: relative; cursor: pointer;">
+                    <i class="material-icons" style="font-size: 24px;">message</i>
+                    <span style="position: absolute; top: -5px; right: -5px; background-color: #f44336; color: white; border-radius: 50%; padding: 2px 5px; font-size: 10px; line-height: 1; text-align: center;">1</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area Container (Scrollable) -->
+        <div style="
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding-bottom: 80px; /* Space for the Floating Action Button */
+        ">
+            <!-- Page Header Section (Non-scrollable within content area) -->
+            <div style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 15px;
+                background-color: #f0f2f5; /* Light grey background */
+                border-bottom: 1px solid #eee;
+            ">
+                <!-- Company Selector/Filter -->
+                <select style="
+                    border: 1px solid #ccc;
+                    padding: 8px;
+                    border-radius: 5px;
+                    font-size: 14px;
+                    flex-grow: 1; /* Allows it to take available space */
+                    margin-right: 10px;
+                    background-color: white;
+                    color: #333;
+                ">
+                    <option>My Company Inc.</option>
+                    <option>Another Company</option>
+                    <option>Third Party Ltd.</option>
+                </select>
+                <!-- Task List Info/Help Icon -->
+                <i class="material-icons" style="font-size: 24px; color: #757575; cursor: pointer;">info_outline</i>
+            </div>
+
+            <!-- Assigned Task List (Scrollable List View) -->
+            <div style="padding: 0 15px;">
+                <!-- Task List Item 1 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Complete Project Proposal</span>
+                    <!-- New/Recent Task Indicator -->
+                    <span style="background-color: #4caf50; color: white; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">New</span>
+                </div>
+                <!-- Task List Item 2 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Review Q3 Financials</span>
+                    <i class="material-icons" style="font-size: 18px; color: #ff9800;">flag</i> <!-- Example: Importance flag -->
+                </div>
+                <!-- Task List Item 3 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Schedule Team Meeting</span>
+                </div>
+                <!-- Task List Item 4 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Follow up with Client X</span>
+                </div>
+                <!-- Task List Item 5 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Draft Marketing Copy</span>
+                </div>
+                <!-- Task List Item 6 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Prepare for Annual Review</span>
+                </div>
+                <!-- Task List Item 7 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Update CRM Records</span>
+                </div>
+                <!-- Task List Item 8 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Research new software</span>
+                </div>
+                <!-- Task List Item 9 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Submit Expense Report</span>
+                </div>
+                <!-- Task List Item 10 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Book travel for conference</span>
+                </div>
+                <!-- Task List Item 11 -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 15px 0;
+                    cursor: pointer; /* Last item doesn't need bottom border */
+                ">
+                    <span style="font-size: 16px; font-weight: 500; color: #333;">Prepare presentation slides</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button Container -->
+        <div id="fab" style="
+            position: absolute; /* Positioned relative to #mobile-screen-container */
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #ff4081; /* Pink */
+            color: white;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 20; /* Ensure it floats above content */
+        ">
+            <i class="material-icons">add</i>
+        </div>
+
+        <!-- Mini Menu / Action Sheet (Overlay) -->
+        <div id="mini-menu" style="
+            position: absolute; /* Positioned relative to #mobile-screen-container */
+            bottom: 90px; /* Above FAB: FAB_bottom(20px) + FAB_height(56px) + gap(14px) */
+            right: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            padding: 10px 0;
+            display: none; /* Hidden by default, shown on FAB tap */
+            flex-direction: column;
+            z-index: 25; /* Ensure it floats above FAB */
+            min-width: 200px;
+            color: #333;
+        ">
+            <div style="display: flex; align-items: center; padding: 10px 15px; gap: 10px; cursor: pointer; border-bottom: 1px solid #eee;">
+                <i class="material-icons" style="font-size: 20px; color: #666;">assignment</i>
+                <span>Create New Task</span>
+            </div>
+            <div style="display: flex; align-items: center; padding: 10px 15px; gap: 10px; cursor: pointer; border-bottom: 1px solid #eee;">
+                <i class="material-icons" style="font-size: 20px; color: #666;">chat_bubble_outline</i>
+                <span>Create New Conversation</span>
+            </div>
+            <div style="display: flex; align-items: center; padding: 10px 15px; gap: 10px; cursor: pointer;">
+                <i class="material-icons" style="font-size: 20px; color: #666;">work</i>
+                <span>Create New Project</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const fab = document.getElementById('fab');
+        const miniMenu = document.getElementById('mini-menu');
+
+        // Toggle mini menu visibility on FAB click
+        fab.addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent click from bubbling to document and closing immediately
+            miniMenu.style.display = miniMenu.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Close mini menu if clicked outside
+        document.addEventListener('click', (event) => {
+            if (miniMenu.style.display === 'flex' && !miniMenu.contains(event.target) && !fab.contains(event.target)) {
+                miniMenu.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

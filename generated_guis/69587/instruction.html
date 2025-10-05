@@ -1,109 +1,436 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inbox</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f8f8;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Email Client - Inbox</title>
+    <style>
+        /* Basic Reset and Global Styles */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent body scroll, content will scroll */
+        }
 
-.header {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 1.2em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        /* Container for the entire app to simulate mobile screen */
+        .mobile-app-container {
+            width: 100%;
+            max-width: 375px; /* Target width */
+            height: 100%;
+            max-height: 667px; /* Target height */
+            margin: 0 auto; /* Center the app on larger screens */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content inside scrolls */
+            border-radius: 8px; /* Slightly rounded corners for the app frame */
+        }
 
-.email-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        /* Header Bar */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
 
-.email-item {
-  background-color: white;
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer; /* Indicate it's clickable */
-}
+        .header-icon {
+            font-size: 24px;
+            color: #555;
+            cursor: pointer;
+            padding: 5px;
+        }
 
-.email-item:hover {
-  background-color: #f0f0f0; /* Slight highlight on hover */
-}
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
 
-.sender {
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #333;
-}
+        /* Search Bar */
+        .search-bar {
+            padding: 10px 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 55px; /* Below the header */
+            z-index: 9;
+        }
 
-.subject {
-  color: #555;
-  margin-bottom: 5px;
-}
+        .search-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            outline: none;
+            background-color: #f0f2f5;
+            padding-left: 40px; /* Space for search icon */
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+            background-repeat: no-repeat;
+            background-position: 10px center;
+            background-size: 20px;
+        }
 
-.preview {
-  color: #777;
-  font-size: 0.9em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+        /* Email List */
+        .email-list {
+            flex-grow: 1; /* Takes available space */
+            overflow-y: auto; /* Makes the list scrollable */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
 
-.timestamp {
-  color: #999;
-  font-size: 0.8em;
-  align-self: flex-end; /* Push to the right */
-}
-</style>
+        .email-item {
+            display: flex;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: #fff;
+            position: relative;
+            align-items: flex-start; /* Align items to the top */
+        }
+
+        .email-item.selected {
+            background-color: #e0f2f7; /* Light blue background for selected */
+        }
+
+        .sender-icon-wrapper {
+            flex-shrink: 0; /* Don't shrink the icon */
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+            margin-right: 15px;
+            cursor: pointer;
+            user-select: none; /* Prevent text selection on tap */
+        }
+
+        /* Example colors for sender icons */
+        .color-1 { background-color: #4CAF50; } /* Green */
+        .color-2 { background-color: #2196F3; } /* Blue */
+        .color-3 { background-color: #FFC107; } /* Amber */
+        .color-4 { background-color: #E91E63; } /* Pink */
+        .color-5 { background-color: #9C27B0; } /* Purple */
+        .color-6 { background-color: #00BCD4; } /* Cyan */
+
+        .email-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Allow content to shrink */
+        }
+
+        .email-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .sender-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex-grow: 1;
+        }
+
+        .email-meta {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+            flex-shrink: 0;
+        }
+
+        .email-time {
+            font-size: 12px;
+            color: #888;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+
+        .star-icon {
+            font-size: 18px;
+            color: #ccc; /* Default grey star */
+            cursor: pointer;
+        }
+
+        .star-icon.starred {
+            color: #FFC107; /* Yellow for starred */
+        }
+
+        .email-subject {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .email-snippet {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Show max 2 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Compose Button (FAB) */
+        .compose-fab {
+            position: sticky; /* Sticky to parent container */
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background-color: #2196F3; /* Blue */
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 20; /* Above other content */
+            margin-left: auto; /* Push to the right */
+            margin-right: 20px;
+            margin-bottom: 20px;
+            flex-shrink: 0; /* Don't shrink if it's in a flex container */
+        }
+
+        /* For the purpose of demonstration, let's make the FAB appear at the bottom right of the .mobile-app-container */
+        .fab-wrapper {
+            position: absolute; /* Position relative to .mobile-app-container */
+            bottom: 20px;
+            right: 20px;
+            z-index: 20;
+        }
+
+        /* Hide scrollbar for aesthetics, but keep functionality */
+        .email-list::-webkit-scrollbar {
+            display: none;
+        }
+        .email-list {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+    </style>
 </head>
 <body>
 
-<div class="header">
-  Inbox
-</div>
+    <div class="mobile-app-container">
+        <!-- Header Bar -->
+        <div class="header">
+            <span class="header-icon">&#9776;</span> <!-- Hamburger Menu -->
+            <span class="header-title">Inbox</span>
+            <span class="header-icon">&#128269;</span> <!-- Search Icon -->
+        </div>
 
-<ul class="email-list">
-  <li class="email-item">
-    <div class="sender">Google</div>
-    <div class="subject">Security alert</div>
-    <div class="preview">New sign-in from Windows</div>
-    <div class="timestamp">2 hours ago</div>
-  </li>
-  <li class="email-item">
-    <div class="sender">Amazon</div>
-    <div class="subject">Your order has shipped</div>
-    <div class="preview">Your package is on its way!</div>
-    <div class="timestamp">Yesterday</div>
-  </li>
-  <li class="email-item">
-    <div class="sender">LinkedIn</div>
-    <div class="subject">New connection request</div>
-    <div class="preview">John Doe wants to connect</div>
-    <div class="timestamp">2 days ago</div>
-  </li>
-  <li class="email-item">
-    <div class="sender">Stack Overflow</div>
-    <div class="subject">Question with no activity</div>
-    <div class="preview">Is there a better way to do this?</div>
-    <div class="timestamp">3 days ago</div>
-  </li>
-  <li class="email-item">
-    <div class="sender">GitHub</div>
-    <div class="subject">[GitHub] New pull request</div>
-    <div class="preview">Your team member opened a new PR in your repository</div>
-    <div class="timestamp">1 week ago</div>
-  </li>
-</ul>
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search emails...">
+        </div>
 
+        <!-- Email List -->
+        <div class="email-list">
+            <!-- Email Item 1 -->
+            <div class="email-item" data-sender-initials="JS">
+                <div class="sender-icon-wrapper color-1">JS</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">John Smith</div>
+                        <div class="email-meta">
+                            <span class="email-time">9:30 AM</span>
+                            <span class="star-icon">&#9734;</span> <!-- Outline star -->
+                        </div>
+                    </div>
+                    <div class="email-subject">Project Update - Week 3</div>
+                    <div class="email-snippet">Hi team, just wanted to share the latest progress on Project Alpha. We've completed the initial design phase...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 2 (Starred) -->
+            <div class="email-item" data-sender-initials="AM">
+                <div class="sender-icon-wrapper color-2">AM</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Alice Miller</div>
+                        <div class="email-meta">
+                            <span class="email-time">Yesterday</span>
+                            <span class="star-icon starred">&#9733;</span> <!-- Filled star -->
+                        </div>
+                    </div>
+                    <div class="email-subject">Meeting Reminder: Q3 Planning</div>
+                    <div class="email-snippet">Just a friendly reminder about our Q3 planning meeting scheduled for tomorrow at 10 AM in Conference Room B. Please review the agenda...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 3 -->
+            <div class="email-item" data-sender-initials="BG">
+                <div class="sender-icon-wrapper color-3">BG</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Bob Green</div>
+                        <div class="email-meta">
+                            <span class="email-time">Mon</span>
+                            <span class="star-icon">&#9734;</span>
+                        </div>
+                    </div>
+                    <div class="email-subject">Your Order #12345 Has Shipped!</div>
+                    <div class="email-snippet">Great news! Your recent order from OurStore.com, #12345, has been shipped and is on its way. You can track your package using this link...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 4 -->
+            <div class="email-item" data-sender-initials="CD">
+                <div class="sender-icon-wrapper color-4">CD</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Carol Davis</div>
+                        <div class="email-meta">
+                            <span class="email-time">Oct 26</span>
+                            <span class="star-icon">&#9734;</span>
+                        </div>
+                    </div>
+                    <div class="email-subject">Invoice for October Services</div>
+                    <div class="email-snippet">Dear Carol, please find attached the invoice for services rendered in October. The total amount due is $1,200...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 5 (Longer Snippet) -->
+            <div class="email-item" data-sender-initials="EV">
+                <div class="sender-icon-wrapper color-5">EV</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Eve White</div>
+                        <div class="email-meta">
+                            <span class="email-time">Oct 25</span>
+                            <span class="star-icon">&#9734;</span>
+                        </div>
+                    </div>
+                    <div class="email-subject">Feedback Request: New Feature Rollout</div>
+                    <div class="email-snippet">We're excited to announce the rollout of our new "Smart Analytics" feature! We'd love to get your feedback on your experience. This will help us improve and refine the feature for everyone. Please take a few minutes to fill out our survey...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 6 -->
+            <div class="email-item" data-sender-initials="FK">
+                <div class="sender-icon-wrapper color-6">FK</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Frank King</div>
+                        <div class="email-meta">
+                            <span class="email-time">Oct 24</span>
+                            <span class="star-icon">&#9734;</span>
+                        </div>
+                    </div>
+                    <div class="email-subject">Your Password Reset Request</div>
+                    <div class="email-snippet">You recently requested to reset your password for your account. If you did not make this request, please ignore this email. To reset your password, click the link below...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 7 -->
+            <div class="email-item" data-sender-initials="GP">
+                <div class="sender-icon-wrapper color-1">GP</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Grace Price</div>
+                        <div class="email-meta">
+                            <span class="email-time">Oct 23</span>
+                            <span class="star-icon">&#9734;</span>
+                        </div>
+                    </div>
+                    <div class="email-subject">Holiday Party Invitation!</div>
+                    <div class="email-snippet">You're invited to our annual company holiday party! Join us for an evening of food, fun, and festivities on December 15th at The Grand Ballroom. RSVP by December 1st...</div>
+                </div>
+            </div>
+
+            <!-- Email Item 8 (Starred) -->
+            <div class="email-item" data-sender-initials="HM">
+                <div class="sender-icon-wrapper color-2">HM</div>
+                <div class="email-content">
+                    <div class="email-header-info">
+                        <div class="sender-name">Henry Moore</div>
+                        <div class="email-meta">
+                            <span class="email-time">Oct 22</span>
+                            <span class="star-icon starred">&#9733;</span>
+                        </div>
+                    </div>
+                    <div class="email-subject">Urgent: Server Maintenance Tonight</div>
+                    <div class="email-snippet">Please be advised that we will be performing urgent server maintenance tonight from 1 AM to 3 AM PST. Services may experience brief interruptions during this window...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Compose Button (Floating Action Button) -->
+        <div class="fab-wrapper">
+            <div class="compose-fab">+</div>
+        </div>
+    </div>
+
+    <script>
+        // Simple JavaScript for interactivity (selection and starring)
+        document.addEventListener('DOMContentLoaded', () => {
+            const emailItems = document.querySelectorAll('.email-item');
+
+            emailItems.forEach(item => {
+                const senderIcon = item.querySelector('.sender-icon-wrapper');
+                const starIcon = item.querySelector('.star-icon');
+
+                // Toggle email selection by tapping sender icon
+                senderIcon.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent item click from triggering
+                    item.classList.toggle('selected');
+                    // In a real app, this would show/hide a delete button or other multi-select actions
+                    console.log(`Email from ${item.querySelector('.sender-name').textContent} ${item.classList.contains('selected') ? 'selected' : 'deselected'}`);
+                });
+
+                // Toggle star status
+                starIcon.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent item click from triggering
+                    starIcon.classList.toggle('starred');
+                    starIcon.innerHTML = starIcon.classList.contains('starred') ? '&#9733;' : '&#9734;'; // Toggle filled/outline star
+                    console.log(`Email from ${item.querySelector('.sender-name').textContent} ${starIcon.classList.contains('starred') ? 'starred' : 'unstarred'}`);
+                });
+
+                // Optional: Make the whole email item clickable to simulate opening it
+                item.addEventListener('click', () => {
+                    if (!item.classList.contains('selected')) { // Only open if not in selection mode
+                        console.log(`Opening email from ${item.querySelector('.sender-name').textContent}`);
+                        // In a real app, navigate to email detail page
+                    }
+                });
+            });
+
+            // Prevent default touch behavior (e.g., long press context menu)
+            document.body.addEventListener('touchstart', function() {}, {passive: true});
+        });
+    </script>
 </body>
 </html>

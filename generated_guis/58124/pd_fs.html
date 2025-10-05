@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Invoice Creation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* General Body Styling for Mobile Simulation */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto; /* Center the body on larger screens for better simulation */
+            padding: 0;
+            background-color: #f0f2f5; /* Light background for the page */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure the page takes full viewport height */
+            width: 375px; /* Target mobile width as specified */
+            max-width: 100%; /* Ensures it doesn't overflow on screens smaller than 375px */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            color: #333;
+        }
+
+        /* Common Styling for Sections */
+        .section-container {
+            background-color: #ffffff; /* White background for content sections */
+            border-radius: 10px; /* Slightly rounded corners for modern look */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Subtle shadow for depth */
+            margin: 10px 15px; /* Spacing around each section */
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        /* Input Group Styling */
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .input-group:last-child {
+            margin-bottom: 0; /* No bottom margin for the last item in a group */
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+            color: #555;
+            font-weight: bold;
+        }
+        .input-group input[type="text"],
+        .input-group textarea {
+            width: calc(100% - 20px); /* Full width minus padding */
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+            background-color: #fdfdfd;
+            color: #333;
+        }
+        .input-group textarea {
+            min-height: 70px; /* Default height for multi-line inputs */
+            resize: vertical; /* Allow vertical resizing */
+        }
+
+        /* Header / Organization Details Section */
+        .organization-details {
+            position: relative; /* For positioning the edit button */
+            padding-top: 20px; /* More top padding for the first section */
+        }
+        .organization-details .edit-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.3em; /* Larger icon */
+            cursor: pointer;
+            color: #007bff; /* Primary color for action */
+            padding: 5px;
+            line-height: 1; /* Ensure icon is centered */
+        }
+        .organization-details textarea {
+            min-height: 60px; /* Slightly smaller height for address */
+        }
+
+        /* Total Summary Section */
+        .total-summary h2 {
+            font-size: 1.25em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0; /* Separator for heading */
+            padding-bottom: 10px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .summary-item label {
+            flex-grow: 1;
+            text-align: left;
+            font-size: 1em;
+            color: #333;
+            font-weight: normal; /* Labels here are not bold */
+        }
+        .summary-item .currency-input {
+            display: flex;
+            align-items: center;
+        }
+        .summary-item .currency-input span {
+            margin-right: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 1.1em;
+        }
+        .summary-item input[type="number"] {
+            width: 100px; /* Fixed width for number inputs */
+            padding: 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: right;
+            -moz-appearance: textfield; /* Hide arrows in Firefox */
+            color: #333;
+        }
+        /* Hide arrows for Chrome, Safari, Edge */
+        .summary-item input[type="number"]::-webkit-outer-spin-button,
+        .summary-item input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .total-amount-due {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0; /* Separator above total */
+        }
+        .total-amount-due span:first-child {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+        .total-amount-due .amount {
+            font-size: 1.6em; /* Larger font for total amount */
+            font-weight: bold;
+            color: #007bff; /* Highlight total amount with primary color */
+        }
+
+        /* Notes and Terms Section */
+        .notes-terms {
+            flex-grow: 1; /* Allows this section to fill remaining vertical space */
+        }
+        .notes-terms .input-group label {
+            font-weight: bold;
+            color: #333;
+        }
+        .notes-terms textarea {
+            min-height: 120px; /* Larger text areas for notes/terms */
+        }
+
+        /* Bottom Navigation Section */
+        .bottom-navigation {
+            padding: 15px;
+            background-color: #ffffff;
+            border-top: 1px solid #f0f0f0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            margin-top: auto; /* Pushes the footer to the bottom of the flex container */
+            border-radius: 10px 10px 0 0; /* Rounded top corners for the footer */
+            margin-left: 15px;
+            margin-right: 15px;
+            margin-bottom: 0;
+        }
+        .bottom-navigation button {
+            width: 100%;
+            padding: 16px;
+            background-color: #007bff; /* Primary button color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease; /* Smooth transition for hover/tap */
+        }
+        .bottom-navigation button:active {
+            background-color: #0056b3; /* Darker on active/tap */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Header / Organization Details Section -->
+    <div class="organization-details section-container">
+        <div class="input-group">
+            <label for="orgName">Your Organization</label>
+            <input type="text" id="orgName" value="Acme Corp." placeholder="Enter organization name">
+        </div>
+        <div class="input-group">
+            <label for="orgAddress">Organization Address</label>
+            <textarea id="orgAddress" placeholder="Enter organization address">123 Main St
+Suite 400
+Anytown, USA 12345</textarea>
+        </div>
+        <!-- Edit Icon/Button (Unicode for pencil) -->
+        <button class="edit-button" aria-label="Edit Organization Details">&#9998;</button> 
+    </div>
+
+    <!-- 2. Total Summary Section -->
+    <div class="total-summary section-container">
+        <h2>Total Summary</h2>
+        <div class="summary-item">
+            <label for="subtotal">Subtotal</label>
+            <div class="currency-input">
+                <span>$</span>
+                <input type="number" id="subtotal" value="150.00" step="0.01">
+            </div>
+        </div>
+        <div class="summary-item">
+            <label for="salesTax">Sales Tax</label>
+            <div class="currency-input">
+                <span>$</span>
+                <input type="number" id="salesTax" value="12.00" step="0.01">
+            </div>
+        </div>
+        <div class="total-amount-due">
+            <span>Total Amount Due</span>
+            <!-- This value would typically be calculated by JavaScript -->
+            <span class="amount">$162.00</span> 
+        </div>
+    </div>
+
+    <!-- 3. Notes and Terms Section -->
+    <div class="notes-terms section-container">
+        <div class="input-group">
+            <label for="customNotes">Custom Notes</label>
+            <textarea id="customNotes" placeholder="Add any custom notes here..."></textarea>
+        </div>
+        <div class="input-group">
+            <label for="termsConditions">Terms and Conditions</label>
+            <textarea id="termsConditions" placeholder="Enter terms and conditions...">Payment is due within 30 days of invoice date. Late payments may incur a penalty fee.</textarea>
+        </div>
+    </div>
+
+    <!-- 4. Bottom Navigation Section -->
+    <div class="bottom-navigation">
+        <button>Next</button>
+    </div>
+
+</body>
+</html>

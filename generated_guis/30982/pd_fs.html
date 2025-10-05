@@ -1,206 +1,323 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Police Stations</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROP Directory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            width: 375px; /* Fixed width for simulation in DevTools */
+            max-width: 100%; /* Ensures it doesn't overflow if screen is smaller */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* 1. Top Bar (Header Section) */
+        .top-bar {
+            display: flex;
+            justify-content: space-between; /* Distribute items with space between them */
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: 60px; /* Fixed height for header */
             box-sizing: border-box;
-            width: 375px; /* Fixed width for the specified screen size */
-            max-width: 100%; /* Ensure it scales down on smaller screens */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
-        /* Header Styles */
-        .header {
-            background-color: #fff;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
+        .branding-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain; /* Ensure image scales properly */
+            flex-shrink: 0; /* Prevent image from shrinking */
         }
 
-        .back-button, .sort-button, .filter-button {
-            background: none;
-            border: none;
+        .app-title {
             font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .screen-title {
-            font-size: 18px;
-        }
-
-        /* Search Bar Styles */
-        .search-bar {
-            padding: 10px;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-input {
-            flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        /* List/Map Toggle Styles */
-        .toggle-container {
-            display: flex;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .toggle-button {
-            flex-grow: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 16px;
-            color: #555;
-        }
-
-        .toggle-button.active {
-            background-color: #e0e0e0;
+            font-weight: bold;
             color: #333;
+            flex-grow: 1; /* Allow title to take available space */
+            text-align: center; /* Center the title within its flex-grown space */
         }
 
-        /* List View Styles */
-        .list-container {
-            padding: 10px;
+        /* Empty div for balancing the header layout, matching the branding image's width */
+        .header-spacer {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0;
         }
 
-        .list-item {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
+        /* 2. View Selector Section */
+        .view-selector {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            width: 100%;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 5px 0;
+            box-sizing: border-box;
         }
 
-        .station-info {
-            flex-grow: 1;
+        .selector-button {
+            flex: 1; /* Each button takes equal space */
+            padding: 12px 0;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            color: #666;
+            cursor: pointer;
+            outline: none;
+            border-bottom: 2px solid transparent; /* For inactive state */
+            transition: all 0.2s ease-in-out;
         }
 
-        .station-name {
-            font-size: 18px;
+        .selector-button.active {
+            color: #007bff; /* Highlight color for active tab */
+            border-bottom-color: #007bff;
             font-weight: bold;
         }
 
-        .station-address {
-            font-size: 14px;
-            color: #777;
+        /* 3. Main Content Area (Dynamic) */
+        .main-content {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow: hidden; /* Prevent main-content from scrolling itself, let children handle */
+            display: flex; /* To manage list-view and map-view display */
+            flex-direction: column;
         }
 
-        .call-button {
-            background-color: #4CAF50;
-            color: white;
+        /* A. If "List" is selected (Alphabetical List View) */
+        .list-view {
+            flex-grow: 1; /* Make list-view fill available space in main-content */
+            display: flex; /* To allow scrollable-list-container to fill its space */
+            flex-direction: column;
+        }
+
+        .scrollable-list-container {
+            flex-grow: 1; /* Make it fill available space in list-view */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 0 10px; /* Padding for the list items */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            margin-top: 10px; /* Space between items */
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        .location-details {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            flex-grow: 1; /* Allow details to take up most space */
+        }
+
+        .location-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .phone-number {
+            font-size: 15px;
+            color: #007bff; /* Make phone number look clickable */
+            text-decoration: none;
+            display: flex; /* To align text and icon */
+            align-items: center;
+        }
+
+        .call-icon {
+            margin-left: 8px;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+        .view-on-map-button {
+            background-color: transparent;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            font-size: 24px;
+            color: #888;
             cursor: pointer;
+            padding: 5px;
+            margin-left: 10px; /* Space from phone number */
+            outline: none; /* Remove focus outline */
         }
 
-        /* Map View Styles (Placeholder - needs actual map implementation) */
-        .map-container {
-            height: 300px; /* Adjust as needed */
-            background-color: #eee;
-            text-align: center;
-            padding: 20px;
+        /* B. If "Map" is selected (Geographical Map View) - Conceptual Placeholder */
+        .map-view {
+            flex-grow: 1; /* Make map-view fill available space in main-content */
+            display: none; /* Hidden by default, would be shown via JavaScript */
         }
 
-        /* Bottom Section Styles (Placeholder) */
-        .bottom-section {
-            padding: 20px;
+        .interactive-map-component {
+            width: 100%;
+            height: 100%; /* Fills parent */
+            background-color: #e0e0e0; /* Placeholder background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            color: #666;
             text-align: center;
-            color: #777;
+            border-top: 1px solid #e0e0e0;
+            padding: 20px;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-
-    <!-- Header -->
-    <div class="header">
-        <button class="back-button">&lt;</button>
-        <span class="screen-title">Police Stations</span>
-        <div>
-          <button class="filter-button">Filter</button>
-          <button class="sort-button">Sort</button>
-        </div>
+    <!-- 1. Top Bar (Header Section) -->
+    <div class="top-bar">
+        <!-- Branding Image -->
+        <img src="https://via.placeholder.com/40x40/007bff/ffffff?text=ROP" alt="ROP Logo" class="branding-image">
+        <!-- App Title Display -->
+        <div class="app-title">ROP Directory</div>
+        <!-- Spacer to horizontally balance the branding image for central title alignment -->
+        <div class="header-spacer"></div>
     </div>
 
-    <!-- Search Bar -->
-    <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search for a police station...">
+    <!-- 2. View Selector Section -->
+    <div class="view-selector">
+        <button class="selector-button active">List</button>
+        <button class="selector-button">Map</button>
     </div>
 
-    <!-- List/Map Toggle -->
-    <div class="toggle-container">
-        <button class="toggle-button active" onclick="showList()">List</button>
-        <button class="toggle-button" onclick="showMap()">Map</button>
-    </div>
+    <!-- 3. Main Content Area (Dynamic) -->
+    <div class="main-content">
+        <!-- A. If "List" is selected (Alphabetical List View) - Default display -->
+        <div class="list-view">
+            <div class="scrollable-list-container">
+                <!-- List Item (for each location) - Example 1 -->
+                <div class="list-item">
+                    <div class="location-details">
+                        <!-- Location Name Display -->
+                        <div class="location-name">Sultan Qaboos Police Academy</div>
+                        <!-- Phone Number Display (tappable) with Call Action Button/Icon -->
+                        <a href="tel:+96824123456" class="phone-number">
+                            +968 2412 3456
+                            <span class="call-icon">&#x260E;</span> <!-- Phone icon -->
+                        </a>
+                    </div>
+                    <!-- "View on Map" Action Button/Icon -->
+                    <button class="view-on-map-button">
+                        &#x27A4; <!-- Right arrow icon -->
+                    </button>
+                </div>
 
-    <!-- List View -->
-    <div id="list-view" class="list-container">
-        <div class="list-item">
-            <div class="station-info">
-                <div class="station-name">Main Police Station</div>
-                <div class="station-address">123 Main Street, Anytown</div>
+                <!-- List Item (for each location) - Example 2 -->
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">ROP General Headquarters</div>
+                        <a href="tel:+96824127890" class="phone-number">
+                            +968 2412 7890
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
+
+                <!-- List Item (for each location) - Example 3 -->
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">Muscat Police Station</div>
+                        <a href="tel:+96824121122" class="phone-number">
+                            +968 2412 1122
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
+
+                <!-- More list items to demonstrate scrollability -->
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">Sohar Police Station</div>
+                        <a href="tel:+96826123456" class="phone-number">
+                            +968 2612 3456
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">Nizwa Police Station</div>
+                        <a href="tel:+96825123456" class="phone-number">
+                            +968 2512 3456
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">Salalah Police Station</div>
+                        <a href="tel:+96823123456" class="phone-number">
+                            +968 2312 3456
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">Al Buraimi Police Station</div>
+                        <a href="tel:+96825121234" class="phone-number">
+                            +968 2512 1234
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
+                <div class="list-item">
+                    <div class="location-details">
+                        <div class="location-name">Duqm Police Station</div>
+                        <a href="tel:+96825125678" class="phone-number">
+                            +968 2512 5678
+                            <span class="call-icon">&#x260E;</span>
+                        </a>
+                    </div>
+                    <button class="view-on-map-button">
+                        &#x27A4;
+                    </button>
+                </div>
             </div>
-            <button class="call-button">Call</button>
         </div>
 
-        <div class="list-item">
-            <div class="station-info">
-                <div class="station-name">Downtown Substation</div>
-                <div class="station-address">456 Oak Avenue, Anytown</div>
+        <!-- B. If "Map" is selected (Geographical Map View) - Conceptual Placeholder -->
+        <!-- This section is hidden by default. In a real application, JavaScript would toggle its display. -->
+        <div class="map-view" style="display: none;"> 
+            <div class="interactive-map-component">
+                <p>
+                    Interactive Map Component goes here.<br>
+                    Location markers and info windows would be displayed dynamically.
+                </p>
             </div>
-            <button class="call-button">Call</button>
         </div>
     </div>
-
-    <!-- Map View (Placeholder) -->
-    <div id="map-view" class="map-container" style="display: none;">
-        Map View (Implementation Needed)
-    </div>
-
-    <!-- Bottom Section (Placeholder) -->
-    <div class="bottom-section">
-        <!-- Future content here -->
-    </div>
-
-    <script>
-        function showList() {
-            document.getElementById('list-view').style.display = 'block';
-            document.getElementById('map-view').style.display = 'none';
-            document.querySelector('.toggle-button.active').classList.remove('active');
-            document.querySelector('.toggle-container button:first-child').classList.add('active');
-
-        }
-
-        function showMap() {
-            document.getElementById('list-view').style.display = 'none';
-            document.getElementById('map-view').style.display = 'block';
-            document.querySelector('.toggle-button.active').classList.remove('active');
-            document.querySelector('.toggle-container button:last-child').classList.add('active');
-
-        }
-    </script>
-
 </body>
 </html>

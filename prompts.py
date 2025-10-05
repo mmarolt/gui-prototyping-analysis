@@ -4,9 +4,15 @@ from langchain.prompts import PromptTemplate
 SUMMARY2CODE_ZS = PromptTemplate(
     input_variables=["summary"],
     template=
-"""Given a short description of a mobile page, implement the described page with HTML and inline CSS code: 
+"""
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
+Given a short description of a mobile page, implement the described page with HTML and inline CSS code: 
 {summary}
-Make sure, that the mobile page displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
 """
 )
 
@@ -70,9 +76,14 @@ STRUCTURE2CODE_ZS = PromptTemplate(
     input_variables=["structure"],
     template=
 """
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
 Given a Structure of UI Elements for a mobile page. Implement the described page with HTML and inline CSS code:
 {structure}
-Make sure, that the mobile page displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
 """
 )
 
@@ -287,6 +298,12 @@ STRUCTURE2CODE_FS = PromptTemplate(
 """
 Q:
 
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375. 
+
 Given a Structure of UI Elements for a mobile page. Implement the described page with HTML and inline CSS code:
 
 1. Top Section:
@@ -308,7 +325,6 @@ Given a Structure of UI Elements for a mobile page. Implement the described page
         - This should be on the lower right side, mirroring the skip button.
     - The Skip Button should be a lot smaller in widht compared to the check button, making the check button much more prominent than the skip button.
 
-Make sure, that the mobile screen displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
 
 A:
 
@@ -423,6 +439,12 @@ A:
 
 Q:
 
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
 Given a Structure of UI Elements for a mobile page. Implement the described page with HTML and inline CSS code:
 
 1. Header
@@ -445,7 +467,6 @@ Given a Structure of UI Elements for a mobile page. Implement the described page
     - Badge with Item Count: a small badge indicating the number of items in the user’s shopping list.
         - should be placed inside the clickable section, in the lower left corner of the screen.
 
-Make sure, that the mobile screen displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
 
 A:
 
@@ -586,11 +607,15 @@ A:
 
 Q: 
 
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
 Given a Structure of UI Elements for a mobile page. Implement the described page with HTML and inline CSS code:
 
 {structure}
-
-Make sure, that the mobile screen displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
 
 A:
 """
@@ -601,12 +626,18 @@ CoT_ZS = PromptTemplate(
     input_variables=["summary"],
     template=
 """
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
 Based on a short description, create a mobile page, by completing the following steps:
 
 1. Using the provided short description of a mobile page, please analyze the content and identify the specific features that are necessary for optimal functionality and user experience. Focus solely on visible functionalities
 2. Describe the necessary UI elements, for implementing a mobile page with the features, identified in the first step.
 3. How could the UI Elements be structured into a mobile page?
-4. Develop the mobile page using HTML, and inline CSS styling. Make sure, that the mobile page displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
+4. Develop the mobile page using HTML, and inline CSS styling.
 
 {summary}
 """
@@ -619,12 +650,18 @@ CoT_FS = PromptTemplate(
     template=
 """
 Q:
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
 Based on a short description, create a mobile page, by following these steps:
 
 1. Using the provided short description of a mobile page, please analyze the content and identify the specific features that are necessary for optimal functionality and user experience. Focus solely on visible functionalities
 2. Describe the necessary UI elements, for implementing a mobile page with the features, identified in the first step.
 3. How could the UI Elements be structured into a mobile page?
-4. Develop the mobile page using HTML, and inline CSS styling. Make sure, that the mobile page displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
+4. Develop the mobile page using HTML, and inline CSS styling. 
 
 The mobile screen is part of a language translator application that asks the user to translate a given text sentence.
 
@@ -786,13 +823,18 @@ code:
 </html>
 
 Q:
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
 
 Based on a short description, create a mobile page, by following these steps:
 
 1. Using the provided short description of a mobile page, please analyze the content and identify the specific features that are necessary for optimal functionality and user experience. Focus solely on visible functionalities
 2. Describe the necessary UI elements, for implementing a mobile page with the features, identified in the first step.
 3. How could the UI Elements be structured into a mobile page?
-4. Develop the mobile page using HTML, and inline CSS styling. Make sure, that the mobile page displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
+4. Develop the mobile page using HTML, and inline CSS styling.
 
 The screen displays a List with information about upcoming Box office movies.
 
@@ -987,12 +1029,18 @@ code:
 
 Q:
 
+You're an expert of mobile UI/UX design.
+You are familiar with HTML and CSS.
+You know every detail of Material Design.
+You should import the CDN <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>.
+The size of the mobile screen is 667x375.
+
 Based on a short description, create a mobile page, by following these steps:
 
 1. Using the provided short description of a mobile page, please analyze the content and identify the specific features that are necessary for optimal functionality and user experience. Focus solely on visible functionalities
 2. Describe the necessary UI elements, for implementing a mobile page with the features, identified in the first step.
 3. How could the UI Elements be structured into a mobile page?
-4. Develop the mobile page using HTML, and inline CSS styling. Make sure, that the mobile page displays well in the Google Chrome Developer Tools when simulating a device with a mobile screen size of 375 x 667 pixels.
+4. Develop the mobile page using HTML, and inline CSS styling.
 
 {summary}
 

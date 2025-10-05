@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Business Cards - Explore</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font for Material Design Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles for the entire page */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0; /* Overall page background */
+        }
+
+        /* Mobile Screen Frame Simulation */
+        .mobile-frame {
+            width: 375px;  /* Width of the mobile screen as specified */
+            height: 667px; /* Height of the mobile screen as specified */
+            background-color: #FFFFFF; /* Default app background */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Soft shadow to represent a device */
+            position: relative; /* Crucial for absolute positioning of app elements */
+            overflow: hidden; /* Ensures content stays within frame and allows internal scrolling */
+            border-radius: 8px; /* Slightly rounded corners for the frame */
+        }
+
+        /* Adjusting conceptual example's 'position: fixed' to 'position: absolute' relative to '.mobile-frame' */
+        .mobile-frame > header,
+        .mobile-frame > main,
+        .mobile-frame > .fab, /* Specific class for FAB */
+        .mobile-frame > nav {
+            position: absolute; /* Overrides 'fixed' from conceptual examples */
+            left: 0;
+            width: 100%;
+            box-sizing: border-box; /* Include padding in width/height calculations */
+        }
+
+        .mobile-frame > header {
+            top: 0;
+        }
+
+        .mobile-frame > main {
+            top: 0; /* Starts from the top of the mobile frame */
+            height: calc(667px - 144px); /* (100vh equivalent - 144px) as per conceptual example's height calculation for main */
+            z-index: 1; /* Below bars and FAB */
+        }
+
+        .mobile-frame > .fab { /* Apply FAB specific positioning */
+            bottom: 72px; /* BottomNav (56px) + 16px margin */
+            right: 16px;
+            width: 56px;
+            height: 56px;
+            z-index: 10;
+        }
+
+        .mobile-frame > nav {
+            bottom: 0;
+            z-index: 10;
+        }
+
+        /* Empty State Styling (optional, uncomment in HTML to see) */
+        .empty-state {
+            position: absolute;
+            top: 50%; /* Centered vertically within the main's total height */
+            left: 50%;
+            transform: translate(-50%, -50%); /* Adjust for own size */
+            width: 80%;
+            text-align: center;
+            padding: 16px;
+            color: #757575;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-frame">
+
+        <!-- 1. Top App Bar (Header) -->
+        <header style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px; /* Material Design standard padding */
+            height: 56px;
+            background-color: #6200EE; /* Primary Color (Deep Purple 500) */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle elevation */
+            z-index: 10; /* Ensure it stays on top */
+        ">
+            <span style="font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 20px;">My Business Cards</span>
+            <div style="display: flex;">
+                <i class="material-icons" style="font-size: 24px; margin-left: 24px; cursor: pointer;">search</i>
+                <i class="material-icons" style="font-size: 24px; margin-left: 24px; cursor: pointer;">favorite_border</i>
+                <i class="material-icons" style="font-size: 24px; margin-left: 24px; cursor: pointer;">more_vert</i>
+            </div>
+        </header>
+
+        <!-- 2. Main Content Area (Business Card Collection List) -->
+        <main style="
+            padding-top: 72px; /* TopAppBar height (56px) + 16px spacing */
+            padding-bottom: 72px; /* BottomNav height (56px) + 16px spacing */
+            padding-left: 16px;
+            padding-right: 16px;
+            background-color: #F8F8F8; /* Light background color for content */
+            overflow-y: auto; /* Enable vertical scrolling */
+        ">
+            <!-- Empty State Message (uncomment to demonstrate if no cards are present) -->
+            <!--
+            <div class="empty-state">
+                <i class="material-icons" style="font-size: 48px; color: #9E9E9E; margin-bottom: 8px;">credit_card</i>
+                <p style="margin: 0;">No business cards yet! Tap the '+' button to add your first card.</p>
+            </div>
+            -->
+
+            <!-- Example Business Card Item 1 -->
+            <div style="
+                background-color: white;
+                border-radius: 8px; /* Slightly rounded corners */
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); /* Card elevation */
+                margin-bottom: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #E0E0E0; /* Placeholder background */
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 16px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 500;
+                    font-size: 18px;
+                    color: #757575;
+                ">JD</div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0; font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; color: #212121;">John Doe</h3>
+                    <p style="margin: 4px 0 0; font-family: 'Roboto', sans-serif; font-size: 14px; color: #757575;">Software Engineer, Acme Corp.</p>
+                    <p style="margin: 2px 0 0; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E;">john.doe@acme.com</p>
+                </div>
+                <i class="material-icons" style="font-size: 24px; color: #FFC107; cursor: pointer;">star</i> <!-- Example favorited card -->
+            </div>
+
+            <!-- Example Business Card Item 2 -->
+            <div style="
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                margin-bottom: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #BBDEFB; /* Different placeholder background */
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 16px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 500;
+                    font-size: 18px;
+                    color: #424242;
+                ">AS</div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0; font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; color: #212121;">Alice Smith</h3>
+                    <p style="margin: 4px 0 0; font-family: 'Roboto', sans-serif; font-size: 14px; color: #757575;">Product Manager, Global Solutions</p>
+                    <p style="margin: 2px 0 0; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E;">alice.s@globalsol.net</p>
+                </div>
+                <i class="material-icons" style="font-size: 24px; color: #9E9E9E; cursor: pointer;">favorite_border</i> <!-- Not favorited -->
+            </div>
+
+            <!-- Example Business Card Item 3 -->
+            <div style="
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                margin-bottom: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #C8E6C9; /* Another placeholder background */
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 16px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 500;
+                    font-size: 18px;
+                    color: #424242;
+                ">MJ</div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0; font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; color: #212121;">Michael Johnson</h3>
+                    <p style="margin: 4px 0 0; font-family: 'Roboto', sans-serif; font-size: 14px; color: #757575;">Senior Sales Rep, Innovations Co.</p>
+                    <p style="margin: 2px 0 0; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E;">mike.j@innovations.biz</p>
+                </div>
+                <i class="material-icons" style="font-size: 24px; color: #FFC107; cursor: pointer;">star</i> <!-- Favorited -->
+            </div>
+
+            <!-- More cards to ensure scrolling within the frame -->
+            <div style="
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                margin-bottom: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #FFCDD2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 16px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 500;
+                    font-size: 18px;
+                    color: #424242;
+                ">EM</div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0; font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; color: #212121;">Emily White</h3>
+                    <p style="margin: 4px 0 0; font-family: 'Roboto', sans-serif; font-size: 14px; color: #757575;">Creative Director, Design Hub</p>
+                    <p style="margin: 2px 0 0; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E;">emily.w@designhub.com</p>
+                </div>
+                <i class="material-icons" style="font-size: 24px; color: #9E9E9E; cursor: pointer;">favorite_border</i>
+            </div>
+            <div style="
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                margin-bottom: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #D1C4E9;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 16px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 500;
+                    font-size: 18px;
+                    color: #424242;
+                ">DB</div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0; font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; color: #212121;">David Brown</h3>
+                    <p style="margin: 4px 0 0; font-family: 'Roboto', sans-serif; font-size: 14px; color: #757575;">Head of R&D, FutureTech</p>
+                    <p style="margin: 2px 0 0; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E;">david.b@futuretech.io</p>
+                </div>
+                <i class="material-icons" style="font-size: 24px; color: #FFC107; cursor: pointer;">star</i>
+            </div>
+            <div style="
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+                margin-bottom: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+            ">
+                <div style="
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    background-color: #FFF9C4;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: 16px;
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 500;
+                    font-size: 18px;
+                    color: #424242;
+                ">SK</div>
+                <div style="flex-grow: 1;">
+                    <h3 style="margin: 0; font-family: 'Roboto', sans-serif; font-weight: 500; font-size: 16px; color: #212121;">Sarah Kim</h3>
+                    <p style="margin: 4px 0 0; font-family: 'Roboto', sans-serif; font-size: 14px; color: #757575;">Customer Success, ConnectHub</p>
+                    <p style="margin: 2px 0 0; font-family: 'Roboto', sans-serif; font-size: 12px; color: #9E9E9E;">sarah.k@connecthub.co</p>
+                </div>
+                <i class="material-icons" style="font-size: 24px; color: #9E9E9E; cursor: pointer;">favorite_border</i>
+            </div>
+
+        </main>
+
+        <!-- 3. Floating Action Button (FAB) -->
+        <button class="fab" style="
+            border-radius: 50%;
+            background-color: #03DAC5; /* Secondary/Accent Color (Teal 200) */
+            color: white;
+            border: none;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2), 0 9px 18px rgba(0,0,0,0.24); /* Prominent elevation */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            outline: none; /* Remove focus outline */
+        ">
+            <i class="material-icons" style="font-size: 24px;">add</i>
+        </button>
+
+        <!-- 4. Bottom Navigation Bar -->
+        <nav style="
+            height: 56px;
+            background-color: #FFFFFF; /* White background */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Elevation from bottom */
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        ">
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1; /* Distribute items evenly */
+                padding: 4px 0;
+                color: #757575; /* Inactive color */
+                font-family: 'Roboto', sans-serif;
+                font-size: 12px;
+                cursor: pointer;
+            ">
+                <i class="material-icons" style="font-size: 24px;">alarm</i>
+                <span>Reminders</span>
+            </div>
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                padding: 4px 0;
+                color: #6200EE; /* Active color, matches primary color */
+                font-family: 'Roboto', sans-serif;
+                font-size: 12px;
+                font-weight: 500; /* Bolder for active state */
+                cursor: pointer;
+            ">
+                <i class="material-icons" style="font-size: 24px;">credit_card</i>
+                <span>Cards</span>
+            </div>
+            <div style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex: 1;
+                padding: 4px 0;
+                color: #757575; /* Inactive color */
+                font-family: 'Roboto', sans-serif;
+                font-size: 12px;
+                cursor: pointer;
+            ">
+                <i class="material-icons" style="font-size: 24px;">sync_alt</i>
+                <span>Contacts</span>
+            </div>
+        </nav>
+
+    </div>
+
+</body>
+</html>

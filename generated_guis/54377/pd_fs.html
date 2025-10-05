@@ -1,229 +1,836 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mobile Slide Editor</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: sans-serif;
+        /* Base styles for the mobile screen simulation */
+        body, html {
             margin: 0;
             padding: 0;
-            height: 100vh;
-            overflow: hidden; /* Prevent scrolling */
-        }
-
-        /* Top Bar */
-        .top-bar {
-            background-color: #eee;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #f8f8f8;
+            height: 100%; /* Make body fill the viewport height */
+            display: flex; /* Flex container to hold screens */
+            flex-direction: column; /* Stack screens vertically */
+            width: 375px; /* Fixed width for Chrome DevTools simulation */
+            max-width: 100%; /* Ensure it doesn't overflow on larger screens */
+            overflow-x: hidden; /* Prevent horizontal scroll */
             box-sizing: border-box;
-            width: 100%;
-            height: 50px;
         }
 
-        .top-bar button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        /* Slide Preview Area */
-        .slide-preview {
-            background-color: #fff;
-            height: calc(100vh - 150px); /* Account for top and bottom bars */
-            width: 100%;
-            box-sizing: border-box;
-            position: relative;
-            overflow: hidden; /* Hide anything that overflows */
-            text-align: center;
-            line-height: calc(100vh - 150px); /* Vertically center placeholder */
-            color: #ccc;
-        }
-
-        /* Contextual Toolbar */
-        .contextual-toolbar {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            padding: 5px;
-            border-radius: 5px;
-            display: none; /* Hidden by default */
-        }
-
-        .contextual-toolbar button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 16px;
-            margin: 0 5px;
-            cursor: pointer;
-        }
-
-        /* Bottom Bar */
-        .bottom-bar {
-            background-color: #eee;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-sizing: border-box;
-            width: 100%;
-            height: 50px;
-        }
-
-        .bottom-bar button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        /* Add Element Menu */
-        .add-element-menu {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            display: none; /* Hidden by default */
+        /* Common styles for all screens */
+        .screen {
+            display: none; /* Hidden by default, only one screen visible at a time */
             flex-direction: column;
-            align-items: center;
-            box-sizing: border-box;
-        }
-
-        .add-element-menu button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 80%;
-        }
-
-        /* Text Formatting Toolbar */
-        .text-formatting-toolbar {
-            position: fixed;
-            bottom: 0;
-            left: 0;
             width: 100%;
-            background-color: #fff;
-            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            display: none; /* Hidden by default */
-            flex-direction: column;
-            align-items: center;
+            height: 100%; /* Each screen takes full height */
             box-sizing: border-box;
+            position: relative; /* For absolutely positioned children like FABs, toolbars */
+            background-color: #f8f8f8; /* Default screen background */
         }
 
-        .text-formatting-toolbar select,
-        .text-formatting-toolbar input,
-        .text-formatting-toolbar button {
-            margin: 5px;
-            padding: 5px;
-        }
-
-        .multiline-text-input {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-
-        /* Utility Classes */
-        .hidden {
-            display: none !important;
-        }
-
-        .visible {
+        /* Helper class to show a screen or element */
+        .show-element {
             display: flex !important;
         }
+        .show-grid {
+            display: grid !important;
+        }
 
+        /* Common header styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2vh 4vw; /* Vertical and horizontal padding */
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            position: relative;
+            z-index: 10; /* Ensure header is above other content */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .header-title {
+            font-size: 5vw; /* Responsive font size */
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1;
+            text-align: center;
+            margin: 0; /* Reset default margins */
+        }
+
+        /* Common button styling */
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 4vw; /* Responsive font size */
+            color: #007bff; /* Accent color for interactive elements */
+            padding: 0;
+            outline: none; /* Remove focus outline */
+        }
+
+        /* --- I. Presentation List Screen Styles --- */
+        .presentation-list-screen {
+            /* Add .show-element to this div to make it visible */
+            /* For demo, it is made visible by default */
+        }
+
+        .presentation-list-screen .header-title {
+            text-align: center;
+            flex-grow: 1; /* Title takes available space */
+        }
+
+        .presentation-list-content {
+            flex-grow: 1; /* Takes remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 2vh 4vw;
+            background-color: #f0f0f0; /* Slightly different background for content area */
+        }
+
+        .presentation-card {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            margin-bottom: 2vh;
+            padding: 2.5vw;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .presentation-card img {
+            width: 15vw;
+            height: 10vw;
+            object-fit: cover; /* Ensures image covers the area without distortion */
+            border-radius: 4px;
+            margin-right: 3vw;
+            background-color: #e0e0e0; /* Placeholder background for images */
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        .presentation-card span {
+            font-size: 4vw;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Floating Action Button (FAB) */
+        .fab {
+            position: fixed; /* Fixed position relative to the viewport */
+            bottom: 4vh;
+            right: 4vw;
+            width: 14vw;
+            height: 14vw;
+            border-radius: 50%; /* Circular shape */
+            background-color: #007bff; /* Primary action color */
+            color: white;
+            font-size: 8vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 20; /* Above other content */
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Bottom Sheet Overlay and Content */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 25; /* Above FAB */
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: flex-end; /* Align sheet to the bottom */
+        }
+
+        .bottom-sheet {
+            background-color: #fff;
+            width: 100%;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 3vh 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            animation: slideUp 0.3s ease-out forwards; /* Simple slide-up animation */
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .bottom-sheet button {
+            display: block;
+            width: 100%;
+            padding: 2.5vh 4vw;
+            text-align: left;
+            font-size: 4.5vw;
+            color: #333;
+            border-bottom: 1px solid #eee; /* Separator between options */
+            background-color: transparent;
+        }
+        .bottom-sheet button:last-child {
+            border-bottom: none; /* No separator for the last item */
+        }
+        .bottom-sheet button:hover {
+            background-color: #f0f0f0; /* Hover effect */
+        }
+
+        /* --- Template Gallery Screen Styles --- */
+        .template-gallery-screen .header button {
+            flex-basis: 15%; /* Allocate space for back button */
+            text-align: left;
+        }
+        .template-gallery-screen .header .header-title {
+            flex-grow: 1;
+            text-align: center;
+        }
+        /* Hidden spacer to balance header items if only two are present */
+        .template-gallery-screen .header span:last-of-type {
+            flex-basis: 15%;
+        }
+
+        .template-grid-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2vh 4vw;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40vw, 1fr)); /* Two columns with responsive width */
+            gap: 3vw; /* Gap between grid items */
+            justify-content: center;
+            background-color: #f0f0f0;
+        }
+
+        .template-item {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 2vw;
+        }
+
+        .template-item img {
+            width: 100%;
+            height: 25vw; /* Aspect ratio for thumbnails */
+            object-fit: cover;
+            background-color: #e0e0e0; /* Placeholder background */
+            border-bottom: 1px solid #eee;
+            margin-bottom: 1.5vw;
+        }
+
+        .template-item span {
+            font-size: 3.5vw;
+            color: #333;
+            padding: 0 2vw;
+            display: block;
+        }
+
+        /* --- II. Slide Editing Screen Styles --- */
+        .slide-editing-screen {
+            /* Add .show-element to this div to make it visible */
+            /* For demo, it is hidden by default */
+            background-color: #f0f0f0;
+        }
+
+        .slide-editing-screen .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2vh 4vw;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        .slide-editing-screen .header-bar .left-buttons,
+        .slide-editing-screen .header-bar .right-buttons {
+            display: flex;
+            gap: 3vw; /* Space between buttons */
+        }
+        .slide-editing-screen .header-bar .header-title {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 4.5vw;
+            font-weight: normal;
+        }
+        .slide-editing-screen .header-bar button {
+            font-size: 5vw;
+            color: #333;
+        }
+        .slide-editing-screen .header-bar button.done-button {
+            color: #007bff;
+            font-size: 4vw;
+            font-weight: bold;
+        }
+
+        .editing-area {
+            flex-grow: 1; /* Takes remaining vertical space */
+            display: flex;
+            position: relative; /* For absolutely positioned toolbars/canvas */
+            padding: 2vh 0; /* Vertical padding around the editing area */
+            overflow: hidden; /* Prevent content from spilling out */
+        }
+
+        .left-toolbar {
+            position: absolute; /* Position relative to .editing-area */
+            left: 2vw;
+            top: 2vh;
+            bottom: 2vh;
+            width: 12vw;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align items to the top */
+            padding: 1vh 0;
+            gap: 1.5vh; /* Space between toolbar buttons */
+            z-index: 15;
+            flex-shrink: 0;
+        }
+        .left-toolbar button {
+            font-size: 5vw;
+            color: #555;
+            padding: 1.5vh 0;
+            border-bottom: 1px solid #eee; /* Separator */
+        }
+        .left-toolbar button:last-child {
+            border-bottom: none;
+        }
+        .left-toolbar button:active {
+            background-color: #f0f0f0; /* Active state feedback */
+        }
+
+        .slide-canvas-wrapper {
+            flex-grow: 1; /* Takes remaining horizontal space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Adjust margin to account for left toolbar */
+            margin-left: calc(4vw + 12vw + 2vw); /* Left margin + toolbar width + toolbar offset */
+            margin-right: 4vw; /* Right margin */
+            box-sizing: border-box;
+        }
+
+        .slide-canvas {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            width: 100%; /* Fill wrapper width */
+            padding-bottom: 56.25%; /* 16:9 aspect ratio (height is 56.25% of width) */
+            position: relative; /* For content positioning */
+            border-radius: 4px;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.05); /* Inner shadow for canvas effect */
+            max-width: 60vh; /* Limit max width to keep it reasonable on taller screens */
+            max-height: calc(100% - 4vh); /* Ensure it fits vertically within editing-area */
+        }
+
+        /* Styles for editable elements on canvas */
+        .editable-text-box, .interactive-shape {
+            position: absolute;
+            border: 1px dashed #007bff; /* Selection border */
+            padding: 1vw;
+            min-width: 15vw;
+            min-height: 8vw;
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background */
+        }
+        .editable-text-box {
+            top: 10%;
+            left: 10%;
+            width: 70%;
+            height: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .editable-text-box textarea {
+            width: 100%;
+            height: 100%;
+            border: none;
+            resize: none;
+            font-size: 4vw;
+            text-align: center;
+            background: transparent;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            color: #333;
+        }
+        .interactive-shape {
+            top: 50%;
+            left: 20%;
+            width: 40%;
+            height: 30%;
+            background-color: #ffc107; /* Example shape color */
+            border-radius: 8px; /* Example: rectangle with rounded corners */
+            border: 1px dashed #007bff;
+        }
+        /* Conceptual selection handles (for resizing/rotation) */
+        .handle {
+            position: absolute;
+            width: 1.5vh;
+            height: 1.5vh;
+            background-color: #007bff;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            cursor: nwse-resize; /* Example cursor */
+        }
+        .handle.top-left { top: -0.75vh; left: -0.75vh; }
+        .handle.top-right { top: -0.75vh; right: -0.75vh; }
+        .handle.bottom-left { bottom: -0.75vh; left: -0.75vh; }
+        .handle.bottom-right { bottom: -0.75vh; right: -0.75vh; }
+
+
+        /* Dynamic Text Editing Toolbar */
+        .text-toolbar {
+            position: fixed; /* Fixed position */
+            top: 8vh; /* Below header bar */
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 1.5vh 2vw;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: none; /* Hidden by default, appears contextually */
+            justify-content: space-around;
+            align-items: center;
+            z-index: 10;
+            flex-wrap: wrap; /* Allow items to wrap if space is tight */
+            gap: 1vh; /* Gap for wrapped items */
+        }
+        .text-toolbar select, .text-toolbar input[type="number"], .text-toolbar button {
+            padding: 0.8vh 1.5vw;
+            font-size: 3.5vw;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0 0.5vw;
+            box-sizing: border-box;
+            min-width: 10vw; /* Ensure minimum width for controls */
+        }
+        .text-toolbar input[type="number"] {
+            width: 10vw;
+            text-align: center;
+        }
+        .text-toolbar .inc-dec-buttons {
+            display: flex;
+            gap: 0;
+        }
+        .text-toolbar .inc-dec-buttons button {
+            border-radius: 0;
+            width: 6vw;
+            padding: 0.8vh 0;
+            border-color: #ddd;
+        }
+        .text-toolbar .inc-dec-buttons button:first-child { border-top-left-radius: 4px; border-bottom-left-radius: 4px; }
+        .text-toolbar .inc-dec-buttons button:last-child { border-top-right-radius: 4px; border-bottom-right-radius: 4px; }
+
+        .text-alignment-buttons {
+            display: flex;
+        }
+        .text-alignment-buttons button {
+            width: 8vw;
+            padding: 0.8vh 0;
+        }
+        .text-alignment-buttons button.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        /* Shapes Pop-up Menu */
+        .shapes-popup {
+            position: absolute;
+            left: calc(2vw + 12vw + 1vw); /* Right of left toolbar + some gap */
+            top: 15vh; /* Example position */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            padding: 2vh;
+            display: none; /* Hidden by default, uncomment .show-grid to see */
+            grid-template-columns: repeat(3, 1fr); /* 3 columns for shapes */
+            gap: 2vw;
+            z-index: 20;
+        }
+        .shapes-popup button {
+            width: 10vw;
+            height: 10vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 6vw;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            color: #555;
+            background-color: #f9f9f9;
+        }
+        .shapes-popup button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Contextual Element Editing Controls (Pop-up) */
+        .context-menu {
+            position: absolute;
+            background-color: #333;
+            border-radius: 5px;
+            padding: 1vh 1vw;
+            display: none; /* Hidden by default, uncomment .show-element to see */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 30; /* Highest z-index */
+            white-space: nowrap; /* Prevent buttons from wrapping */
+        }
+        .context-menu button {
+            color: white;
+            font-size: 4vw;
+            padding: 0.5vh 1.5vw;
+            margin: 0 0.5vw;
+            border-radius: 3px;
+            background-color: transparent;
+        }
+        .context-menu button:hover {
+            background-color: #555;
+        }
+
+        /* Bottom Slide Navigation/Management Bar */
+        .bottom-slide-bar {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 1.5vh 2vw;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Shadow indicating it's above content */
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .slide-thumbnail-strip {
+            flex-grow: 1; /* Takes most of the horizontal space */
+            overflow-x: auto; /* Enables horizontal scrolling */
+            white-space: nowrap; /* Prevent thumbnails from wrapping */
+            display: flex;
+            gap: 1.5vw; /* Space between thumbnails */
+            padding: 0.5vh 0; /* Vertical padding for scrollability */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .thumbnail-item {
+            display: inline-block; /* For horizontal scroll */
+            width: 18vw;
+            flex-shrink: 0; /* Prevent items from shrinking */
+            border: 2px solid transparent;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            position: relative;
+            cursor: grab; /* Indicates draggable */
+        }
+        .thumbnail-item img {
+            width: 100%;
+            height: 10vw; /* Maintain aspect ratio */
+            object-fit: cover;
+            display: block;
+        }
+        .thumbnail-item.active {
+            border-color: #007bff; /* Highlight active slide */
+        }
+        .thumbnail-item:active {
+            cursor: grabbing;
+        }
+
+        .add-slide-button {
+            width: 10vw;
+            height: 10vw;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            font-size: 6vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 2vw;
+            flex-shrink: 0; /* Prevent button from shrinking */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <div>
-            <button>&#8630;</button>  <!-- Undo -->
-            <button>&#8631;</button>  <!-- Redo -->
+    <!--
+    To view a specific screen in Chrome Developer Tools:
+    1. Open the HTML file in your browser.
+    2. Open Developer Tools (F12 or right-click -> Inspect).
+    3. Toggle "Device Toolbar" (Ctrl+Shift+M or the mobile icon).
+    4. Select a device (e.g., "iPhone SE" for 375x667px).
+    5. In the Elements tab, find the <div> for the screen you want to see.
+    6. Add the class "show-element" to that screen's <div>.
+       For contextual elements like bottom-sheet, text-toolbar, shapes-popup, context-menu,
+       add "show-element" (or "show-grid" for grid layouts) to them as well.
+    7. Make sure other screens do NOT have "show-element" class to avoid overlap.
+    -->
+
+    <!-- I. Presentation List Screen (Entry Point) -->
+    <!-- This screen is visible by default -->
+    <div class="screen presentation-list-screen show-element">
+        <div class="header">
+            <span class="header-title">My Presentations</span>
         </div>
-        <div>Slide 1</div>
-        <div>
-            <button onclick="toggleAddElementMenu()">+</button> <!-- Add Element -->
+
+        <div class="presentation-list-content">
+            <!-- Presentation List View -->
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P1" alt="Presentation Thumbnail">
+                <span>Project Alpha Overview</span>
+            </div>
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P2" alt="Presentation Thumbnail">
+                <span>Quarterly Report Q3</span>
+            </div>
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P3" alt="Presentation Thumbnail">
+                <span>Team Meeting Agenda</span>
+            </div>
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P4" alt="Presentation Thumbnail">
+                <span>Client Pitch Deck</span>
+            </div>
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P5" alt="Presentation Thumbnail">
+                <span>Product Roadmap 2024</span>
+            </div>
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P6" alt="Presentation Thumbnail">
+                <span>Marketing Strategy Update</span>
+            </div>
+            <div class="presentation-card">
+                <img src="https://via.placeholder.com/150x100?text=P7" alt="Presentation Thumbnail">
+                <span>Sales Performance Review</span>
+            </div>
+        </div>
+
+        <!-- "Create New Presentation" Button (FAB) -->
+        <button class="fab" onclick="document.getElementById('createOptionsOverlay').classList.add('show-element');">&plus;</button>
+
+        <!-- Creation Options (Bottom Sheet - hidden by default, appears on FAB tap) -->
+        <div class="bottom-sheet-overlay" id="createOptionsOverlay" onclick="this.classList.remove('show-element');">
+            <div class="bottom-sheet" onclick="event.stopPropagation();">
+                <button>Start from Scratch</button>
+                <button onclick="document.getElementById('presentationList').classList.remove('show-element'); document.getElementById('templateGallery').classList.add('show-element'); document.getElementById('createOptionsOverlay').classList.remove('show-element');">Choose Template</button>
+            </div>
         </div>
     </div>
 
-    <div class="slide-preview" onclick="showContextualToolbar()">
-        Slide Preview Area
-        <div class="contextual-toolbar">
-            <button>Move</button>
-            <button>Delete</button>
+    <!-- Template Gallery Screen (Subsequent Screen - hidden by default) -->
+    <div class="screen template-gallery-screen" id="templateGallery">
+        <div class="header">
+            <button class="back-button" onclick="document.getElementById('templateGallery').classList.remove('show-element'); document.getElementById('presentationList').classList.add('show-element');">&larr;</button>
+            <span class="header-title">Select a Template</span>
+            <span></span><!-- Spacer to center title (optional, can adjust flex-grow) -->
+        </div>
+
+        <div class="template-grid-container">
+            <div class="template-item">
+                <img src="https://via.placeholder.com/150x100?text=T1" alt="Template Thumbnail">
+                <span>Modern Minimalist</span>
+            </div>
+            <div class="template-item">
+                <img src="https://via.placeholder.com/150x100?text=T2" alt="Template Thumbnail">
+                <span>Business Professional</span>
+            </div>
+            <div class="template-item">
+                <img src="https://via.placeholder.com/150x100?text=T3" alt="Template Thumbnail">
+                <span>Creative Portfolio</span>
+            </div>
+            <div class="template-item">
+                <img src="https://via.placeholder.com/150x100?text=T4" alt="Template Thumbnail">
+                <span>Dark Mode Theme</span>
+            </div>
+            <div class="template-item">
+                <img src="https://via.placeholder.com/150x100?text=T5" alt="Template Thumbnail">
+                <span>Educational Focus</span>
+            </div>
+            <div class="template-item">
+                <img src="https://via.placeholder.com/150x100?text=T6" alt="Template Thumbnail">
+                <span>Infographic Style</span>
+            </div>
         </div>
     </div>
 
-    <div class="bottom-bar">
-        <button>&#8592;</button> <!-- Previous Slide -->
-        <button>&#8594;</button> <!-- Next Slide -->
-    </div>
 
-    <div class="add-element-menu hidden" id="addElementMenu">
-        <button onclick="showTextFormatting()">Add Text</button>
-        <button>Add Image</button>
-        <button>Add Shape</button>
-    </div>
-
-    <div class="text-formatting-toolbar hidden" id="textFormattingToolbar">
-        <textarea class="multiline-text-input" placeholder="Enter text"></textarea>
-        <select>
-            <option>Arial</option>
-            <option>Times New Roman</option>
-        </select>
-        <input type="number" placeholder="Size">
-        <input type="color">
-        <div>
-            <button>Left</button>
-            <button>Center</button>
-            <button>Right</button>
+    <!-- II. Slide Editing Screen (Main Editing Interface - hidden by default) -->
+    <!-- To see this screen, remove "show-element" from .presentation-list-screen and add it here. -->
+    <div class="screen slide-editing-screen" id="slideEditingScreen">
+        <!-- Top Header Bar -->
+        <div class="header-bar">
+            <div class="left-buttons">
+                <button>&curvearrowleft;</button> <!-- Undo -->
+                <button>&curvearrowright;</button> <!-- Redo -->
+            </div>
+            <span class="header-title">My Presentation - Slide 3 of 10</span>
+            <div class="right-buttons">
+                <button class="done-button">Done</button>
+            </div>
         </div>
-        <div>
-            <button><b>B</b></button>
-            <button><i>I</i></button>
-            <button><u>U</u></button>
+
+        <!-- Dynamic Text Editing Toolbar (Contextual - hidden by default) -->
+        <!-- Add class "show-element" to this div to make it visible -->
+        <div class="text-toolbar" id="textEditingToolbar">
+            <select>
+                <option>Arial</option>
+                <option>Helvetica</option>
+                <option>Times New Roman</option>
+            </select>
+            <div class="inc-dec-buttons">
+                <button>-</button>
+                <input type="number" value="24" min="8" max="72">
+                <button>+</button>
+            </div>
+            <button title="Text Color">&#x25A0;</button> <!-- Color Picker (filled square icon) -->
+            <div class="text-alignment-buttons">
+                <button class="active" title="Align Left">&#x2261;</button> <!-- Left Align (using unicode for justified) -->
+                <button title="Align Center">&#x25A1;</button> <!-- Center Align (conceptual, using square) -->
+                <button title="Align Right">&#x2261;</button> <!-- Right Align (using unicode for justified) -->
+                <button title="Justify">&#x2261;</button> <!-- Justify (using unicode for justified) -->
+            </div>
+        </div>
+
+        <div class="editing-area">
+            <!-- Left-Side Element Insertion Toolbar -->
+            <div class="left-toolbar">
+                <button title="Add Text Box">T</button> <!-- Text Box -->
+                <button title="Add Shape" onclick="document.getElementById('shapesPopup').classList.toggle('show-grid');">&#9632;</button> <!-- Shapes (using square) -->
+            </div>
+
+            <!-- Main Slide Canvas Area -->
+            <div class="slide-canvas-wrapper">
+                <div class="slide-canvas">
+                    <!-- Editable Text Boxes -->
+                    <div class="editable-text-box" onclick="document.getElementById('contextualMenu').classList.add('show-element'); document.getElementById('textEditingToolbar').classList.add('show-element');">
+                        <textarea placeholder="Click to add text"></textarea>
+                        <span class="handle top-left"></span>
+                        <span class="handle top-right"></span>
+                        <span class="handle bottom-left"></span>
+                        <span class="handle bottom-right"></span>
+                    </div>
+                    <!-- Interactive Shapes -->
+                    <div class="interactive-shape" onclick="document.getElementById('contextualMenu').classList.add('show-element'); document.getElementById('textEditingToolbar').classList.remove('show-element');">
+                        <span class="handle top-left"></span>
+                        <span class="handle top-right"></span>
+                        <span class="handle bottom-left"></span>
+                        <span class="handle bottom-right"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contextual Element Editing Controls (Pop-up - hidden by default) -->
+            <!-- Add class "show-element" to this div to make it visible -->
+            <div class="context-menu" id="contextualMenu" style="top: 20vh; left: 50vw;" onclick="event.stopPropagation();">
+                <button title="Cut">&#x2702;</button> <!-- Cut (scissors icon) -->
+                <button title="Copy">&#x2398;</button> <!-- Copy (two squares icon) -->
+                <button title="Delete">&#x1F5D1;</button> <!-- Delete (trash can) -->
+            </div>
+
+            <!-- Shapes Pop-up Menu (hidden by default) -->
+            <!-- Add class "show-grid" to this div to make it visible -->
+            <div class="shapes-popup" id="shapesPopup">
+                <button title="Rectangle">&#9632;</button> <!-- Rectangle -->
+                <button title="Circle">&#9679;</button> <!-- Circle -->
+                <button title="Arrow">&#x2192;</button> <!-- Arrow -->
+                <button title="Line">&#x2014;</button> <!-- Line -->
+                <button title="Triangle">&#9650;</button> <!-- Triangle -->
+                <button title="Diamond">&#9670;</button> <!-- Diamond -->
+            </div>
+        </div>
+
+        <!-- Bottom Slide Navigation/Management Bar -->
+        <div class="bottom-slide-bar">
+            <!-- Slide Sorter/Thumbnail Strip -->
+            <div class="slide-thumbnail-strip">
+                <div class="thumbnail-item">
+                    <img src="https://via.placeholder.com/150x100?text=S1" alt="Slide Thumbnail 1">
+                </div>
+                <div class="thumbnail-item">
+                    <img src="https://via.placeholder.com/150x100?text=S2" alt="Slide Thumbnail 2">
+                </div>
+                <div class="thumbnail-item active">
+                    <img src="https://via.placeholder.com/150x100?text=S3" alt="Slide Thumbnail 3">
+                </div>
+                <div class="thumbnail-item">
+                    <img src="https://via.placeholder.com/150x100?text=S4" alt="Slide Thumbnail 4">
+                </div>
+                <div class="thumbnail-item">
+                    <img src="https://via.placeholder.com/150x100?text=S5" alt="Slide Thumbnail 5">
+                </div>
+                <div class="thumbnail-item">
+                    <img src="https://via.placeholder.com/150x100?text=S6" alt="Slide Thumbnail 6">
+                </div>
+                <div class="thumbnail-item">
+                    <img src="https://via.placeholder.com/150x100?text=S7" alt="Slide Thumbnail 7">
+                </div>
+            </div>
+            <!-- "Add Slide" Button -->
+            <button class="add-slide-button">&plus;</button>
         </div>
     </div>
 
     <script>
-        function toggleAddElementMenu() {
-            var menu = document.getElementById("addElementMenu");
-            menu.classList.toggle("hidden");
-            menu.classList.toggle("visible");
-        }
+        // Simple JS to toggle screens and contextual menus for demo purposes
+        document.addEventListener('DOMContentLoaded', () => {
+            const presentationListScreen = document.getElementById('presentationList');
+            const templateGallery = document.getElementById('templateGallery');
+            const slideEditingScreen = document.getElementById('slideEditingScreen');
+            const createOptionsOverlay = document.getElementById('createOptionsOverlay');
+            const textEditingToolbar = document.getElementById('textEditingToolbar');
+            const contextualMenu = document.getElementById('contextualMenu');
+            const shapesPopup = document.getElementById('shapesPopup');
 
-        function showTextFormatting() {
-            toggleAddElementMenu();
-            var toolbar = document.getElementById("textFormattingToolbar");
-            toolbar.classList.remove("hidden");
-            toolbar.classList.add("visible");
+            // Initial setup: only presentation list screen visible
+            presentationListScreen.classList.add('show-element');
+            templateGallery.classList.remove('show-element');
+            slideEditingScreen.classList.remove('show-element');
+            createOptionsOverlay.classList.remove('show-element');
+            textEditingToolbar.classList.remove('show-element');
+            contextualMenu.classList.remove('show-element');
+            shapesPopup.classList.remove('show-grid');
 
-            document.querySelector('.bottom-bar').classList.add('hidden'); // Hide bottom bar nav
-        }
+            // Example of how to toggle screens via console or new buttons (not requested, but for context)
+            // To show Slide Editing Screen:
+            // document.querySelector('.presentation-list-screen').classList.remove('show-element');
+            // document.getElementById('slideEditingScreen').classList.add('show-element');
 
-        function showContextualToolbar() {
-            document.querySelector('.contextual-toolbar').style.display = 'block';
-        }
+            // To show Presentation List Screen:
+            // document.getElementById('slideEditingScreen').classList.remove('show-element');
+            // document.querySelector('.presentation-list-screen').classList.add('show-element');
+
+            // Hide contextual menus on general click (if they are visible)
+            document.addEventListener('click', (event) => {
+                if (contextualMenu.classList.contains('show-element') && !contextualMenu.contains(event.target)) {
+                    contextualMenu.classList.remove('show-element');
+                }
+                if (shapesPopup.classList.contains('show-grid') && !shapesPopup.contains(event.target) && !event.target.closest('.left-toolbar button')) {
+                    shapesPopup.classList.remove('show-grid');
+                }
+                // Don't hide text toolbar on general click, as it's contextually shown with selected text box
+            });
+
+            // Prevent clicks on contextual menu from propagating and closing it
+            if (contextualMenu) {
+                contextualMenu.addEventListener('click', (event) => event.stopPropagation());
+            }
+            if (shapesPopup) {
+                shapesPopup.addEventListener('click', (event) => event.stopPropagation());
+            }
+             if (createOptionsOverlay) {
+                createOptionsOverlay.addEventListener('click', (event) => {
+                    if (event.target === createOptionsOverlay) { // Only close if clicking the overlay itself
+                        createOptionsOverlay.classList.remove('show-element');
+                    }
+                });
+            }
+        });
     </script>
-
 </body>
 </html>

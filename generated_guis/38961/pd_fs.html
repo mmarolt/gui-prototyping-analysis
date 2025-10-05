@@ -1,180 +1,319 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Transaction History</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    box-sizing: border-box;
-    width: 375px; /* Enforce the width */
-    max-width: 100%;
-    overflow-x: hidden;
-  }
+    <title>Dashboard</title>
+    <!-- Set viewport for mobile device simulation -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <style>
+        /* Base styles for the entire page */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4; /* Light grey background */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
 
-  .header {
-    background-color: #fff;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 375px; /* Enforce the width */
-    max-width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    box-sizing: border-box;
-  }
+            /* Simulate mobile screen size for Google Chrome Developer Tools */
+            width: 375px;
+            height: 667px;
+            overflow: hidden; /* Prevent the body from scrolling, content will scroll internally */
 
-  .back-button {
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-  }
+            /* Flexbox for main layout: header, scrollable content, footer stacked vertically */
+            display: flex;
+            flex-direction: column;
+        }
 
-  .title {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-    text-align: center;
-    flex-grow: 1; /* Allow title to take up available space */
-  }
+        /* 1. Top Header Section (Fixed) */
+        .header-section {
+            display: flex;
+            justify-content: space-between; /* Distribute items to the ends */
+            align-items: center; /* Vertically center items */
+            padding: 15px 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+            min-height: 50px; /* Fixed height for the header */
+        }
 
-  .filter-button {
-    font-size: 18px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-  }
+        /* User Name Display */
+        .user-info {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            flex-grow: 1; /* Allows it to take available space */
+            text-align: left; /* Aligned to the left */
+        }
 
-  .balance {
-    text-align: center;
-    padding: 10px;
-    background-color: #fff;
-    margin-top: 60px; /* Adjust margin to avoid overlap with header */
-    box-sizing: border-box;
-  }
+        /* Settings Icon */
+        .settings-icon {
+            background: none; /* No background */
+            border: none; /* No border */
+            font-size: 24px; /* Large enough to be tappable */
+            cursor: pointer;
+            color: #555; /* Dark grey color */
+            padding: 0;
+            line-height: 1; /* Ensure icon is vertically centered */
+        }
 
-  .transaction-list {
-    padding: 10px;
-    overflow-y: auto;
-    height: calc(667px - 150px); /* Adjust height dynamically */
-    box-sizing: border-box;
-  }
+        /* 2. Primary Balance Information Section (Below Header) */
+        .balance-section {
+            padding: 20px;
+            background-color: #f4f4f4; /* Matches body background */
+        }
 
-  .transaction-item {
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-  }
+        /* Current Available Balance Display (Tappable Container/Card) */
+        .available-balance-card {
+            display: flex;
+            flex-direction: column; /* Stack title and amount vertically */
+            align-items: flex-start; /* Align text to the left */
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners for card effect */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Prominent shadow */
+            width: 100%; /* Full width within its parent padding */
+            box-sizing: border-box; /* Include padding in width calculation */
+            text-align: left; /* Ensure text inside is left-aligned */
+            border: none; /* No button border */
+            cursor: pointer;
+            -webkit-appearance: none; /* Remove default button styling for consistency */
+            -moz-appearance: none;
+            appearance: none;
+        }
 
-  .transaction-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-  }
+        /* Balance Title */
+        .balance-title {
+            font-size: 14px;
+            color: #777; /* Subtler color */
+            margin-bottom: 5px;
+        }
 
-  .date {
-    font-size: 12px;
-    color: #777;
-  }
+        /* Balance Amount */
+        .balance-amount {
+            font-size: 30px;
+            font-weight: bold;
+            color: #333; /* Prominent color */
+        }
 
-  .amount {
-    font-size: 14px;
-    font-weight: bold;
-  }
+        /* 3. Main Scrollable Content Area */
+        .main-scrollable-content {
+            flex-grow: 1; /* Takes up all available vertical space between header and footer */
+            overflow-y: auto; /* Enables vertical scrolling for this section */
+            padding: 0 20px; /* Horizontal padding */
+            background-color: #f4f4f4; /* Matches body background */
+        }
 
-  .amount.positive {
-    color: green;
-  }
+        /* Recent Account Activity Section Header */
+        .recent-activity-header {
+            display: flex;
+            justify-content: space-between; /* "Recent Activity" left, "View All" right */
+            align-items: baseline; /* Align text baselines */
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
 
-  .amount.negative {
-    color: red;
-  }
+        /* Section Title (e.g., "Recent Activity", "Unpaid Invoices") */
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-align: left; /* Ensure left alignment */
+        }
 
-  .description {
-    font-size: 16px;
-  }
+        /* View All Activity Link */
+        .view-all-link {
+            background: none;
+            border: none;
+            color: #007bff; /* Blue link color */
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
-  .separator {
-    border-bottom: 1px solid #eee;
-    margin-bottom: 10px;
-  }
+        /* Scrollable Container for activity items (within main scrollable area) */
+        .activity-scroll-container {
+            margin-bottom: 20px; /* Space between activity and invoices */
+        }
 
-  /* Optional bottom section styles */
-  .bottom-section {
-    text-align: center;
-    padding: 10px;
-    background-color: #fff;
-    border-top: 1px solid #eee;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 375px; /* Enforce the width */
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-</style>
+        /* Individual Activity Item */
+        .activity-item {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 8px; /* Space between items */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Lighter shadow */
+            font-size: 16px;
+            color: #555;
+            text-align: left;
+        }
+
+        /* Invoice Summaries Section */
+        .invoice-summaries {
+            margin-top: 20px;
+            margin-bottom: 20px; /* Space before bottom navigation */
+        }
+
+        /* Wrapper for each invoice card and its title */
+        .invoice-card-wrapper {
+            margin-bottom: 15px;
+        }
+
+        /* Adjust section title margin for invoice cards */
+        .invoice-card-wrapper .section-title {
+            margin-top: 0;
+            margin-bottom: 10px;
+            display: block; /* Ensure it takes its own line */
+        }
+
+        /* Invoice Card (Tappable Container) */
+        .invoice-card {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+            border: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* Invoice Count (e.g., "3 outstanding") */
+        .invoice-count {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* 4. Bottom Navigation Bar (Fixed) */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around; /* Evenly distribute items */
+            align-items: center; /* Vertically center items */
+            background-color: #ffffff;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Shadow for separation from content */
+            min-height: 60px; /* Fixed height for the navigation bar */
+        }
+
+        /* Individual Navigation Item (Icon Button/Tab) */
+        .nav-item {
+            display: flex;
+            flex-direction: column; /* Stack icon and label vertically */
+            align-items: center;
+            flex: 1; /* Distribute items evenly across the width */
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #777; /* Default color */
+            font-size: 12px;
+            padding: 5px 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* Highlight active/hovered navigation item */
+        .nav-item:hover, .nav-item.active {
+            color: #007bff; /* Blue for active/hover state */
+        }
+
+        /* Navigation Icon */
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 3px;
+            line-height: 1; /* Ensure vertical centering */
+        }
+
+        /* Navigation Label */
+        .nav-label {
+            font-size: 12px;
+        }
+    </style>
 </head>
 <body>
-
-  <div class="header">
-    <button class="back-button">&lt;</button>
-    <h1 class="title">Recent Transactions</h1>
-    <button class="filter-button">&#9883;</button>
-  </div>
-
-  <div class="balance">
-    <h2>Current Balance: $1,234.56</h2>
-  </div>
-
-  <div class="transaction-list">
-    <div class="transaction-item">
-      <div class="transaction-header">
-        <span class="date">2024-10-27</span>
-        <span class="amount positive">+$50.00</span>
-      </div>
-      <p class="description">Starbucks</p>
+    <!-- 1. Top Header Section (Fixed) -->
+    <div class="header-section">
+        <div class="user-info">Hello, John Doe</div>
+        <button class="settings-icon" aria-label="Settings">&#x2699;</button> <!-- Unicode gear icon -->
     </div>
 
-    <div class="transaction-item">
-      <div class="transaction-header">
-        <span class="date">2024-10-26</span>
-        <span class="amount negative">-$1,000.00</span>
-      </div>
-      <p class="description">Rent Payment</p>
+    <!-- 2. Primary Balance Information Section -->
+    <div class="balance-section">
+        <button class="available-balance-card">
+            <span class="balance-title">Available Balance</span>
+            <span class="balance-amount">$1,234.56 USD</span>
+        </button>
     </div>
 
-    <div class="transaction-item">
-      <div class="transaction-header">
-        <span class="date">2024-10-25</span>
-        <span class="amount positive">+$200.00</span>
-      </div>
-      <p class="description">Salary Deposit</p>
+    <!-- 3. Main Scrollable Content Area -->
+    <div class="main-scrollable-content">
+        <!-- Recent Account Activity Section -->
+        <div class="recent-activity-header">
+            <span class="section-title">Recent Activity</span>
+            <button class="view-all-link">View All</button>
+        </div>
+        <!-- Scrollable Container for activity items (within main scrollable area) -->
+        <div class="activity-scroll-container">
+            <!-- Placeholder activity items to demonstrate scrolling -->
+            <div class="activity-item">Transaction 1: Sent $50.00 to Alice</div>
+            <div class="activity-item">Transaction 2: Received $120.00 from Bob</div>
+            <div class="activity-item">Transaction 3: Paid $15.50 for Coffee</div>
+            <div class="activity-item">Transaction 4: Deposit $75.00</div>
+            <div class="activity-item">Transaction 5: Withdrawal $20.00</div>
+            <div class="activity-item">Transaction 6: Income from Project X: $300.00</div>
+            <div class="activity-item">Transaction 7: Subscription Fee: $10.00</div>
+            <div class="activity-item">Transaction 8: Grocery Shopping: -$85.30</div>
+            <div class="activity-item">Transaction 9: Dinner with friends: -$60.00</div>
+            <div class="activity-item">Transaction 10: Online Purchase: -$25.99</div>
+            <div class="activity-item">Transaction 11: Refund from store: +$45.00</div>
+            <div class="activity-item">Transaction 12: Utility Bill: -$110.00</div>
+        </div>
+
+        <!-- Invoice Summaries Section (Grouped as Cards) -->
+        <div class="invoice-summaries">
+            <!-- Unpaid Invoices Section (Tappable Card) -->
+            <div class="invoice-card-wrapper">
+                <span class="section-title">Unpaid Invoices</span>
+                <button class="invoice-card">
+                    <span class="invoice-count">3 outstanding</span>
+                </button>
+            </div>
+            <!-- Draft Invoices Section (Tappable Card) -->
+            <div class="invoice-card-wrapper">
+                <span class="section-title">Draft Invoices</span>
+                <button class="invoice-card">
+                    <span class="invoice-count">2 in draft</span>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- More transaction items here -->
-  </div>
-
-  <div class="bottom-section">
-    <!-- Optional content for the bottom section -->
-    <p>Ads/Promotional Messages</p>
-  </div>
-
+    <!-- 4. Bottom Navigation Bar (Fixed) -->
+    <div class="bottom-nav">
+        <button class="nav-item active"> <!-- 'active' class for demonstration -->
+            <span class="nav-icon" aria-hidden="true">&#x2302;</span> <!-- Home icon -->
+            <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon" aria-hidden="true">&#x1F4B0;</span> <!-- Money bag icon -->
+            <span class="nav-label">Money</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon" aria-hidden="true">&#x1F4DD;</span> <!-- Memo icon (for invoicing) -->
+            <span class="nav-label">Invoicing</span>
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon" aria-hidden="true">&#x1F465;</span> <!-- Busts in silhouette (for customers) -->
+            <span class="nav-label">Customers</span>
+        </button>
+    </div>
 </body>
 </html>

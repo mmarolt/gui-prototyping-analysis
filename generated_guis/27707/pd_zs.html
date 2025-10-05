@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Calendar Page</title>
+    <style>
+        /* Basic Reset & Box Sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            /* For simulating 375x667, the fluid design will adapt. */
+            /* We'll ensure fixed elements maintain their position and content scales */
+        }
+
+        /* I. Top Header Bar (Fixed) */
+        .top-header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            z-index: 100; /* Ensure it's above other content */
+            height: 60px; /* Fixed height */
+        }
+
+        .month-nav-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #007bff; /* Primary blue color */
+            cursor: pointer;
+            padding: 5px 10px;
+            outline: none;
+            -webkit-appearance: none; /* Remove default button styles on iOS */
+        }
+
+        .month-nav-button:active {
+            opacity: 0.7;
+        }
+
+        .month-year-display {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            flex-grow: 1; /* Allows it to take available space and center */
+        }
+
+        /* II. Days of the Week Bar (Fixed) */
+        .days-of-week-bar {
+            position: fixed;
+            top: 60px; /* Directly below the top header bar */
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            z-index: 90; /* Below header, above grid */
+            height: 40px; /* Fixed height */
+        }
+
+        .day-header {
+            flex: 1; /* Distribute evenly */
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* III. Main Calendar Grid Area (Scrollable/Interactive) */
+        .main-calendar-grid-area {
+            flex-grow: 1; /* Occupy remaining vertical space */
+            padding-top: 100px; /* Space for fixed header (60px) and days bar (40px) */
+            padding-bottom: 80px; /* Space for FAB, ensures content above FAB is visible */
+            overflow-y: auto; /* Enable scrolling if content exceeds viewport height */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .calendar-grid-container {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 columns for days */
+            gap: 1px; /* Small gap between cells */
+            background-color: #eee; /* Background for the gaps to appear as borders */
+            margin: 0 10px; /* Some padding from the sides of the screen */
+            border-radius: 8px;
+            overflow: hidden; /* Ensures gap background doesn't show outside */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .date-cell {
+            background-color: #fff;
+            padding: 10px 5px;
+            min-height: 60px; /* Minimum height for each cell */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            position: relative; /* For event indicator positioning */
+        }
+
+        .date-cell:hover {
+            background-color: #f5f5f5;
+        }
+
+        .date-cell.non-current-month {
+            color: #aaa; /* De-emphasize dates from other months */
+        }
+
+        .date-number {
+            font-weight: normal;
+        }
+
+        .date-cell.current-day .date-number {
+            background-color: #007bff; /* Highlight current day */
+            color: #fff;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .event-indicator {
+            width: 6px;
+            height: 6px;
+            background-color: #28a745; /* Green for events */
+            border-radius: 50%;
+            margin-top: 4px;
+            position: absolute; /* Position relative to cell */
+            bottom: 8px; /* Adjust as needed within the cell */
+        }
+
+        /* IV. Floating Action Button (FAB) */
+        .fab-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 110; /* Highest z-index to float above all content */
+        }
+
+        .add-event-fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #007bff; /* Primary blue */
+            color: #fff;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.2s ease;
+            -webkit-appearance: none; /* Remove default button styles on iOS */
+        }
+
+        .add-event-fab:active {
+            background-color: #0056b3; /* Darker blue on tap */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Media Queries for Mobile Responsiveness (e.g., 375x667) */
+        @media (max-width: 400px) {
+            .top-header-bar {
+                padding: 12px 15px;
+                height: 55px;
+            }
+            .month-year-display {
+                font-size: 20px;
+            }
+            .month-nav-button {
+                font-size: 22px;
+                padding: 3px 8px;
+            }
+            .days-of-week-bar {
+                top: 55px; /* Adjust based on new header height */
+                height: 35px;
+                padding: 8px 0;
+            }
+            .day-header {
+                font-size: 12px;
+            }
+            .main-calendar-grid-area {
+                padding-top: 90px; /* Adjust based on new header + days bar height */
+                padding-bottom: 70px;
+            }
+            .calendar-grid-container {
+                margin: 0 8px;
+            }
+            .date-cell {
+                min-height: 55px;
+                padding: 8px 3px;
+                font-size: 15px;
+            }
+            .date-cell.current-day .date-number {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+            }
+            .event-indicator {
+                width: 5px;
+                height: 5px;
+                bottom: 6px;
+                margin-top: 3px;
+            }
+            .add-event-fab {
+                width: 50px;
+                height: 50px;
+                font-size: 28px;
+            }
+            .fab-container {
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- I. Top Header Bar (Context & Navigation) -->
+    <div class="top-header-bar">
+        <button class="month-nav-button">&lt;</button>
+        <div class="month-year-display">October 2023</div>
+        <button class="month-nav-button">&gt;</button>
+    </div>
+
+    <!-- II. Days of the Week Bar -->
+    <div class="days-of-week-bar">
+        <div class="day-header">Sun</div>
+        <div class="day-header">Mon</div>
+        <div class="day-header">Tue</div>
+        <div class="day-header">Wed</div>
+        <div class="day-header">Thu</div>
+        <div class="day-header">Fri</div>
+        <div class="day-header">Sat</div>
+    </div>
+
+    <!-- III. Main Calendar Grid Area (Core Interaction) -->
+    <div class="main-calendar-grid-area">
+        <div class="calendar-grid-container">
+            <!-- Example: Dates from previous month (September 2023) -->
+            <div class="date-cell non-current-month"><span class="date-number">24</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">25</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">26</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">27</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">28</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">29</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">30</span></div>
+
+            <!-- Example: Dates for October 2023 -->
+            <!-- October 1st, 2023 is a Sunday -->
+            <div class="date-cell"><span class="date-number">1</span></div>
+            <div class="date-cell"><span class="date-number">2</span></div>
+            <div class="date-cell"><span class="date-number">3</span></div>
+            <div class="date-cell"><span class="date-number">4</span></div>
+            <div class="date-cell">
+                <span class="date-number">5</span>
+                <span class="event-indicator"></span> <!-- Event Indicator -->
+            </div>
+            <div class="date-cell"><span class="date-number">6</span></div>
+            <div class="date-cell"><span class="date-number">7</span></div>
+
+            <div class="date-cell"><span class="date-number">8</span></div>
+            <div class="date-cell"><span class="date-number">9</span></div>
+            <div class="date-cell"><span class="date-number">10</span></div>
+            <div class="date-cell"><span class="date-number">11</span></div>
+            <div class="date-cell">
+                <span class="date-number">12</span>
+                <span class="event-indicator"></span> <!-- Event Indicator -->
+            </div>
+            <div class="date-cell"><span class="date-number">13</span></div>
+            <div class="date-cell"><span class="date-number">14</span></div>
+
+            <div class="date-cell"><span class="date-number">15</span></div>
+            <div class="date-cell"><span class="date-number">16</span></div>
+            <div class="date-cell current-day">
+                <span class="date-number">17</span> <!-- Current Day Highlight -->
+            </div>
+            <div class="date-cell"><span class="date-number">18</span></div>
+            <div class="date-cell"><span class="date-number">19</span></div>
+            <div class="date-cell">
+                <span class="date-number">20</span>
+                <span class="event-indicator"></span> <!-- Event Indicator -->
+            </div>
+            <div class="date-cell"><span class="date-number">21</span></div>
+
+            <div class="date-cell"><span class="date-number">22</span></div>
+            <div class="date-cell"><span class="date-number">23</span></div>
+            <div class="date-cell"><span class="date-number">24</span></div>
+            <div class="date-cell"><span class="date-number">25</span></div>
+            <div class="date-cell"><span class="date-number">26</span></div>
+            <div class="date-cell"><span class="date-number">27</span></div>
+            <div class="date-cell"><span class="date-number">28</span></div>
+
+            <div class="date-cell"><span class="date-number">29</span></div>
+            <div class="date-cell"><span class="date-number">30</span></div>
+            <div class="date-cell"><span class="date-number">31</span></div>
+
+            <!-- Example: Dates from next month (November 2023) -->
+            <div class="date-cell non-current-month"><span class="date-number">1</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">2</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">3</span></div>
+            <div class="date-cell non-current-month"><span class="date-number">4</span></div>
+        </div>
+    </div>
+
+    <!-- IV. Floating Action Button (Primary Action) -->
+    <div class="fab-container">
+        <button class="add-event-fab">+</button>
+    </div>
+
+</body>
+</html>

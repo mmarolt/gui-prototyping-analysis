@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Professional Networking</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            
+            /* Target specific mobile screen size for demonstration in DevTools */
+            width: 375px;
+            max-width: 100%; /* Ensures it doesn't exceed viewport if narrower */
+            margin-left: auto;
+            margin-right: auto;
+            overflow: hidden; /* Prevents scrollbars if content slightly overflows */
+        }
+
+        /* 1. Top Navigation Bar (Header Section) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 50px; /* Ensure header has a decent height */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .header-icon {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            padding: 5px; /* Make clickable area larger */
+            border: none;
+            background: none;
+            outline: none; /* Remove focus outline */
+        }
+
+        /* 2. Profile Sequence Indicator */
+        .progress-indicator {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #666;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0; /* Prevent progress indicator from shrinking */
+        }
+
+        /* 3. Swipeable Profile Card (Main Content Area) */
+        .main-content {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px; /* Padding around the card */
+            position: relative; /* For swipe cues */
+            overflow: hidden; /* Hide overflow of potential next card */
+        }
+
+        .profile-card-wrapper {
+            position: relative;
+            width: 90%; /* Card width relative to main-content */
+            max-width: 320px; /* Max width for larger screens (not strictly needed for 375px) */
+            height: 85%; /* Card height relative to main-content */
+            max-height: 450px; /* Max height for larger screens (not strictly needed for 375px) */
+        }
+
+        .profile-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally within the card */
+            padding: 20px 0; /* Vertical padding, horizontal handled by content margins */
+            box-sizing: border-box;
+            position: absolute; /* Allows for visual stacking for swipe effect */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out; /* Smooth transitions for swiping */
+            overflow-y: auto; /* Allow content inside card to scroll if it overflows */
+        }
+
+        /* Swipe cue: A hint of the next card peeking from behind */
+        .profile-card::after {
+            content: '';
+            position: absolute;
+            top: 10px; /* Slightly offset from the current card */
+            left: 10px; /* Slightly offset from the current card */
+            width: calc(100% - 20px); /* Slightly smaller than the current card */
+            height: calc(100% - 20px); /* Slightly smaller than the current card */
+            background-color: #f0f0f0; /* Lighter background for the "next" card */
+            border-radius: 15px;
+            z-index: -1; /* Place it behind the current card */
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08); /* Subtle shadow for depth */
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #e0e0e0; /* Placeholder background */
+            margin-bottom: 15px;
+            overflow: hidden; /* Ensure image (or icon) stays within circle */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px; /* Placeholder icon size */
+            color: #888;
+            border: 3px solid #f0f2f5; /* Slight border for visual separation */
+            flex-shrink: 0; /* Prevent photo from shrinking */
+        }
+        /* Example for a real image: .profile-photo img { width: 100%; height: 100%; object-fit: cover; } */
+
+        .user-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .job-title {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .distance-indicator {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .short-bio {
+            text-align: left; /* As per requirement */
+            font-size: 15px;
+            color: #444;
+            line-height: 1.4;
+            margin: 0 25px 20px; /* Left/right margin for bio within the card */
+            width: calc(100% - 50px); /* Ensure it fits within the card with margins */
+        }
+
+        .interests-hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px; /* Space between pills */
+            margin: 0 15px 10px; /* Bottom margin for spacing before action buttons */
+        }
+
+        .interest-pill {
+            background-color: #e6f7ff; /* Light blue */
+            color: #1890ff; /* Darker blue */
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap; /* Prevent text wrapping inside pill */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .interest-pill:hover {
+            background-color: #bae7ff;
+        }
+
+        /* 4. Action Buttons (Bottom Section) */
+        .action-buttons {
+            display: flex;
+            justify-content: space-around; /* Space out buttons */
+            padding: 20px 15px;
+            background-color: #ffffff;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            min-height: 80px; /* Ensure buttons have decent height */
+            flex-shrink: 0; /* Prevent buttons section from shrinking */
+        }
+
+        .action-button {
+            width: 45%; /* Nearly half width each */
+            padding: 15px 0;
+            border-radius: 30px; /* Highly rounded buttons */
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between icon and text */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.2s ease, transform 0.1s ease-out;
+            outline: none;
+        }
+        .action-button:active {
+            transform: scale(0.98); /* Visual feedback on tap */
+        }
+
+        .pass-button {
+            background-color: #ff4d4f; /* Red */
+            color: white;
+        }
+        .pass-button:hover {
+            background-color: #cf1322;
+        }
+
+        .meet-button {
+            background-color: #52c41a; /* Green */
+            color: white;
+        }
+        .meet-button:hover {
+            background-color: #389e0d;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Navigation Bar (Header Section) -->
+    <div class="header">
+        <button class="header-icon menu-icon" aria-label="Menu">&#9776;</button> <!-- Unicode for hamburger menu -->
+        <button class="header-icon message-icon" aria-label="Messages">&#9993;</button> <!-- Unicode for envelope (message) -->
+    </div>
+
+    <!-- 2. Profile Sequence Indicator -->
+    <div class="progress-indicator">
+        3 of 10
+    </div>
+
+    <!-- 3. Swipeable Profile Card (Main Content Area) -->
+    <div class="main-content">
+        <div class="profile-card-wrapper">
+            <div class="profile-card">
+                <div class="profile-photo">
+                    <!-- Placeholder for profile image. In a real app, this would be an <img> tag. -->
+                    &#128100; <!-- Unicode for generic person icon -->
+                </div>
+                <div class="user-name">John Doe</div>
+                <div class="job-title">Senior Software Engineer</div>
+                <div class="distance-indicator">5 miles away</div>
+                <div class="short-bio">
+                    Passionate software engineer with 8+ years of experience in full-stack development,
+                    specializing in scalable web applications and cloud infrastructure.
+                    Always eager to connect with like-minded professionals and explore new technologies!
+                </div>
+                <div class="interests-hashtags">
+                    <span class="interest-pill">#ReactJS</span>
+                    <span class="interest-pill">#NodeJS</span>
+                    <span class="interest-pill">#AWS</span>
+                    <span class="interest-pill">#Leadership</span>
+                    <span class="interest-pill">#Mentorship</span>
+                    <span class="interest-pill">#Startups</span>
+                    <span class="interest-pill">#AI</span>
+                    <span class="interest-pill">#MachineLearning</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Action Buttons (Bottom Section) -->
+    <div class="action-buttons">
+        <button class="action-button pass-button">
+            &#10006; Pass
+        </button>
+        <button class="action-button meet-button">
+            &#10003; Meet
+        </button>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Fax Page</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Body Styling */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6; /* Light background for the page */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure page takes full viewport height */
+            color: #333; /* Default text color */
+        }
+
+        /* Fixed Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px; /* Standard mobile header height */
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+            z-index: 1000; /* Ensure header is on top */
+        }
+        .header-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #007bff; /* Brand color for tappable items */
+            cursor: pointer;
+            padding: 8px; /* Increase tappable area */
+            border-radius: 8px; /* Slight rounded corners */
+            transition: background-color 0.2s ease;
+        }
+        .header-item:hover {
+            background-color: #f0f0f0;
+        }
+        .header-item i {
+            margin-left: 5px;
+            font-size: 1.2em;
+        }
+        .header-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Takes up available space between header and footer */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 20px 15px;
+            margin-top: 56px; /* Offset for fixed header */
+            margin-bottom: 150px; /* Offset for fixed footer (adjusted for button height + padding) */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Section Styling */
+        .section {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow for sections */
+        }
+        .section-heading {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            margin-top: 0; /* Reset default margin */
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Buttons - General */
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            box-sizing: border-box; /* Include padding in width */
+            text-decoration: none; /* For potential anchor buttons */
+        }
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.1em;
+        }
+
+        /* Primary Button */
+        .btn-primary {
+            background-color: #007bff; /* Brand primary color */
+            color: #ffffff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-primary:disabled {
+            background-color: #cccccc;
+            color: #999999;
+            cursor: not-allowed;
+        }
+
+        /* Secondary Button (Outline) */
+        .btn-secondary-outline {
+            background-color: transparent;
+            color: #007bff;
+            border: 2px solid #007bff;
+        }
+        .btn-secondary-outline:hover {
+            background-color: #e6f2ff;
+        }
+
+        /* Text Input Field */
+        .text-input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            font-size: 1em;
+            box-sizing: border-box;
+            outline: none; /* Remove default focus outline */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .text-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Focus highlight */
+        }
+
+        /* List Styling (RecyclerView / FlatList simulation) */
+        .list-container {
+            margin-top: 15px;
+            padding-top: 10px; /* Space above first item */
+        }
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eeeeee;
+        }
+        .list-item:last-child {
+            border-bottom: none; /* No border for the last item */
+        }
+        .list-item-icon {
+            font-size: 1.5em;
+            color: #6c757d; /* Muted icon color */
+            margin-right: 12px;
+            width: 30px; /* Fixed width for alignment */
+            text-align: center;
+        }
+        .list-item-details {
+            flex-grow: 1; /* Takes up remaining space */
+        }
+        .list-item-name {
+            font-weight: 600;
+            font-size: 1em;
+            color: #333;
+        }
+        .list-item-info {
+            font-size: 0.85em;
+            color: #6c757d; /* Muted info text */
+            margin-top: 2px;
+        }
+        .list-item-remove {
+            background: none;
+            border: none;
+            color: #dc3545; /* Red for remove action */
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 8px; /* Increase tappable area */
+            margin-left: 10px;
+            border-radius: 50%; /* Make it circular */
+            transition: background-color 0.2s ease;
+        }
+        .list-item-remove:hover {
+            color: #c82333;
+            background-color: #f8d7da; /* Light red background on hover */
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            padding: 25px;
+            background-color: #f8f9fa; /* Light grey background */
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        /* Fixed Footer / Action Bar */
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: auto; /* Adjusts based on content */
+            background-color: #ffffff;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            gap: 10px; /* Space between buttons */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+            z-index: 1000; /* Ensure footer is on top */
+        }
+        .footer .btn {
+            margin: 0; /* Override any default button margins */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fixed Header -->
+    <div class="header">
+        <div class="header-item" onclick="alert('Navigating to Buy Credits / Account page.');">
+            Credits: 15
+        </div>
+        <div class="header-title">New Fax</div>
+        <div class="header-item" onclick="alert('Opening Help section / FAQ.');">
+            <i class="fas fa-question-circle"></i>
+        </div>
+    </div>
+
+    <!-- Main Content Area (Scrollable) -->
+    <div class="main-content">
+
+        <!-- Files to Send Section -->
+        <div class="section">
+            <h2 class="section-heading">Files to Send</h2>
+
+            <button class="btn btn-primary" onclick="addDummyFile();">
+                <i class="fas fa-plus"></i> Add Files from Device
+            </button>
+
+            <div class="list-container" id="files-list">
+                <!-- File items will be dynamically added here by JavaScript -->
+            </div>
+            <!-- Empty State for Files (initially hidden, shown by JS if no files) -->
+            <div class="empty-state" id="empty-files-state" style="display: none;">
+                No files selected. Tap 'Add Files' to begin.
+            </div>
+        </div>
+
+        <!-- Recipients Section -->
+        <div class="section">
+            <h2 class="section-heading">Recipients</h2>
+
+            <input type="tel" class="text-input" placeholder="Enter Fax Number (e.g., +15551234567)" inputmode="tel" id="fax-number-input">
+            
+            <button class="btn btn-secondary-outline" onclick="addDummyRecipient();">
+                <i class="fas fa-user-plus"></i> Add from Contacts
+            </button>
+
+            <div class="list-container" id="recipients-list">
+                <!-- Recipient items will be dynamically added here by JavaScript -->
+            </div>
+            <!-- Empty State for Recipients (initially hidden, shown by JS if no recipients) -->
+            <div class="empty-state" id="empty-recipients-state" style="display: none;">
+                No recipients added. Enter a number or add from contacts.
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Fixed Footer / Action Bar -->
+    <div class="footer">
+        <button class="btn btn-secondary-outline" onclick="clearSetupConfirmation();">
+            Clear Setup
+        </button>
+        <button class="btn btn-primary" id="continue-button" disabled onclick="alert('Proceeding to next step (e.g., review/send page).');">
+            Continue
+        </button>
+    </div>
+
+    <script>
+        // Function to update the disabled state of the 'Continue' button and empty state messages
+        function updateContinueButtonState() {
+            const filesList = document.getElementById('files-list');
+            const recipientsList = document.getElementById('recipients-list');
+            const continueButton = document.getElementById('continue-button');
+
+            // Count actual list items, which represent selected files/recipients
+            const fileItemsCount = filesList.querySelectorAll('.list-item').length;
+            const recipientItemsCount = recipientsList.querySelectorAll('.list-item').length;
+
+            // Enable 'Continue' button if at least one file and one recipient are selected
+            if (fileItemsCount > 0 && recipientItemsCount > 0) {
+                continueButton.disabled = false;
+            } else {
+                continueButton.disabled = true;
+            }
+
+            // Show/hide empty state messages based on item counts
+            document.getElementById('empty-files-state').style.display = fileItemsCount === 0 ? 'block' : 'none';
+            document.getElementById('empty-recipients-state').style.display = recipientItemsCount === 0 ? 'block' : 'none';
+        }
+
+        // Function to remove a list item (file or recipient)
+        function removeListItem(button, type) {
+            const item = button.closest('.list-item');
+            if (item) {
+                item.remove();
+                updateContinueButtonState(); // Re-evaluate button state after removal
+            }
+        }
+
+        // Function to handle 'Clear Setup' confirmation
+        function clearSetupConfirmation() {
+            const confirmation = confirm("Are you sure you want to clear all selections? This action cannot be undone.");
+            if (confirmation) {
+                document.getElementById('files-list').innerHTML = ''; // Clear all file items
+                document.getElementById('recipients-list').innerHTML = ''; // Clear all recipient items
+                document.getElementById('fax-number-input').value = ''; // Clear fax number input field
+                updateContinueButtonState(); // Re-evaluate button state and show empty messages
+                alert('All selections cleared!');
+            }
+        }
+
+        // Helper function to add a dummy file item (for demonstration)
+        let fileCounter = 0;
+        function addDummyFile() {
+            fileCounter++;
+            const filesList = document.getElementById('files-list');
+            const newItem = document.createElement('div');
+            newItem.className = 'list-item';
+            const fileName = `Document_${fileCounter}.pdf`;
+            const fileSize = `${(Math.random() * 3 + 0.5).toFixed(1)} MB (${Math.floor(Math.random() * 5 + 1)} pages)`;
+            newItem.innerHTML = `
+                <i class="list-item-icon fas fa-file-pdf"></i>
+                <div class="list-item-details">
+                    <div class="list-item-name">${fileName}</div>
+                    <div class="list-item-info">${fileSize}</div>
+                </div>
+                <button class="list-item-remove" onclick="removeListItem(this, 'file');"><i class="fas fa-times-circle"></i></button>
+            `;
+            filesList.appendChild(newItem);
+            updateContinueButtonState();
+        }
+
+        // Helper function to add a dummy recipient item (for demonstration)
+        let recipientCounter = 0;
+        function addDummyRecipient(faxNumber = null) {
+            recipientCounter++;
+            const recipientsList = document.getElementById('recipients-list');
+            const newItem = document.createElement('div');
+            newItem.className = 'list-item';
+            const name = faxNumber ? 'Manual Entry' : `Contact ${recipientCounter}`;
+            const number = faxNumber || `+1 (555) ${1000 + recipientCounter * 10}-${1000 + recipientCounter * 10}`;
+            newItem.innerHTML = `
+                <i class="list-item-icon fas fa-user"></i>
+                <div class="list-item-details">
+                    <div class="list-item-name">${name}</div>
+                    <div class="list-item-info">${number}</div>
+                </div>
+                <button class="list-item-remove" onclick="removeListItem(this, 'recipient');"><i class="fas fa-times-circle"></i></button>
+            `;
+            recipientsList.appendChild(newItem);
+            updateContinueButtonState();
+        }
+
+        // Event listener for adding recipient from input field on Enter key
+        document.getElementById('fax-number-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && this.value.trim() !== '') {
+                addDummyRecipient(this.value.trim());
+                this.value = ''; // Clear input after adding
+            }
+        });
+
+        // Initial state setup when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+             // Start with empty lists and disabled button
+             document.getElementById('files-list').innerHTML = '';
+             document.getElementById('recipients-list').innerHTML = '';
+             updateContinueButtonState();
+
+             // Optional: Add some initial dummy data for easier testing
+             // Uncomment the lines below to start with pre-filled lists
+             // addDummyFile();
+             // addDummyFile();
+             // addDummyRecipient('+1 (555) 111-2222');
+             // addDummyRecipient('+1 (555) 333-4444');
+             // updateContinueButtonState(); // Ensure button state is updated after adding initial data
+        });
+    </script>
+</body>
+</html>

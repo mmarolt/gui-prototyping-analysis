@@ -3,286 +3,487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recent Transactions</title>
+    <title>Mobile App Dashboard</title>
+    <!-- Material Icons CDN - REQUIRED -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts for Roboto (Material Design's default font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* CSS Variables for Material Design Colors & Typography */
+        :root {
+            /* Material Design 3 Simplified Color Palette */
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+
+            --md-sys-color-surface: #FFFBFE;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-container: #F3EDF7; /* Used for bottom nav, slightly off-white */
+            --md-sys-color-on-surface-container: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-error: #B3261E;
+            --md-sys-color-on-error: #FFFFFF;
+
+            /* Semantic Colors */
+            --md-sys-color-success: #2ECC71; /* Green for positive values */
+            --md-sys-color-warning: #FFC107;
+            --md-sys-color-danger: #E74C3C; /* Red for negative values */
+
+            /* Spacing (Material Design recommends multiples of 4dp/8dp) */
+            --md-spacing-xs: 4px;
+            --md-spacing-s: 8px;
+            --md-spacing-m: 16px;
+            --md-spacing-l: 24px;
+            --md-spacing-xl: 32px;
+
+            /* Typography Scale (Adjusted for typical mobile legibility on 375px width) */
+            --md-sys-typescale-h2-font-size: 38px; /* For balance amount, prominent */
+            --md-sys-typescale-h2-font-weight: 700;
+            --md-sys-typescale-h3-font-size: 32px;
+            --md-sys-typescale-h3-font-weight: 700;
+            --md-sys-typescale-h4-font-size: 28px; /* For invoice counts */
+            --md-sys-typescale-h4-font-weight: 600;
+            --md-sys-typescale-h5-font-size: 24px;
+            --md-sys-typescale-h5-font-weight: 500;
+            --md-sys-typescale-h6-font-size: 18px; /* For user greeting */
+            --md-sys-typescale-h6-font-weight: 500;
+            --md-sys-typescale-subtitle1-font-size: 16px; /* Card headers, titles */
+            --md-sys-typescale-subtitle1-font-weight: 500;
+            --md-sys-typescale-subtitle2-font-size: 14px; /* Balance label */
+            --md-sys-typescale-subtitle2-font-weight: 500;
+            --md-sys-typescale-body1-font-size: 16px; /* Main body text, amounts */
+            --md-sys-typescale-body1-font-weight: 400;
+            --md-sys-typescale-body2-font-size: 14px;
+            --md-sys-typescale-body2-font-weight: 400;
+            --md-sys-typescale-button-font-size: 14px; /* Action links */
+            --md-sys-typescale-button-font-weight: 500;
+            --md-sys-typescale-caption-font-size: 12px; /* Hints, dates, bottom nav labels */
+            --md-sys-typescale-caption-font-weight: 400;
+
+            /* Elevation / Shadows */
+            --md-elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15); /* For app bars, cards */
+            --md-elevation-2: 0px 2px 4px rgba(0, 0, 0, 0.2), 0px 3px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* App Bar */
-        .app-bar {
-            background-color: #6200EE;
-            color: white;
-            height: 56px;
+        /* Universal Box-Sizing and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px; /* Base font size for rem units */
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            height: 100%; /* For full page layout, especially important for flexbox */
+            overflow: hidden; /* Prevent body scroll, content area will handle scrolling */
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--md-sys-color-primary);
+            cursor: pointer;
+        }
+
+        /* Mobile App Container - Simulates the mobile screen */
+        .mobile-app-container {
+            width: 375px; /* Fixed mobile screen width */
+            height: 667px; /* Fixed mobile screen height */
+            background-color: var(--md-sys-color-surface);
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto; /* Centers the mock screen on larger displays */
+            border: 1px solid #ccc; /* Visual boundary for the phone screen */
+            overflow: hidden; /* Ensure content respects the fixed size */
+            box-shadow: var(--md-elevation-2);
+            border-radius: var(--md-spacing-s); /* Slight corner rounding for the device frame */
+        }
+
+        /* 1. Top App Bar (Header) */
+        .top-app-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            padding: var(--md-spacing-m) var(--md-spacing-l); /* 16px vertical, 24px horizontal */
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            box-shadow: var(--md-elevation-1);
+            z-index: 10; /* Ensures it stays above scrolling content */
+            flex-shrink: 0; /* Prevents the bar from shrinking */
         }
 
-        .app-title {
-            font-size: 1.25rem; /* Roughly 20px */
-            font-weight: 500;
+        .top-app-bar .user-greeting {
+            font-size: var(--md-sys-typescale-h6-font-size);
+            font-weight: var(--md-sys-typescale-h6-font-weight);
         }
 
-        .menu-icon, .search-icon {
+        .top-app-bar .material-icons {
+            font-size: var(--md-spacing-l); /* 24px Material Icon size */
             cursor: pointer;
+            padding: var(--md-spacing-s); /* Increase touch target area */
+            border-radius: 50%; /* For circular ripple effect */
+            transition: background-color 0.2s ease-out;
+            color: var(--md-sys-color-on-primary);
+        }
+        .top-app-bar .material-icons:hover { /* Only for desktop demo */
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .top-app-bar .material-icons:active { /* Mobile tap feedback */
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Balance Overview */
+        /* Main Content Area (Scrollable) */
+        .main-content {
+            flex: 1; /* Allows this section to grow and fill available space */
+            overflow-y: auto; /* Enables vertical scrolling for its content */
+            padding: var(--md-spacing-l); /* Overall padding for the content area */
+            -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-m); /* Consistent spacing between major sections */
+        }
+
+        /* Shared Card Style */
+        .card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: var(--md-spacing-s); /* Standard card corner radius */
+            box-shadow: var(--md-elevation-1);
+            padding: var(--md-spacing-l);
+        }
+
+        /* 2. Available Balance Overview */
         .balance-overview {
-            padding: 16px;
-        }
-
-        .balance-card {
-            background-color: #FFFFFF;
-            border-radius: 4px;
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-        }
-
-        .balance-title {
-            font-size: 14px;
-            color: rgba(0, 0, 0, 0.6); /* Secondary Text Color */
-        }
-
-        .balance-amount {
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 4px;
-        }
-
-        /* Transaction List */
-        .transaction-list {
-            background-color: #FFFFFF;
-        }
-
-        .transaction-item {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid #EEEEEE; /* Light Grey Divider */
-        }
-
-        .transaction-icon-wrapper {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #FFCDD2; /* Light Red - Example for Shopping */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 16px;
-        }
-
-        .transaction-icon {
-            color: #D32F2F; /* Darker Red */
-        }
-
-        .transaction-details {
-            flex-grow: 1;
-        }
-
-        .transaction-description {
-            font-weight: 500;
-        }
-
-        .transaction-date {
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.6); /* Secondary Text Color */
-        }
-
-        .transaction-amount {
-            font-weight: bold;
-            margin-left: auto; /* Push to the right */
-        }
-
-        .expense {
-            color: #D32F2F; /* Red for Expense */
-        }
-
-        .income {
-            color: #388E3C; /* Green for Income */
-        }
-
-        /* FAB */
-        .fab {
-            position: fixed;
-            bottom: 16px;
-            right: 16px;
-            background-color: #FF4081;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 56px;
-            height: 56px;
-            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure FAB is above other content */
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.2s ease-out;
+        }
+        .balance-overview:hover { /* Only for desktop demo */
+            background-color: var(--md-sys-color-primary-container); /* No change on hover */
+        }
+        .balance-overview:active { /* Mobile tap feedback */
+            background-color: #D6C2F0; /* Slightly darker/more saturated primaryContainer */
         }
 
-        /* Bottom Navigation (Optional) - Basic Styling */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 56px; /* Standard bottom nav height */
-            background-color: #f8f8f8;
+        .balance-overview .label {
+            font-size: var(--md-sys-typescale-subtitle2-font-size);
+            font-weight: var(--md-sys-typescale-subtitle2-font-weight);
+            display: block;
+            margin-bottom: var(--md-spacing-xs);
+            color: var(--md-sys-color-on-primary-container);
+            opacity: 0.8;
+        }
+        .balance-overview .amount-currency {
+            display: flex;
+            justify-content: center;
+            align-items: baseline; /* Aligns currency to baseline of amount */
+            gap: var(--md-spacing-s);
+            margin-bottom: var(--md-spacing-s);
+        }
+        .balance-overview .amount {
+            font-size: var(--md-sys-typescale-h2-font-size); /* Very large, prominent */
+            font-weight: var(--md-sys-typescale-h2-font-weight);
+            line-height: 1; /* Tighter line height for large numbers */
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .balance-overview .currency {
+            font-size: var(--md-sys-typescale-body1-font-size);
+            font-weight: var(--md-sys-typescale-body1-font-weight);
+            align-self: flex-end; /* Aligns to baseline of amount */
+            margin-bottom: var(--md-spacing-xs); /* Fine-tune vertical alignment */
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .balance-overview .hint {
+            font-size: var(--md-sys-typescale-caption-font-size);
+            font-weight: var(--md-sys-typescale-caption-font-weight);
+            color: var(--md-sys-color-on-primary-container);
+            opacity: 0.7; /* Muted hint text */
+        }
+
+        /* 3. Key Financial Snapshots */
+        .financial-snapshots {
+            display: flex;
+            flex-direction: column; /* Stack vertically for optimal mobile readability */
+            gap: var(--md-spacing-m); /* Space between cards */
+        }
+
+        .invoice-summary {
+            display: flex;
+            flex-direction: column;
+            gap: var(--md-spacing-s);
+            align-items: flex-start; /* Align content to the left within the card */
+        }
+
+        .invoice-summary .icon {
+            font-size: var(--md-spacing-xl); /* Larger icon for emphasis (32px) */
+            color: var(--md-sys-color-primary);
+            margin-bottom: var(--md-spacing-xs);
+        }
+        .invoice-summary .title {
+            font-size: var(--md-sys-typescale-subtitle1-font-size);
+            font-weight: var(--md-sys-typescale-subtitle1-font-weight);
+            color: var(--md-sys-color-on-surface);
+        }
+        .invoice-summary .count {
+            font-size: var(--md-sys-typescale-h4-font-size);
+            font-weight: var(--md-sys-typescale-h4-font-weight);
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+        .invoice-summary .action-link {
+            font-size: var(--md-sys-typescale-button-font-size);
+            font-weight: var(--md-sys-typescale-button-font-weight);
+            text-transform: uppercase;
+            padding: var(--md-spacing-s) var(--md-spacing-m);
+            border-radius: var(--md-spacing-xs);
+            transition: background-color 0.2s ease-out;
+            align-self: flex-end; /* Push action link to the right */
+            margin-top: var(--md-spacing-s);
+            color: var(--md-sys-color-primary);
+        }
+        .invoice-summary .action-link:hover { /* Only for desktop demo */
+            background-color: rgba(var(--md-sys-color-primary), 0.05);
+        }
+        .invoice-summary .action-link:active { /* Mobile tap feedback */
+            background-color: rgba(var(--md-sys-color-primary), 0.1);
+        }
+
+        /* 4. Recent Account Activity */
+        .recent-activity .card-header {
+            font-size: var(--md-sys-typescale-subtitle1-font-size);
+            font-weight: var(--md-sys-typescale-subtitle1-font-weight);
+            margin-bottom: var(--md-spacing-m);
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .activity-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--md-spacing-s) 0;
+            border-bottom: 1px solid var(--md-sys-color-surface-variant); /* Subtle divider */
+        }
+        .activity-item:last-child {
+            border-bottom: none; /* No divider after the last item */
+        }
+
+        .activity-item .description-date {
+            flex: 1; /* Allows description/date to take up available space */
+            margin-right: var(--md-spacing-m);
+        }
+
+        .activity-item .description {
+            font-size: var(--md-sys-typescale-body1-font-size);
+            font-weight: var(--md-sys-typescale-body1-font-weight);
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: var(--md-spacing-xs);
+        }
+
+        .activity-item .date {
+            font-size: var(--md-sys-typescale-caption-font-size);
+            font-weight: var(--md-sys-typescale-caption-font-weight);
+            color: var(--md-sys-color-outline); /* Muted color for secondary info */
+        }
+
+        .activity-item .amount {
+            font-size: var(--md-sys-typescale-body1-font-size);
+            font-weight: var(--md-sys-typescale-body1-font-weight);
+            text-align: right;
+            white-space: nowrap; /* Prevent amount from wrapping */
+            flex-shrink: 0; /* Don't let it shrink */
+            margin-left: var(--md-spacing-s); /* Space from description */
+        }
+        .activity-item .amount.positive {
+            color: var(--md-sys-color-success);
+        }
+        .activity-item .amount.negative {
+            color: var(--md-sys-color-danger);
+        }
+        .activity-item .amount.neutral {
+            color: var(--md-sys-color-on-surface-variant); /* Neutral/muted color */
+        }
+
+        .recent-activity .view-all-link {
+            display: block;
+            text-align: center;
+            margin-top: var(--md-spacing-m);
+            font-size: var(--md-sys-typescale-button-font-size);
+            font-weight: var(--md-sys-typescale-button-font-weight);
+            text-transform: uppercase;
+            padding: var(--md-spacing-s) var(--md-spacing-m);
+            border-radius: var(--md-spacing-xs);
+            transition: background-color 0.2s ease-out;
+            color: var(--md-sys-color-primary);
+        }
+        .recent-activity .view-all-link:hover { /* Only for desktop demo */
+            background-color: rgba(var(--md-sys-color-primary), 0.05);
+        }
+        .recent-activity .view-all-link:active { /* Mobile tap feedback */
+            background-color: rgba(var(--md-sys-color-primary), 0.1);
+        }
+
+
+        /* 5. Bottom Navigation Bar */
+        .bottom-navigation-bar {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid #ddd;
+            height: 80px; /* Standard Material 3 bottom nav height */
+            background-color: var(--md-sys-color-surface-container);
+            color: var(--md-sys-color-on-surface-container);
+            box-shadow: var(--md-elevation-1);
+            z-index: 10;
+            flex-shrink: 0; /* Prevents the bar from shrinking */
+            padding-bottom: env(safe-area-inset-bottom); /* For iPhone X, etc. */
         }
 
-        .nav-item {
+        .bottom-navigation-bar .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            color: #757575; /* Gray */
-            text-decoration: none;
+            justify-content: center;
+            flex: 1; /* Distribute items evenly */
+            padding: var(--md-spacing-s) 0; /* Vertical padding */
+            color: var(--md-sys-color-on-surface-container);
+            transition: color 0.2s ease-out, background-color 0.2s ease-out;
+            min-width: 0; /* Prevents flex items from overflowing in tight spaces */
+            height: 100%; /* Make clickable area full height */
         }
 
-        .nav-item .material-icons {
-            font-size: 24px;
+        .bottom-navigation-bar .nav-item .material-icons {
+            font-size: var(--md-spacing-l); /* 24px icon */
+            margin-bottom: var(--md-spacing-xs); /* Space between icon and label */
+            line-height: 1; /* Remove extra space above/below icon */
         }
 
-        .nav-item span {
-            font-size: 12px;
+        .bottom-navigation-bar .nav-item .label {
+            font-size: var(--md-sys-typescale-caption-font-size);
+            font-weight: var(--md-sys-typescale-caption-font-weight);
+            line-height: 1.2;
         }
 
-        .nav-item.active {
-            color: #6200EE; /* Primary color */
+        .bottom-navigation-bar .nav-item.active {
+            color: var(--md-sys-color-primary); /* Active item uses primary color */
+        }
+        .bottom-navigation-bar .nav-item:hover { /* Only for desktop demo */
+            background-color: var(--md-sys-color-surface-variant); /* Subtle hover effect */
+        }
+        .bottom-navigation-bar .nav-item:active { /* Mobile tap feedback */
+            background-color: rgba(var(--md-sys-color-primary), 0.1); /* Ripple-like effect */
         }
 
-        /* Utility Classes (For Icons) */
-        .shopping {
-            background-color: #FFCDD2;
-            color: #D32F2F;
-        }
-
-        .restaurant {
-            background-color: #C8E6C9;
-            color: #388E3C;
-        }
-
-        .transfer {
-            background-color: #BBDEFB;
-            color: #1976D2;
-        }
-
-        /* Empty State */
-        .empty-state {
-          text-align: center;
-          padding: 20px;
-          color: rgba(0, 0, 0, 0.6);
-        }
-
-        /* Loading State */
-        .loading-spinner {
-          text-align: center;
-          padding: 20px;
+        /* Demo: Center the app container on a larger screen */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0; /* Page background behind the mock app */
         }
     </style>
 </head>
 <body>
+    <div class="mobile-app-container">
+        <!-- 1. Top App Bar (Header) -->
+        <header class="top-app-bar">
+            <span class="user-greeting">Welcome, John Doe</span>
+            <i class="material-icons settings-icon" tabindex="0" role="button" aria-label="Settings">settings</i>
+        </header>
 
-    <!-- App Bar -->
-    <div class="app-bar">
-        <i class="material-icons menu-icon">menu</i>
-        <span class="app-title">Recent Transactions</span>
-        <i class="material-icons search-icon">search</i>
+        <!-- Main Content Area (Scrollable) -->
+        <main class="main-content">
+            <!-- 2. Available Balance Overview -->
+            <div class="card balance-overview" tabindex="0" role="button" aria-label="Available Balance. Tap for details.">
+                <span class="label">Available Balance</span>
+                <div class="amount-currency">
+                    <span class="amount">$12,345.67</span>
+                    <span class="currency">USD</span>
+                </div>
+                <span class="hint">Tap for details</span>
+            </div>
+
+            <!-- 3. Key Financial Snapshots (Invoices) -->
+            <section class="financial-snapshots">
+                <div class="card invoice-summary" tabindex="0" role="link" aria-label="5 Unpaid Invoices. View Details.">
+                    <i class="material-icons icon">receipt_long</i>
+                    <h3 class="title">Unpaid Invoices</h3>
+                    <p class="count">5</p>
+                    <a href="#" class="action-link">View Details</a>
+                </div>
+                <div class="card invoice-summary" tabindex="0" role="link" aria-label="2 Draft Invoices. View Details.">
+                    <i class="material-icons icon">edit_note</i>
+                    <h3 class="title">Draft Invoices</h3>
+                    <p class="count">2</p>
+                    <a href="#" class="action-link">View Details</a>
+                </div>
+            </section>
+
+            <!-- 4. Recent Account Activity -->
+            <section class="card recent-activity">
+                <h3 class="card-header">Recent Activity</h3>
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="description-date">
+                            <p class="description">Payment received - Invoice #1001</p>
+                            <span class="date">Oct 26, 2023</span>
+                        </div>
+                        <span class="amount positive">+$500.00</span>
+                    </li>
+                    <li class="activity-item">
+                        <div class="description-date">
+                            <p class="description">Expense: Software Subscription</p>
+                            <span class="date">Oct 25, 2023</span>
+                        </div>
+                        <span class="amount negative">-$19.99</span>
+                    </li>
+                    <li class="activity-item">
+                        <div class="description-date">
+                            <p class="description">Invoice #1002 created</p>
+                            <span class="date">Oct 24, 2023</span>
+                        </div>
+                        <span class="amount neutral">N/A</span>
+                    </li>
+                </ul>
+                <a href="#" class="view-all-link">View All Activity</a>
+            </section>
+        </main>
+
+        <!-- 5. Bottom Navigation Bar -->
+        <nav class="bottom-navigation-bar">
+            <a href="#" class="nav-item active" aria-current="page" aria-label="Home">
+                <i class="material-icons">home</i>
+                <span class="label">Home</span>
+            </a>
+            <a href="#" class="nav-item" aria-label="Money">
+                <i class="material-icons">payments</i>
+                <span class="label">Money</span>
+            </a>
+            <a href="#" class="nav-item" aria-label="Invoicing">
+                <i class="material-icons">receipt_long</i>
+                <span class="label">Invoicing</span>
+            </a>
+            <a href="#" class="nav-item" aria-label="Customers">
+                <i class="material-icons">people</i>
+                <span class="label">Customers</span>
+            </a>
+        </nav>
     </div>
-
-    <!-- Balance Overview -->
-    <div class="balance-overview">
-        <div class="balance-card">
-            <p class="balance-title">Current Balance</p>
-            <h2 class="balance-amount">$1,234.56</h2>
-        </div>
-    </div>
-
-    <!-- Transaction List -->
-    <div class="transaction-list">
-
-      <!-- Example Transactions -->
-        <div class="transaction-item">
-            <div class="transaction-icon-wrapper shopping">
-                <i class="material-icons transaction-icon">shopping_cart</i>
-            </div>
-            <div class="transaction-details">
-                <p class="transaction-description">Starbucks</p>
-                <p class="transaction-date">Today, 10:30 AM</p>
-            </div>
-            <p class="transaction-amount expense">- $5.50</p>
-        </div>
-
-        <div class="transaction-item">
-            <div class="transaction-icon-wrapper restaurant">
-                <i class="material-icons transaction-icon">restaurant</i>
-            </div>
-            <div class="transaction-details">
-                <p class="transaction-description">Dinner with Friends</p>
-                <p class="transaction-date">Yesterday, 7:00 PM</p>
-            </div>
-            <p class="transaction-amount expense">- $45.00</p>
-        </div>
-
-        <div class="transaction-item">
-            <div class="transaction-icon-wrapper transfer">
-                <i class="material-icons transaction-icon">trending_up</i>
-            </div>
-            <div class="transaction-details">
-                <p class="transaction-description">Salary Deposit</p>
-                <p class="transaction-date">2024-01-26</p>
-            </div>
-            <p class="transaction-amount income">+ $2,500.00</p>
-        </div>
-
-        <div class="transaction-item">
-            <div class="transaction-icon-wrapper shopping">
-                <i class="material-icons transaction-icon">shopping_cart</i>
-            </div>
-            <div class="transaction-details">
-                <p class="transaction-description">Amazon Purchase</p>
-                <p class="transaction-date">2024-01-25</p>
-            </div>
-            <p class="transaction-amount expense">- $120.00</p>
-        </div>
-    </div>
-
-    <!-- Floating Action Button -->
-    <button class="fab">
-        <i class="material-icons">add</i>
-    </button>
-
-    <!-- Bottom Navigation (Optional) -->
-    <nav class="bottom-nav">
-        <a href="#" class="nav-item">
-            <i class="material-icons">home</i>
-            <span>Home</span>
-        </a>
-        <a href="#" class="nav-item active">
-            <i class="material-icons">swap_horiz</i>
-            <span>Transactions</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="material-icons">insert_chart</i>
-            <span>Budget</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="material-icons">person</i>
-            <span>Profile</span>
-        </a>
-    </nav>
-
 </body>
 </html>

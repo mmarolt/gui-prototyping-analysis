@@ -1,109 +1,566 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Slide</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-  color: #333;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Presentation Editor</title>
+    <style>
+        /* General Body Styles */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent body scroll if app frame is fixed */
+        }
 
-.container {
-  width: 100%;
-  max-width: 375px; /* Match target mobile width */
-  margin: 0 auto;
-  box-sizing: border-box; /* Include padding/border in width */
-}
+        /* Mobile Device Frame Simulation */
+        #app-frame {
+            width: 375px;
+            height: 667px;
+            border: 10px solid #333;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content stays within the frame */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
 
-.header {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 18px;
-}
+        /* Header Bar */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #eee;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
 
-.slide-preview {
-  background-color: #fff;
-  margin: 10px;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-}
+        .header .left-actions,
+        .header .right-actions {
+            display: flex;
+            gap: 10px;
+        }
 
-.slide-preview h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
+        .header button {
+            background: none;
+            border: none;
+            color: #007aff; /* iOS blue */
+            font-size: 15px;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
 
-.slide-preview p {
-  font-size: 14px;
-  color: #666;
-}
+        .header button:active {
+            background-color: rgba(0, 122, 255, 0.1);
+        }
+        
+        .header .done-button {
+            font-weight: bold;
+        }
 
-.toolbar {
-  background-color: #eee;
-  padding: 10px;
-  text-align: center;
-  display: flex;
-  justify-content: space-around;
-}
+        /* Slide Navigation Area */
+        .slide-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+            color: #555;
+        }
 
-.toolbar button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 14px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 5px;
-}
+        .slide-nav .slide-count {
+            flex-grow: 1;
+            text-align: center;
+        }
 
-.toolbar button:hover {
-  opacity: 0.8;
-}
+        .slide-nav button {
+            background-color: #e9e9eb;
+            border: none;
+            color: #333;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
 
-.footer {
-  text-align: center;
-  padding: 10px;
-  font-size: 12px;
-  color: #777;
-}
-</style>
+        .slide-nav button:active {
+            background-color: #dcdce0;
+        }
+
+        /* Main Slide Canvas Area */
+        .slide-canvas-container {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e0e0e0; /* Background behind the slide */
+            padding: 10px;
+            overflow: auto; /* Allows scrolling if slide is larger or zoomed */
+        }
+
+        .slide-canvas {
+            width: 320px; /* Example slide dimensions */
+            height: 180px; /* 16:9 aspect ratio for presentation */
+            background-color: white;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative; /* For absolutely positioned elements on the slide */
+            overflow: hidden; /* Elements outside this boundary are hidden */
+            box-sizing: border-box;
+            user-select: none; /* Prevent text selection on canvas itself */
+        }
+
+        /* Elements on the Slide */
+        .slide-element {
+            position: absolute;
+            border: 1px solid transparent; /* Default transparent border */
+            box-sizing: border-box;
+            cursor: grab;
+            transition: border-color 0.1s; /* Smooth transition for selection */
+        }
+
+        .slide-element.selected {
+            border-color: #007aff; /* Blue border when selected */
+            box-shadow: 0 0 0 1px #007aff inset; /* Inner shadow for a cleaner look */
+        }
+
+        /* Text Box Specific Styles */
+        .text-box {
+            min-width: 50px;
+            min-height: 20px;
+            padding: 5px;
+            font-size: 16px;
+            color: #333;
+            /* contenteditable makes it editable. Double-tap would typically toggle this. */
+            outline: none; /* Remove default focus outline */
+            cursor: text;
+        }
+
+        /* Shape Specific Styles */
+        .shape {
+            background-color: #ffcc00; /* Default shape color */
+            opacity: 0.7;
+        }
+
+        .shape.rectangle {
+            width: 80px;
+            height: 50px;
+        }
+
+        .shape.circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        /* Toolbar / Bottom Bar */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to next line */
+            justify-content: space-around;
+            padding: 10px 5px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            gap: 5px; /* Spacing between toolbar items */
+        }
+
+        .toolbar .tool-group {
+            display: flex;
+            gap: 5px;
+            background-color: #e9e9eb;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 5px; /* Space between rows of tool groups */
+        }
+
+        .toolbar button,
+        .toolbar select,
+        .toolbar input[type="number"],
+        .toolbar input[type="color"] {
+            background-color: #ffffff;
+            border: 1px solid #dcdce0;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            min-width: 30px; /* Ensure buttons are tappable */
+            box-sizing: border-box;
+        }
+
+        .toolbar button:active {
+            background-color: #e0e0e0;
+            border-color: #c0c0c0;
+        }
+
+        .toolbar select,
+        .toolbar input[type="number"],
+        .toolbar input[type="color"] {
+            padding: 7px 10px;
+            min-width: unset;
+        }
+
+        .toolbar input[type="color"] {
+            width: 40px;
+            height: 32px; /* Match button height */
+            padding: 0;
+            border: none;
+            overflow: hidden; /* Hide default color input border */
+        }
+
+        .toolbar .alignment-buttons button {
+            width: 38px; /* Fixed width for alignment buttons */
+            height: 32px;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        /* Icon-like representation for alignment */
+        .toolbar .alignment-buttons button.align-left::before { content: 'L'; }
+        .toolbar .alignment-buttons button.align-center::before { content: 'C'; }
+        .toolbar .alignment-buttons button.align-right::before { content: 'R'; }
+
+        /* Hide default number input arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        /* Placeholder for new presentation/template options */
+        .initial-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            background-color: #f0f2f5;
+            padding: 20px;
+        }
+
+        .initial-screen h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .initial-screen .options button {
+            display: block;
+            width: 200px;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .initial-screen .options button:hover {
+            background-color: #0056b3;
+        }
+
+        .initial-screen .options button:last-child {
+            margin-bottom: 0;
+            background-color: #6c757d; /* Grey for templates */
+        }
+
+        .initial-screen .options button:last-child:hover {
+            background-color: #5a6268;
+        }
+
+    </style>
 </head>
 <body>
+    <div id="app-frame">
+        <!-- Initial Screen - Replace with actual editor when a presentation is "opened" -->
+        <div class="initial-screen" id="initialScreen">
+            <h2>Create Your Presentation</h2>
+            <div class="options">
+                <button onclick="openEditor()">New Presentation</button>
+                <button onclick="openEditor()">From Template</button>
+            </div>
+        </div>
 
-<div class="container">
+        <!-- Main Editor View (initially hidden) -->
+        <div id="editorView" style="display: none; flex-direction: column; flex-grow: 1;">
+            <div class="header">
+                <div class="left-actions">
+                    <button>Undo</button>
+                    <button>Redo</button>
+                </div>
+                <span>My Presentation</span>
+                <div class="right-actions">
+                    <button class="done-button" onclick="closeEditor()">Done</button>
+                </div>
+            </div>
 
-  <div class="header">
-    New Slide
-  </div>
+            <div class="slide-nav">
+                <button>&#9664; Prev</button> <!-- Left arrow -->
+                <span class="slide-count">Slide 1 of 3</span>
+                <button>Next &#9654;</button> <!-- Right arrow -->
+                <button>+ Add</button>
+                <button>&#128465; Del</button> <!-- Trash can icon -->
+            </div>
 
-  <div class="slide-preview">
-    <h2>Slide Title</h2>
-    <p>Add your content here...</p>
-  </div>
+            <div class="slide-canvas-container">
+                <div class="slide-canvas">
+                    <!-- Example Text Box -->
+                    <div class="slide-element text-box selected" contenteditable="true" style="top: 20px; left: 20px; width: 200px; font-size: 20px; font-weight: bold; color: #000;">
+                        Double-tap to edit text.
+                    </div>
 
-  <div class="toolbar">
-    <button>Add Text</button>
-    <button>Add Image</button>
-    <button>Add Chart</button>
-  </div>
+                    <!-- Example Rectangle Shape -->
+                    <div class="slide-element shape rectangle" style="top: 80px; left: 240px; background-color: #007aff;"></div>
 
-  <div class="footer">
-    &copy; 2023 Presentation App
-  </div>
+                    <!-- Example Circle Shape -->
+                    <div class="slide-element shape circle" style="top: 100px; left: 50px; background-color: #34c759;"></div>
+                </div>
+            </div>
 
-</div>
+            <div class="toolbar">
+                <div class="tool-group">
+                    <button>&#x270E; Text</button> <!-- Add Text Box -->
+                    <button>&#x25A1; Rect</button> <!-- Add Rectangle -->
+                    <button>&#x25CF; Circle</button> <!-- Add Circle -->
+                </div>
 
+                <div class="tool-group">
+                    <select>
+                        <option>Arial</option>
+                        <option>Verdana</option>
+                        <option>Helvetica</option>
+                        <option>Times New Roman</option>
+                    </select>
+                    <input type="number" value="16" min="8" max="72">
+                    <input type="color" value="#333333">
+                </div>
+
+                <div class="tool-group alignment-buttons">
+                    <button class="align-left" title="Align Left"></button>
+                    <button class="align-center" title="Align Center"></button>
+                    <button class="align-right" title="Align Right"></button>
+                </div>
+
+                <div class="tool-group">
+                    <button>&#x2702; Cut</button>
+                    <button>&#x2398; Copy</button>
+                    <button>&#x2398; Paste</button>
+                    <button>&#128465; Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openEditor() {
+            document.getElementById('initialScreen').style.display = 'none';
+            document.getElementById('editorView').style.display = 'flex';
+        }
+
+        function closeEditor() {
+            document.getElementById('editorView').style.display = 'none';
+            document.getElementById('initialScreen').style.display = 'flex';
+        }
+
+        // --- Basic interactivity for demonstration purposes ---
+        const slideCanvas = document.querySelector('.slide-canvas');
+        let selectedElement = null;
+
+        // Select an element on click
+        slideCanvas.addEventListener('click', (e) => {
+            if (selectedElement) {
+                selectedElement.classList.remove('selected');
+            }
+            if (e.target.classList.contains('slide-element')) {
+                selectedElement = e.target;
+                selectedElement.classList.add('selected');
+            } else {
+                selectedElement = null; // Deselect if clicking outside elements
+            }
+        });
+
+        // Double-tap simulation for contenteditable elements
+        // In a real app, this would be a more robust touch event handler.
+        // For this demo, text boxes are always contenteditable, but we can highlight the interaction.
+        slideCanvas.addEventListener('dblclick', (e) => {
+            if (e.target.classList.contains('text-box')) {
+                // In a real app, this would toggle contenteditable.
+                // Here, we just ensure it's focused.
+                e.target.focus();
+                alert("Text box is now editable! (In a real app, double-tap would toggle this state.)");
+            }
+        });
+
+        // Add element buttons (for demonstration, just adds a new element)
+        document.querySelector('.toolbar button:nth-child(1)').addEventListener('click', () => { // Add Text
+            const newText = document.createElement('div');
+            newText.classList.add('slide-element', 'text-box');
+            newText.setAttribute('contenteditable', 'true');
+            newText.style.top = '60px';
+            newText.style.left = '100px';
+            newText.style.width = '150px';
+            newText.style.fontSize = '18px';
+            newText.textContent = 'New Text';
+            slideCanvas.appendChild(newText);
+        });
+
+        document.querySelector('.toolbar button:nth-child(2)').addEventListener('click', () => { // Add Rectangle
+            const newRect = document.createElement('div');
+            newRect.classList.add('slide-element', 'shape', 'rectangle');
+            newRect.style.top = '40px';
+            newRect.style.left = '80px';
+            newRect.style.backgroundColor = '#ffc107';
+            slideCanvas.appendChild(newRect);
+        });
+
+        document.querySelector('.toolbar button:nth-child(3)').addEventListener('click', () => { // Add Circle
+            const newCircle = document.createElement('div');
+            newCircle.classList.add('slide-element', 'shape', 'circle');
+            newCircle.style.top = '120px';
+            newCircle.style.left = '180px';
+            newCircle.style.backgroundColor = '#17a2b8';
+            slideCanvas.appendChild(newCircle);
+        });
+
+        // Delete button
+        document.querySelector('.toolbar button:last-child').addEventListener('click', () => { // Delete
+            if (selectedElement && selectedElement.parentNode === slideCanvas) {
+                slideCanvas.removeChild(selectedElement);
+                selectedElement = null;
+            } else {
+                alert('No element selected to delete.');
+            }
+        });
+        
+        // Basic font size change (applies to selected text box)
+        document.querySelector('.toolbar input[type="number"]').addEventListener('change', (e) => {
+            if (selectedElement && selectedElement.classList.contains('text-box')) {
+                selectedElement.style.fontSize = e.target.value + 'px';
+            }
+        });
+
+        // Basic color change (applies to selected element)
+        document.querySelector('.toolbar input[type="color"]').addEventListener('change', (e) => {
+            if (selectedElement) {
+                if (selectedElement.classList.contains('text-box')) {
+                    selectedElement.style.color = e.target.value;
+                } else if (selectedElement.classList.contains('shape')) {
+                    selectedElement.style.backgroundColor = e.target.value;
+                }
+            }
+        });
+
+        // Basic alignment (applies to selected text box)
+        document.querySelectorAll('.alignment-buttons button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                if (selectedElement && selectedElement.classList.contains('text-box')) {
+                    if (e.target.classList.contains('align-left')) {
+                        selectedElement.style.textAlign = 'left';
+                    } else if (e.target.classList.contains('align-center')) {
+                        selectedElement.style.textAlign = 'center';
+                    } else if (e.target.classList.contains('align-right')) {
+                        selectedElement.style.textAlign = 'right';
+                    }
+                }
+            });
+        });
+
+        // Drag functionality (simplified for demo)
+        let isDragging = false;
+        let activeElement = null;
+        let initialX, initialY, xOffset, yOffset;
+
+        slideCanvas.addEventListener("touchstart", dragStart, false);
+        slideCanvas.addEventListener("touchend", dragEnd, false);
+        slideCanvas.addEventListener("touchmove", drag, false);
+
+        slideCanvas.addEventListener("mousedown", dragStart, false);
+        slideCanvas.addEventListener("mouseup", dragEnd, false);
+        slideCanvas.addEventListener("mousemove", drag, false);
+
+        function dragStart(e) {
+            if (e.target.classList.contains("slide-element")) {
+                activeElement = e.target;
+                isDragging = true;
+
+                if (e.type === "touchstart") {
+                    initialX = e.touches[0].clientX - activeElement.offsetLeft;
+                    initialY = e.touches[0].clientY - activeElement.offsetTop;
+                } else {
+                    initialX = e.clientX - activeElement.offsetLeft;
+                    initialY = e.clientY - activeElement.offsetTop;
+                }
+                
+                // Set z-index to bring dragged element to front
+                activeElement.style.zIndex = 1000;
+            }
+        }
+
+        function dragEnd(e) {
+            if (activeElement) {
+                activeElement.style.zIndex = ''; // Reset z-index
+            }
+            isDragging = false;
+            activeElement = null;
+        }
+
+        function drag(e) {
+            if (!isDragging || !activeElement) return;
+
+            e.preventDefault();
+
+            let currentX, currentY;
+            if (e.type === "touchmove") {
+                currentX = e.touches[0].clientX;
+                currentY = e.touches[0].clientY;
+            } else {
+                currentX = e.clientX;
+                currentY = e.clientY;
+            }
+
+            // Get canvas position relative to viewport
+            const canvasRect = slideCanvas.getBoundingClientRect();
+
+            // Calculate new position relative to canvas
+            let newX = currentX - initialX - canvasRect.left;
+            let newY = currentY - initialY - canvasRect.top;
+
+            // Constrain movement within canvas bounds
+            newX = Math.max(0, Math.min(newX, slideCanvas.offsetWidth - activeElement.offsetWidth));
+            newY = Math.max(0, Math.min(newY, slideCanvas.offsetHeight - activeElement.offsetHeight));
+
+            activeElement.style.left = `${newX}px`;
+            activeElement.style.top = `${newY}px`;
+        }
+
+
+    </script>
 </body>
 </html>

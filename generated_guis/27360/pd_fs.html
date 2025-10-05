@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Events</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* General body and HTML styling for mobile simulation */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background */
+            height: 100vh; /* Full viewport height */
+            width: 375px; /* Fixed width for Google Chrome DevTools simulation */
+            max-width: 100%; /* Ensures it doesn't exceed actual screen width */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            display: flex;
+            flex-direction: column; /* Stack sections vertically */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+        }
+
+        /* 1. Top Header Section */
+        .header {
+            padding: 15px 0;
+            text-align: center;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* 2. Search and Filter Section */
+        .search-filter-section {
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .search-input-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .search-input {
+            width: calc(100% - 30px); /* Full width minus combined padding */
+            padding: 10px 15px 10px 40px; /* Left padding for icon, right for text */
+            border: 1px solid #ddd;
+            border-radius: 25px; /* Rounded corners for modern look */
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none; /* Remove default focus outline */
+            -webkit-appearance: none; /* Remove default styling on iOS */
+        }
+        .search-input::placeholder {
+            color: #999;
+        }
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 18px;
+            pointer-events: none; /* Allow clicks to pass through to input */
+        }
+        .segmented-control {
+            display: flex;
+            justify-content: space-around;
+            background-color: #e0e0e0; /* Background for the control */
+            border-radius: 8px;
+            overflow: hidden; /* Ensures child buttons respect border-radius */
+            padding: 3px;
+        }
+        .segmented-control button {
+            flex: 1; /* Each button takes equal space */
+            padding: 10px 5px;
+            border: none;
+            background-color: transparent;
+            font-size: 15px;
+            color: #555;
+            cursor: pointer;
+            outline: none;
+            border-radius: 6px; /* Rounded corners for individual buttons */
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+            -webkit-appearance: none; /* Remove default button styling */
+        }
+        .segmented-control button.active {
+            background-color: #007bff; /* Highlight color for active tab */
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Shadow for active tab */
+        }
+        .segmented-control button:not(.active):hover {
+            background-color: #d0d0d0; /* Subtle hover effect */
+        }
+
+        /* 3. Main Content Section (Scrollable Event List) */
+        .scrollable-event-container {
+            flex-grow: 1; /* Takes all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 15px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* 4. Event Listing (Individual Event Card Structure) */
+        .event-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            margin-bottom: 15px; /* Space between cards */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Card shadow */
+            overflow: hidden; /* Ensures image corners are rounded with card */
+            display: flex;
+            flex-direction: column; /* Stack image and details vertically */
+        }
+        .event-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for event images */
+            object-fit: cover; /* Cover the area, cropping if necessary */
+            display: block; /* Remove extra space below image */
+        }
+        .event-details {
+            padding: 15px;
+            text-align: left;
+        }
+        .event-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .event-date, .event-location {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 3px;
+            display: flex; /* For icon alignment */
+            align-items: center;
+        }
+        .event-location::before {
+            content: "\1F4CD"; /* Unicode for pushpin icon */
+            margin-right: 8px;
+            font-size: 16px;
+            color: #888;
+        }
+        .event-date::before {
+            content: "\1F4C5"; /* Unicode for calendar icon */
+            margin-right: 8px;
+            font-size: 16px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Header Section -->
+    <div class="header">
+        <h1>Events</h1>
+    </div>
+
+    <!-- 2. Search and Filter Section -->
+    <div class="search-filter-section">
+        <div class="search-input-container">
+            <input type="text" class="search-input" placeholder="Search events...">
+            <span class="search-icon">&#128269;</span> <!-- Magnifying glass icon -->
+        </div>
+        <div class="segmented-control">
+            <button class="active">Coming Soon</button>
+            <button>All Upcoming</button>
+            <button>Past</button>
+        </div>
+    </div>
+
+    <!-- 3. Main Content Section (Scrollable Event List) -->
+    <div class="scrollable-event-container">
+        <!-- Event Card 1 -->
+        <div class="event-card">
+            <img src="https://via.placeholder.com/375x180/FF5733/FFFFFF?text=Music+Festival" alt="Music Festival Image">
+            <div class="event-details">
+                <div class="event-title">Music Festival Extravaganza</div>
+                <div class="event-date">Oct 26 - Oct 28, 2023</div>
+                <div class="event-location">City Park Arena</div>
+            </div>
+        </div>
+
+        <!-- Event Card 2 -->
+        <div class="event-card">
+            <img src="https://via.placeholder.com/375x180/33FF57/FFFFFF?text=Tech+Summit" alt="Tech Summit Image">
+            <div class="event-details">
+                <div class="event-title">Tech Innovators Summit</div>
+                <div class="event-date">Nov 15, 2023</div>
+                <div class="event-location">Convention Center Hall A</div>
+            </div>
+        </div>
+
+        <!-- Event Card 3 -->
+        <div class="event-card">
+            <img src="https://via.placeholder.com/375x180/3357FF/FFFFFF?text=Farmers+Market" alt="Farmers Market Image">
+            <div class="event-details">
+                <div class="event-title">Local Farmers Market</div>
+                <div class="event-date">Every Saturday Morning</div>
+                <div class="event-location">Town Square</div>
+            </div>
+        </div>
+
+        <!-- Event Card 4 (for scroll demonstration) -->
+        <div class="event-card">
+            <img src="https://via.placeholder.com/375x180/FFC300/333333?text=Art+Exhibition" alt="Art Exhibition Image">
+            <div class="event-details">
+                <div class="event-title">Art Exhibition: Modern Visions</div>
+                <div class="event-date">Dec 1 - Jan 31, 2024</div>
+                <div class="event-location">Art Gallery Downtown</div>
+            </div>
+        </div>
+
+        <!-- Event Card 5 (for scroll demonstration) -->
+        <div class="event-card">
+            <img src="https://via.placeholder.com/375x180/DAF7A6/333333?text=Community+Dinner" alt="Community Dinner Image">
+            <div class="event-details">
+                <div class="event-title">Community Potluck Dinner</div>
+                <div class="event-date">Dec 20, 2023</div>
+                <div class="event-location">Community Hall</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

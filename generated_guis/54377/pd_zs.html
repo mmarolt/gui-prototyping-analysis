@@ -1,189 +1,622 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mobile Presentation Editor</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f0f0;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Presentation Editor</title>
+    <style>
+        /* Global Styles & Reset */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box;
+        }
 
-/* Top Bar */
-.top-bar {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box; /* Important for width consistency */
-  z-index: 100; /* Ensure it stays on top */
-}
+        /* Mobile Device Container Simulation */
+        /* This container simulates the mobile screen size within a desktop browser. */
+        /* To test, open in Chrome, then F12 (Developer Tools), click the "Toggle device toolbar" icon, */
+        /* and select "Responsive" or a specific device like "iPhone SE" (375x667) */
+        .mobile-page-container {
+            width: 375px; /* Target width for mobile simulation */
+            height: 667px; /* Target height for mobile simulation */
+            border: 1px solid #ccc;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            position: relative; /* For absolute positioning of child elements */
+            overflow: hidden; /* Hide overflow from fixed elements */
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
 
-.top-bar button {
-  background-color: transparent;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 16px;
-}
+        /* Helper for buttons (basic styling) */
+        .button {
+            padding: 8px 12px;
+            border: none;
+            background-color: transparent;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+        .button:active {
+            opacity: 0.7;
+        }
 
-.top-bar h1 {
-  margin: 0;
-  font-size: 18px;
-}
+        /* I. Core Layout Principles */
 
-/* Slide Editing Area */
-.slide-area {
-  width: 100%;
-  height: 400px; /* Adjust as needed */
-  background-color: white;
-  margin-top: 60px; /* Account for top bar height */
-  margin-bottom: 110px; /*Account for bottom bar + formatting bar */
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  position: relative; /* Required for absolute positioning of elements */
-  overflow: hidden; /* Prevent content overflow */
-}
+        /* 1. Header Bar (Persistent) */
+        .top-toolbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px; /* Standard toolbar height */
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+            z-index: 1000; /* Ensure it's on top */
+        }
+        .top-toolbar .title {
+            font-weight: bold;
+            font-size: 16px;
+            flex-grow: 1;
+            text-align: center;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .top-toolbar .left-actions,
+        .top-toolbar .right-actions {
+            display: flex;
+            align-items: center;
+        }
+        .top-toolbar .right-actions .done-button {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            padding: 6px 12px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
 
-.slide-area p {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 20px;
-}
+        /* 2. Slide Canvas (Main Content Area) */
+        .slide-canvas {
+            flex-grow: 1; /* Takes available space */
+            margin-top: 56px; /* Offset for top toolbar */
+            /* Default margin-bottom for State 1: Thumbnail Scroller (50px) + Content Creation Toolbar (50px) */
+            margin-bottom: calc(50px + 50px);
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-style: italic;
+            color: #666;
+            overflow: auto; /* For pinch-to-zoom simulation */
+            position: relative; /* For absolutely positioned elements within canvas */
+            box-sizing: border-box;
+        }
+        /* Adjustments for different states */
+        .slide-canvas.text-editing-mode {
+            /* Adjust for keyboard (200px) + text toolbar (50px) */
+            margin-bottom: calc(200px + 50px);
+        }
+        .slide-canvas.has-bottom-sheet {
+            /* Adjust for bottom sheet (example height 200px) */
+            margin-bottom: 200px;
+        }
 
-/* Formatting Toolbar */
-.formatting-toolbar {
-  background-color: #eee;
-  padding: 10px;
-  text-align: center;
-  position: fixed;
-  bottom: 50px;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
-  z-index: 90;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
+        /* Placeholder for selected element (State 2) */
+        .selected-element {
+            width: 150px;
+            height: 100px;
+            background-color: #fff;
+            border: 2px solid #007bff;
+            position: relative;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #333;
+            cursor: grab;
+        }
+        .selection-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #007bff;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            cursor: nwse-resize;
+            z-index: 10;
+        }
+        .handle-tl { top: -6px; left: -6px; }
+        .handle-tr { top: -6px; right: -6px; cursor: nesw-resize; }
+        .handle-bl { bottom: -6px; left: -6px; cursor: nesw-resize; }
+        .handle-br { bottom: -6px; right: -6px; }
+        .rotation-handle { top: -25px; left: 50%; transform: translateX(-50%); cursor: grab; background-color: #007bff; border: 1px solid #fff; width: 16px; height: 16px; }
 
-.formatting-toolbar button {
-  background-color: #ddd;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
+        /* Textarea for editing (State 3) */
+        .editing-textarea {
+            width: 80%;
+            height: 150px;
+            border: 1px dashed #007bff;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            background-color: white;
+            color: #333;
+        }
 
-/* Bottom Bar */
-.bottom-bar {
-  background-color: #f5f5f5;
-  padding: 10px;
-  text-align: center;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
-}
+        /* 3. Slide Thumbnail Scroller (Persistent/Toggleable) */
+        .thumbnail-scroller {
+            position: absolute;
+            bottom: 50px; /* Above the bottom toolbar */
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: #f0f0f0;
+            border-top: 1px solid #eee;
+            display: flex; /* Default state */
+            align-items: center;
+            overflow-x: scroll;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding: 0 5px;
+            box-sizing: border-box;
+            z-index: 900;
+        }
+        .thumbnail {
+            min-width: 40px; /* Fixed width for thumbnails */
+            height: 35px;
+            background-color: #ccc;
+            border: 1px solid #aaa;
+            margin: 0 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: #555;
+            cursor: pointer;
+            flex-shrink: 0; /* Prevent shrinking */
+            border-radius: 3px;
+        }
+        .thumbnail.active {
+            border: 2px solid #007bff;
+            background-color: #e6f2ff;
+        }
+        .add-slide-button {
+            min-width: 40px;
+            height: 35px;
+            background-color: #007bff;
+            color: white;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
 
-.bottom-bar button {
-  background-color: #ccc;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 14px;
-}
+        /* 4. Bottom Toolbar (Dynamic/Contextual) */
+        .bottom-toolbar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #eee;
+            display: flex; /* Default for content creation */
+            justify-content: space-around;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
 
-.slide-thumbnails {
-  display: flex;
-  overflow-x: auto;
-  padding: 5px 0;
-}
+        /* State 3: Text Editing Toolbar (Above Keyboard) */
+        .text-editing-toolbar {
+            position: absolute;
+            bottom: 200px; /* Placeholder for keyboard height */
+            left: 0;
+            right: 0;
+            height: 50px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #eee;
+            display: none; /* Initially hidden */
+            justify-content: space-around;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1100;
+        }
+        /* State 3: Mobile Keyboard (System UI) */
+        .mobile-keyboard {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px; /* Typical keyboard height */
+            background-color: #d1d5db; /* Light grey for keyboard */
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            z-index: 1050;
+        }
 
-.slide-thumbnail {
-  width: 50px;
-  height: 40px;
-  background-color: #ddd;
-  border: 1px solid #ccc;
-  margin: 0 5px;
-  cursor: pointer;
-}
+        /* 5. Overlays/Bottom Sheets */
+        .bottom-sheet {
+            position: absolute;
+            bottom: 0; /* Will slide up from here */
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+            padding: 15px 10px;
+            box-sizing: border-box;
+            z-index: 1200;
+            display: none; /* Initially hidden */
+            min-height: 200px; /* Example height for bottom sheets */
+        }
+        .bottom-sheet .dismiss-handle {
+            width: 40px;
+            height: 4px;
+            background-color: #ccc;
+            border-radius: 2px;
+            margin: 0 auto 10px auto;
+            cursor: grab;
+        }
+        .bottom-sheet .header {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        /* Shape Palette/Gallery (State 5) */
+        .shape-palette-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .shape-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        /* Shape Properties (State 4) */
+        .shape-properties-list > div {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .shape-properties-list > div:last-child {
+            border-bottom: none;
+        }
+        .color-box {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .slider-control {
+            width: 100px;
+            height: 4px;
+            background-color: #ddd;
+            border-radius: 2px;
+            position: relative;
+        }
+        .slider-thumb {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #007bff;
+            border-radius: 50%;
+            top: -6px;
+            left: 50%; /* Example position */
+            transform: translateX(-50%);
+            cursor: grab;
+        }
 
-/* General Button Styling */
-button:hover {
-  opacity: 0.8;
-}
-
-/* Responsive adjustments - not strictly necessary with viewport meta tag, but good practice */
-@media (max-width: 400px) { /* Example breakpoint */
-  .top-bar h1 {
-    font-size: 16px;
-  }
-  .top-bar button {
-    font-size: 14px;
-  }
-  .formatting-toolbar button {
-    font-size: 12px;
-    padding: 6px 10px;
-  }
-  .bottom-bar button {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-}
-</style>
+        /* Initial Entry Point: Presentation Creation Screen (Optional, uncomment to view) */
+        .presentation-creation-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #fff;
+            z-index: 2000; /* Higher z-index to cover the editor */
+            display: none; /* Initially hidden */
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+        .presentation-creation-screen .header-bar {
+            height: 56px;
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        .presentation-creation-screen .header-bar .title {
+            font-weight: bold;
+            font-size: 16px;
+            flex-grow: 1;
+            text-align: center;
+            color: #333;
+        }
+        .create-options {
+            padding: 20px;
+            text-align: center;
+        }
+        .create-options button {
+            display: block;
+            width: 80%;
+            margin: 15px auto;
+            padding: 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .template-gallery {
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .template-card {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .template-card img {
+            max-width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .template-card p {
+            font-size: 12px;
+            margin: 0;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <button>Back</button>
-  <h1>Presentation Title</h1>
-  <button>Save</button>
-</div>
+    <div class="mobile-page-container">
 
-<div class="slide-area">
-  <p>Slide Content (Example)</p>
-</div>
+        <!-- Initial Entry Point: Presentation Creation (Uncomment the 'style' attribute below to view this screen) -->
+        <!-- This screen would typically appear BEFORE the editor page. -->
+        <div class="presentation-creation-screen" style="display: none;">
+            <div class="header-bar">
+                <button class="button">&lt;-</button>
+                <span class="title">New Presentation</span>
+                <!-- Spacer to balance header -->
+                <span style="width: 40px;"></span>
+            </div>
+            <div class="create-options">
+                <button>From Scratch</button>
+                <button>From Pre-designed Templates</button>
+            </div>
+            <div class="template-gallery">
+                <div class="template-card">
+                    <img src="https://via.placeholder.com/150x80/e0e0e0/555555?text=Template+1" alt="Template 1">
+                    <p>Business Report</p>
+                </div>
+                <div class="template-card">
+                    <img src="https://via.placeholder.com/150x80/e0e0e0/555555?text=Template+2" alt="Template 2">
+                    <p>Marketing Pitch</p>
+                </div>
+                <div class="template-card">
+                    <img src="https://via.placeholder.com/150x80/e0e0e0/555555?text=Template+3" alt="Template 3">
+                    <p>Project Update</p>
+                </div>
+                <div class="template-card">
+                    <img src="https://via.placeholder.com/150x80/e0e0e0/555555?text=Template+4" alt="Template 4">
+                    <p>Educational</p>
+                </div>
+                <div class="template-card">
+                    <img src="https://via.placeholder.com/150x80/e0e0e0/555555?text=Template+5" alt="Template 5">
+                    <p>Creative Portfolio</p>
+                </div>
+            </div>
+        </div>
 
-<div class="formatting-toolbar">
-  <button>Bold</button>
-  <button>Italic</button>
-  <button>Underline</button>
-  <button>Color</button>
-  <button>Font Size</button>
-</div>
 
-<div class="bottom-bar">
-  <button>Add Slide</button>
-  <div class="slide-thumbnails">
-    <div class="slide-thumbnail"></div>
-    <div class="slide-thumbnail"></div>
-    <div class="slide-thumbnail"></div>
-    <div class="slide-thumbnail"></div>
-    <!-- More thumbnails -->
-  </div>
-  <div>
-    <button>&lt;</button>
-    <button>&gt;</button>
-  </div>
-</div>
+        <!-- I. Core Layout: Persistent Header Bar -->
+        <div class="top-toolbar">
+            <div class="left-actions">
+                <button class="button">&lt;-</button>
+            </div>
+            <span class="title">My Awesome Presentation</span>
+            <div class="right-actions">
+                <button class="button">Undo</button>
+                <button class="button">Redo</button>
+                <button class="button done-button">Done</button>
+            </div>
+        </div>
+
+        <!-- II. Detailed Screen Structure -->
+
+        <!-- Main Content Area: Slide Canvas -->
+        <!--
+            Instructions for viewing different states:
+
+            STATE 1: Initial Load / No Element Selected (Default View)
+            - Ensure 'slide-canvas' has NO extra classes.
+            - Ensure 'thumbnail-scroller' has 'display: flex;'.
+            - Ensure 'bottom-toolbar content-creation' has 'display: flex;'.
+            - Ensure ALL other bottom toolbars and bottom sheets have 'display: none;'.
+            - Ensure '.selected-element' and '.editing-textarea' inside canvas have 'display: none;'.
+        -->
+        <div class="slide-canvas">
+            <p style="display: block;">Tap to add content</p>
+
+            <!--
+                STATE 2: Element Selected (Text Box or Shape)
+                - To view this, set the 'slide-canvas' to default (no extra classes).
+                - Set 'thumbnail-scroller' to 'display: flex;'.
+                - Set 'bottom-toolbar content-creation' to 'display: none;'.
+                - Set 'bottom-toolbar element-selected' to 'display: flex;'.
+                - Set 'selected-element' below to 'display: flex;' and 'p' above to 'display: none;'.
+                - Ensure ALL other bottom toolbars and bottom sheets have 'display: none;'.
+            -->
+            <div class="selected-element" style="position: absolute; top: 100px; left: 50px; display: none;">
+                Selected Element
+                <div class="selection-handle handle-tl"></div>
+                <div class="selection-handle handle-tr"></div>
+                <div class="selection-handle handle-bl"></div>
+                <div class="selection-handle handle-br"></div>
+                <div class="selection-handle rotation-handle"></div>
+            </div>
+
+            <!--
+                STATE 3: Editing Text (Double-tap on Text Box)
+                - Set 'slide-canvas' to class="slide-canvas text-editing-mode".
+                - Set 'thumbnail-scroller' to 'display: none;'.
+                - Set 'text-editing-toolbar' to 'display: flex;'.
+                - Set 'mobile-keyboard' to 'display: flex;'.
+                - Set 'editing-textarea' below to 'display: block;' and 'p' above to 'display: none;'.
+                - Ensure ALL other bottom toolbars and bottom sheets have 'display: none;'.
+            -->
+            <textarea class="editing-textarea" style="display: none;">This is editable text.</textarea>
+        </div>
+
+        <!-- Persistent/Toggleable Slide Thumbnail Scroller -->
+        <div class="thumbnail-scroller" style="display: flex;">
+            <div class="thumbnail">1</div>
+            <div class="thumbnail">2</div>
+            <div class="thumbnail active">3</div>
+            <div class="thumbnail">4</div>
+            <div class="thumbnail">5</div>
+            <div class="thumbnail">6</div>
+            <div class="add-slide-button">+</div>
+        </div>
+
+        <!-- Dynamic Bottom Toolbars -->
+
+        <!-- STATE 1: Initial Load / No Element Selected - Content Creation Toolbar -->
+        <div class="bottom-toolbar content-creation" style="display: flex;">
+            <button class="button">Add Text Box</button>
+            <button class="button">Insert Shapes</button>
+        </div>
+
+        <!-- STATE 2: Element Selected - Contextual Toolbar -->
+        <div class="bottom-toolbar element-selected" style="display: none;">
+            <button class="button">Cut</button>
+            <button class="button">Copy</button>
+            <button class="button">Duplicate</button>
+            <button class="button">Delete</button>
+            <button class="button">Style/Properties</button>
+        </div>
+
+        <!-- STATE 3: Editing Text - Text Editing Toolbar -->
+        <div class="text-editing-toolbar" style="display: none;">
+            <button class="button">Font</button>
+            <button class="button">Size</button>
+            <button class="button">Color</button>
+            <button class="button">Align</button>
+            <button class="button"><b>B</b></button>
+            <button class="button"><i>I</i></button>
+            <button class="button"><u>U</u></button>
+            <button class="button">More...</button>
+        </div>
+
+        <!-- STATE 3: Mobile Keyboard (System UI) -->
+        <div class="mobile-keyboard" style="display: none;">
+            MOBILE KEYBOARD
+        </div>
+
+        <!--
+            STATE 4: Adjusting Shape Properties (From 'Style/Properties' button in State 2)
+            - To view this, set 'slide-canvas' to class="slide-canvas has-bottom-sheet".
+            - Set 'thumbnail-scroller' to 'display: none;'.
+            - Set 'bottom-sheet shape-properties' below to 'display: block;'.
+            - Set 'selected-element' inside canvas to 'display: flex;'.
+            - Ensure ALL other bottom toolbars and bottom sheets have 'display: none;'.
+        -->
+        <div class="bottom-sheet shape-properties" style="display: none;">
+            <div class="dismiss-handle"></div>
+            <div class="header">Shape Properties</div>
+            <div class="shape-properties-list">
+                <div>
+                    <span>Fill Color</span>
+                    <div class="color-box" style="background-color: #ff0000;"></div>
+                </div>
+                <div>
+                    <span>Border Color</span>
+                    <div class="color-box" style="background-color: #0000ff;"></div>
+                </div>
+                <div>
+                    <span>Border Thickness</span>
+                    <div class="slider-control"><div class="slider-thumb" style="left: 70%;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+            STATE 5: Inserting Shapes (From 'Insert Shapes' button in State 1)
+            - To view this, set 'slide-canvas' to class="slide-canvas has-bottom-sheet".
+            - Set 'thumbnail-scroller' to 'display: none;'.
+            - Set 'bottom-sheet shape-palette' below to 'display: block;'.
+            - Ensure ALL other bottom toolbars and bottom sheets have 'display: none;'.
+        -->
+        <div class="bottom-sheet shape-palette" style="display: none;">
+            <div class="dismiss-handle"></div>
+            <div class="header">Insert Shapes</div>
+            <div class="shape-palette-grid">
+                <div class="shape-icon">◻</div>
+                <div class="shape-icon">◯</div>
+                <div class="shape-icon">△</div>
+                <div class="shape-icon">→</div>
+                <div class="shape-icon">⭐</div>
+                <div class="shape-icon">⬟</div>
+                <div class="shape-icon">⬡</div>
+                <div class="shape-icon">⬠</div>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 </html>

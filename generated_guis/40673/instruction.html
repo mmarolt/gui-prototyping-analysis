@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Audio Recorder</title>
+    <style>
+        /* Basic Reset & Box-Sizing */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            height: 100%;
+            overflow: hidden; /* Prevent body scroll */
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* App Container - Simulates Mobile Screen */
+        .app-container {
+            max-width: 375px; /* Mobile screen width */
+            height: 667px;   /* Mobile screen height */
+            margin: 20px auto; /* Center the app container on larger screens */
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Ensure content doesn't spill out */
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+
+        /* Header */
+        .header {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Main Content Area */
+        .content {
+            flex-grow: 1; /* Takes up all available space between header and tab bar */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Recorder Screen Elements */
+        .recorder-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .microphone-graphic {
+            width: 150px;
+            height: 150px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 3px solid #ccc;
+        }
+
+        .microphone-graphic::before {
+            content: '';
+            width: 60px;
+            height: 60px;
+            background-color: #a0a0a0;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .recording-time {
+            font-size: 3rem;
+            font-weight: lighter;
+            color: #333;
+            margin-bottom: 25px;
+            min-width: 120px; /* Ensure consistent width */
+        }
+
+        .progress-bar {
+            width: 80%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-fill {
+            width: 0%; /* This will be dynamically updated in a real app */
+            height: 100%;
+            background-color: #4CAF50; /* Green for progress */
+            border-radius: 4px;
+            transition: width 0.3s ease-in-out; /* Smooth progress animation */
+        }
+        /* Example progress for static display */
+        .progress-bar.active .progress-fill {
+            width: 60%; /* Example: 60% progress */
+            background-color: #4a90e2; /* Blue when active */
+        }
+
+
+        .controls {
+            display: flex;
+            gap: 30px; /* Space between buttons */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .record-button, .stop-button {
+            width: 70px;
+            height: 70px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .record-button {
+            background-color: #ff3b30; /* Red */
+        }
+        .record-button:active {
+            transform: scale(0.95);
+            background-color: #e02a20;
+        }
+        /* Inner circle for record icon */
+        .record-button::before {
+            content: '';
+            width: 25px;
+            height: 25px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+
+        .stop-button {
+            background-color: #8e8e93; /* Gray */
+            border-radius: 10px; /* Square-like shape for stop */
+        }
+        .stop-button:active {
+            transform: scale(0.95);
+            background-color: #7a7a7e;
+        }
+        /* Inner square for stop icon */
+        .stop-button::before {
+            content: '';
+            width: 25px;
+            height: 25px;
+            background-color: #fff;
+            border-radius: 3px; /* Slightly rounded square */
+        }
+
+        /* Voice Memos Screen (Placeholder) */
+        .voice-memos-screen {
+            display: none; /* Hidden by default */
+            padding: 20px;
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        /* Tab Bar Navigation */
+        .tab-bar {
+            display: flex;
+            width: 100%;
+            height: 60px;
+            background-color: #f7f7f7;
+            border-top: 1px solid #e0e0e0;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8e8e93;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .tab.active {
+            color: #4a90e2; /* Active tab color */
+            font-weight: bold;
+            position: relative;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #4a90e2;
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            Audio Recorder
+        </div>
+
+        <div class="content">
+            <!-- Recorder Tab Content -->
+            <div class="recorder-screen" id="recorderScreen">
+                <div class="microphone-graphic"></div>
+                <div class="recording-time">00:00</div>
+                <div class="progress-bar active"> <!-- 'active' class for example progress -->
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="controls">
+                    <button class="record-button"></button>
+                    <button class="stop-button"></button>
+                </div>
+            </div>
+
+            <!-- Voice Memos Tab Content (Hidden by default) -->
+            <div class="voice-memos-screen" id="voiceMemosScreen">
+                <h2>Voice Memos</h2>
+                <p>No recordings saved yet.</p>
+                <p style="font-size: 0.9rem; color: #a0a0a0;">(This section would list your saved audio files.)</p>
+            </div>
+        </div>
+
+        <div class="tab-bar">
+            <div class="tab active" id="recorderTab">Recorder</div>
+            <div class="tab" id="memosTab">Voice Memos</div>
+        </div>
+    </div>
+
+    <script>
+        // Simple JavaScript to simulate tab switching (not required by prompt, but enhances demo)
+        const recorderTab = document.getElementById('recorderTab');
+        const memosTab = document.getElementById('memosTab');
+        const recorderScreen = document.getElementById('recorderScreen');
+        const voiceMemosScreen = document.getElementById('voiceMemosScreen');
+
+        recorderTab.addEventListener('click', () => {
+            recorderTab.classList.add('active');
+            memosTab.classList.remove('active');
+            recorderScreen.style.display = 'flex';
+            voiceMemosScreen.style.display = 'none';
+        });
+
+        memosTab.addEventListener('click', () => {
+            memosTab.classList.add('active');
+            recorderTab.classList.remove('active');
+            voiceMemosScreen.style.display = 'flex';
+            recorderScreen.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

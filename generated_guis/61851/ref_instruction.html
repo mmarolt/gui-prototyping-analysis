@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DHL News Feed</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font CDN for Material Design typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic reset and global styles for Material Design look */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif; /* Material Design font */
+            background-color: #f5f5f5; /* Light grey background outside the mobile screen */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top of viewport */
+            min-height: 100vh; /* Full viewport height */
+            overflow-x: hidden; /* Prevent horizontal scroll for body */
+            padding: 20px 0; /* Add some padding around the mobile screen for presentation */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+        .mobile-screen {
+            width: 375px; /* Width from 667x375 */
+            height: 667px; /* Height from 667x375 */
+            border: 1px solid #ddd;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            background-color: #fff; /* Default background for the app */
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            overflow: hidden; /* To contain scrolling content within */
+            border-radius: 8px; /* Slightly rounded corners for the "device" */
+        }
+        .material-icons {
+            font-size: 24px; /* Standard Material Icon size */
+            user-select: none; /* Prevent text selection on icons */
+        }
+
+        /* 1. Top App Bar */
+        .top-app-bar {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px; /* Material Design standard height for a compact top app bar */
+            background-color: #000000; /* DHL primary black */
+            color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Material Design elevation */
+            z-index: 10; /* Ensure it stays above scrolling content */
+            justify-content: space-between;
+        }
+        .top-app-bar h1 {
+            margin: 0;
+            font-size: 20px; /* Material Design headline6 typography */
+            font-weight: 500; /* Medium weight */
+            flex-grow: 1; /* Allows the title to take available space */
+            line-height: 1; /* Ensure consistent vertical alignment */
+        }
+        .top-app-bar .menu-icon {
+            cursor: pointer;
+            padding: 8px; /* Enlarged touch target */
+            margin-left: 8px; /* Spacing from title */
+            border-radius: 50%; /* For potential ripple effect visual */
+            transition: background-color 0.3s;
+        }
+        /* Optional: Avatar for user profile, as described in breakdown */
+        .top-app-bar .avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #FFCC00; /* DHL yellow */
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        /* 2. Category Filter */
+        .category-filter {
+            display: flex;
+            overflow-x: auto; /* Enable horizontal scrolling for categories */
+            padding: 8px 16px; /* Padding around the chips */
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee; /* Subtle separator */
+            white-space: nowrap; /* Prevent chips from wrapping */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+        }
+        .category-filter::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+        }
+        .category-chip {
+            display: inline-flex; /* Use inline-flex to keep them on one line and centered */
+            align-items: center;
+            padding: 8px 16px;
+            margin-right: 8px; /* Space between chips */
+            background-color: #f0f0f0; /* Default chip background */
+            border-radius: 20px; /* Pill shape */
+            font-size: 14px; /* Material Design body2 typography */
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            user-select: none; /* Prevent text selection */
+            flex-shrink: 0; /* Prevent chips from shrinking */
+        }
+        .category-chip.active {
+            background-color: #FFCC00; /* DHL yellow for active state */
+            color: #000000;
+            font-weight: 500; /* Medium weight for active text */
+        }
+
+        /* 3. News Feed (Main Content Area) */
+        .news-feed {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow-y: auto; /* Enable vertical scrolling for news articles */
+            padding: 8px; /* Padding around the feed */
+            background-color: #f5f5f5; /* Light grey for content background */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .news-card {
+            background-color: #ffffff;
+            border-radius: 8px; /* Rounded corners for cards */
+            margin-bottom: 16px; /* Space between cards */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Material Design elevation for cards */
+            overflow: hidden; /* Ensures image corners are rounded */
+        }
+        .news-card img {
+            width: 100%;
+            height: 180px; /* Fixed height for consistent image presentation */
+            object-fit: cover; /* Crop image to fit without distortion */
+            display: block; /* Remove extra space below image */
+        }
+        .news-card-content {
+            padding: 16px; /* Padding inside the card content area */
+        }
+        .news-card h3 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 18px; /* Material Design subtitle1 typography */
+            font-weight: 500; /* Medium weight */
+            color: #333;
+            line-height: 1.3;
+        }
+        .news-card p {
+            font-size: 14px; /* Material Design body2 typography */
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis if text overflows */
+            display: -webkit-box; /* Required for -webkit-line-clamp */
+            -webkit-line-clamp: 3; /* Limit description to 3 lines */
+            -webkit-box-orient: vertical; /* Required for -webkit-line-clamp */
+        }
+        .news-card a {
+            color: #000000; /* DHL black for links */
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px; /* Material Design button/label typography */
+            display: inline-block; /* Allows padding for better touch target */
+            padding: 8px 0; /* Vertical padding for touch target */
+        }
+        .news-card a:hover, .news-card a:focus {
+            text-decoration: underline; /* Visual feedback on hover/focus */
+            outline: none; /* Remove default focus outline */
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- 1. Top App Bar -->
+        <div class="top-app-bar">
+            <h1>Hi, John!</h1>
+            <!-- A menu icon, as described in the breakdown, to access options including logout -->
+            <span class="material-icons menu-icon" role="button" aria-label="Open menu">menu</span>
+            <!-- Alternative for user actions: an avatar -->
+            <!-- <div class="avatar" role="button" aria-label="User profile">J</div> -->
+        </div>
+
+        <!-- 2. Category Filter -->
+        <div class="category-filter">
+            <div class="category-chip active" role="button" aria-pressed="true" tabindex="0">All News</div>
+            <div class="category-chip" role="button" aria-pressed="false" tabindex="0">Sports</div>
+            <div class="category-chip" role="button" aria-pressed="false" tabindex="0">Events</div>
+            <div class="category-chip" role="button" aria-pressed="false" tabindex="0">Logistics</div>
+            <div class="category-chip" role="button" aria-pressed="false" tabindex="0">Partnerships</div>
+            <div class="category-chip" role="button" aria-pressed="false" tabindex="0">Sustainability</div>
+            <div class="category-chip" role="button" aria-pressed="false" tabindex="0">Technology</div>
+        </div>
+
+        <!-- 3. News Feed -->
+        <div class="news-feed">
+            <!-- News Card 1 -->
+            <div class="news-card">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+F1+News" alt="DHL F1 Racing Car" loading="lazy">
+                <div class="news-card-content">
+                    <h3>DHL Powers Formula 1 Logistics to New Heights</h3>
+                    <p>DHL continues its partnership with Formula 1, ensuring seamless global logistics for the world's most dynamic motorsport series. From complex car components to essential equipment, DHL delivers speed and precision for every race and event...</p>
+                    <a href="#" role="button" tabindex="0">Read all...</a>
+                </div>
+            </div>
+
+            <!-- News Card 2 -->
+            <div class="news-card">
+                <img src="https://via.placeholder.com/375x180/000000/FFFFFF?text=DHL+Event+Update" alt="DHL Event Stage" loading="lazy">
+                <div class="news-card-content">
+                    <h3>Global Connectedness Index 2024: DHL Unveils Key Insights</h3>
+                    <p>The latest DHL Global Connectedness Index reveals the state and trajectory of globalization worldwide. Dive into the data and discover how countries are connecting, trading, and interacting in an increasingly complex world...</p>
+                    <a href="#" role="button" tabindex="0">Read all...</a>
+                </div>
+            </div>
+
+            <!-- News Card 3 -->
+            <div class="news-card">
+                <img src="https://via.placeholder.com/375x180/FFCC00/000000?text=DHL+Sustainability" alt="DHL Green Logistics" loading="lazy">
+                <div class="news-card-content">
+                    <h3>DHL's New Sustainable Fleet Rolls Out Across Europe</h3>
+                    <p>Committed to a greener future, DHL introduces its latest fleet of electric vehicles and eco-friendly logistics solutions across major European hubs. This initiative marks a significant step towards achieving net-zero emissions...</p>
+                    <a href="#" role="button" tabindex="0">Read all...</a>
+                </div>
+            </div>
+
+            <!-- News Card 4 (example of more content) -->
+            <div class="news-card">
+                <img src="https://via.placeholder.com/375x180/003366/FFFFFF?text=DHL+Innovation+Hub" alt="DHL Innovation Hub" loading="lazy">
+                <div class="news-card-content">
+                    <h3>Innovating Tomorrow's Logistics: A Tour of the DHL Innovation Center</h3>
+                    <p>Explore cutting-edge technologies and future trends shaping the logistics industry at the DHL Innovation Center. From AI-powered automation to sustainable packaging solutions, see how DHL is preparing for the future...</p>
+                    <a href="#" role="button" tabindex="0">Read all...</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

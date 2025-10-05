@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Recorder App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts: Roboto for general text, Roboto Mono for time display -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles & Reset */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Full viewport height */
+            background-color: #F8F9FA; /* Light background for the content area */
+            color: #3C4043; /* Default text color */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden; /* Prevent body scrolling, main content handles scroll */
+        }
+
+        /* 1. Top App Bar Styles */
+        .mdc-top-app-bar {
+            background-color: #6200EE; /* Material Design Primary color */
+            color: white;
+            box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 
+                        0px 4px 5px 0px rgba(0,0,0,0.14), 
+                        0px 1px 10px 0px rgba(0,0,0,0.12);
+            height: 56px; /* Standard height */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-family: 'Roboto', sans-serif;
+            position: fixed; /* Fixed at the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10; /* Ensure it stays above content */
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .mdc-top-app-bar__title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        /* Optional overflow menu button styling, kept for completeness */
+        .mdc-icon-button {
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mdc-icon-button:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* 2. Main Recording Area Styles */
+        .main-recording-area {
+            flex-grow: 1; /* Takes remaining space between header and footer */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            text-align: center;
+            background-color: #F8F9FA; /* Light background */
+            margin-top: 56px; /* Account for fixed header height */
+            margin-bottom: 56px; /* Account for fixed bottom navigation height */
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow content to scroll if it overflows */
+        }
+        .large-mic-icon {
+            font-size: 150px; /* Large icon size */
+            color: #6200EE; /* Primary color */
+            margin-bottom: 24px;
+        }
+        .instruction-text {
+            font-size: 16px;
+            color: #5F6368;
+            margin-bottom: 48px; /* Space before button */
+            font-family: 'Roboto', sans-serif;
+        }
+        .recording-time {
+            font-family: 'Roboto Mono', monospace; /* Monospaced for time */
+            font-size: 64px;
+            font-weight: 500;
+            color: #3C4043;
+            margin-bottom: 24px;
+            line-height: 1; /* Prevent extra space */
+        }
+        
+        /* Floating Action Button (FAB) base styles */
+        .mdc-fab {
+            height: 56px; /* Standard FAB height */
+            border-radius: 28px; /* Half of height for pill shape */
+            padding: 0 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.0892857143em;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 
+                        0px 6px 10px 0px rgba(0,0,0,0.14), 
+                        0px 1px 18px 0px rgba(0,0,0,0.12);
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mdc-fab--primary {
+            background-color: #6200EE; /* Primary color */
+            color: white;
+        }
+        .mdc-fab--stop {
+            background-color: #D32F2F; /* Red for stop action */
+            color: white;
+        }
+        .mdc-fab__icon {
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        /* Linear Progress Indicator */
+        .mdc-linear-progress {
+            position: relative;
+            width: 80%; /* Adjust width as needed */
+            height: 4px;
+            background-color: rgba(98, 0, 238, 0.2); /* Light primary for buffer */
+            border-radius: 2px;
+            overflow: hidden; /* Hide overflowing animation parts */
+            margin-bottom: 48px; /* Space before button */
+        }
+
+        .mdc-linear-progress--indeterminate .mdc-linear-progress__buffer,
+        .mdc-linear-progress--indeterminate .mdc-linear-progress__bar {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mdc-linear-progress__primary-bar,
+        .mdc-linear-progress__secondary-bar {
+            background-color: #6200EE; /* Primary color for progress */
+        }
+
+        /* Indeterminate animation logic */
+        .mdc-linear-progress--indeterminate .mdc-linear-progress__primary-bar {
+            transform-origin: left;
+            animation: mdc-linear-progress-primary-indeterminate-translate 2s infinite linear;
+        }
+        .mdc-linear-progress--indeterminate .mdc-linear-progress__primary-bar .mdc-linear-progress__bar-inner {
+            width: 100%;
+            transform-origin: left;
+            animation: mdc-linear-progress-primary-indeterminate-scale 2s infinite linear;
+        }
+
+        .mdc-linear-progress--indeterminate .mdc-linear-progress__secondary-bar {
+            transform-origin: left;
+            animation: mdc-linear-progress-secondary-indeterminate-translate 2s infinite linear;
+        }
+        .mdc-linear-progress--indeterminate .mdc-linear-progress__secondary-bar .mdc-linear-progress__bar-inner {
+            width: 100%;
+            transform-origin: left;
+            animation: mdc-linear-progress-secondary-indeterminate-scale 2s infinite linear;
+        }
+
+        @keyframes mdc-linear-progress-primary-indeterminate-translate {
+            0% { transform: translateX(-100%) }
+            60% { transform: translateX(100%) }
+            100% { transform: translateX(100%) }
+        }
+        @keyframes mdc-linear-progress-primary-indeterminate-scale {
+            0% { transform: scaleX(0.08); }
+            36.7% { transform: scaleX(0.08); }
+            45.5% { transform: scaleX(0.60); }
+            72.7% { transform: scaleX(0.60); }
+            81.8% { transform: scaleX(0.08); }
+            100% { transform: scaleX(0.08); }
+        }
+
+        @keyframes mdc-linear-progress-secondary-indeterminate-translate {
+            0% { transform: translateX(-100%) }
+            20% { transform: translateX(-100%) }
+            60% { transform: translateX(100%) }
+            100% { transform: translateX(100%) }
+        }
+        @keyframes mdc-linear-progress-secondary-indeterminate-scale {
+            0% { transform: scaleX(0.08); }
+            19.1% { transform: scaleX(0.08); }
+            27.3% { transform: scaleX(0.60); }
+            63.6% { transform: scaleX(0.60); }
+            72.7% { transform: scaleX(0.08); }
+            100% { transform: scaleX(0.08); }
+        }
+
+        /* Animation for active mic */
+        .pulsating-mic {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .hidden { display: none !important; } /* Used to toggle states, !important for override */
+
+
+        /* 3. Bottom Navigation Bar Styles */
+        .mdc-bottom-navigation {
+            width: 100%;
+            height: 56px; /* Standard height */
+            background-color: white;
+            box-shadow: 0px -2px 4px -1px rgba(0,0,0,0.2), 
+                        0px -4px 5px 0px rgba(0,0,0,0.14), 
+                        0px -1px 10px 0px rgba(0,0,0,0.12);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom); /* For notched devices */
+            position: fixed; /* Fixed at the bottom */
+            bottom: 0;
+            left: 0;
+            z-index: 10; /* Ensure it stays above content */
+            box-sizing: border-box;
+        }
+        .mdc-bottom-navigation__item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #5F6368; /* Inactive color */
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            padding-top: 6px;
+            transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+        .mdc-bottom-navigation__item--active {
+            color: #6200EE; /* Primary color for active */
+        }
+        .mdc-bottom-navigation__item-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+        .mdc-bottom-navigation__item-text {
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Top App Bar -->
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <span class="mdc-top-app-bar__title">Recorder</span>
+            </section>
+            <!-- Optional: Overflow menu icon
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Settings">more_vert</button>
+            </section>
+            -->
+        </div>
+    </header>
+
+    <!-- 2. Main Recording Area -->
+    <main class="main-recording-area">
+        <!-- Idle State Content -->
+        <div class="recording-idle" id="recordingIdleState">
+            <i class="material-icons large-mic-icon">mic_none</i>
+            <p class="instruction-text">Tap the button to start recording</p>
+            <button class="mdc-fab mdc-fab--extended mdc-fab--primary" id="recordButton" aria-label="Start recording">
+                <span class="material-icons mdc-fab__icon">fiber_manual_record</span>
+                <span class="mdc-fab__label">Record</span>
+            </button>
+        </div>
+
+        <!-- Recording State Content (initially hidden, shown on record) -->
+        <div class="recording-active hidden" id="recordingActiveState">
+            <i class="material-icons large-mic-icon pulsating-mic">mic</i>
+            <p class="recording-time" id="recordingTime">00:00:00</p>
+            <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate recording-progress" aria-label="Recording in progress" aria-valuemin="0" aria-valuemax="1">
+                <div class="mdc-linear-progress__buffer">
+                    <div class="mdc-linear-progress__buffer-dots"></div>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+            </div>
+            <button class="mdc-fab mdc-fab--extended mdc-fab--stop" id="stopButton" aria-label="Stop recording">
+                <span class="material-icons mdc-fab__icon">stop</span>
+                <span class="mdc-fab__label">Stop</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- 3. Bottom Navigation Bar -->
+    <nav class="mdc-bottom-navigation">
+        <button class="mdc-bottom-navigation__item mdc-bottom-navigation__item--active" aria-label="Recorder">
+            <span class="material-icons mdc-bottom-navigation__item-icon">mic</span>
+            <span class="mdc-bottom-navigation__item-text">Recorder</span>
+        </button>
+        <button class="mdc-bottom-navigation__item" aria-label="Voice Memos">
+            <span class="material-icons mdc-bottom-navigation__item-icon">list</span>
+            <span class="mdc-bottom-navigation__item-text">Voice Memos</span>
+        </button>
+    </nav>
+
+    <script>
+        // Basic interactivity for demonstration
+        const recordButton = document.getElementById('recordButton');
+        const stopButton = document.getElementById('stopButton');
+        const recordingIdleState = document.getElementById('recordingIdleState');
+        const recordingActiveState = document.getElementById('recordingActiveState');
+        const recordingTime = document.getElementById('recordingTime');
+        let timerInterval;
+        let seconds = 0;
+
+        function formatTime(s) {
+            const minutes = Math.floor(s / 60);
+            const remainingSeconds = s % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        recordButton.addEventListener('click', () => {
+            recordingIdleState.classList.add('hidden');
+            recordingActiveState.classList.remove('hidden');
+            seconds = 0;
+            recordingTime.textContent = formatTime(seconds);
+            timerInterval = setInterval(() => {
+                seconds++;
+                recordingTime.textContent = formatTime(seconds);
+            }, 1000);
+            // In a real app, this would trigger actual audio recording
+            console.log("Recording started!");
+        });
+
+        stopButton.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            recordingActiveState.classList.add('hidden');
+            recordingIdleState.classList.remove('hidden');
+            console.log("Recording stopped!");
+        });
+    </script>
+</body>
+</html>

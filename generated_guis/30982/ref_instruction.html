@@ -1,198 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Police Stations</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-    body {
-      font-family: Roboto, sans-serif;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROP Directory</title>
 
-    /* App Bar */
-    header {
-      background-color: #3F51B5;
-      height: 84px; /* Approximate 56dp */
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      color: white;
-      box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-      position: sticky;
-      top: 0;
-      z-index: 10; /* Ensure it stays on top during scroll */
-    }
+    <!-- Material Icons CDN (as requested) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Material Design Components Web CSS -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <!-- Google Fonts for Roboto (Material Design's default font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    header i {
-      cursor: pointer;
-      font-size: 24px;
-    }
+    <style>
+        /* Base styles for a clean slate and Roboto font */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5; /* Light grey background for the "outside" of the phone */
+            font-family: 'Roboto', sans-serif;
+            overflow: hidden; /* Prevent scrolling on the body */
+        }
 
-    header h1 {
-      font-size: 20px;
-      margin: 0;
-      font-weight: 500; /* Roboto Medium */
-    }
+        /* Mobile Screen Simulation */
+        .mobile-screen {
+            width: 375px; /* Specified width */
+            height: 667px; /* Specified height */
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+            border-radius: 8px; /* Slightly rounded corners for phone screen */
+            overflow: hidden; /* Hide scrollbars outside the screen content */
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+        }
 
-    /* Search Bar */
-    .search-bar {
-      background-color: #FFFFFF;
-      height: 72px; /* Approximate 48dp */
-      display: flex;
-      align-items: center;
-      padding: 0 16px;
-      border-bottom: 1px solid #BDBDBD;
-    }
+        /* Section 1: Top App Bar Styling */
+        .mdc-top-app-bar {
+            background-color: #004d40; /* Dark Teal - A professional, authoritative color */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            height: 56px; /* Standard Material Design App Bar height */
+            z-index: 2; /* Ensure it's above other content */
+        }
 
-    .search-bar i {
-      color: #757575;
-      margin-right: 8px;
-    }
+        .mdc-top-app-bar__title {
+            font-size: 1.25rem; /* Corresponds to Material Design headline6 */
+            font-weight: 500;
+            letter-spacing: 0.0125em;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            margin-left: 8px; /* Spacing from logo */
+        }
 
-    .search-bar input[type="text"] {
-      border: none;
-      outline: none;
-      font-size: 16px;
-      color: #212121;
-      width: 100%;
-    }
+        .mdc-top-app-bar__action-item.material-icons {
+            color: white; /* Icon color on dark background */
+        }
 
-    /* List Items */
-    .list-item {
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-    }
+        /* Section 2: View Selector (Tabs) Styling */
+        .mdc-tab-bar {
+            height: 48px; /* Standard Material Design Tab Bar height */
+            background-color: #e0f2f1; /* Lighter teal/mint green, complements dark teal */
+            border-bottom: 1px solid #e0e0e0; /* Subtle separator */
+            z-index: 1; /* Below app bar, above main content */
+        }
 
-    .list-item h2 {
-      font-size: 16px;
-      margin: 0;
-      color: #212121;
-      font-weight: 500; /* Roboto Medium */
-    }
+        .mdc-tab__text-label {
+            color: #004d40; /* Dark Teal for default tab text */
+        }
 
-    .list-item p {
-      font-size: 14px;
-      margin: 0;
-      color: #757575;
-    }
+        .mdc-tab--active .mdc-tab__text-label {
+            color: #004d40; /* Dark Teal for active tab text */
+            font-weight: 500; /* Slightly bolder for active tab */
+        }
 
-    .list-item i {
-      color: #757575;
-      cursor: pointer;
-    }
+        .mdc-tab-indicator__content--underline {
+            border-color: #004d40; /* Dark Teal for active tab underline */
+        }
 
-    hr {
-      border: none;
-      border-bottom: 1px solid #EEEEEE;
-      margin: 0;
-    }
+        /* Section 3: Main Content Area Styling */
+        .main-content-container {
+            flex-grow: 1; /* Takes up remaining vertical space (667 - 56 - 48 = 563px) */
+            position: relative; /* For absolute positioning of sub-sections */
+            overflow: hidden; /* Child content will manage its own scrolling */
+        }
 
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 32px;
-    }
+        .main-content-area {
+            position: absolute; /* Allows views to occupy same space and be toggled */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* Fill the main-content-container */
+            background-color: #f5f5f5; /* Light background for lists */
+            display: flex; /* Flex to center map placeholder content */
+            flex-direction: column; /* Stack list items */
+        }
 
-    .empty-state i {
-      font-size: 48px;
-      color: #757575;
-    }
+        /* Sub-section 3.1: Alphabetical List View Styling */
+        .list-scroll-wrapper {
+            overflow-y: auto; /* Enable vertical scrolling for the list */
+            height: 100%; /* Ensure it fills its parent for scrolling */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+        }
 
-    .empty-state p {
-      font-size: 16px;
-      color: #757575;
-    }
+        .mdc-list {
+            padding: 0; /* Remove default padding from MDC list to fit screen edge-to-edge */
+            background-color: white; /* List items background */
+        }
 
-    /* Make the list scrollable */
-    .list-container {
-      overflow-y: auto; /* Enable vertical scrolling */
-      height: calc(100vh - 84px - 72px); /* Full viewport height minus the AppBar and Search Bar heights */
-    }
+        .mdc-list-item {
+            height: auto; /* Allow height to adjust for two lines of text */
+            min-height: 72px; /* Standard two-line list item minimum height */
+            padding-top: 12px;
+            padding-bottom: 12px;
+            box-sizing: border-box; /* Include padding in item's height */
+        }
 
-    /* Optional: Ensure the entire page fits the screen and disable horizontal scroll */
-    html, body {
-        max-width: 100%;
-        overflow-x: hidden;
-    }
+        .mdc-list-item__meta {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Space between action buttons on the right */
+        }
 
-  </style>
+        .mdc-list-item__secondary-text {
+            color: rgba(0, 0, 0, 0.6); /* Standard secondary text color */
+        }
+
+        /* Sub-section 3.2: Geographical Map View Styling */
+        #map-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #e0e0e0; /* Placeholder grey for the map area */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #757575;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        /* Material Design Bottom Sheet for Map Marker Info */
+        #map-info-sheet {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            padding: 16px;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.15); /* Stronger shadow to pop out */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            display: none; /* Initially hidden */
+            transform: translateY(100%); /* Start off-screen below */
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.4, 1), opacity 0.3s ease-out; /* Smooth slide-up and fade-in */
+            z-index: 10; /* Ensure it's above the map */
+            opacity: 0; /* Start invisible for a fade-in effect */
+        }
+
+        #map-info-sheet.active {
+            display: block; /* Make it visible for transition */
+            transform: translateY(0); /* Slide into view */
+            opacity: 1; /* Fade in */
+        }
+
+        #map-info-sheet .mdc-typography--headline6 {
+            margin-top: 0;
+            margin-bottom: 4px;
+            font-size: 1.25rem;
+            color: #333;
+        }
+
+        #map-info-sheet .mdc-typography--body1 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #555;
+        }
+
+        .mdc-button--outlined {
+            border-color: #004d40; /* Dark Teal border for outlined buttons */
+            color: #004d40; /* Dark Teal text for outlined buttons */
+        }
+        .mdc-button--outlined .material-icons {
+            color: #004d40; /* Dark Teal icons for outlined buttons */
+        }
+    </style>
 </head>
 <body>
 
-  <!-- App Bar -->
-  <header>
-    <i class="material-icons">arrow_back</i>
-    <h1>Police Stations</h1>
-    <i class="material-icons">search</i>
-  </header>
+    <div class="mobile-screen">
 
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <i class="material-icons">search</i>
-    <input type="text" placeholder="Search Police Stations...">
-  </div>
+        <!-- Section 1: Top App Bar -->
+        <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <!-- Placeholder for ROP Logo. In a real app, replace src with the actual logo path. -->
+                    <img src="https://via.placeholder.com/24x24/004d40/ffffff?text=ROP" alt="ROP Logo" style="height: 24px; margin-right: 8px; vertical-align: middle;">
+                    <span class="mdc-top-app-bar__title mdc-typography--headline6">ROP Directory</span>
+                </section>
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                    <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
+                </section>
+            </div>
+        </header>
 
-  <!-- List of Police Stations -->
-  <div class="list-container">
-    <div class="list-item">
-      <div>
-        <h2>Main Street Police Station</h2>
-        <p>123 Main Street</p>
-      </div>
-      <i class="material-icons">phone</i>
-    </div>
-    <hr>
-    <div class="list-item">
-      <div>
-        <h2>Oak Avenue Police Station</h2>
-        <p>456 Oak Avenue</p>
-      </div>
-      <i class="material-icons">phone</i>
-    </div>
-    <hr>
-     <div class="list-item">
-      <div>
-        <h2>Pine Lane Police Station</h2>
-        <p>789 Pine Lane</p>
-      </div>
-      <i class="material-icons">phone</i>
-    </div>
-    <hr>
-    <div class="list-item">
-      <div>
-        <h2>River Road Police Station</h2>
-        <p>101 River Road</p>
-      </div>
-      <i class="material-icons">phone</i>
-    </div>
-    <hr>
-    <div class="list-item">
-      <div>
-        <h2>Hilltop Police Station</h2>
-        <p>222 Hilltop Drive</p>
-      </div>
-      <i class="material-icons">phone</i>
-    </div>
-    <hr>
+        <!-- Section 2: View Selector (Tabs) -->
+        <nav class="mdc-tab-bar" role="tablist">
+            <div class="mdc-tab-scroller">
+                <div class="mdc-tab-scroller__scroll-area">
+                    <div class="mdc-tab-scroller__scroll-content">
+                        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0" data-tab="list-view">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__text-label">List</span>
+                            </span>
+                            <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+                        <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1" data-tab="map-view">
+                            <span class="mdc-tab__content">
+                                <span class="mdc-tab__text-label">Map</span>
+                            </span>
+                            <span class="mdc-tab-indicator">
+                                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                            </span>
+                            <span class="mdc-tab__ripple"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
-    <!-- More list items would go here -->
+        <!-- Section 3: Main Content Area -->
+        <div class="main-content-container">
 
-    <!-- Empty State (Example - Uncomment to test) -->
-    <!--
-    <div class="empty-state">
-      <i class="material-icons">not_listed_location</i>
-      <p>No police stations found. Please try a different search term.</p>
+            <!-- Sub-section 3.1: Alphabetical List View (Displayed by default) -->
+            <div id="list-view-content" class="main-content-area" style="display: flex;">
+                <div class="list-scroll-wrapper">
+                    <ul class="mdc-list mdc-list--two-line mdc-list--non-interactive" role="list">
+                        <!-- Example List Item 1 -->
+                        <li class="mdc-list-item" tabindex="0">
+                            <span class="mdc-list-item__text">
+                                <span class="mdc-list-item__primary-text">Al Ghubrah Police Station</span>
+                                <span class="mdc-list-item__secondary-text">+968 2451 XXXX</span>
+                            </span>
+                            <span class="mdc-list-item__meta" aria-hidden="true">
+                                <button class="material-icons mdc-icon-button" aria-label="Call Al Ghubrah Police Station">phone</button>
+                                <button class="material-icons mdc-icon-button" aria-label="View Al Ghubrah Police Station on map" data-location-name="Al Ghubrah Police Station" data-phone-number="+968 2451 XXXX">location_on</button>
+                            </span>
+                        </li>
+                        <li role="separator" class="mdc-list-divider"></li>
+                        <!-- Example List Item 2 -->
+                        <li class="mdc-list-item" tabindex="0">
+                            <span class="mdc-list-item__text">
+                                <span class="mdc-list-item__primary-text">Bawshar Police Headquarters</span>
+                                <span class="mdc-list-item__secondary-text">+968 2469 XXXX</span>
+                            </span>
+                            <span class="mdc-list-item__meta" aria-hidden="true">
+                                <button class="material-icons mdc-icon-button" aria-label="Call Bawshar Police Headquarters">phone</button>
+                                <button class="material-icons mdc-icon-button" aria-label="View Bawshar Police Headquarters on map" data-location-name="Bawshar Police Headquarters" data-phone-number="+968 2469 XXXX">location_on</button>
+                            </span>
+                        </li>
+                        <li role="separator" class="mdc-list-divider"></li>
+                        <!-- Example List Item 3 -->
+                        <li class="mdc-list-item" tabindex="0">
+                            <span class="mdc-list-item__text">
+                                <span class="mdc-list-item__primary-text">Muscat International Airport Police</span>
+                                <span class="mdc-list-item__secondary-text">+968 2451 YYYY</span>
+                            </span>
+                            <span class="mdc-list-item__meta" aria-hidden="true">
+                                <button class="material-icons mdc-icon-button" aria-label="Call Muscat International Airport Police">phone</button>
+                                <button class="material-icons mdc-icon-button" aria-label="View Muscat International Airport Police on map" data-location-name="Muscat International Airport Police" data-phone-number="+968 2451 YYYY">location_on</button>
+                            </span>
+                        </li>
+                        <li role="separator" class="mdc-list-divider"></li>
+                        <!-- Example List Item 4 -->
+                        <li class="mdc-list-item" tabindex="0">
+                            <span class="mdc-list-item__text">
+                                <span class="mdc-list-item__primary-text">Nizwa Police Station</span>
+                                <span class="mdc-list-item__secondary-text">+968 2544 ZZZZ</span>
+                            </span>
+                            <span class="mdc-list-item__meta" aria-hidden="true">
+                                <button class="material-icons mdc-icon-button" aria-label="Call Nizwa Police Station">phone</button>
+                                <button class="material-icons mdc-icon-button" aria-label="View Nizwa Police Station on map" data-location-name="Nizwa Police Station" data-phone-number="+968 2544 ZZZZ">location_on</button>
+                            </span>
+                        </li>
+                        <li role="separator" class="mdc-list-divider"></li>
+                        <!-- Example List Item 5 -->
+                        <li class="mdc-list-item" tabindex="0">
+                            <span class="mdc-list-item__text">
+                                <span class="mdc-list-item__primary-text">Salalah Police Headquarters</span>
+                                <span class="mdc-list-item__secondary-text">+968 2329 AAAA</span>
+                            </span>
+                            <span class="mdc-list-item__meta" aria-hidden="true">
+                                <button class="material-icons mdc-icon-button" aria-label="Call Salalah Police Headquarters">phone</button>
+                                <button class="material-icons mdc-icon-button" aria-label="View Salalah Police Headquarters on map" data-location-name="Salalah Police Headquarters" data-phone-number="+968 2329 AAAA">location_on</button>
+                            </span>
+                        </li>
+                        <li role="separator" class="mdc-list-divider"></li>
+                        <!-- More list items would follow here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Sub-section 3.2: Geographical Map View (Initially hidden) -->
+            <div id="map-view-content" class="main-content-area" style="display: none;">
+                <div id="map-canvas">
+                    <!-- This is a placeholder for an actual interactive map (e.g., powered by a JS library) -->
+                    <span>Interactive Map View<br>(ROP locations marked here)</span>
+                </div>
+
+                <!-- Example of a Material Design Bottom Sheet for marker info (initially hidden) -->
+                <div id="map-info-sheet">
+                    <h3 class="mdc-typography--headline6" id="sheet-location-name"></h3>
+                    <p class="mdc-typography--body1" id="sheet-phone-number"></p>
+                    <div style="display: flex; gap: 8px; margin-top: 8px;">
+                        <button class="mdc-button mdc-button--outlined">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="material-icons mdc-button__icon" aria-hidden="true">phone</span>
+                            <span class="mdc-button__label">Call</span>
+                        </button>
+                        <button class="mdc-button mdc-button--outlined">
+                            <span class="mdc-button__ripple"></span>
+                            <span class="material-icons mdc-button__icon" aria-hidden="true">directions</span>
+                            <span class="mdc-button__label">Directions</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    -->
-  </div>
 
+    <!-- Material Design Components Web JavaScript -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script>
+        // Initialize MDC components for interactivity (ripples, tabs, etc.)
+        const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+        const topAppBar = mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarElement);
+
+        const tabBarElement = document.querySelector('.mdc-tab-bar');
+        const tabBar = new mdc.tabBar.MDCTabBar(tabBarElement);
+
+        const listViewContent = document.getElementById('list-view-content');
+        const mapViewContent = document.getElementById('map-view-content');
+        const mapInfoSheet = document.getElementById('map-info-sheet');
+        const sheetLocationName = document.getElementById('sheet-location-name');
+        const sheetPhoneNumber = document.getElementById('sheet-phone-number');
+
+        // Initialize ripples for all MDC buttons for visual feedback
+        document.querySelectorAll('.mdc-icon-button, .mdc-button').forEach(buttonEl => {
+            mdc.ripple.MDCRipple.attachTo(buttonEl);
+        });
+
+        // Tab switching logic
+        tabBar.listen('MDCTabBar:activated', (event) => {
+            const tabId = event.detail.tab.dataset.tab;
+            if (tabId === 'list-view') {
+                listViewContent.style.display = 'flex';
+                mapViewContent.style.display = 'none';
+                mapInfoSheet.classList.remove('active'); // Hide bottom sheet when switching to list
+            } else if (tabId === 'map-view') {
+                listViewContent.style.display = 'none';
+                mapViewContent.style.display = 'flex';
+                // In a real application, this is where you would initialize or update your map view
+                // For demonstration, we simulate a marker tap shortly after switching to map.
+                setTimeout(() => {
+                    // Example: Simulate tapping on a marker for Bawshar Police Headquarters
+                    simulateMapMarkerTap('Bawshar Police Headquarters', '+968 2469 XXXX');
+                }, 500); // Small delay for visual effect of tab transition
+            }
+        });
+
+        /**
+         * Simulates a map marker tap by populating and showing the bottom sheet.
+         * In a real map, this function would be called by the map API's marker click event.
+         */
+        function simulateMapMarkerTap(locationName, phoneNumber) {
+            sheetLocationName.textContent = locationName;
+            sheetPhoneNumber.textContent = phoneNumber;
+            mapInfoSheet.classList.add('active'); // Show bottom sheet
+        }
+
+        // Handle "View on map" button clicks from the list view
+        document.querySelectorAll('.mdc-list-item .material-icons[aria-label^="View"]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const locationName = e.currentTarget.dataset.locationName;
+                const phoneNumber = e.currentTarget.dataset.phoneNumber;
+
+                // Activate the "Map" tab
+                tabBar.activateTab(1); // Index 1 corresponds to the 'Map' tab
+
+                // After a brief delay for the tab transition, simulate the marker tap
+                setTimeout(() => {
+                    simulateMapMarkerTap(locationName, phoneNumber);
+                }, 100);
+            });
+        });
+
+        // Example: Hide the bottom sheet if the map background (not a marker) is tapped
+        mapViewContent.addEventListener('click', (e) => {
+            // Check if the click occurred directly on the map-canvas div
+            if (e.target === document.getElementById('map-canvas')) {
+                mapInfoSheet.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Phone Dashboard</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <style>
+        /* Import Google Fonts - Roboto for Material Design typography */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        /* Define Material Design Color System variables (example - M3 Baseline Light Theme) */
+        :root {
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+            --md-sys-color-tertiary: #7D5260;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-tertiary-container: #FFD8E4;
+            --md-sys-color-on-tertiary-container: #31111D;
+            --md-sys-color-error: #B3261E;
+            --md-sys-color-on-error: #FFFFFF;
+            --md-sys-color-error-container: #F9DEDC;
+            --md-sys-color-on-error-container: #410E0B;
+            --md-sys-color-background: #FFFBFE;
+            --md-sys-color-on-background: #1C1B1F;
+            --md-sys-color-surface: #FFFBFE;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-inverse-on-surface: #F4EFF4;
+            --md-sys-color-inverse-surface: #313033;
+            --md-sys-color-inverse-primary: #D0BCFF;
+            --md-sys-color-shadow: #000000;
+            --md-sys-color-surface-tint: #6750A4;
+            --md-sys-color-surface-container-low: #F7F2F8;
+            --md-sys-color-surface-container: #F3EDF7;
+            --md-sys-color-surface-container-high: #ECE6F0;
+
+            /* Material Design Elevation */
+            --md-sys-elevation-level0: none;
+            --md-sys-elevation-level1: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+            --md-sys-elevation-level2: 0 1px 3px 0 rgba(0,0,0,0.3), 0 4px 8px 3px rgba(0,0,0,0.15);
+            --md-sys-elevation-level3: 0 1px 3px 0 rgba(0,0,0,0.3), 0 5px 10px 5px rgba(0,0,0,0.15);
+            --md-sys-elevation-level4: 0 2px 3px 0 rgba(0,0,0,0.3), 0 6px 10px 5px rgba(0,0,0,0.15);
+            --md-sys-elevation-level5: 0 4px 4px 0 rgba(0,0,0,0.3), 0 8px 12px 6px rgba(0,0,0,0.15);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Mobile screen simulation for 375x667 viewport */
+            width: 375px; /* Matches the 375 of 667x375 if interpreted as width x height,
+                            but is a common portrait width for mobile.
+                            The height (667px) is for the entire simulated screen. */
+            height: 667px;
+            margin: 0 auto; /* Center the simulated screen */
+            border: 1px solid var(--md-sys-color-outline); /* Visual boundary */
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            overflow: hidden; /* Ensure content inside scrolls, not the body itself */
+            position: relative; /* For fixed elements to position relative to this */
+        }
+
+        /* General Material Design buttons */
+        .md-button {
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .md-button.primary {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            box-shadow: var(--md-sys-elevation-level1);
+        }
+        .md-button.primary:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .md-button.text {
+            background: none;
+            color: var(--md-sys-color-primary);
+            padding: 8px 12px;
+            border-radius: 8px; /* Slightly less rounded than primary */
+        }
+        .md-button.text:hover {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        /* 1. Top App Bar (Header) CSS */
+        .top-app-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 56px; /* Material Design standard height for mobile */
+            padding: 0 16px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            box-shadow: var(--md-sys-elevation-level2); /* MD elevation */
+            position: fixed;
+            width: 100%; /* Spans the full simulated screen width */
+            top: 0;
+            left: 0;
+            z-index: 100; /* Ensures it stays above other content */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        .app-title {
+            font-size: 20px;
+            font-weight: 500;
+            margin: 0;
+            flex-grow: 1; /* Allows title to take available space */
+        }
+        .icon-button {
+            background: none;
+            border: none;
+            color: inherit;
+            padding: 8px;
+            border-radius: 50%; /* Circular touch target */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .icon-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .icon-button .material-icons {
+            font-size: 24px;
+        }
+        .actions {
+            display: flex;
+            gap: 8px; /* Spacing between icons */
+        }
+
+        /* 2. Main Content Area (Feature Dashboard) CSS */
+        .main-content {
+            padding: 72px 16px 72px 16px; /* Top/Bottom padding to clear fixed header/footer */
+            display: flex;
+            flex-direction: column;
+            gap: 16px; /* Spacing between main sections */
+            background-color: var(--md-sys-color-surface-container-low);
+            min-height: calc(100% - 56px - 56px); /* Full height minus app bar and bottom nav */
+            overflow-y: auto; /* Enable vertical scrolling for content */
+            box-sizing: border-box; /* Include padding in height calculation */
+            max-height: calc(100% - 56px - 56px); /* Constrain height to enable scroll within body sim */
+        }
+
+        .feature-card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: 12px; /* Rounded corners for cards */
+            padding: 16px;
+            box-shadow: var(--md-sys-elevation-level1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start; /* Align content to the left */
+            text-align: left;
+            color: var(--md-sys-color-on-surface);
+            gap: 8px; /* Spacing between elements within a card */
+        }
+        .primary-feature {
+            background-color: var(--md-sys-color-secondary-container);
+            color: var(--md-sys-color-on-secondary-container);
+            padding: 24px;
+            align-items: center; /* Center content for primary action */
+            text-align: center;
+            gap: 12px;
+        }
+        .primary-feature .feature-icon {
+            font-size: 48px;
+            color: var(--md-sys-color-secondary); /* Accent icon color */
+            margin-bottom: 8px;
+        }
+        .primary-feature .feature-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+        }
+        .primary-feature .feature-description {
+            font-size: 14px;
+            color: var(--md-sys-color-on-secondary-container);
+            margin: 0 0 16px 0; /* More space before button */
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Two columns for 375px width */
+            gap: 16px;
+        }
+        .secondary-feature .feature-icon {
+            font-size: 32px;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 4px;
+        }
+        .secondary-feature .feature-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0;
+        }
+        .secondary-feature .feature-description {
+            font-size: 12px;
+            color: var(--md-sys-color-on-surface-variant);
+            margin: 0 0 8px 0;
+            flex-grow: 1; /* Allows description to take vertical space, pushing button down */
+        }
+        .my-apps-card .md-button {
+            margin-top: auto; /* Pushes the button to the bottom of the card */
+        }
+
+        /* 3. Bottom Navigation Bar CSS */
+        .bottom-navigation {
+            display: flex;
+            justify-content: space-around; /* Distributes items evenly */
+            align-items: center;
+            height: 56px; /* Material Design standard height for bottom nav */
+            background-color: var(--md-sys-color-surface-container);
+            color: var(--md-sys-color-on-surface-variant);
+            box-shadow: var(--md-sys-elevation-level2); /* MD elevation (above content) */
+            position: fixed;
+            width: 100%; /* Spans the full simulated screen width */
+            bottom: 0;
+            left: 0;
+            z-index: 100; /* Ensures it stays above other content */
+            box-sizing: border-box;
+        }
+        .nav-item {
+            flex: 1; /* Each item takes equal width */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: inherit; /* Inherits text color */
+            padding: 8px 0;
+            cursor: pointer;
+            position: relative; /* For badge positioning */
+            transition: color 0.3s, background-color 0.3s;
+        }
+        .nav-item.active {
+            color: var(--md-sys-color-primary); /* Active item color */
+        }
+        .nav-item:not(.active):hover {
+            background-color: var(--md-sys-color-surface-container-high); /* Subtle hover effect */
+        }
+        .nav-item .material-icons {
+            font-size: 24px;
+            margin-bottom: 2px;
+        }
+        .nav-label {
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1; /* Compact label */
+        }
+        .badge {
+            position: absolute;
+            top: 4px;
+            right: calc(50% - 16px); /* Adjust based on icon size and nav-item width for positioning */
+            background-color: var(--md-sys-color-error);
+            color: var(--md-sys-color-on-error);
+            font-size: 10px;
+            font-weight: 700;
+            min-width: 16px; /* Ensures circular shape for single digit */
+            height: 16px;
+            border-radius: 8px; /* Perfectly round */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px; /* Horizontal padding for multiple digits */
+            box-sizing: border-box;
+            border: 2px solid var(--md-sys-color-surface-container); /* Border to stand out */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top App Bar (Header) -->
+    <header class="top-app-bar">
+        <h1 class="app-title">Connect phone</h1>
+        <div class="actions">
+            <button class="icon-button"><i class="material-icons">search</i></button>
+            <button class="icon-button"><i class="material-icons">add</i></button>
+        </div>
+    </header>
+
+    <!-- 2. Main Content Area (Feature Dashboard) -->
+    <main class="main-content">
+        <section class="feature-card primary-feature">
+            <i class="material-icons feature-icon">share</i>
+            <h2 class="feature-title">Connect friends sync file</h2>
+            <p class="feature-description">Share files and sync with friends directly to devices or cloud services.</p>
+            <button class="md-button primary">Start Connection</button>
+        </section>
+
+        <section class="feature-grid">
+            <div class="feature-card secondary-feature">
+                <i class="material-icons feature-icon">inbox</i>
+                <h3 class="feature-title">Received</h3>
+                <p class="feature-description">View and manage recently received files.</p>
+            </div>
+            <div class="feature-card secondary-feature">
+                <i class="material-icons feature-icon">storage</i>
+                <h3 class="feature-title">Storage</h3>
+                <p class="feature-description">Monitor and manage device storage usage.</p>
+            </div>
+            <div class="feature-card secondary-feature my-apps-card">
+                <i class="material-icons feature-icon">apps</i>
+                <h3 class="feature-title">My Apps</h3>
+                <p class="feature-description">35 Installed Apps (Last: WhatsApp)</p>
+                <button class="md-button text">Manage Apps</button>
+                <!-- This button navigates to the detailed 'My Apps' page with the list and selection capability -->
+            </div>
+            <div class="feature-card secondary-feature">
+                <i class="material-icons feature-icon">collections</i>
+                <h3 class="feature-title">Pictures</h3>
+                <p class="feature-description">Browse and organize your photo collection.</p>
+            </div>
+            <div class="feature-card secondary-feature">
+                <i class="material-icons feature-icon">movie</i>
+                <h3 class="feature-title">Videos</h3>
+                <p class="feature-description">Watch and manage your video library.</p>
+            </div>
+            <div class="feature-card secondary-feature">
+                <i class="material-icons feature-icon">music_note</i>
+                <h3 class="feature-title">Music</h3>
+                <p class="feature-description">Listen to and manage your audio files.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- 3. Bottom Navigation Bar -->
+    <nav class="bottom-navigation">
+        <button class="nav-item active">
+            <i class="material-icons">phone_iphone</i>
+            <span class="nav-label">Phone</span>
+        </button>
+        <button class="nav-item">
+            <i class="material-icons">desktop_windows</i>
+            <span class="nav-label">Computer</span>
+        </button>
+        <button class="nav-item has-badge">
+            <i class="material-icons">near_me</i>
+            <span class="nav-label">Nearby</span>
+            <span class="badge">3</span>
+        </button>
+        <button class="nav-item">
+            <i class="material-icons">person</i>
+            <span class="nav-label">Profile</span>
+        </button>
+    </nav>
+
+</body>
+</html>

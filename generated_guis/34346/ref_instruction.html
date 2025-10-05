@@ -2,372 +2,573 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My Profile</title>
+    <!-- Material Icons CDN -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font (Material Design's default typeface) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        /* Global styles and Material Design definitions */
+        :root {
+            /* Material Design Color System */
+            --mdc-theme-primary: #6200EE;         /* Deep Purple */
+            --mdc-theme-on-primary: #FFFFFF;      /* White */
+            --mdc-theme-secondary: #03DAC6;       /* Teal (optional, for accents) */
+            --mdc-theme-on-secondary: #000000;    /* Black */
+            --mdc-theme-surface: #FFFFFF;         /* White (for cards, sheets, nav bars) */
+            --mdc-theme-on-surface: #000000;      /* Black */
+            --mdc-theme-background: #F8F8F8;     /* Light Grey (for main content background) */
+
+            /* Material Design Text Opacity (on a light background) */
+            --mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+            --mdc-theme-text-secondary-on-background: rgba(0, 0, 0, 0.60);
+            --mdc-theme-text-hint-on-background: rgba(0, 0, 0, 0.38);
+            --mdc-theme-text-disabled-on-background: rgba(0, 0, 0, 0.38);
+            --mdc-theme-text-icon-on-background: rgba(0, 0, 0, 0.38);
+
+            /* Material Design Elevation (Shadows) */
+            --shadow-z2: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+            --shadow-z8: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+
+            /* Typography Sizes (adjusted for mobile 375px width, sp to px approximation) */
+            --headline4: 24px;   /* Used for large primary names */
+            --headline5: 20px;   /* Alternative for name */
+            --headline6: 20px;   /* App Header Title, Card Titles */
+            --subtitle1: 16px;   /* Secondary card titles */
+            --subtitle2: 14px;   /* Smaller subheadings, prominent body text */
+            --body1: 16px;       /* General body text, contact info */
+            --body2: 14px;       /* Smaller body text, prompts, review count */
+            --button-text: 14px; /* Standard button text */
+            --caption-text: 12px; /* Bottom Navigation labels */
+        }
+
         /* Basic Reset */
-        body, h1, h2, h3, p, ul, li, input, textarea, button {
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            border: none;
-            outline: none;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif; /* Or your preferred Material Design font */
         }
 
+        html, body {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            color: var(--mdc-theme-text-primary-on-background);
+            background-color: #F0F0F0; /* Overall page background outside the "mobile screen" */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Mobile screen dimensions wrapper */
         body {
-            font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: #f8f8f8; /* Light grey background */
-            color: #212121; /* Dark grey text */
+            width: 375px; /* Fixed width as per description */
+            height: 667px; /* Fixed height as per description */
+            margin: 0 auto; /* Center the "mobile screen" for demonstration */
+            overflow: hidden; /* Prevent body scroll, main content will scroll */
+            position: relative;
+            background-color: var(--mdc-theme-background); /* Background color of the app itself */
+            box-shadow: 0 0 15px rgba(0,0,0,0.15); /* Visual cue for the mobile screen container */
         }
 
-        /* General Styling */
-        .container {
-            width: 375px;
-            margin: 0 auto; /* Center the content */
-            overflow: hidden;
+        /* Material Icons sizing and alignment */
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px; /* Default icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            -moz-osx-font-smoothing: grayscale;
+            font-feature-settings: 'liga';
+            vertical-align: middle; /* Align icons with text baseline */
         }
 
-        /* Top App Bar */
-        .top-app-bar {
+        /* 1. App Header */
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 56px; /* Standard MD toolbar height */
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            height: 56px;
-            background-color: #6200EE; /* Primary Color */
-            color: white;
-            padding: 0 16px;
+            padding: 0 16px; /* Horizontal padding */
+            box-shadow: var(--shadow-z2);
+            z-index: 1000;
         }
 
-        .top-app-bar .leading-icon,
-        .top-app-bar .trailing-action {
-            cursor: pointer;
-        }
-
-        .top-app-bar .title {
-            font-size: 20px;
+        .app-header .title {
+            flex-grow: 1; /* Occupy available space */
+            text-align: center; /* Centered title */
+            font-size: var(--headline6); /* 20sp Roboto Medium */
             font-weight: 500;
-            flex-grow: 1;
+            line-height: 1.2;
+        }
+
+        .app-header .action-button {
+            min-width: 48px; /* Material Design touch target */
+            min-height: 48px; /* Material Design touch target */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mdc-theme-on-primary);
+            text-decoration: none;
+            cursor: pointer;
+            border-radius: 50%; /* For ripple effect, though no JS here */
+            outline: none;
+            background: none;
+            border: none;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+        .app-header .action-button:active {
+            background-color: rgba(255, 255, 255, 0.12); /* Mimic MD ripple feedback */
+        }
+        .app-header .action-button .material-icons {
+             font-size: 24px; /* Standard icon size */
+        }
+        .app-header .action-button:first-child { /* Left-most action (e.g., back button) */
+            margin-left: -12px; /* Pull icon slightly to the left to align content */
+        }
+        .app-header .action-button:last-child { /* Right-most action (e.g., edit button) */
+            margin-right: -12px; /* Pull icon slightly to the right */
+        }
+
+        /* Main scrollable content area */
+        .main-content {
+            padding-top: 56px; /* Space for fixed header */
+            padding-bottom: 56px; /* Space for fixed bottom navigation */
+            height: 100%; /* Occupy full height for scrolling */
+            overflow-y: auto; /* Make content scrollable */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-bottom: 16px; /* Extra padding for the last card/content at the bottom */
+        }
+
+        /* Material Design Card styling */
+        .mdc-card {
+            background-color: var(--mdc-theme-surface);
+            border-radius: 8px; /* Standard MD corner radius */
+            box-shadow: var(--shadow-z2);
+            padding: 16px;
+            margin-top: 16px; /* Space between cards and header/other cards */
+            overflow: hidden; /* Ensures content respects border-radius */
+        }
+        .main-content .mdc-card:first-child {
+            margin-top: 20px; /* More space from header */
+        }
+
+
+        /* Material Design Button styling (simplified) */
+        .mdc-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px; /* Standard MD button height */
+            padding: 0 16px;
+            font-size: var(--button-text); /* 14sp */
+            font-weight: 500; /* Roboto Medium */
+            letter-spacing: 0.0892857143em; /* MD button letter spacing */
+            text-transform: uppercase;
+            border-radius: 4px; /* MD button border radius */
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, color 0.15s ease-in-out;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            text-decoration: none; /* For button links */
+        }
+        .mdc-button__icon {
+            margin-right: 8px; /* Space between icon and text */
+            font-size: 18px; /* Slightly smaller icon for inline with text */
+        }
+        .mdc-button__icon:last-child { /* If icon is on the right */
+            margin-right: 0;
+            margin-left: 8px;
+        }
+
+        /* Raised Button */
+        .mdc-button--raised {
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            box-shadow: var(--shadow-z2);
+            border: none;
+        }
+        .mdc-button--raised:hover {
+            box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 10px 0px rgba(0,0,0,0.14), 0px 1px 18px 0px rgba(0,0,0,0.12);
+        }
+
+        /* Outlined Button */
+        .mdc-button--outlined {
+            background-color: transparent;
+            color: var(--mdc-theme-primary);
+            border: 1px solid currentColor; /* Uses primary color for border */
+        }
+        .mdc-button--outlined:hover {
+            background-color: rgba(98, 0, 238, 0.04); /* Primary color with transparency */
+        }
+
+        /* Text Button */
+        .mdc-button--text {
+            background-color: transparent;
+            color: var(--mdc-theme-primary);
+            border: none;
+            padding: 0 8px; /* Text buttons have less horizontal padding */
+        }
+        .mdc-button--text:hover {
+            background-color: rgba(98, 0, 238, 0.04);
+        }
+
+        /* 2. Profile Overview & Basic Information */
+        .profile-overview-card {
+            text-align: center;
+            padding-top: 24px;
+            padding-bottom: 24px;
+        }
+
+        .profile-picture-container {
+            width: 96px; /* Avatar size as per MD guidelines */
+            height: 96px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #EEE; /* Placeholder background color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(0,0,0,0.08); /* Subtle border */
+        }
+
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block; /* Remove extra space below image */
+        }
+        .profile-picture-container .material-icons {
+            font-size: 72px; /* Large icon for placeholder */
+            color: var(--mdc-theme-text-icon-on-background);
+        }
+
+        .user-name {
+            font-size: var(--headline4); /* 24sp Roboto Regular/Light */
+            font-weight: 400; /* Regular */
+            margin-bottom: 8px;
+            color: var(--mdc-theme-text-primary-on-background);
+        }
+
+        .contact-info p {
+            font-size: var(--body1); /* 16sp */
+            color: var(--mdc-theme-text-secondary-on-background);
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center each contact line */
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+        .contact-info p:last-of-type { /* Adjust margin for phone number */
+            margin-bottom: 16px;
+        }
+        .contact-info .material-icons {
+            font-size: 20px; /* Slightly smaller icon for text lines */
+            margin-right: 8px;
+            color: var(--mdc-theme-text-hint-on-background);
+        }
+
+        .profile-completion-prompt {
+            background-color: rgba(var(--mdc-theme-primary), 0.08); /* Light primary background */
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin-top: 16px; /* Space from contact info */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center prompt content */
+            gap: 8px;
+        }
+        .profile-completion-prompt p {
+            font-size: var(--body2); /* 14sp */
+            color: var(--mdc-theme-text-primary-on-background);
+            margin: 0;
             text-align: center;
         }
-
-        .top-app-bar .save-button {
-            background-color: #03DAC5; /* Accent Color */
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
+        .profile-completion-prompt .mdc-button {
+            width: 100%; /* Full width for the outlined button */
+            max-width: 250px; /* Keep button from stretching too wide on larger card */
         }
 
-        /* Profile Header */
-        .profile-header {
-            background-color: #7c4dff; /* Primary Variant Color */
-            padding: 16px;
+        /* 3. Video Profile */
+        .video-profile-card h3 {
+            font-size: var(--subtitle1); /* 16sp Roboto Medium */
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--mdc-theme-text-primary-on-background);
+        }
+
+        .video-preview {
+            position: relative;
+            width: 100%;
+            height: 180px; /* Common aspect ratio for video previews */
+            background-color: #E0E0E0; /* Placeholder background */
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .video-preview .thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7); /* Darken thumbnail for play icon visibility */
+        }
+
+        .video-preview .play-icon {
+            position: absolute;
+            font-size: 64px; /* Large play icon */
+            color: rgba(255, 255, 255, 0.9);
+            pointer-events: none; /* Allows clicks to pass through if actual video player is behind */
+        }
+
+        .no-video-placeholder {
+            text-align: center;
+            color: var(--mdc-theme-text-hint-on-background);
+            padding: 24px;
+        }
+        .no-video-placeholder .material-icons {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        .no-video-placeholder p {
+            font-size: var(--body2);
+            margin: 0;
+        }
+        .video-profile-card .mdc-button {
+            width: 100%; /* Full width for the raised button */
+        }
+
+        /* 4. Employer Reviews & Requests */
+        .employer-reviews-card h3 {
+            font-size: var(--subtitle1); /* 16sp Roboto Medium */
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--mdc-theme-text-primary-on-background);
+        }
+
+        .review-summary {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center summary content */
+            margin-bottom: 16px;
+        }
+
+        .star-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .star-rating .material-icons {
+            color: #FFC107; /* Gold color for stars */
+            font-size: 24px;
+            margin-right: 2px;
+        }
+        .star-rating .material-icons:last-of-type { /* Adjust margin for the last star before rating score */
+            margin-right: 8px;
+        }
+
+        .rating-score {
+            font-size: var(--headline6); /* 20sp Roboto Medium */
+            font-weight: 500;
+            color: var(--mdc-theme-text-primary-on-background);
+            margin-left: 4px;
+        }
+
+        .review-count {
+            font-size: var(--body2); /* 14sp */
+            color: var(--mdc-theme-text-secondary-on-background);
+            margin-bottom: 16px;
+        }
+
+        .employer-reviews-card .mdc-button--raised {
+            width: 100%; /* Full width for the raised button */
+            margin-bottom: 8px; /* Space between raised and text button */
+        }
+        .employer-reviews-card .mdc-button--text {
+            display: block; /* Make it a block element to center with margin auto */
+            margin: 8px auto 0 auto; /* Center the text button */
+            width: auto; /* Allow text button to size to its content */
+        }
+
+
+        /* 5. Bottom Navigation Bar */
+        .mdc-bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 56px; /* Standard MD bottom nav height */
+            background-color: var(--mdc-theme-surface);
+            box-shadow: var(--shadow-z8);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 1000;
+            padding: 0;
+        }
+
+        .mdc-bottom-navigation__item {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 150px;
-            color: white;
-        }
-
-        .profile-picture-container {
-            position: relative;
-        }
-
-        .profile-picture {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #bdbdbd; /* Placeholder Color */
-            margin-bottom: 8px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            font-size: 24px;
-        }
-
-        .profile-picture img {
-            width: 100%;
+            flex: 1; /* Distribute space evenly */
+            min-width: 64px; /* Minimum recommended touch target for nav items by MD */
             height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-picture-edit-icon {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border-radius: 50%;
-            padding: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .profile-header input {
-            background: none;
-            border: none;
-            text-align: center;
-            color: white;
-        }
-
-        .profile-header input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .profile-header .name-input {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            width: 100%; /* expand the input field */
-        }
-
-        .profile-header .profession-input {
-            font-size: 16px;
+            text-decoration: none;
+            color: var(--mdc-theme-text-secondary-on-background); /* Inactive color */
+            font-size: var(--caption-text); /* 12sp */
             font-weight: 400;
-            width: 100%; /* expand the input field */
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+            -webkit-tap-highlight-color: transparent;
         }
 
-
-        /* Divider */
-        .divider {
-            height: 1px;
-            background-color: #e0e0e0;
-            margin: 8px 0;
+        .mdc-bottom-navigation__item:hover {
+            background-color: rgba(var(--mdc-theme-on-surface), 0.04); /* Subtle hover effect */
         }
 
-        /* Contact Information Section */
-        .contact-info-section,
-        .about-me-section,
-        .skills-section,
-        .links-section {
-            background-color: #fff;
-            padding: 16px;
-            margin-bottom: 8px;
+        .mdc-bottom-navigation__item--active {
+            color: var(--mdc-theme-primary); /* Active color */
+            font-weight: 500; /* Roboto Medium for active label */
         }
 
-        .contact-info-section .input-group,
-        .links-section .input-group {
-            margin-bottom: 12px;
+        .mdc-bottom-navigation__icon {
+            font-size: 24px;
+            margin-bottom: 2px; /* Small space between icon and label */
         }
-
-        .contact-info-section label,
-        .links-section label {
-            display: block;
-            font-size: 12px;
-            color: #757575;
-            margin-bottom: 4px;
+        .mdc-bottom-navigation__label {
+            line-height: 1.2; /* Ensure consistent line height */
+            white-space: nowrap; /* Prevent labels from wrapping */
         }
-
-        .contact-info-section input,
-        .links-section input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #bdbdbd;
-            border-radius: 4px;
-            font-size: 16px;
-            color: #212121;
-        }
-
-       /* About Me Section */
-        .about-me-section textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #bdbdbd;
-            border-radius: 4px;
-            font-size: 16px;
-            color: #212121;
-            resize: vertical; /* Allow vertical resizing */
-            min-height: 100px;
-        }
-
-        .about-me-section .section-title,
-        .skills-section .section-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #757575; /* Secondary Text Color */
-            margin-bottom: 8px;
-        }
-
-
-        /* Skills Section */
-        .skills-section .skills-list {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-
-        .skills-section .skill-chip {
-            background-color: #e0e0e0;
-            color: #212121;
-            padding: 6px 12px;
-            border-radius: 16px;
-            margin: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .skills-section .skill-chip:hover {
-            background-color: #bdbdbd;
-        }
-
-        .skills-section .add-skill-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .skills-section .add-skill-container input {
-            flex-grow: 1;
-            padding: 8px;
-            border: 1px solid #bdbdbd;
-            border-radius: 4px;
-            font-size: 16px;
-            color: #212121;
-            margin-right: 8px;
-        }
-
-        .skills-section .add-skill-container button {
-            background-color: #6200EE;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 14px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-
-        /* Links Section (reusing styles from Contact Info) */
-
-
-        /* Bottom Navigation (Placeholder - Implement as needed) */
-        .bottom-navigation {
-            /* Add your bottom navigation styles here */
-        }
-
-        /* Utility Classes (Margin & Padding)*/
-        .mb-1 { margin-bottom: 1rem; }
-        .mt-1 { margin-top: 1rem; }
-
-        /* Input Styles (To be refined and integrated with TextInputLayout) */
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="url"],
-        textarea {
-            width: 100%;
-            padding: 8px 12px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box; /* Important for consistent sizing */
-            font-size: 16px;
-            color: #333;
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        input[type="url"]:focus,
-        textarea:focus {
-            border-color: #6200EE;
-            outline: none;
-            box-shadow: 0 0 5px rgba(98, 0, 238, 0.5);
-        }
-
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Top App Bar -->
-        <div class="top-app-bar">
-            <div class="leading-icon">
-                <i class="material-icons">close</i>
-            </div>
-            <div class="title">Edit Profile</div>
-            <div class="trailing-action">
-                <button class="save-button">Save</button>
-            </div>
-        </div>
+    <!-- 1. App Header -->
+    <header class="app-header">
+        <!-- Optional: Back Arrow icon (hidden in this example) -->
+        <a href="#" class="action-button" style="visibility: hidden;" aria-label="Back">
+            <i class="material-icons">arrow_back</i>
+        </a>
+        <h1 class="title">My Profile</h1>
+        <!-- Edit Profile icon -->
+        <button class="action-button" aria-label="Edit Profile">
+            <i class="material-icons">edit</i>
+        </button>
+    </header>
 
-        <!-- Profile Header -->
-        <div class="profile-header">
+    <!-- Main Content Area (Scrollable) -->
+    <main class="main-content">
+        <!-- 2. Profile Overview & Basic Information -->
+        <div class="mdc-card profile-overview-card">
             <div class="profile-picture-container">
-                <div class="profile-picture">
-                    <!--  Replace with user's profile picture or initials -->
-                    <img src="https://via.placeholder.com/80" alt="Profile Picture">
+                <!-- Example: User's profile picture -->
+                <img src="https://via.placeholder.com/96/6200EE/FFFFFF?text=JD" alt="Profile Picture" class="profile-picture">
+                <!-- Alternative: If no picture, use Material Icon placeholder -->
+                <!-- <i class="material-icons">account_circle</i> -->
+            </div>
+            <h2 class="user-name">John Doe</h2>
+            <div class="contact-info">
+                <p><i class="material-icons">location_on</i> New York, USA</p>
+                <p><i class="material-icons">email</i> john.doe@example.com</p>
+                <p><i class="material-icons">phone</i> +1 (555) 123-4567</p>
+            </div>
+            <div class="profile-completion-prompt">
+                <p>Your profile is 70% complete.</p>
+                <button class="mdc-button mdc-button--outlined">
+                    <span class="mdc-button__label">Complete Your Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. Video Profile -->
+        <div class="mdc-card video-profile-card">
+            <h3>Video Profile</h3>
+            <div class="video-preview">
+                <!-- Example: If video exists, display thumbnail with play icon -->
+                <img src="https://via.placeholder.com/343x180/7B1FA2/FFFFFF?text=Video+Thumbnail" alt="Video Profile Thumbnail" class="thumbnail">
+                <i class="material-icons play-icon">play_circle_filled</i>
+                <!-- Alternative: If no video, display a placeholder and prompt -->
+                <!--
+                <div class="no-video-placeholder">
+                    <i class="material-icons">videocam</i>
+                    <p>Add a video to stand out!</p>
                 </div>
-                <div class="profile-picture-edit-icon">
-                    <i class="material-icons">add_a_photo</i>
+                -->
+            </div>
+            <button class="mdc-button mdc-button--raised mdc-button--icon-leading">
+                <span class="mdc-button__ripple"></span>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">videocam</i>
+                <span class="mdc-button__label">Add/Edit Video Profile</span>
+            </button>
+        </div>
+
+        <!-- 4. Employer Reviews & Requests -->
+        <div class="mdc-card employer-reviews-card">
+            <h3>Employer Reviews</h3>
+            <div class="review-summary">
+                <div class="star-rating">
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star</i>
+                    <i class="material-icons">star_half</i>
+                    <span class="rating-score">4.5</span>
                 </div>
+                <p class="review-count">Based on 12 reviews</p>
             </div>
-            <input type="text" class="name-input" placeholder="Your Name" value="John Doe">
-            <input type="text" class="profession-input" placeholder="Job Title" value="Software Engineer">
+            <button class="mdc-button mdc-button--raised mdc-button--icon-leading">
+                <span class="mdc-button__ripple"></span>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">rate_review</i>
+                <span class="mdc-button__label">Request a Review</span>
+            </button>
+            <button class="mdc-button mdc-button--text">
+                <span class="mdc-button__label">View All Reviews</span>
+            </button>
         </div>
+    </main>
 
-        <!-- Divider -->
-        <div class="divider"></div>
-
-        <!-- Contact Information Section -->
-        <div class="contact-info-section">
-            <div class="input-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Email Address">
-            </div>
-            <div class="input-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" placeholder="Phone Number">
-            </div>
-             <div class="input-group">
-                <label for="location">Location</label>
-                <input type="text" id="location" placeholder="City, Country">
-            </div>
-        </div>
-
-        <!-- About Me Section -->
-        <div class="about-me-section">
-            <h2 class="section-title">About Me</h2>
-            <textarea placeholder="Tell us about yourself..."></textarea>
-        </div>
-
-        <!-- Skills Section -->
-        <div class="skills-section">
-            <h2 class="section-title">Skills</h2>
-            <div class="skills-list">
-                <div class="skill-chip">JavaScript</div>
-                <div class="skill-chip">HTML</div>
-                <div class="skill-chip">CSS</div>
-                <!-- Add more skills dynamically -->
-            </div>
-            <div class="add-skill-container">
-                <input type="text" placeholder="Add a skill">
-                <button>Add</button>
-            </div>
-        </div>
-
-        <!-- Links Section -->
-        <div class="links-section">
-            <div class="input-group">
-                <label for="linkedin">LinkedIn Profile URL</label>
-                <input type="url" id="linkedin" placeholder="LinkedIn Profile URL">
-            </div>
-            <div class="input-group">
-                <label for="portfolio">Portfolio URL</label>
-                <input type="url" id="portfolio" placeholder="Portfolio URL">
-            </div>
-        </div>
-
-        <!-- Bottom Navigation (Placeholder) -->
-        <div class="bottom-navigation">
-            <!-- Implement your bottom navigation here -->
-        </div>
-    </div>
+    <!-- 5. Bottom Navigation Bar -->
+    <nav class="mdc-bottom-navigation">
+        <a href="#home" class="mdc-bottom-navigation__item" aria-label="Home">
+            <i class="material-icons mdc-bottom-navigation__icon">home</i>
+            <span class="mdc-bottom-navigation__label">Home</span>
+        </a>
+        <a href="#saved" class="mdc-bottom-navigation__item" aria-label="Saved Items">
+            <i class="material-icons mdc-bottom-navigation__icon">bookmark</i>
+            <span class="mdc-bottom-navigation__label">Saved</span>
+        </a>
+        <a href="#messages" class="mdc-bottom-navigation__item" aria-label="Messaging">
+            <i class="material-icons mdc-bottom-navigation__icon">message</i>
+            <span class="mdc-bottom-navigation__label">Messaging</span>
+        </a>
+        <a href="#jobs" class="mdc-bottom-navigation__item" aria-label="Jobs">
+            <i class="material-icons mdc-bottom-navigation__icon">work</i>
+            <span class="mdc-bottom-navigation__label">Jobs</span>
+        </a>
+        <a href="#profile" class="mdc-bottom-navigation__item mdc-bottom-navigation__item--active" aria-label="Profile">
+            <i class="material-icons mdc-bottom-navigation__icon">person</i>
+            <span class="mdc-bottom-navigation__label">Profile</span>
+        </a>
+    </nav>
 </body>
 </html>

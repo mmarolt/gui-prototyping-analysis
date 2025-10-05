@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Filters</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font for Material Design Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles and Material Design Theme Variables */
+        :root {
+            /* Primary Color Scheme */
+            --mdc-theme-primary: #6200EE; /* Deep Purple */
+            --mdc-theme-on-primary: #FFFFFF;
+
+            /* Secondary Color Scheme */
+            --mdc-theme-secondary: #03DAC5; /* Teal */
+            --mdc-theme-on-secondary: rgba(0, 0, 0, 0.87); /* Dark text on light secondary */
+
+            /* Surface and Background Colors */
+            --mdc-theme-surface: #FFFFFF;
+            --mdc-theme-background: #F5F5F5; /* Light gray for the page background */
+
+            /* On-Surface Colors (for text, icons on light surfaces) */
+            --mdc-theme-on-surface: rgba(0, 0, 0, 0.87); /* High emphasis text */
+            --mdc-theme-text-medium-emphasis: rgba(0, 0, 0, 0.6); /* Medium emphasis text/hint */
+            --mdc-theme-text-disabled: rgba(0, 0, 0, 0.38); /* Disabled text */
+
+            /* Component-specific colors */
+            --mdc-theme-text-field-border: rgba(0, 0, 0, 0.42);
+            --mdc-theme-chip-unselected-background: #EEEEEE; /* Lighter grey for unselected chips */
+        }
+
+        /* Base Body and Main Container Styling for 375px Mobile Screen */
+        html {
+            height: 100%;
+            overflow: hidden; /* Prevent scrolling on html/body, allow only on main content */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--mdc-theme-background);
+            color: var(--mdc-theme-on-surface);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+
+            /* Simulate 375px mobile screen */
+            width: 375px;
+            height: 667px;
+            margin: 0 auto; /* Center the simulated screen */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative; /* For fixed children positioning */
+
+            display: flex;
+            flex-direction: column; /* Allows main to grow and fill space */
+        }
+
+        /* Main content area, takes available space and handles scrolling */
+        main {
+            flex-grow: 1;
+            overflow-y: auto; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+            padding-top: 56px; /* Space for fixed Top App Bar */
+            padding-bottom: 88px; /* Space for fixed Bottom Action Bar (56px height + 16px*2 padding) */
+            background-color: var(--mdc-theme-background); /* Ensures consistent background between sections */
+        }
+
+        /* Material Design Typography Classes */
+        h1, h2, h3, h4, h5, h6 { margin: 0; } /* Reset default margins */
+
+        .mdc-typography--headline6 {
+            font-size: 20px;
+            font-weight: 500; /* Medium */
+            letter-spacing: 0.15px;
+        }
+        .mdc-typography--subtitle2 {
+            font-size: 14px;
+            font-weight: 500; /* Medium */
+            letter-spacing: 0.1px;
+            color: var(--mdc-theme-on-surface);
+        }
+        .mdc-typography--body1 {
+            font-size: 16px;
+            font-weight: 400; /* Regular */
+            letter-spacing: 0.5px;
+        }
+        .mdc-typography--body2 {
+            font-size: 14px;
+            font-weight: 400; /* Regular */
+            letter-spacing: 0.25px;
+        }
+        .mdc-typography--button {
+            font-size: 14px;
+            font-weight: 500; /* Medium */
+            letter-spacing: 1.25px;
+            text-transform: uppercase;
+        }
+
+        /* Material Design Elevation (Shadows) */
+        .elevation-0 { box-shadow: none; }
+        .elevation-4 { box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12); }
+        .elevation-8 { box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12); }
+
+        /* General Section Styling */
+        section {
+            padding: 16px;
+            background-color: var(--mdc-theme-surface);
+            margin-bottom: 8px; /* Visual separation between sections */
+        }
+        section:last-of-type {
+            margin-bottom: 0; /* No margin after the last section before the footer */
+        }
+
+        /* Material Icons Base Styling */
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 1. Top App Bar */
+        .top-app-bar {
+            position: fixed;
+            top: 0;
+            width: 375px; /* Match simulated screen width */
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            z-index: 100; /* Ensure it's above scrolling content */
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .top-app-bar .leading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* 48x48dp touch target */
+            height: 48px;
+            cursor: pointer;
+            margin-left: -12px; /* Adjust to align 24px icon with 16px padding on a 48px touch target */
+        }
+        .top-app-bar .leading-icon .material-icons {
+            font-size: 24px;
+        }
+        .top-app-bar .title {
+            flex-grow: 1;
+            text-align: center;
+            margin-left: -24px; /* Compensate for the left icon's width to truly center the title */
+        }
+
+        /* 2. Budget Range Filter (Text Fields) */
+        .mdc-text-field-wrapper {
+            margin-bottom: 20px; /* Spacing between input fields */
+            position: relative;
+        }
+        .mdc-text-field-wrapper:last-of-type {
+            margin-bottom: 0;
+        }
+        .mdc-text-field-wrapper label {
+            position: absolute;
+            top: 18px; /* Initial position for floating label */
+            left: 0;
+            font-size: var(--mdc-typography--body2-font-size);
+            color: var(--mdc-theme-text-medium-emphasis);
+            pointer-events: none; /* Allows clicks to pass through to input */
+            transition: transform 0.2s ease-out, color 0.2s ease-out, font-size 0.2s ease-out;
+            transform-origin: left top;
+            padding-left: 28px; /* Space for the currency symbol prefix */
+        }
+        .mdc-text-field-wrapper.focused label,
+        .mdc-text-field-wrapper.has-value label {
+            transform: translateY(-20px) scale(0.75); /* Float label above input */
+            color: var(--mdc-theme-primary); /* Label color when focused/has value */
+        }
+        .mdc-text-field-container {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--mdc-theme-text-field-border);
+            padding-bottom: 4px;
+            padding-top: 18px; /* Create space for the floating label */
+            transition: border-bottom-color 0.2s ease-out, border-bottom-width 0.2s ease-out;
+        }
+        .mdc-text-field-wrapper.focused .mdc-text-field-container {
+            border-bottom-color: var(--mdc-theme-primary);
+            border-bottom-width: 2px;
+        }
+        .mdc-text-field-container .prefix {
+            font-size: var(--mdc-typography--body1-font-size);
+            margin-right: 4px;
+            color: var(--mdc-theme-on-surface);
+        }
+        .mdc-text-field-container input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            font-size: var(--mdc-typography--body1-font-size);
+            padding: 0;
+            color: var(--mdc-theme-on-surface);
+            background-color: transparent; /* Ensure input background is transparent */
+        }
+        .mdc-text-field-container input::placeholder {
+            color: var(--mdc-theme-text-medium-emphasis); /* Hint text color */
+            opacity: 1; /* Ensure placeholder is always visible */
+        }
+        .mdc-text-field-container .clear-icon {
+            font-size: 18px;
+            color: var(--mdc-theme-text-medium-emphasis);
+            cursor: pointer;
+            display: none; /* Hidden by default, shown by JS when text is present */
+            margin-left: 8px;
+            width: 24px; /* Touch target hint */
+            height: 24px;
+            display: flex; /* Override initial display:none for JS to toggle */
+            align-items: center;
+            justify-content: center;
+        }
+        /* Show clear icon when input has value and wrapper has 'has-value' class */
+        .mdc-text-field-wrapper:not(.focused).has-value .clear-icon {
+             display: flex;
+        }
+        /* Hide clear icon when focused to avoid interfering with typing, unless input has value already */
+        .mdc-text-field-wrapper.focused .clear-icon {
+            display: none;
+        }
+        .mdc-text-field-wrapper.focused.has-value .clear-icon {
+            display: flex; /* Show clear icon when focused IF it has value */
+        }
+
+
+        /* 3., 4., 5. Chips (Filter Chips and Choice Chips) */
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap; /* Allows chips to wrap to the next line */
+            gap: 8px; /* Spacing between chips */
+        }
+        .chip {
+            display: flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 18px; /* Creates the pill shape */
+            font-size: var(--mdc-typography--body2-font-size);
+            cursor: pointer;
+            user-select: none; /* Prevent text selection */
+            border: 1px solid rgba(0,0,0,0.12); /* Light outline for unselected */
+            background-color: var(--mdc-theme-chip-unselected-background);
+            color: var(--mdc-theme-on-surface);
+            transition: background-color 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out, box-shadow 0.15s ease-out;
+            min-height: 32px; /* Standard Material Design chip height */
+            box-sizing: border-box; /* Include padding and border in height */
+        }
+
+        /* Filter Chip - Selected State */
+        .chip.selected {
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            border-color: var(--mdc-theme-primary);
+        }
+        .chip .material-icons {
+            font-size: 18px;
+            margin-right: 4px;
+            line-height: 1; /* Ensure icon is vertically centered */
+        }
+        /* Hide check icon for unselected filter chips */
+        .chip:not(.selected) .material-icons {
+            display: none;
+        }
+
+        /* Choice Chip - Selected State (uses secondary color) */
+        .chip.choice-chip.selected {
+            background-color: var(--mdc-theme-secondary);
+            color: var(--mdc-theme-on-secondary);
+            border-color: var(--mdc-theme-secondary);
+            font-weight: 500; /* As per example, choice chips might have medium weight text */
+        }
+
+        /* 6. Action Buttons (Bottom Navigation) */
+        .bottom-action-bar {
+            position: fixed;
+            bottom: 0;
+            width: 375px; /* Match simulated screen width */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            background-color: var(--mdc-theme-surface);
+            z-index: 100; /* Ensure it's above scrolling content */
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .bottom-action-bar button {
+            flex: 1; /* Share available space equally */
+            padding: 10px 16px;
+            border: none;
+            font-size: var(--mdc-typography--button-font-size);
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.15s ease-out, color 0.15s ease-out, box-shadow 0.15s ease-out;
+            min-height: 40px; /* Standard Material Design button height */
+            text-align: center; /* Ensure text is centered within button */
+        }
+
+        /* Text Button Style */
+        .bottom-action-bar .text-button {
+            margin-right: 8px;
+            background: none;
+            color: var(--mdc-theme-primary);
+        }
+        .bottom-action-bar .text-button:hover,
+        .bottom-action-bar .text-button:focus {
+            background-color: rgba(98, 0, 238, 0.04); /* Primary color with 4% opacity on hover/focus */
+        }
+
+        /* Contained Button Style */
+        .bottom-action-bar .contained-button {
+            margin-left: 8px;
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Initial elevation 2 */
+        }
+        .bottom-action-bar .contained-button:hover,
+        .bottom-action-bar .contained-button:focus {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* Increased elevation on hover/focus */
+            background-color: var(--mdc-theme-primary); /* Keep background same */
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 1. Top App Bar (Header) -->
+    <header class="top-app-bar elevation-4">
+        <div class="leading-icon" role="button" aria-label="Close filters">
+            <i class="material-icons">close</i>
+        </div>
+        <h1 class="title mdc-typography--headline6">Filters</h1>
+        <!-- No trailing icon as per description -->
+    </header>
+
+    <!-- Main content area, scrollable -->
+    <main>
+        <!-- 2. Budget Range Filter -->
+        <section>
+            <h2 class="mdc-typography--subtitle2" style="margin-bottom: 12px;">Budget Range</h2>
+
+            <div class="mdc-text-field-wrapper" id="minBudgetWrapper">
+                <label for="minBudget" class="mdc-typography--body2">Minimum</label>
+                <div class="mdc-text-field-container">
+                    <span class="prefix mdc-typography--body1">₹</span>
+                    <input type="number" id="minBudget" placeholder="e.g., 5,00,000">
+                    <i class="material-icons clear-icon" role="button" aria-label="Clear minimum budget">cancel</i>
+                </div>
+            </div>
+
+            <div class="mdc-text-field-wrapper" id="maxBudgetWrapper">
+                <label for="maxBudget" class="mdc-typography--body2">Maximum</label>
+                <div class="mdc-text-field-container">
+                    <span class="prefix mdc-typography--body1">₹</span>
+                    <input type="number" id="maxBudget" placeholder="e.g., 20,00,000">
+                    <i class="material-icons clear-icon" role="button" aria-label="Clear maximum budget">cancel</i>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Property Type Filter (Multi-select filter chips) -->
+        <section>
+            <h2 class="mdc-typography--subtitle2" style="margin-bottom: 12px;">Property Type</h2>
+            <div class="chip-container" role="group" aria-label="Select property types">
+                <div class="chip selected" role="button" tabindex="0" aria-pressed="true">
+                    <i class="material-icons">check</i> Flat
+                </div>
+                <div class="chip" role="button" tabindex="0" aria-pressed="false">House/Villa</div>
+                <div class="chip" role="button" tabindex="0" aria-pressed="false">Office Space</div>
+                <div class="chip" role="button" tabindex="0" aria-pressed="false">PG/Hostel</div>
+                <div class="chip" role="button" tabindex="0" aria-pressed="false">Other Commercial</div>
+                <div class="chip" role="button" tabindex="0" aria-pressed="false">Shop/Showroom</div>
+            </div>
+        </section>
+
+        <!-- 4. Number of Bedrooms Filter (Single-select choice chips) -->
+        <section>
+            <h2 class="mdc-typography--subtitle2" style="margin-bottom: 12px;">Number of Bedrooms</h2>
+            <div class="chip-container" role="radiogroup" aria-label="Select number of bedrooms">
+                <div class="chip choice-chip" role="radio" tabindex="0" aria-checked="false">1</div>
+                <div class="chip choice-chip" role="radio" tabindex="0" aria-checked="false">2</div>
+                <div class="chip choice-chip selected" role="radio" tabindex="0" aria-checked="true">3</div>
+                <div class="chip choice-chip" role="radio" tabindex="0" aria-checked="false">4</div>
+                <div class="chip choice-chip" role="radio" tabindex="0" aria-checked="false">>4</div>
+            </div>
+        </section>
+
+        <!-- 5. Posted By Filter (Single-select choice chips) -->
+        <section>
+            <h2 class="mdc-typography--subtitle2" style="margin-bottom: 12px;">Posted By</h2>
+            <div class="chip-container" role="radiogroup" aria-label="Select who posted the listing">
+                <div class="chip choice-chip selected" role="radio" tabindex="0" aria-checked="true">Owner</div>
+                <div class="chip choice-chip" role="radio" tabindex="0" aria-checked="false">Builder</div>
+                <div class="chip choice-chip" role="radio" tabindex="0" aria-checked="false">Agent</div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 6. Action Buttons (Bottom Navigation) -->
+    <footer class="bottom-action-bar elevation-8">
+        <button class="text-button mdc-typography--button" role="button">
+            Reset
+        </button>
+        <button class="contained-button mdc-typography--button" role="button">
+            Apply
+        </button>
+    </footer>
+
+    <script>
+        // --- JavaScript for Material Design Interactions ---
+
+        // 1. Text Field Interactions (Floating Label and Clear Icon)
+        document.querySelectorAll('.mdc-text-field-wrapper').forEach(wrapper => {
+            const input = wrapper.querySelector('input');
+            const clearIcon = wrapper.querySelector('.clear-icon');
+            const label = wrapper.querySelector('label');
+
+            // Function to update wrapper state based on input value
+            function updateTextFieldState() {
+                if (input.value.length > 0) {
+                    wrapper.classList.add('has-value');
+                    // Also ensure label floats when there's a value, even if not focused
+                    if (!wrapper.classList.contains('focused')) {
+                        label.style.transform = 'translateY(-20px) scale(0.75)';
+                        label.style.color = 'var(--mdc-theme-text-medium-emphasis)'; // Keep neutral color if not focused
+                    }
+                } else {
+                    wrapper.classList.remove('has-value');
+                    if (!wrapper.classList.contains('focused')) {
+                        label.style.transform = ''; // Reset label position
+                        label.style.color = 'var(--mdc-theme-text-medium-emphasis)'; // Reset label color
+                    }
+                }
+            }
+
+            // Initial check on page load if inputs have pre-filled values
+            updateTextFieldState();
+
+            // Focus event: Add 'focused' class and apply primary color to label
+            input.addEventListener('focus', () => {
+                wrapper.classList.add('focused');
+                label.style.color = 'var(--mdc-theme-primary)';
+                label.style.transform = 'translateY(-20px) scale(0.75)'; // Ensure label floats on focus
+            });
+
+            // Blur event: Remove 'focused' class, reset label color if no value
+            input.addEventListener('blur', () => {
+                wrapper.classList.remove('focused');
+                updateTextFieldState(); // Re-evaluate state after blur
+            });
+
+            // Input event: Update state as user types
+            input.addEventListener('input', updateTextFieldState);
+
+            // Clear Icon click handler
+            if (clearIcon) {
+                clearIcon.addEventListener('click', (event) => {
+                    input.value = ''; // Clear input value
+                    updateTextFieldState(); // Update state to hide clear icon and reset label
+                    input.focus(); // Keep focus on the input after clearing
+                    event.stopPropagation(); // Prevent input from blurring immediately
+                });
+            }
+        });
+
+        // 2. Filter Chips (Multi-select) - Property Type
+        document.querySelectorAll('section:nth-of-type(2) .chip-container .chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                const isSelected = chip.classList.toggle('selected');
+                chip.setAttribute('aria-pressed', isSelected);
+                // CSS handles the display of the check icon based on the 'selected' class
+            });
+        });
+
+        // 3. Choice Chips (Single-select) - Number of Bedrooms & Posted By
+        function setupChoiceChips(sectionSelector) {
+            const container = document.querySelector(sectionSelector + ' .chip-container');
+            if (!container) return; // Exit if container not found
+
+            container.querySelectorAll('.choice-chip').forEach(chip => {
+                chip.addEventListener('click', () => {
+                    // Deselect all other chips in this group
+                    container.querySelectorAll('.choice-chip').forEach(otherChip => {
+                        if (otherChip !== chip && otherChip.classList.contains('selected')) {
+                            otherChip.classList.remove('selected');
+                            otherChip.setAttribute('aria-checked', 'false');
+                        }
+                    });
+
+                    // Select the clicked chip
+                    chip.classList.add('selected');
+                    chip.setAttribute('aria-checked', 'true');
+                });
+            });
+        }
+
+        setupChoiceChips('section:nth-of-type(3)'); // Number of Bedrooms
+        setupChoiceChips('section:nth-of-type(4)'); // Posted By
+    </script>
+</body>
+</html>

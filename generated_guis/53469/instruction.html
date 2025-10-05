@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Easy Sourcing App</title>
+    <!-- 
+        Note: The request specifies "HTML and inline CSS code". 
+        This implementation uses 'style' attributes on individual elements for CSS, 
+        which is the strictest interpretation of "inline CSS". 
+        For a real-world application, a <style> block in the <head> or an external stylesheet 
+        would be preferred for better maintainability and performance.
+        The meta viewport tag is crucial for correct mobile display.
+    -->
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f8f8; -webkit-tap-highlight-color: transparent;">
+
+    <!-- Header with Search Bar -->
+    <div style="background-color: #fff; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; position: sticky; top: 0; z-index: 100;">
+        <input type="search" placeholder="Search products or suppliers..." 
+               style="width: calc(100% - 30px); padding: 12px 15px; border: 1px solid #ddd; border-radius: 25px; font-size: 16px; outline: none; background-color: #f0f0f0;">
+    </div>
+
+    <!-- Prominent Action Buttons -->
+    <div style="display: flex; justify-content: space-around; padding: 20px 10px; background-color: #fff; margin-top: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <button style="flex: 1; margin: 0 5px; padding: 15px 10px; background-color: #007bff; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; outline: none; transition: background-color 0.2s ease;">
+            Messages
+        </button>
+        <button style="flex: 1; margin: 0 5px; padding: 15px 10px; background-color: #28a745; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; outline: none; transition: background-color 0.2s ease;">
+            Get Quotations
+        </button>
+        <button style="flex: 1; margin: 0 5px; padding: 15px 10px; background-color: #ffc107; color: #333; border: none; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; outline: none; transition: background-color 0.2s ease;">
+            Favorites
+        </button>
+    </div>
+
+    <!-- What's Popular Section -->
+    <div style="margin-top: 15px; background-color: #fff; padding: 15px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h2 style="font-size: 20px; font-weight: bold; color: #333; margin: 0 15px 15px 15px;">What's Popular</h2>
+        <div style="display: flex; overflow-x: scroll; -webkit-overflow-scrolling: touch; padding: 0 15px;">
+            <!-- Product Item 1 -->
+            <div style="flex-shrink: 0; width: 120px; margin-right: 15px; text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/120x120/FFD700/FFFFFF?text=Laptop" alt="Laptop" 
+                     style="width: 100%; height: 120px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Laptop Pro 2023</p>
+            </div>
+            <!-- Product Item 2 -->
+            <div style="flex-shrink: 0; width: 120px; margin-right: 15px; text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/120x120/87CEEB/FFFFFF?text=Smartphone" alt="Smartphone" 
+                     style="width: 100%; height: 120px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Ultra Smart Phone</p>
+            </div>
+            <!-- Product Item 3 -->
+            <div style="flex-shrink: 0; width: 120px; margin-right: 15px; text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/120x120/FF6347/FFFFFF?text=Headphones" alt="Headphones" 
+                     style="width: 100%; height: 120px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Noise Cancelling Headphones</p>
+            </div>
+            <!-- Product Item 4 -->
+            <div style="flex-shrink: 0; width: 120px; margin-right: 15px; text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/120x120/98FB98/FFFFFF?text=Smartwatch" alt="Smartwatch" 
+                     style="width: 100%; height: 120px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Sport Smartwatch X</p>
+            </div>
+            <!-- Product Item 5 -->
+            <div style="flex-shrink: 0; width: 120px; margin-right: 15px; text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/120x120/DDA0DD/FFFFFF?text=Camera" alt="Camera" 
+                     style="width: 100%; height: 120px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Digital Camera 4K</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Don't Miss Section -->
+    <div style="margin-top: 15px; background-color: #fff; padding: 15px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 70px;">
+        <h2 style="font-size: 20px; font-weight: bold; color: #333; margin: 0 15px 15px 15px;">Don't Miss</h2>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px;">
+            <!-- Don't Miss Item 1 -->
+            <div style="text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/160x160/B0E0E6/333333?text=Drone" alt="Drone" 
+                     style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Professional Drone</p>
+            </div>
+            <!-- Don't Miss Item 2 -->
+            <div style="text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/160x160/F08080/FFFFFF?text=Speaker" alt="Speaker" 
+                     style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Bluetooth Speaker</p>
+            </div>
+            <!-- Don't Miss Item 3 -->
+            <div style="text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/160x160/ADD8E6/333333?text=Monitor" alt="Monitor" 
+                     style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Gaming Monitor 27"</p>
+            </div>
+            <!-- Don't Miss Item 4 -->
+            <div style="text-align: center; background-color: #fefefe; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                <img src="https://via.placeholder.com/160x160/F5DEB3/333333?text=Watch" alt="Watch" 
+                     style="width: 100%; height: 160px; object-fit: cover; border-bottom: 1px solid #eee;">
+                <p style="font-size: 14px; color: #555; margin: 8px 0; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Luxury Wrist Watch</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #fff; box-shadow: 0 -2px 5px rgba(0,0,0,0.1); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100;">
+        <a href="#" style="flex: 1; text-align: center; text-decoration: none; color: #007bff; font-size: 12px; padding: 5px 0; display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: 22px;">🏠</span>
+            <span style="margin-top: 3px;">Home</span>
+        </a>
+        <a href="#" style="flex: 1; text-align: center; text-decoration: none; color: #666; font-size: 12px; padding: 5px 0; display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: 22px;">✨</span>
+            <span style="margin-top: 3px;">Discover</span>
+        </a>
+        <a href="#" style="flex: 1; text-align: center; text-decoration: none; color: #666; font-size: 12px; padding: 5px 0; display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: 22px;">🚀</span>
+            <span style="margin-top: 3px;">Easy Sourcing</span>
+        </a>
+        <a href="#" style="flex: 1; text-align: center; text-decoration: none; color: #666; font-size: 12px; padding: 5px 0; display: flex; flex-direction: column; align-items: center;">
+            <span style="font-size: 22px;">👤</span>
+            <span style="margin-top: 3px;">My Account</span>
+        </a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager</title>
+    <style>
+        /* Basic Reset and Global Styles */
+        * {
+            box-sizing: border-box; /* Ensures consistent sizing */
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5; /* Light background for the page itself */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensures the page takes at least full viewport height */
+            -webkit-font-smoothing: antialiased; /* Better font rendering on macOS/iOS */
+            -moz-osx-font-smoothing: grayscale; /* Better font rendering on Firefox */
+        }
+
+        /* Mobile Page Container - Simulates a phone screen */
+        .mobile-page {
+            width: 375px; /* Specified mobile width */
+            height: 667px; /* Specified mobile height */
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            display: flex;
+            flex-direction: column; /* Stacks header, content, footer vertically */
+            overflow: hidden; /* Prevents content from spilling outside the device frame */
+            border-radius: 10px; /* Rounded corners for the "device" */
+            position: relative; /* For potential absolute positioning of child elements */
+        }
+
+        /* --- 1. Top Header Area --- */
+        .top-header {
+            background-color: #f8f8f8;
+            z-index: 10; /* Ensures header stays above scrolling content */
+            flex-shrink: 0; /* Prevents header from shrinking */
+        }
+
+        /* 1.1. Storage Location Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            padding: 0; /* Tabs themselves will define their padding */
+            border-bottom: 1px solid #eee; /* Separator line below tabs */
+            height: 48px; /* Fixed height for the entire tab bar for consistent layout */
+        }
+
+        .nav-tab {
+            flex: 1; /* Each tab takes equal space */
+            text-align: center;
+            padding: 12px 0; /* Vertical padding to center text, considering the border */
+            color: #555;
+            font-size: 14px;
+            cursor: pointer; /* Indicates interactivity */
+            position: relative;
+            transition: color 0.2s ease, border-color 0.2s ease; /* Smooth transitions for hover/active */
+            border-bottom: 3px solid transparent; /* All tabs have a transparent border initially */
+        }
+
+        .nav-tab:hover {
+            color: #333;
+        }
+
+        .nav-tab.active {
+            color: #007bff; /* Primary color for active state */
+            font-weight: bold;
+            border-bottom-color: #007bff; /* Active tab gets a colored underline */
+        }
+
+        /* 1.2. Storage Space Display */
+        .storage-display {
+            padding: 15px;
+            font-size: 13px;
+            color: #666;
+            border-bottom: 1px solid #eee; /* Separates storage display from main content */
+        }
+
+        .storage-text {
+            display: flex;
+            justify-content: space-between; /* Aligns "Total" and "Available" to opposite ends */
+            margin-bottom: 8px;
+        }
+
+        .storage-progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #8bc34a; /* Green for free space, as per description */
+            border-radius: 4px;
+            overflow: hidden; /* Ensures the fill doesn't overflow rounded corners */
+        }
+
+        .storage-progress-fill {
+            width: 60.9375%; /* Calculated width for 78GB used out of 128GB total */
+            height: 100%;
+            background-color: #9e9e9e; /* Grey for used space, as per description */
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px; /* Rounds only the left side of the fill */
+        }
+
+        /* --- 2. Main Content Area --- */
+        .main-content {
+            flex: 1; /* Allows this section to take up all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for the content */
+            background-color: #fff;
+            -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+        }
+
+        /* 2.1. Directory and File List */
+        .list-item {
+            display: flex;
+            align-items: center; /* Vertically centers items in the row */
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee; /* Separator between list items */
+            cursor: pointer; /* Indicates interactivity */
+            transition: background-color 0.2s ease; /* Smooth hover effect */
+        }
+
+        .list-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item-icon {
+            font-size: 20px;
+            margin-right: 12px;
+            min-width: 20px; /* Ensures consistent icon spacing */
+            text-align: center;
+        }
+
+        .item-details {
+            flex-grow: 1; /* Allows details to take up most available space */
+            display: flex;
+            flex-direction: column;
+            margin-right: 10px; /* Space before action icons */
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: #333;
+            font-size: 15px;
+            white-space: nowrap; /* Prevents text from wrapping */
+            overflow: hidden; /* Hides overflowing text */
+            text-overflow: ellipsis; /* Adds "..." for truncated text */
+        }
+
+        .item-info {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* Pushes action icons to the far right */
+            flex-shrink: 0; /* Prevents action icons from shrinking */
+        }
+
+        .lock-icon {
+            font-size: 16px;
+            color: #dc3545; /* Red color for lock icon */
+            margin-right: 10px;
+            min-width: 16px; /* Consistent width */
+            text-align: center;
+        }
+
+        .star-icon {
+            font-size: 18px;
+            color: #ffc107; /* Yellow color for filled star */
+            cursor: pointer;
+            min-width: 18px; /* Consistent width */
+            text-align: center;
+        }
+        .star-icon.unfilled {
+            color: #ccc; /* Grey color for unfilled star */
+        }
+
+        /* --- 3. Bottom Navigation Bar --- */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around; /* Distributes buttons evenly */
+            padding: 10px 0;
+            border-top: 1px solid #eee; /* Separator line above navigation */
+            background-color: #f8f8f8;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05); /* Subtle shadow above the bar */
+            z-index: 10; /* Ensures navigation stays above scrolling content */
+            flex-shrink: 0; /* Prevents navigation from shrinking */
+        }
+
+        .nav-button {
+            display: flex;
+            flex-direction: column; /* Stacks icon and text vertically */
+            align-items: center; /* Centers icon and text */
+            color: #6c757d;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 5px;
+            transition: color 0.2s ease; /* Smooth hover effect */
+            flex: 1; /* Each button takes equal space */
+            text-decoration: none; /* In case anchor tags are used */
+        }
+
+        .nav-button:hover {
+            color: #007bff; /* Primary color on hover */
+        }
+
+        .nav-button-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-page">
+        <!-- 1. Top Header Area -->
+        <div class="top-header">
+            <!-- 1.1. Storage Location Navigation Tabs -->
+            <div class="nav-tabs">
+                <div class="nav-tab active" role="button" aria-pressed="true">Root</div>
+                <div class="nav-tab" role="button">SD Card</div>
+                <div class="nav-tab" role="button">App store</div>
+            </div>
+
+            <!-- 1.2. Storage Space Display -->
+            <div class="storage-display">
+                <div class="storage-text">
+                    <span>Total: 128 GB</span>
+                    <span>Available: 50 GB</span>
+                </div>
+                <div class="storage-progress-bar">
+                    <!-- Progress fill width calculated: ((128 - 50) / 128) * 100% = (78 / 128) * 100% = 60.9375% -->
+                    <div class="storage-progress-fill" style="width: 60.9375%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Main Content Area -->
+        <div class="main-content">
+            <!-- 2.1. Directory and File List -->
+
+            <!-- Directory Item Examples -->
+            <div class="list-item" role="button">
+                <span class="item-icon">📁</span>
+                <div class="item-details">
+                    <span class="item-name">DCIM</span>
+                    <span class="item-info">150 items</span>
+                </div>
+                <div class="item-actions">
+                    <span class="star-icon unfilled" role="button">☆</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">📁</span>
+                <div class="item-details">
+                    <span class="item-name">Downloads</span>
+                    <span class="item-info">25 items</span>
+                </div>
+                <div class="item-actions">
+                    <span class="star-icon" role="button">★</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">📁</span>
+                <div class="item-details">
+                    <span class="item-name">System Files (Restricted)</span>
+                    <span class="item-info">300 items</span>
+                </div>
+                <div class="item-actions">
+                    <span class="lock-icon">🔒</span>
+                    <span class="star-icon unfilled" role="button">☆</span>
+                </div>
+            </div>
+
+            <!-- File Item Examples -->
+            <div class="list-item" role="button">
+                <span class="item-icon">🖼️</span>
+                <div class="item-details">
+                    <span class="item-name">IMG_20231026_1.jpg</span>
+                    <span class="item-info">2.5 MB</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">📄</span>
+                <div class="item-details">
+                    <span class="item-name">MeetingNotes_Q4_2023.pdf</span>
+                    <span class="item-info">500 KB</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">🎵</span>
+                <div class="item-details">
+                    <span class="item-name">FavoriteSong_Chillout.mp3</span>
+                    <span class="item-info">4.2 MB</span>
+                </div>
+            </div>
+
+            <!-- More items to demonstrate scrollability -->
+            <div class="list-item" role="button">
+                <span class="item-icon">📁</span>
+                <div class="item-details">
+                    <span class="item-name">Documents</span>
+                    <span class="item-info">7 items</span>
+                </div>
+                <div class="item-actions">
+                    <span class="star-icon unfilled" role="button">☆</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">🎬</span>
+                <div class="item-details">
+                    <span class="item-name">Holiday_Video_2023.mp4</span>
+                    <span class="item-info">150 MB</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">📁</span>
+                <div class="item-details">
+                    <span class="item-name">Music</span>
+                    <span class="item-info">30 items</span>
+                </div>
+                <div class="item-actions">
+                    <span class="star-icon" role="button">★</span>
+                </div>
+            </div>
+
+            <div class="list-item" role="button">
+                <span class="item-icon">📦</span>
+                <div class="item-details">
+                    <span class="item-name">Archive_Backup.zip</span>
+                    <span class="item-info">20 MB</span>
+                </div>
+            </div>
+            
+            <div class="list-item" role="button">
+                <span class="item-icon">📁</span>
+                <div class="item-details">
+                    <span class="item-name">Photos</span>
+                    <span class="item-info">200 items</span>
+                </div>
+                <div class="item-actions">
+                    <span class="star-icon unfilled" role="button">☆</span>
+                </div>
+            </div>
+            <div class="list-item" role="button">
+                <span class="item-icon">📄</span>
+                <div class="item-details">
+                    <span class="item-name">Report_Final.docx</span>
+                    <span class="item-info">1.2 MB</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 3. Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <div class="nav-button" role="button">
+                <span class="nav-button-icon">⬇️</span>
+                <span>Download</span>
+            </div>
+            <div class="nav-button" role="button">
+                <span class="nav-button-icon">🔍</span>
+                <span>Search</span>
+            </div>
+            <div class="nav-button" role="button">
+                <span class="nav-button-icon">➕📁</span>
+                <span>New Folder</span>
+            </div>
+            <div class="nav-button" role="button">
+                <span class="nav-button-icon">↕️</span>
+                <span>Sort Files</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

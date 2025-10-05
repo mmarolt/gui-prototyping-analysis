@@ -1,127 +1,418 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vitamin Capsules Suppliers</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f8f8;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamin Capsule Suppliers</title>
+    <style>
+        /* General Reset & Base Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6; /* Light grey background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Full viewport height */
+            color: #333;
+            -webkit-text-size-adjust: 100%; /* Prevent text scaling on orientation change */
+        }
 
-.container {
-  max-width: 375px; /* Matches mobile screen width */
-  margin: 0 auto;
-  padding: 16px;
-}
+        /* Header Section */
+        .header {
+            background-color: #2e8b57; /* SeaGreen - primary app color */
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-h1 {
-  font-size: 20px;
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
+        .header-menu-icon {
+            font-size: 28px;
+            cursor: pointer;
+            padding-right: 10px;
+            line-height: 1; /* Align icon vertically */
+        }
 
-.supplier-card {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 16px;
-  padding: 16px;
-}
+        .header-title {
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1; /* Take available space */
+            text-align: center;
+        }
 
-.supplier-name {
-  font-size: 16px;
-  font-weight: bold;
-  color: #2e7d32; /* A darker green for emphasis */
-  margin-bottom: 8px;
-}
+        .request-quote-btn {
+            background-color: #ffc107; /* Amber - accent color */
+            color: #333;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent text wrapping */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
 
-.supplier-details {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 8px;
-}
+        /* Search Section */
+        .search-section {
+            background-color: #ffffff;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap; /* Allows location filter to wrap on small screens */
+            gap: 10px;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
 
-.supplier-contact {
-  font-size: 14px;
-  color: #0d47a1; /* A darker blue for links/contact info */
-  text-decoration: none;
-}
+        .search-input-container {
+            display: flex;
+            flex-grow: 1; /* Take most of the space */
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            padding: 5px 15px;
+            background-color: #f9f9f9;
+        }
 
-.supplier-contact:hover {
-  text-decoration: underline;
-}
+        .search-input-container input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            padding: 5px 0;
+            font-size: 16px;
+            background-color: transparent;
+        }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
+        .search-icon {
+            font-size: 18px;
+            color: #777;
+            margin-right: 8px;
+        }
+        
+        .voice-input-icon {
+            font-size: 20px;
+            color: #777;
+            cursor: pointer;
+            margin-left: 10px;
+        }
 
-.pagination a {
-  display: inline-block;
-  padding: 8px 12px;
-  margin: 0 4px;
-  background-color: #e0e0e0;
-  color: #333;
-  text-decoration: none;
-  border-radius: 4px;
-}
+        .location-filter {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            color: #555;
+            cursor: pointer;
+            /* Ensures it looks like a button/dropdown */
+            min-width: 100px;
+            text-align: center;
+        }
 
-.pagination a.active {
-  background-color: #2e7d32;
-  color: #fff;
-}
+        /* Display Options */
+        .display-options {
+            padding: 10px 15px;
+            background-color: #e0e0e0; /* Slightly darker grey */
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            gap: 10px;
+            border-bottom: 1px solid #ccc;
+        }
 
-.pagination a:hover {
-  background-color: #ccc;
-}
-</style>
+        .view-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-btn.active {
+            background-color: #2e8b57;
+            color: white;
+            border-color: #2e8b57;
+        }
+
+        /* Search Results Container */
+        .search-results-container {
+            flex-grow: 1; /* Occupy remaining vertical space */
+            overflow-y: auto; /* Enable scrolling for results */
+            padding: 15px;
+            display: flex; /* Default to list view layout */
+            flex-direction: column; /* Stack items vertically for list view */
+            gap: 15px; /* Space between result items */
+        }
+
+        /* List View Item */
+        .result-item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            display: flex;
+            align-items: flex-start; /* Align thumbnail and text to top */
+            gap: 15px;
+        }
+
+        .result-item-thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover; /* Crop image to fit */
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        .result-item-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .result-item-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2e8b57; /* SeaGreen */
+        }
+
+        .result-item-location,
+        .result-item-price {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .result-item-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            align-items: center;
+            flex-wrap: wrap; /* Allow action buttons to wrap */
+        }
+
+        .action-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #333;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .action-btn.call {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .action-btn.enquiry {
+            background-color: #007bff; /* Blue */
+            color: white;
+            border-color: #007bff;
+        }
+
+        .favorite-icon {
+            font-size: 22px;
+            color: #ccc; /* Default grey for not favorited */
+            cursor: pointer;
+            margin-left: auto; /* Pushes icon to the right */
+            line-height: 1;
+        }
+
+        .favorite-icon.favorited {
+            color: #ff4500; /* Red-Orange when favorited */
+        }
+
+        /* Grid View Specific Styles */
+        .search-results-container.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Auto-fit 2 columns on 375px width */
+            gap: 15px;
+        }
+
+        .search-results-container.grid-view .result-item {
+            flex-direction: column; /* Stack content vertically */
+            align-items: center; /* Center horizontally */
+            text-align: center; /* Center text */
+            padding: 10px;
+        }
+
+        .search-results-container.grid-view .result-item-thumbnail {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+
+        .search-results-container.grid-view .result-item-details {
+            gap: 3px;
+            margin-left: 0; /* Remove left margin from list view */
+            align-items: center; /* Center details */
+        }
+
+        .search-results-container.grid-view .result-item-actions {
+            flex-wrap: wrap;
+            justify-content: center; /* Center buttons */
+            gap: 5px;
+        }
+        
+        .search-results-container.grid-view .favorite-icon {
+            margin-left: 0; /* Remove auto margin */
+            margin-top: 10px; /* Add some top margin */
+        }
+
+        /* Icons using Unicode characters for simplicity */
+        .icon-hamburger::before { content: "\2630"; } /* Three horizontal bars */
+        .icon-search::before { content: "\1F50D"; } /* Magnifying glass */
+        .icon-mic::before { content: "\1F3A4"; } /* Microphone */
+        .icon-phone::before { content: "\1F4DE"; } /* Telephone receiver */
+        .icon-envelope::before { content: "\2709\FE0F"; } /* Envelope */
+        .icon-heart::before { content: "\2764\FE0F"; } /* Heavy black heart */
+        .icon-list::before { content: "\2630"; } /* Re-using hamburger for list icon */
+        .icon-grid::before { content: "\229E"; } /* Squared plus (grid-like) */
+
+    </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>Vitamin Capsules Suppliers</h1>
+    <header class="header">
+        <span class="header-menu-icon icon-hamburger" onclick="alert('Menu Clicked!')"></span>
+        <div class="header-title">Capsule Finder</div>
+        <button class="request-quote-btn" onclick="alert('Request a Quote Clicked!')">Request a Quote</button>
+    </header>
 
-  <div class="supplier-card">
-    <div class="supplier-name">ABC Pharmaceuticals</div>
-    <div class="supplier-details">
-      GMP Certified, EU Standards Compliant
-    </div>
-    <a href="tel:+15551234567" class="supplier-contact">Call: +1-555-123-4567</a><br>
-    <a href="mailto:sales@abcpharma.com" class="supplier-contact">Email: sales@abcpharma.com</a>
-  </div>
+    <section class="search-section">
+        <div class="search-input-container">
+            <span class="search-icon icon-search"></span>
+            <input type="text" placeholder="Search Vitamin Capsules" value="Vitamin Capsules">
+            <span class="voice-input-icon icon-mic" onclick="alert('Voice Input Activated!')"></span>
+        </div>
+        <div class="location-filter" onclick="alert('Location Filter Clicked!')">
+            Location
+        </div>
+    </section>
 
-  <div class="supplier-card">
-    <div class="supplier-name">NutraSource Inc.</div>
-    <div class="supplier-details">
-      Organic Vitamin Capsules, Kosher Certified
-    </div>
-    <a href="tel:+442079460000" class="supplier-contact">Call: +44-207-946-0000</a><br>
-    <a href="mailto:info@nutrasource.co.uk" class="supplier-contact">Email: info@nutrasource.co.uk</a>
-  </div>
+    <section class="display-options">
+        <button class="view-btn active" id="listViewBtn" onclick="toggleView('list')">
+            <span class="icon-list"></span> List View
+        </button>
+        <button class="view-btn" id="gridViewBtn" onclick="toggleView('grid')">
+            <span class="icon-grid"></span> Grid View
+        </button>
+    </section>
 
-  <div class="supplier-card">
-    <div class="supplier-name">VitaCorp Global</div>
-    <div class="supplier-details">
-      Wide Range of Vitamin Blends, Fast Shipping
-    </div>
-    <a href="tel:+81334567890" class="supplier-contact">Call: +81-3-3456-7890</a><br>
-    <a href="mailto:export@vitacorp.jp" class="supplier-contact">Email: export@vitacorp.jp</a>
-  </div>
+    <main class="search-results-container" id="searchResults">
+        <!-- Sample Search Result 1 -->
+        <div class="result-item">
+            <img src="https://via.placeholder.com/80x80/2e8b57/ffffff?text=VitC" alt="Vitamin C Capsules" class="result-item-thumbnail">
+            <div class="result-item-details">
+                <div class="result-item-name">HealthMax Supplements</div>
+                <div class="result-item-location">New York, USA</div>
+                <div class="result-item-price">$15.99 / bottle</div>
+                <div class="result-item-actions">
+                    <button class="action-btn call" onclick="alert('Calling HealthMax Supplements...')">
+                        <span class="icon-phone"></span> Call Now
+                    </button>
+                    <button class="action-btn enquiry" onclick="alert('Sending Enquiry to HealthMax Supplements...')">
+                        <span class="icon-envelope"></span> Send Enquiry
+                    </button>
+                    <span class="favorite-icon icon-heart" onclick="toggleFavorite(this)"></span>
+                </div>
+            </div>
+        </div>
 
-  <div class="pagination">
-    <a href="#">&laquo;</a>
-    <a href="#" class="active">1</a>
-    <a href="#">2</a>
-    <a href="#">3</a>
-    <a href="#">&raquo;</a>
-  </div>
-</div>
+        <!-- Sample Search Result 2 -->
+        <div class="result-item">
+            <img src="https://via.placeholder.com/80x80/8fbc8f/ffffff?text=BComplex" alt="B-Complex Capsules" class="result-item-thumbnail">
+            <div class="result-item-details">
+                <div class="result-item-name">Vitality Pharma Co.</div>
+                <div class="result-item-location">London, UK</div>
+                <div class="result-item-price">$12.50 / bottle</div>
+                <div class="result-item-actions">
+                    <button class="action-btn call" onclick="alert('Calling Vitality Pharma Co....')">
+                        <span class="icon-phone"></span> Call Now
+                    </button>
+                    <button class="action-btn enquiry" onclick="alert('Sending Enquiry to Vitality Pharma Co....')">
+                        <span class="icon-envelope"></span> Send Enquiry
+                    </button>
+                    <span class="favorite-icon icon-heart" onclick="toggleFavorite(this)"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Search Result 3 -->
+        <div class="result-item">
+            <img src="https://via.placeholder.com/80x80/66cdaa/ffffff?text=Omega3" alt="Omega-3 Capsules" class="result-item-thumbnail">
+            <div class="result-item-details">
+                <div class="result-item-name">Global Nutraceuticals</div>
+                <div class="result-item-location">Berlin, Germany</div>
+                <div class="result-item-price">$22.00 / bottle</div>
+                <div class="result-item-actions">
+                    <button class="action-btn call" onclick="alert('Calling Global Nutraceuticals...')">
+                        <span class="icon-phone"></span> Call Now
+                    </button>
+                    <button class="action-btn enquiry" onclick="alert('Sending Enquiry to Global Nutraceuticals...')">
+                        <span class="icon-envelope"></span> Send Enquiry
+                    </button>
+                    <span class="favorite-icon icon-heart" onclick="toggleFavorite(this)"></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sample Search Result 4 -->
+        <div class="result-item">
+            <img src="https://via.placeholder.com/80x80/98fb98/ffffff?text=MultiVit" alt="Multivitamin Capsules" class="result-item-thumbnail">
+            <div class="result-item-details">
+                <div class="result-item-name">PureLife Vitamins</div>
+                <div class="result-item-location">Sydney, Australia</div>
+                <div class="result-item-price">$18.75 / bottle</div>
+                <div class="result-item-actions">
+                    <button class="action-btn call" onclick="alert('Calling PureLife Vitamins...')">
+                        <span class="icon-phone"></span> Call Now
+                    </button>
+                    <button class="action-btn enquiry" onclick="alert('Sending Enquiry to PureLife Vitamins...')">
+                        <span class="icon-envelope"></span> Send Enquiry
+                    </button>
+                    <span class="favorite-icon icon-heart" onclick="toggleFavorite(this)"></span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // JavaScript for toggling between List and Grid View
+        function toggleView(viewType) {
+            const searchResults = document.getElementById('searchResults');
+            const listViewBtn = document.getElementById('listViewBtn');
+            const gridViewBtn = document.getElementById('gridViewBtn');
+
+            if (viewType === 'list') {
+                searchResults.classList.remove('grid-view');
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
+            } else if (viewType === 'grid') {
+                searchResults.classList.add('grid-view');
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
+            }
+        }
+
+        // JavaScript for toggling the favorite icon
+        function toggleFavorite(iconElement) {
+            iconElement.classList.toggle('favorited');
+        }
+    </script>
 
 </body>
 </html>

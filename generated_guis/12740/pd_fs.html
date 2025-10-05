@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter Password</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the entire page to fit a mobile screen */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Occupy full viewport height */
+            /* Target width for Chrome DevTools simulation (375x667) */
+            width: 375px; 
+            max-width: 100%; /* Ensures it scales down on smaller actual screens */
+            margin: 0 auto; /* Center the body content if the browser window is wider than 375px */
+            overflow: hidden; /* Prevent scrolling if content overflows */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* 1. Top Bar / Header Section */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            z-index: 10; /* Ensure header stays on top of other content if positioned */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .header-left {
+            flex: 1; /* Allows it to take available space */
+            text-align: left;
+        }
+
+        /* Exit/Cancel Button */
+        .exit-button {
+            font-size: 24px;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 5px; /* Increase tap area for mobile */
+            display: inline-block; /* Required for padding to work on an anchor */
+            -webkit-tap-highlight-color: transparent; /* Remove default tap highlight on iOS */
+        }
+
+        /* Instructional Text Label */
+        .instructional-text {
+            flex: 2; /* Takes twice the space of header-left/right, effectively centering */
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+        }
+        
+        .header-right {
+            flex: 1; /* Balances the header-left, even if empty, for perfect centering */
+            text-align: right;
+        }
+
+        /* 2. Password Input Display Area */
+        .password-display-area {
+            display: flex;
+            justify-content: center; /* Center the digit indicators horizontally */
+            align-items: center;
+            margin: 60px 0; /* Ample vertical spacing from header and keypad */
+            flex-shrink: 0; /* Prevent this section from shrinking */
+        }
+
+        /* Password Digit Indicators */
+        .digit-indicator {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #ccc;
+            border-radius: 50%; /* Circular containers */
+            margin: 0 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            background-color: #fff;
+            box-sizing: border-box; /* Include padding and border in width/height */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+
+        /* Active Digit Indicator */
+        .digit-indicator.active {
+            border-color: #007bff; /* Clear visual highlight */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Subtle glow */
+        }
+        
+        /* Masked Input Display */
+        .digit-indicator.filled {
+             background-color: #e0e0e0; /* Subtle background change when filled */
+        }
+
+
+        /* 3. Numeric Keypad and Action Buttons */
+        .keypad-container {
+            flex-grow: 1; /* Keypad takes up the remaining vertical space */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Push the keypad to the bottom of its container */
+            padding: 0 20px 20px; /* Padding on sides and bottom */
+            box-sizing: border-box;
+        }
+
+        .numeric-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 equal columns for 3x3 layout */
+            gap: 15px; /* Spacing between keypad buttons */
+            width: 100%; /* Takes full width of its container */
+            max-width: 335px; /* Calculated: 375px (body) - 2*20px (keypad-container padding) */
+            margin: 0 auto; /* Center the keypad horizontally */
+        }
+
+        /* Keypad Button Styling */
+        .keypad-button {
+            width: 80px; /* Fixed size for large, tappable circular buttons */
+            height: 80px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 50%; /* Circular shape */
+            font-size: 32px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        .keypad-button:active {
+            background-color: #d0d0d0; /* Visual feedback when pressed */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15) inset; /* Inset shadow on press */
+        }
+
+        /* 'Clear' Button Styling */
+        .keypad-button.clear {
+            background-color: transparent;
+            color: #666;
+            font-size: 20px;
+            box-shadow: none; /* No shadow for clear button */
+        }
+        .keypad-button.clear:active {
+            color: #333;
+            background-color: rgba(0,0,0,0.05); /* Subtle background on press */
+        }
+
+        /* Specific grid placement for 'Clear' and '0' buttons */
+        .numeric-keypad .clear {
+            grid-column: 1; /* 'Clear' button in the first column of the last row */
+        }
+        .numeric-keypad .keypad-button:nth-last-child(2) { /* The '0' button is the second-to-last child */
+            grid-column: 2; /* '0' button in the second (middle) column, centering it */
+        }
+        /* The third column in the last row remains empty by default, which correctly centers the '0' button */
+
+        /* 'OK' Button Styling */
+        .ok-button {
+            width: 100%; /* Full width */
+            padding: 18px 0;
+            background-color: #ccc; /* Default disabled color */
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            cursor: not-allowed; /* Disabled cursor */
+            outline: none;
+            transition: background-color 0.3s ease, cursor 0.3s ease;
+            flex-shrink: 0; /* Prevent it from shrinking */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05); /* Subtle shadow from the top */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        /* 'OK' Button Enabled State */
+        /* This class would be dynamically added by JavaScript once 4 digits are entered */
+        .ok-button.enabled {
+            background-color: #007bff; /* Primary brand color when enabled */
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-left">
+            <a href="#" class="exit-button">&larr;</a> <!-- Left-pointing arrow icon -->
+        </div>
+        <span class="instructional-text">Enter 4-digit password</span>
+        <div class="header-right">
+            <!-- This div is intentionally empty but helps balance the flex layout for perfect centering -->
+        </div>
+    </div>
+
+    <div class="password-display-area">
+        <!-- Password Digit Indicators -->
+        <!-- For demonstration purposes without JavaScript, we'll simulate a state where:
+             - Two digits have been entered (masked with '●').
+             - The third digit is the currently active input (empty with highlight).
+             - The fourth digit is empty and not active. -->
+        <div class="digit-indicator filled" id="digit1">●</div> 
+        <div class="digit-indicator filled" id="digit2">●</div>
+        <div class="digit-indicator active" id="digit3"></div> <!-- Simulates the current active input field -->
+        <div class="digit-indicator" id="digit4"></div>
+    </div>
+
+    <div class="keypad-container">
+        <div class="numeric-keypad">
+            <button class="keypad-button">1</button>
+            <button class="keypad-button">2</button>
+            <button class="keypad-button">3</button>
+            <button class="keypad-button">4</button>
+            <button class="keypad-button">5</button>
+            <button class="keypad-button">6</button>
+            <button class="keypad-button">7</button>
+            <button class="keypad-button">8</button>
+            <button class="keypad-button">9</button>
+            <!-- Bottom row of keypad: Clear button on left, 0 button in middle -->
+            <button class="keypad-button clear">Clear</button>
+            <button class="keypad-button">0</button>
+            <!-- The third column in this row is left empty to ensure the '0' button is centered -->
+        </div>
+    </div>
+
+    <!-- 'OK' Button -->
+    <!-- This button is initially disabled as per the requirement ("must be visually disabled until all four password digits have been entered").
+         The 'enabled' class would be added via JavaScript once the password is complete. -->
+    <button class="ok-button" disabled>OK</button> 
+
+</body>
+</html>

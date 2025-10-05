@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardVault Mobile App Structure</title>
+    <style>
+        /* Define CSS variables for easier maintenance of colors and dimensions */
+        :root {
+            --header-height: 55px;
+            --footer-height: 60px;
+            --primary-color: #4CAF50; /* Green */
+            --accent-color: #FF5722; /* Deep Orange */
+            --text-color: #333;
+            --light-text-color: #666;
+            --border-color: #eee;
+            --background-light: #f9f9f9;
+            --background-page: #f0f2f5; /* Overall page background */
+        }
+
+        /* General Body and HTML styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--background-page);
+            display: flex;
+            justify-content: center; /* Center the mobile frame horizontally */
+            align-items: flex-start; /* Align to the top of the viewport */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            overflow: hidden; /* Prevent body scroll, content scrolls within the app frame */
+        }
+
+        /* Mobile Frame - Simulates the device screen */
+        .mobile-frame {
+            width: 100%;
+            max-width: 375px; /* Target mobile width for Chrome Dev Tools simulation */
+            height: 100vh; /* Full viewport height on mobile */
+            background-color: #fff; /* App's main background */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative; /* For positioning fixed children relative to its width */
+            overflow: hidden; /* Hide scrollbars for the frame itself */
+        }
+
+        /* --- Global Persistent Elements --- */
+
+        /* Top Header Bar */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 15px; /* Vertical padding controlled by height */
+            height: var(--header-height);
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            position: fixed; /* Fixed to the viewport */
+            width: 100%;
+            max-width: 375px; /* Match mobile-frame width */
+            top: 0;
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for centering */
+            z-index: 1000; /* Ensure it stays on top */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+        .top-header .app-title {
+            font-size: 1.4em;
+        }
+        .top-header .icon-button {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: white;
+            text-decoration: none; /* For label acting as a button */
+            padding: 5px;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: var(--background-light);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 0;
+            height: var(--footer-height);
+            position: fixed; /* Fixed to the viewport */
+            width: 100%;
+            max-width: 375px; /* Match mobile-frame width */
+            bottom: 0;
+            left: 50%; /* Center horizontally */
+            transform: translateX(-50%); /* Adjust for centering */
+            z-index: 1000; /* Ensure it stays on top */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            box-sizing: border-box; /* Include padding in height calculation */
+        }
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #777;
+            font-size: 0.8em;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 5px 0;
+            flex: 1; /* Distribute space evenly */
+        }
+        .nav-tab:hover {
+            color: var(--primary-color);
+        }
+        /* Style for the active navigation tab */
+        #radio-reminders:checked ~ .bottom-nav > label[for="radio-reminders"],
+        #radio-explore:checked ~ .bottom-nav > label[for="radio-explore"],
+        #radio-update-contacts:checked ~ .bottom-nav > label[for="radio-update-contacts"] {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .nav-tab .icon {
+            font-size: 1.6em;
+            margin-bottom: 2px;
+        }
+
+        /* --- Screens Container & Screen Styling --- */
+        .screens-container {
+            position: absolute; /* Position it relative to mobile-frame */
+            top: var(--header-height); /* Starts below the fixed header */
+            bottom: var(--footer-height); /* Ends above the fixed footer */
+            left: 0;
+            right: 0;
+            overflow: hidden; /* Hide scrollbars for the container itself */
+            background-color: #fff; /* Default background for content area */
+        }
+
+        .screen {
+            display: none; /* Hidden by default, controlled by radio buttons */
+            flex-direction: column; /* Content inside screens flows vertically */
+            height: 100%; /* Take full height of screens-container */
+            width: 100%;
+            position: absolute; /* Position screens on top of each other */
+            top: 0;
+            left: 0;
+            background-color: #fff; /* Ensure screens have a white background */
+            overflow-y: auto; /* Allow individual screens to scroll if content is too long */
+            box-sizing: border-box; /* Include padding in height calculation */
+            padding-bottom: 10px; /* Small buffer for content at the very bottom */
+        }
+
+        /* Active screen styling - controlled by hidden radio buttons */
+        #radio-explore:checked ~ .screens-container > #explore-cards-screen,
+        #radio-reminders:checked ~ .screens-container > #reminders-screen,
+        #radio-update-contacts:checked ~ .screens-container > #update-contacts-screen,
+        #radio-scan-camera:checked ~ .screens-container > #camera-viewfinder-screen,
+        #radio-processing:checked ~ .screens-container > #processing-indicator-screen,
+        #radio-review-card:checked ~ .screens-container > #review-edit-card-screen,
+        #radio-card-detail:checked ~ .screens-container > #card-detail-view-screen,
+        #radio-settings:checked ~ .screens-container > #settings-menu-screen,
+        #radio-add-edit-reminder:checked ~ .screens-container > #add-edit-reminder-screen,
+        #radio-contact-matching:checked ~ .screens-container > #contact-matching-interface-screen {
+            display: flex; /* Show the active screen */
+        }
+
+        /* --- Common UI Elements --- */
+
+        .content-padding {
+            padding: 15px;
+            flex-grow: 1; /* Allows content area to fill remaining space in a flex column */
+        }
+
+        .screen-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            padding: 8px 15px;
+            margin-bottom: 15px;
+            background-color: var(--background-light);
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            padding: 5px 10px;
+            background: transparent;
+        }
+        .search-bar .icon {
+            color: #888;
+            margin-right: 5px;
+        }
+
+        .filter-sort-options {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            background-color: var(--background-light);
+            padding: 10px 0;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .filter-sort-options > div {
+            display: flex;
+            align-items: center;
+            color: #555;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .filter-sort-options > div:hover {
+            background-color: #eee;
+        }
+        .filter-sort-options .icon {
+            margin-right: 5px;
+            font-size: 1.2em;
+        }
+
+        .card-list, .reminder-list, .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between items */
+            padding-bottom: 10px; /* Ensure last item is not hidden by FAB */
+        }
+
+        .card-item-preview, .reminder-item, .contact-item {
+            background-color: #fefefe;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .card-item-preview:hover, .reminder-item:hover, .contact-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card-item-preview .details {
+            flex-grow: 1;
+        }
+        .card-item-preview h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+        .card-item-preview p {
+            margin: 0;
+            font-size: 0.9em;
+            color: var(--light-text-color);
+        }
+        .card-item-preview .favorite-icon {
+            font-size: 1.5em;
+            color: #ccc; /* Outlined star */
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .card-item-preview .favorite-icon.filled {
+            color: gold; /* Filled star */
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            padding: 40px 20px;
+            font-size: 1em;
+        }
+        .empty-state .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #bbb;
+        }
+
+        .fab {
+            position: fixed; /* Fixed relative to viewport */
+            bottom: calc(var(--footer-height) + 20px); /* Above bottom nav */
+            right: calc(50% - (var(--max-width, 375px) / 2) + 20px); /* Adjust to be 20px from right of mobile frame */
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50px;
+            padding: 15px 20px;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            white-space: nowrap; /* Prevent text wrapping */
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1001; /* Ensure FAB is above other elements */
+        }
+        .fab:hover {
+            background-color: #e64a19;
+        }
+        /* Media query to adjust FAB position when mobile-frame is full width */
+        @media (max-width: 375px) {
+            .fab {
+                right: 20px; /* Snap to 20px from the right edge of the actual screen */
+            }
+        }
+
+        .action-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+            display: block; /* Make it block level for full width */
+            width: 100%; /* Take full width in its container */
+            text-decoration: none; /* For label acting as button */
+        }
+        .action-button:hover {
+            background-color: #45a049;
+        }
+
+        .secondary-button {
+            background-color: #f0f0f0;
+            color: var(--text-color);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            display: block;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .secondary-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .back-button {
+            font-size: 1.5em;
+            cursor: pointer;
+            color: white;
+            text-decoration: none;
+            padding: 5px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="tel"],
+        .form-group input[type="url"],
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group textarea {
+            width: calc(100% - 20px); /* Account for padding */
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box; /* Include padding in width */
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .form-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        /* Toggle Switch Styling */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 24px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        input:checked + .slider:before {
+            transform: translateX(16px);
+        }
+
+        /* --- Specific Screen Styles --- */
+
+        /* Camera Viewfinder Screen */
+        #camera-viewfinder-screen {
+            background-color: #000;
+            color: white;
+            justify-content: space-between; /* Push elements to top/bottom */
+            align-items: center;
+            position: relative;
+            padding: 20px; /* Adjust padding for content inside */
+        }
+        #camera-viewfinder-screen .camera-feed {
+            width: 100%;
+            height: 70%;
+            background-color: #333; /* Placeholder for live feed */
+            border: 1px dashed #777;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0; /* Prevent shrinking if content is too large */
+        }
+        #camera-viewfinder-screen .card-frame-overlay {
+            position: absolute;
+            width: 80%;
+            height: 50%;
+            border: 2px dashed #eee;
+            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9em;
+            text-align: center;
+            padding: 10px;
+        }
+        #camera-viewfinder-screen .capture-controls {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
+            flex-shrink: 0;
+        }
+        #camera-viewfinder-screen .capture-button {
+            width: 70px;
+            height: 70px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+        #camera-viewfinder-screen .flash-gallery-button {
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+        }
+        #camera-viewfinder-screen .back-button { /* Exit/Cancel Button */
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+        }
+        #camera-viewfinder-screen .flash-button { /* Flash Control */
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+        }
+
+        /* Processing Indicator */
+        #processing-indicator-screen {
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001; /* Above other screens */
+        }
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid var(--primary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Review/Edit Scanned Card Screen */
+        #review-edit-card-screen .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+        #review-edit-card-screen .header .back-button {
+            color: white;
+        }
+        #review-edit-card-screen .scanned-image-display {
+            width: 100%;
+            height: 150px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        #review-edit-card-screen .scanned-image-display img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        #review-edit-card-screen .action-buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 0 15px 15px; /* Add padding here to match content */
+            flex-shrink: 0;
+        }
+        #review-edit-card-screen .inline-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        #review-edit-card-screen .inline-actions .icon-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Individual Card Detail View */
+        #card-detail-view-screen .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        #card-detail-view-screen .header .cardholder-name {
+            font-size: 1.4em;
+        }
+        #card-detail-view-screen .header .icon-button {
+            color: white;
+        }
+        #card-detail-view-screen .card-image-section {
+            width: 100%;
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        #card-detail-view-screen .card-image-section img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        #card-detail-view-screen .data-field {
+            margin-bottom: 10px;
+        }
+        #card-detail-view-screen .data-field label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 3px;
+        }
+        #card-detail-view-screen .data-field span {
+            color: var(--text-color);
+            display: block;
+            font-size: 1.1em;
+        }
+        #card-detail-view-screen .data-field a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        #card-detail-view-screen .data-field a:hover {
+            text-decoration: underline;
+        }
+        #card-detail-view-screen .related-reminders {
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        #card-detail-view-screen .related-reminders h4 {
+            margin-top: 0;
+            color: var(--text-color);
+        }
+        #card-detail-view-screen .reminder-item {
+            font-size: 0.9em;
+            padding: 10px;
+            background-color: var(--background-light);
+        }
+
+        /* Settings Menu Screen */
+        #settings-menu-screen .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+        #settings-menu-screen .header .screen-title {
+            margin: 0;
+            color: white;
+            font-size: 1.4em;
+        }
+        .setting-section h3 {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 1.2em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+        .setting-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+        }
+        .setting-option:last-of-type {
+            border-bottom: none;
+        }
+        .setting-option span {
+            color: var(--text-color);
+            font-size: 1em;
+        }
+        .setting-option .status {
+            color: #777;
+            font-size: 0.9em;
+        }
+        .setting-option a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .setting-option a:hover {
+            text-decoration: underline;
+        }
+
+        /* Add/Edit Reminder Screen */
+        #add-edit-reminder-screen .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+        #add-edit-reminder-screen .header .screen-title {
+            margin: 0;
+            color: white;
+            font-size: 1.4em;
+        }
+        #add-edit-reminder-screen .header .cancel-button {
+            color: white;
+            font-size: 1.2em;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #add-edit-reminder-screen .action-buttons-group {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--background-light);
+            flex-shrink: 0;
+        }
+
+        /* Contact Matching Interface */
+        #contact-matching-interface-screen .header {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.1em;
+            font-weight: bold;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+        #contact-matching-interface-screen .header .screen-title {
+            margin: 0;
+            color: white;
+            font-size: 1.4em;
+        }
+        #contact-matching-interface-screen .scanned-card-data-display {
+            background-color: var(--background-light);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        #contact-matching-interface-screen .scanned-card-data-display h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        #contact-matching-interface-screen .potential-match-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background-color: #fefefe;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        #contact-matching-interface-screen .match-details {
+            flex-grow: 1;
+        }
+        #contact-matching-interface-screen .match-details h4 {
+            margin: 0 0 5px 0;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+        #contact-matching-interface-screen .match-details p {
+            margin: 0;
+            font-size: 0.9em;
+            color: var(--light-text-color);
+        }
+        #contact-matching-interface-screen .match-actions {
+            display: flex;
+            gap: 10px;
+            margin-left: 10px;
+        }
+        #contact-matching-interface-screen .create-new-contact-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+        #contact-matching-interface-screen .create-new-contact-section .action-button {
+            width: auto;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-frame">
+        <!-- Hidden radio buttons for screen control. The 'checked' attribute on one radio button determines the initial screen. -->
+        <input type="radio" id="radio-explore" name="screen-switcher" checked style="display: none;">
+        <input type="radio" id="radio-reminders" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-update-contacts" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-scan-camera" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-processing" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-review-card" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-card-detail" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-settings" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-add-edit-reminder" name="screen-switcher" style="display: none;">
+        <input type="radio" id="radio-contact-matching" name="screen-switcher" style="display: none;">
+
+        <!-- I. Global Persistent Elements: Top Header Bar -->
+        <div class="top-header">
+            <span class="app-title">CardVault</span>
+            <label for="radio-settings" class="icon-button">⚙️</label> <!-- Settings Icon -->
+        </div>
+
+        <!-- Main content area for all screens -->
+        <div class="screens-container">
+
+            <!-- II. Main Screens: A. Explore Cards Interface (Default Landing Screen) -->
+            <div id="explore-cards-screen" class="screen">
+                <div class="content-padding">
+                    <!-- Search Bar -->
+                    <div class="search-bar">
+                        <span class="icon">🔍</span>
+                        <input type="text" placeholder="Search cards by name, company...">
+                    </div>
+                    <!-- Filter & Sort Options -->
+                    <div class="filter-sort-options">
+                        <div><span class="icon">▼</span> Filter</div>
+                        <div><span class="icon">⇵</span> Sort</div>
+                    </div>
+                    <!-- Card List/Grid View -->
+                    <div class="card-list">
+                        <!-- Card Item Preview - Tapping navigates to Individual Card Detail View -->
+                        <label for="radio-card-detail" class="card-item-preview">
+                            <div class="details">
+                                <h3>John Doe</h3>
+                                <p>Acme Corp. - CEO</p>
+                            </div>
+                            <span class="favorite-icon filled">⭐</span> <!-- Filled Favorite Star Icon -->
+                        </label>
+                        <label for="radio-card-detail" class="card-item-preview">
+                            <div class="details">
+                                <h3>Jane Smith</h3>
+                                <p>Globex Inc. - Marketing Manager</p>
+                            </div>
+                            <span class="favorite-icon">☆</span> <!-- Outlined Favorite Star Icon -->
+                        </label>
+                         <label for="radio-card-detail" class="card-item-preview">
+                            <div class="details">
+                                <h3>Robert Johnson</h3>
+                                <p>Innovate Solutions - Lead Developer</p>
+                            </div>
+                            <span class="favorite-icon filled">⭐</span>
+                        </label>
+                         <label for="radio-card-detail" class="card-item-preview">
+                            <div class="details">
+                                <h3>Emily White</h3>
+                                <p>FutureTech LLC - Project Manager</p>
+                            </div>
+                            <span class="favorite-icon">☆</span>
+                        </label>
+                        <!-- More card items can be added here -->
+                    </div>
+                    <!-- Empty State Message -->
+                    <div class="empty-state" style="display: none;">
+                        <div class="icon">📇</div>
+                        <p>No cards yet! Tap 'Add New Card' to get started.</p>
+                    </div>
+                </div>
+                <!-- Floating Action Button (FAB) - "Add a New Card" -->
+                <!-- Tapping initiates Business Card Scanning Flow (Camera Viewfinder Screen) -->
+                <label for="radio-scan-camera" class="fab">
+                    ➕ Scan Card
+                </label>
+            </div>
+
+            <!-- II. Main Screens: B. Reminders List Screen -->
+            <div id="reminders-screen" class="screen">
+                <div class="content-padding">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 class="screen-title" style="margin:0;">Reminders</h2>
+                        <!-- "Add Reminder" Button - Tapping leads to Add/Edit Reminder Screen -->
+                        <label for="radio-add-edit-reminder" class="icon-button" style="color:var(--primary-color);">➕</label>
+                    </div>
+                    <!-- List of Reminders -->
+                    <div class="reminder-list">
+                        <div class="reminder-item">
+                            <div>
+                                <strong>John Doe</strong> - Follow up<br>
+                                <small>📅 2023-10-26 10:00 AM - Due Soon</small>
+                            </div>
+                        </div>
+                        <div class="reminder-item">
+                            <div>
+                                <strong>Jane Smith</strong> - Send partnership proposal<br>
+                                <small>📅 2023-10-20 03:00 PM - Overdue</small>
+                            </div>
+                        </div>
+                        <!-- More reminder items -->
+                    </div>
+                    <!-- Empty State Message -->
+                    <div class="empty-state" style="display: none;">
+                        <div class="icon">🔔</div>
+                        <p>No reminders yet! Tap the '+' to add one.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- II. Main Screens: C. Update Phone Contacts Screen -->
+            <div id="update-contacts-screen" class="screen">
+                <div class="content-padding">
+                    <h2 class="screen-title">Update Phone Contacts</h2>
+                    <p style="color:var(--light-text-color); margin-bottom:20px;">Sync your scanned business cards with your phone contacts.</p>
+                    <!-- List of Scanned Cards -->
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <div class="details">
+                                <h3>Robert Johnson</h3>
+                                <p>Innovate Solutions</p>
+                            </div>
+                            <div style="display:flex; gap: 8px;">
+                                <!-- "Add to Phone Contacts" Button - Leads to Contact Matching Interface -->
+                                <label for="radio-contact-matching" class="secondary-button">Add to Phone Contacts</label>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="details">
+                                <h3>Emily White</h3>
+                                <p>FutureTech LLC</p>
+                            </div>
+                            <div style="display:flex; gap: 8px;">
+                                <label for="radio-contact-matching" class="secondary-button">Add to Phone Contacts</label>
+                            </div>
+                        </div>
+                        <!-- More cards for update -->
+                    </div>
+                    <!-- Empty State Message -->
+                    <div class="empty-state" style="display: none;">
+                        <div class="icon">👥</div>
+                        <p>No cards to update yet. Scan a new card first!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- III. Feature-Specific Screens: D.1. Camera Viewfinder Screen -->
+            <div id="camera-viewfinder-screen" class="screen">
+                <!-- Top-Left: Exit/Cancel Button -->
+                <label for="radio-explore" class="icon-button back-button">❌</label>
+                <!-- Top-Right: Flash Control -->
+                <label for="radio-scan-camera" class="icon-button flash-button">⚡</label>
+                <!-- Main Display: Live Camera Feed -->
+                <div class="camera-feed">
+                    <!-- Overlay Guides -->
+                    <div class="card-frame-overlay">
+                        Align card within the frame<br>Hold steady
+                    </div>
+                </div>
+                <div class="capture-controls">
+                    <!-- Bottom-Left: Gallery/Album Icon -->
+                    <label for="radio-scan-camera" class="flash-gallery-button">🖼️</label>
+                    <!-- Bottom-Center: Capture Button - Tapping leads to Review/Edit Scanned Card Screen -->
+                    <label for="radio-review-card" class="capture-button">📸</label>
+                    <div class="flash-gallery-button"></div> <!-- Placeholder for symmetry -->
+                </div>
+            </div>
+
+            <!-- III. Feature-Specific Screens: D.2. Processing Indicator (Conceptual) -->
+            <div id="processing-indicator-screen" class="screen">
+                <div class="spinner"></div>
+                <p>Processing card...</p>
+            </div>
+
+            <!-- III. Feature-Specific Screens: D.3. Review/Edit Scanned Card Screen -->
+            <div id="review-edit-card-screen" class="screen">
+                <div class="header">
+                    <!-- Back/Retake button -->
+                    <label for="radio-scan-camera" class="back-button">⬅️ Retake</label>
+                    <span>Review Card</span>
+                    <span></span> <!-- For alignment -->
+                </div>
+                <!-- Scanned Image Display -->
+                <div class="scanned-image-display">
+                    <img src="https://via.placeholder.com/250x150?text=Scanned+Card+Image" alt="Scanned Card Image">
+                </div>
+                <div class="content-padding">
+                    <!-- Editable Data Fields -->
+                    <div class="form-group">
+                        <label for="edit-name">Name</label>
+                        <input type="text" id="edit-name" value="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-company">Company</label>
+                        <input type="text" id="edit-company" value="Acme Corp.">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-title">Title</label>
+                        <input type="text" id="edit-title" value="CEO">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-phone">Phone</label>
+                        <input type="tel" id="edit-phone" value="+1 (555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-email">Email</label>
+                        <input type="email" id="edit-email" value="john.doe@acmecorp.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-website">Website</label>
+                        <input type="url" id="edit-website" value="www.acmecorp.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-address">Address</label>
+                        <textarea id="edit-address">123 Main St, Anytown, USA</textarea>
+                    </div>
+                    <!-- "Add to Favorites" Toggle & "Add Reminder" Button -->
+                    <div class="inline-actions">
+                        <label class="icon-label">
+                            <input type="checkbox" checked>
+                            <span>Add to Favorites ⭐</span>
+                        </label>
+                        <label for="radio-add-edit-reminder" class="secondary-button" style="margin-top:0;">Add Reminder 🔔</label>
+                    </div>
+                    <div class="inline-actions" style="justify-content: center;">
+                        <label for="radio-contact-matching" class="secondary-button" style="margin-top:10px;">Add to Phone Contacts 👥</label>
+                    </div>
+                </div>
+                <!-- Action Buttons: Save Card -->
+                <div class="action-buttons-group">
+                    <label for="radio-explore" class="action-button">Save Card</label>
+                </div>
+            </div>
+
+            <!-- III. Feature-Specific Screens: E. Individual Card Detail View -->
+            <div id="card-detail-view-screen" class="screen">
+                <div class="header">
+                    <!-- Back Button -->
+                    <label for="radio-explore" class="back-button">⬅️</label>
+                    <span class="cardholder-name">John Doe</span>
+                    <div class="header-actions">
+                        <!-- Favorite Toggle Icon, Edit Icon, Share Icon, Delete Icon -->
+                        <span class="icon-button filled">⭐</span>
+                        <span class="icon-button">✏️</span>
+                        <span class="icon-button">↗️</span>
+                        <span class="icon-button">🗑️</span>
+                    </div>
+                </div>
+                <!-- Original Scanned Image -->
+                <div class="card-image-section">
+                    <img src="https://via.placeholder.com/300x180?text=Original+Card+Image" alt="Original Card Image">
+                </div>
+                <div class="content-padding">
+                    <!-- Data Fields with Tappable Actions -->
+                    <div class="data-field">
+                        <label>Company</label>
+                        <span>Acme Corp.</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Title</label>
+                        <span>CEO</span>
+                    </div>
+                    <div class="data-field">
+                        <label>Phone</label>
+                        <a href="tel:+15551234567"><span>+1 (555) 123-4567</span></a>
+                    </div>
+                    <div class="data-field">
+                        <label>Email</label>
+                        <a href="mailto:john.doe@acmecorp.com"><span>john.doe@acmecorp.com</span></a>
+                    </div>
+                    <div class="data-field">
+                        <label>Website</label>
+                        <a href="http://www.acmecorp.com" target="_blank"><span>www.acmecorp.com</span></a>
+                    </div>
+                    <div class="data-field">
+                        <label>Address</label>
+                        <a href="https://maps.google.com/?q=123 Main St, Anytown, USA" target="_blank"><span>123 Main St, Anytown, USA</span></a>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div style="display:flex; gap:10px; margin-top:20px;">
+                        <label for="radio-add-edit-reminder" class="action-button" style="flex:1;">Add Reminder 🔔</label>
+                        <label for="radio-contact-matching" class="action-button" style="flex:1;">Update Contacts 👥</label>
+                    </div>
+                    <!-- Related Reminders Section -->
+                    <div class="related-reminders">
+                        <h4>Related Reminders</h4>
+                        <div class="reminder-list">
+                            <div class="reminder-item">
+                                <div>
+                                    Follow up on Q4 report<br>
+                                    <small>📅 2023-10-26 10:00 AM - Due Soon</small>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="radio-add-edit-reminder" class="secondary-button" style="margin-top:10px; width:auto; display:inline-block;">+ Add New Reminder</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- III. Feature-Specific Screens: F. Settings Menu Screen -->
+            <div id="settings-menu-screen" class="screen">
+                <div class="header">
+                    <!-- Back Button -->
+                    <label for="radio-explore" class="back-button">⬅️</label>
+                    <span class="screen-title">Settings</span>
+                </div>
+                <div class="content-padding">
+                    <!-- "Account & Backup" Section -->
+                    <div class="setting-section">
+                        <h3>Account & Backup</h3>
+                        <div class="setting-option">
+                            <span>WebSync Status</span>
+                            <span class="status">Connected to Google Drive (Last backed up: Yesterday)</span>
+                        </div>
+                        <div class="setting-option">
+                            <span>Connect to Cloud</span>
+                            <a href="#" class="secondary-button" style="width:auto; margin-top:0;">Backup Now</a>
+                        </div>
+                        <div class="setting-option">
+                            <span>Auto Backup</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- "Notifications" Section -->
+                    <div class="setting-section">
+                        <h3>Notifications</h3>
+                        <div class="setting-option">
+                            <span>Reminder Notifications</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-option">
+                            <span>Notification Sound</span>
+                            <span class="status">Default</span>
+                        </div>
+                    </div>
+                    <!-- "General" Section -->
+                    <div class="setting-section">
+                        <h3>General</h3>
+                        <div class="setting-option">
+                            <span>Privacy Policy</span>
+                            <a href="#">View</a>
+                        </div>
+                        <div class="setting-option">
+                            <span>Terms of Service</span>
+                            <a href="#">View</a>
+                        </div>
+                        <div class="setting-option">
+                            <span>Help & Support</span>
+                            <a href="#">Go to Help</a>
+                        </div>
+                        <div class="setting-option">
+                            <span>About</span>
+                            <span class="status">Version 1.0.0</span>
+                        </div>
+                    </div>
+                    <!-- "Log Out" Button -->
+                    <label for="radio-explore" class="action-button" style="background-color: #f44336; margin-top: 30px;">Log Out</label>
+                </div>
+            </div>
+
+            <!-- III. Feature-Specific Screens: G. Add/Edit Reminder Screen -->
+            <div id="add-edit-reminder-screen" class="screen">
+                <div class="header">
+                    <!-- Cancel Button -->
+                    <label for="radio-reminders" class="cancel-button">❌ Cancel</label>
+                    <span class="screen-title">New Reminder</span>
+                    <span></span> <!-- For alignment -->
+                </div>
+                <div class="content-padding">
+                    <!-- Contact Picker, Date Picker, Time Picker, Notes Field -->
+                    <div class="form-group">
+                        <label for="reminder-contact">Contact/Card</label>
+                        <input type="text" id="reminder-contact" value="John Doe" placeholder="Search and select a contact">
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-date">Date</label>
+                        <input type="date" id="reminder-date" value="2023-10-27">
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-time">Time</label>
+                        <input type="time" id="reminder-time" value="10:00">
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-notes">Notes</label>
+                        <textarea id="reminder-notes" placeholder="e.g., Follow up on meeting, Send proposal"></textarea>
+                    </div>
+                </div>
+                <!-- "Save Reminder" Button -->
+                <div class="action-buttons-group">
+                    <label for="radio-reminders" class="action-button">Save Reminder</label>
+                </div>
+            </div>
+
+            <!-- III. Feature-Specific Screens: H. Contact Matching Interface -->
+            <div id="contact-matching-interface-screen" class="screen">
+                <div class="header">
+                    <!-- Back Button -->
+                    <label for="radio-update-contacts" class="back-button">⬅️</label>
+                    <span class="screen-title">Link Contact</span>
+                </div>
+                <div class="content-padding">
+                    <p style="color:var(--light-text-color); margin-bottom:20px;">Review the scanned card data and link it to your phone contacts.</p>
+                    <!-- Scanned Card Data Display -->
+                    <div class="scanned-card-data-display">
+                        <h4>Scanned Card Data</h4>
+                        <p><strong>Name:</strong> John Doe</p>
+                        <p><strong>Company:</strong> Acme Corp.</p>
+                        <p><strong>Phone:</strong> +1 (555) 123-4567</p>
+                        <p><strong>Email:</strong> john.doe@acmecorp.com</p>
+                    </div>
+                    <h3 style="margin-top:30px; margin-bottom:15px; color:var(--text-color);">Potential Phone Contact Matches</h3>
+                    <!-- List of Potential Matching Phone Contacts -->
+                    <div class="contact-list">
+                        <div class="potential-match-item">
+                            <div class="match-details">
+                                <h4>John D. (Existing Phone Contact)</h4>
+                                <p>Mobile: +1 (555) 987-6543</p>
+                            </div>
+                            <div class="match-actions">
+                                <a href="#" class="secondary-button">View Details</a>
+                                <label for="radio-update-contacts" class="action-button" style="width:auto; margin-top:0; padding: 10px 15px;">Select & Update</label>
+                            </div>
+                        </div>
+                        <div class="potential-match-item">
+                            <div class="match-details">
+                                <h4>J. Doe (Existing Phone Contact)</h4>
+                                <p>Work: john.doe@oldcompany.com</p>
+                            </div>
+                            <div class="match-actions">
+                                <a href="#" class="secondary-button">View Details</a>
+                                <label for="radio-update-contacts" class="action-button" style="width:auto; margin-top:0; padding: 10px 15px;">Select & Update</label>
+                            </div>
+                        </div>
+                        <!-- More potential matches -->
+                    </div>
+                    <!-- "Create New Contact" Button -->
+                    <div class="create-new-contact-section">
+                        <p>Can't find a match?</p>
+                        <label for="radio-update-contacts" class="action-button">Create New Contact</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- I. Global Persistent Elements: Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <!-- Left Tab: Reminders -->
+            <label for="radio-reminders" class="nav-tab">
+                <span class="icon">🔔</span>Reminders
+            </label>
+            <!-- Middle Tab (Default Landing): Explore Cards -->
+            <label for="radio-explore" class="nav-tab">
+                <span class="icon">📇</span>Cards
+            </label>
+            <!-- Right Tab: Update Contacts -->
+            <label for="radio-update-contacts" class="nav-tab">
+                <span class="icon">👥</span>Contacts
+            </label>
+        </div>
+    </div>
+</body>
+</html>

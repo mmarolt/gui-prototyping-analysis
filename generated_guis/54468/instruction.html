@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Manager</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background */
+            color: #333; /* Dark grey text */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures the page takes full viewport height */
+            height: 100%; /* Important for flexbox on some mobile browsers */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* Utility class for Unicode icons/emojis */
+        .icon {
+            font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            line-height: 1; /* Ensure consistent vertical alignment */
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            position: sticky; /* Keeps header at the top */
+            top: 0;
+            z-index: 1000; /* Ensure header is above other content */
+        }
+        .header-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50; /* Darker title color */
+        }
+        .header-icons {
+            display: flex;
+            gap: 15px; /* Space between icons */
+        }
+        .header-icon {
+            font-size: 1.3em;
+            color: #555; /* Icon color */
+            cursor: pointer;
+            padding: 5px; /* Increase clickable area */
+            display: flex; /* For better icon centering */
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Allows main content to take up available space */
+            padding: 15px;
+            overflow-y: auto; /* Enables scrolling for forms list if it overflows */
+        }
+
+        /* New Document Button */
+        .new-document-button {
+            display: block; /* Make it a block-level element */
+            width: calc(100% - 30px); /* Full width minus padding */
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #007bff; /* Primary blue color */
+            color: #fff;
+            text-align: center;
+            border-radius: 8px; /* Rounded corners */
+            font-size: 1.1em;
+            font-weight: bold;
+            text-decoration: none; /* Remove underline */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+        .new-document-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Forms List Header (for sorting) */
+        .forms-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee; /* Separator line */
+            margin-bottom: 10px;
+        }
+        .forms-list-header span {
+            font-weight: bold;
+            color: #666;
+            font-size: 0.9em;
+        }
+        .forms-list-header .sort-indicator {
+            cursor: pointer;
+            color: #007bff; /* Blue to indicate interactivity */
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+        }
+        .forms-list-header .sort-indicator::after {
+            content: ' ↓'; /* Down arrow, indicating descending sort */
+            margin-left: 5px;
+            font-size: 0.8em;
+        }
+
+        /* Forms List */
+        .forms-list {
+            list-style: none; /* Remove default list bullets */
+            padding: 0;
+            margin: 0;
+        }
+        .form-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Light shadow for list items */
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* Space between name and date */
+        }
+        .form-item-name {
+            font-weight: 500;
+            font-size: 1em;
+            color: #2c3e50;
+        }
+        .form-item-date {
+            font-size: 0.85em;
+            color: #777; /* Lighter color for date */
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            background-color: #fff;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Shadow at the top of the nav */
+            position: sticky; /* Keeps nav at the bottom */
+            bottom: 0;
+            width: 100%;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #777; /* Default nav item color */
+            font-size: 0.7em; /* Smaller text for nav labels */
+            gap: 3px;
+            flex: 1; /* Distribute items evenly */
+        }
+        .nav-item.active {
+            color: #007bff; /* Active item color */
+        }
+        .nav-icon {
+            font-size: 1.5em; /* Larger icons for nav */
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-icons">
+            <span class="header-icon icon" title="Information">ℹ️</span>
+            <span class="header-icon icon" title="Messages">✉️</span>
+        </div>
+        <div class="header-title">My Forms</div>
+        <div class="header-icons">
+            <span class="header-icon icon" title="Search">🔍</span>
+            <span class="header-icon icon" title="Profile">👤</span>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <main class="main-content">
+        <!-- New Document Button -->
+        <a href="#" class="new-document-button">Create New Document</a>
+
+        <!-- Forms List Header with Sort Indicator -->
+        <div class="forms-list-header">
+            <span>Forms</span>
+            <div class="sort-indicator">Last Modified</div>
+        </div>
+
+        <!-- List of Forms -->
+        <ul class="forms-list">
+            <li class="form-item">
+                <div class="form-item-name">Client Onboarding Form</div>
+                <div class="form-item-date">Last modified: 2023-10-26 10:30 AM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">Project Proposal Template</div>
+                <div class="form-item-date">Last modified: 2023-10-25 03:15 PM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">Expense Report</div>
+                <div class="form-item-date">Last modified: 2023-10-24 09:00 AM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">Vacation Request Form</div>
+                <div class="form-item-date">Last modified: 2023-10-20 11:00 AM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">Performance Review</div>
+                <div class="form-item-date">Last modified: 2023-10-18 02:00 PM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">Customer Feedback Survey</div>
+                <div class="form-item-date">Last modified: 2023-10-15 04:00 PM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">Incident Report</div>
+                <div class="form-item-date">Last modified: 2023-10-12 08:30 AM</div>
+            </li>
+            <li class="form-item">
+                <div class="form-item-name">New Employee Checklist</div>
+                <div class="form-item-date">Last modified: 2023-10-10 01:00 PM</div>
+            </li>
+        </ul>
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="nav-icon icon">📄</span>
+            <span>Forms</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon icon">📁</span>
+            <span>Folders</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon icon">📊</span>
+            <span>Reports</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon icon">📤</span>
+            <span>Share</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+    </nav>
+</body>
+</html>

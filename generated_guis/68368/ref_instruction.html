@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Calendar & Task App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto for Material Design typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for Material Design Colors */
+        :root {
+            --md-primary: #6200EE; /* Deep Purple */
+            --md-primary-variant: #3700B3;
+            --md-secondary: #03DAC5; /* Teal */
+            --md-secondary-variant: #018786;
+            --md-background: #F5F5F5; /* Light Grey */
+            --md-surface: #FFFFFF; /* White */
+            --md-error: #B00020;
+            --md-on-primary: #FFFFFF;
+            --md-on-secondary: #000000;
+            --md-on-background: #000000;
+            --md-on-surface: #000000;
+            --md-on-error: #FFFFFF;
+            --md-text-primary: rgba(0, 0, 0, 0.87); /* Black 87% opacity */
+            --md-text-secondary: rgba(0, 0, 0, 0.60); /* Black 60% opacity */
+            --md-text-disabled: rgba(0, 0, 0, 0.38); /* Black 38% opacity */
+            --md-divider: rgba(0, 0, 0, 0.12); /* Black 12% opacity */
+        }
+
+        /* Base styles for the mobile screen */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--md-background);
+            display: flex;
+            flex-direction: column;
+            width: 375px; /* Mobile screen width as specified */
+            height: 667px; /* Mobile screen height as specified */
+            /* This border is added just to visually represent the screen boundaries in a browser when run directly */
+            border: 1px solid #ccc; 
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            overflow: hidden; /* Prevent body scroll, content will scroll internally */
+            position: relative; /* For fixed/absolute children positioning */
+        }
+
+        /* General Material Icon styling for interactive elements */
+        .material-icons {
+            user-select: none; /* Prevent text selection */
+        }
+        .material-icons[class*="icon-"], .material-icons[class*="task-"] {
+            /* Specific icon colors will override these defaults */
+            color: var(--md-text-secondary); 
+        }
+
+        /* 1. Top App Bar (Header) */
+        header.app-bar {
+            position: sticky; /* Sticky allows it to scroll with content if needed, but stays fixed at top */
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px; /* Material Design standard height */
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 100; /* Ensure it's above other content */
+            flex-shrink: 0; /* Prevent it from shrinking */
+        }
+        .app-bar .material-icons {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px; /* Larger tap target */
+            border-radius: 50%;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .app-bar .material-icons:hover {
+             background-color: rgba(255, 255, 255, 0.1); /* Subtle hover effect */
+        }
+        .app-bar h1 {
+            flex-grow: 1;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 500; /* Roboto Medium */
+            margin: 0;
+            /* Adjust padding to visually center title despite the left menu icon */
+            padding-left: 24px; 
+            padding-right: 24px; 
+        }
+
+        /* 2. Week Navigation Bar */
+        nav.week-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: var(--md-surface);
+            border-bottom: 1px solid var(--md-divider);
+            color: var(--md-text-primary);
+            min-height: 48px; /* Standard or slightly less than app bar */
+            flex-shrink: 0;
+        }
+        .week-nav .material-icons {
+            font-size: 20px;
+            color: var(--md-text-secondary);
+            cursor: pointer;
+            padding: 4px; /* Larger tap target */
+            border-radius: 50%;
+        }
+        .week-nav .material-icons:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+        .week-nav span {
+            font-size: 16px;
+            font-weight: 400; /* Roboto Regular */
+            color: var(--md-text-primary);
+        }
+
+        /* 3. Weekly Calendar View */
+        section.calendar-week-view {
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            background-color: var(--md-surface);
+            border-bottom: 1px solid var(--md-divider);
+            min-height: 64px; /* Ensure consistent height for the view */
+            flex-shrink: 0;
+        }
+        .calendar-day {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: calc(100% / 7); /* Distribute days evenly across the week */
+            cursor: pointer;
+            padding: 4px 0;
+        }
+        .calendar-day-name {
+            font-size: 12px;
+            color: var(--md-text-secondary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .calendar-day-date {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 400; /* Regular */
+            color: var(--md-text-primary);
+            position: relative;
+        }
+        /* Style for the current day */
+        .calendar-day.current .calendar-day-date {
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+            font-weight: 500; /* Medium weight for emphasis */
+        }
+        /* Style for a selected day (user has tapped it) */
+        .calendar-day.selected .calendar-day-date {
+            border: 2px solid var(--md-primary); /* Border as visual highlight */
+            font-weight: 500;
+        }
+        /* If selected day is also the current day, it should look like current day */
+        .calendar-day.selected.current .calendar-day-date {
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+        }
+        /* If selected but NOT current, use primary color for text */
+        .calendar-day.selected:not(.current) .calendar-day-date {
+            color: var(--md-primary);
+        }
+        
+        /* Activity Indicator Dot */
+        .calendar-day-date.has-activity::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: var(--md-secondary); /* Accent color for indicator */
+        }
+
+        /* 4. Daily Activities List */
+        main.daily-activities-list {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            overflow-y: auto; /* Enables scrolling for content that exceeds height */
+            background-color: var(--md-background);
+            padding-bottom: 80px; /* Space for FAB to not overlap content */
+            position: relative; /* For proper stacking context for scrolling */
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 16px;
+            border-bottom: 1px solid var(--md-divider);
+            background-color: var(--md-surface);
+            color: var(--md-text-primary);
+        }
+        .activity-item:last-child {
+            border-bottom: none; /* No border for the last item in the list */
+        }
+        .activity-item-time {
+            font-size: 14px;
+            color: var(--md-text-secondary);
+            min-width: 60px; /* Ensure time aligns consistently */
+            margin-right: 16px;
+            text-align: right;
+            line-height: 1.4; /* Match line height of title for better alignment */
+        }
+        .activity-item-content {
+            flex-grow: 1;
+            display: flex;
+            align-items: flex-start; /* Align icon and text at the top */
+        }
+        .activity-item-content .material-icons {
+            font-size: 20px;
+            margin-right: 12px;
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+        /* Specific colors for different activity types */
+        .activity-item-content .material-icons.icon-event { color: #2196F3; } /* Blue for events */
+        .activity-item-content .material-icons.icon-task { color: #FFC107; } /* Amber for tasks (unused, checkbox is used) */
+        .activity-item-content .material-icons.icon-call { color: #4CAF50; } /* Green for calls */
+        
+        .activity-item-text h3 {
+            font-size: 16px;
+            font-weight: 500; /* Medium for titles */
+            margin: 0;
+            color: var(--md-text-primary);
+            line-height: 1.4;
+        }
+        .activity-item-text p {
+            font-size: 14px;
+            color: var(--md-text-secondary);
+            margin: 4px 0 0 0;
+            line-height: 1.4;
+        }
+        /* Specific styling for task checkboxes */
+        .activity-item-content .material-icons.task-checkbox {
+            font-size: 24px; /* Larger for checkbox icon */
+            margin-right: 8px;
+            cursor: pointer;
+            color: var(--md-text-secondary); /* Default state color */
+            padding: 0; /* No extra padding for checkbox for more compact look */
+        }
+        .activity-item-content .material-icons.task-checkbox.completed {
+            color: var(--md-primary); /* Primary color for completed tasks */
+        }
+        .activity-item-text.completed h3 {
+            text-decoration: line-through; /* Strikethrough for completed tasks */
+            color: var(--md-text-disabled);
+            font-weight: 400;
+        }
+
+        /* 5. Floating Action Button (FAB) */
+        .fab-container {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            z-index: 110; /* Ensure FAB is on top of almost everything */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .fab-main {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--md-secondary); /* Accent color */
+            color: var(--md-on-secondary);
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px; /* Icon size */
+            outline: none;
+            transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+            position: relative;
+            z-index: 2; /* Ensure main FAB is on top of sub FABs */
+        }
+        .fab-main:hover {
+            background-color: var(--md-secondary-variant); /* Darker on hover */
+        }
+        /* Rotate '+' icon when FAB is expanded */
+        .fab-container.expanded .fab-main i {
+            transform: rotate(45deg);
+        }
+        .fab-main i {
+            transition: transform 0.2s ease-out;
+        }
+
+        /* Speed Dial Secondary FABs (initially hidden, would be shown with JS) */
+        .fab-sub-menu {
+            position: absolute;
+            bottom: 72px; /* Position above main FAB (56px height + 16px gap) */
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            opacity: 0; /* Initially hidden */
+            transform: translateY(20px); /* Slide up animation */
+            pointer-events: none; /* Prevent interaction when hidden */
+            transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+            z-index: 1; /* Below main FAB */
+        }
+        /* Class to show sub FABs (toggled by JS on main FAB click) */
+        .fab-container.expanded .fab-sub-menu {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto; /* Enable interaction when visible */
+        }
+
+        .fab-sub-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fab-sub-item span {
+            font-size: 14px;
+            color: var(--md-text-primary);
+            background-color: var(--md-surface);
+            padding: 4px 8px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            white-space: nowrap; /* Prevent text wrap for labels */
+        }
+        .fab-sub-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--md-surface);
+            color: var(--md-primary); /* Primary color for sub-FAB icons */
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            outline: none;
+            transition: background-color 0.15s ease-in-out;
+        }
+        .fab-sub-button:hover {
+            background-color: rgba(98, 0, 238, 0.04); /* Light hover effect using primary color */
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top App Bar (Header) -->
+    <header class="app-bar">
+        <i class="material-icons">menu</i>
+        <h1>Calendar</h1>
+        <i class="material-icons">search</i>
+    </header>
+
+    <!-- 2. Week Navigation Bar -->
+    <nav class="week-nav">
+        <i class="material-icons">arrow_back_ios</i>
+        <span>September 2024</span>
+        <i class="material-icons">arrow_forward_ios</i>
+    </nav>
+
+    <!-- 3. Weekly Calendar View -->
+    <section class="calendar-week-view">
+        <div class="calendar-day">
+            <span class="calendar-day-name">Mon</span>
+            <div class="calendar-day-date">23</div>
+        </div>
+        <div class="calendar-day current"> <!-- Example: Current Day -->
+            <span class="calendar-day-name">Tue</span>
+            <div class="calendar-day-date">24</div>
+        </div>
+        <div class="calendar-day selected"> <!-- Example: Selected Day -->
+            <span class="calendar-day-name">Wed</span>
+            <div class="calendar-day-date has-activity">25</div> <!-- Has activity dot -->
+        </div>
+        <div class="calendar-day">
+            <span class="calendar-day-name">Thu</span>
+            <div class="calendar-day-date">26</div>
+        </div>
+        <div class="calendar-day">
+            <span class="calendar-day-name">Fri</span>
+            <div class="calendar-day-date has-activity">27</div>
+        </div>
+        <div class="calendar-day">
+            <span class="calendar-day-name">Sat</span>
+            <div class="calendar-day-date">28</div>
+        </div>
+        <div class="calendar-day">
+            <span class="calendar-day-name">Sun</span>
+            <div class="calendar-day-date">29</div>
+        </div>
+    </section>
+
+    <!-- 4. Daily Activities List -->
+    <main class="daily-activities-list">
+        <div class="activity-item">
+            <span class="activity-item-time">09:00 AM</span>
+            <div class="activity-item-content">
+                <i class="material-icons icon-event">event</i>
+                <div class="activity-item-text">
+                    <h3>Project Kick-off Meeting</h3>
+                    <p>Main Office, Room 101</p>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">10:00 AM</span>
+            <div class="activity-item-content">
+                <i class="material-icons task-checkbox">check_box_outline_blank</i>
+                <div class="activity-item-text">
+                    <h3>Prepare Q4 Strategy Document</h3>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">11:30 AM</span>
+            <div class="activity-item-content">
+                <i class="material-icons icon-call">call</i>
+                <div class="activity-item-text">
+                    <h3>Follow-up with Client Z</h3>
+                    <p>+1 (555) 987-6543</p>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">01:00 PM</span>
+            <div class="activity-item-content">
+                <i class="material-icons icon-event">calendar_today</i>
+                <div class="activity-item-text">
+                    <h3>Lunch with Team Lead</h3>
+                    <p>Cafeteria</p>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">03:00 PM</span>
+            <div class="activity-item-content">
+                <i class="material-icons task-checkbox completed">check_box</i>
+                <div class="activity-item-text completed">
+                    <h3>Review Project X Deliverables</h3>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">05:00 PM</span>
+            <div class="activity-item-content">
+                <i class="material-icons icon-event">event</i>
+                <div class="activity-item-text">
+                    <h3>Workout Session</h3>
+                    <p>Gym</p>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">07:00 PM</span>
+            <div class="activity-item-content">
+                <i class="material-icons task-checkbox">check_box_outline_blank</i>
+                <div class="activity-item-text">
+                    <h3>Read "Atomic Habits"</h3>
+                </div>
+            </div>
+        </div>
+        <div class="activity-item">
+            <span class="activity-item-time">08:00 PM</span>
+            <div class="activity-item-content">
+                <i class="material-icons icon-call">phone_in_talk</i>
+                <div class="activity-item-text">
+                    <h3>Video Call with Family</h3>
+                    <p>Zoom</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 5. Floating Action Button (FAB) -->
+    <div class="fab-container">
+        <!-- Secondary FABs (Speed Dial) - initially hidden, would be toggled by JS -->
+        <!-- Added a simple inline onclick event to the main FAB to toggle the 'expanded' class, simulating JS interaction. -->
+        <div class="fab-sub-menu">
+            <div class="fab-sub-item">
+                <span>Add Event</span>
+                <button class="fab-sub-button">
+                    <i class="material-icons">event</i>
+                </button>
+            </div>
+            <div class="fab-sub-item">
+                <span>Add Task</span>
+                <button class="fab-sub-button">
+                    <i class="material-icons">check</i>
+                </button>
+            </div>
+            <div class="fab-sub-item">
+                <span>Add Call</span>
+                <button class="fab-sub-button">
+                    <i class="material-icons">call</i>
+                </button>
+            </div>
+        </div>
+        <!-- Main FAB -->
+        <button class="fab-main" onclick="this.parentNode.classList.toggle('expanded')">
+            <i class="material-icons">add</i>
+        </button>
+    </div>
+
+</body>
+</html>

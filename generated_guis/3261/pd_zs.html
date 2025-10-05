@@ -1,215 +1,338 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Property Search</title>
-<style>
-  body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f8f8; /* Light gray background */
-    color: #333; /* Dark gray text */
-  }
-
-  .top-bar {
-    background-color: #007bff; /* Blue top bar */
-    color: white;
-    padding: 15px;
-    text-align: center;
-    font-size: 1.2em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-  }
-
-  .search-area {
-    background-color: white;
-    padding: 20px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .search-area label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-
-  .search-area input,
-  .search-area select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Important for width calculation */
-  }
-
-  .search-area button {
-    background-color: #28a745; /* Green button */
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    width: 100%;
-  }
-
-  .search-area button:hover {
-    background-color: #218838;
-  }
-
-  .results-area {
-    padding: 20px;
-  }
-
-  .result-item {
-    background-color: white;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Responsive adjustments for smaller screens */
-  @media (max-width: 400px) {
-    .top-bar {
-      font-size: 1em;
-      padding: 10px;
-    }
-
-    .search-area {
-      padding: 15px;
-    }
-
-    .search-area input,
-    .search-area select {
-      padding: 8px;
-      margin-bottom: 12px;
-    }
-
-    .search-area button {
-      padding: 10px 16px;
-      font-size: 0.9em;
-    }
-
-    .results-area {
-      padding: 15px;
-    }
-
-    .result-item {
-      padding: 12px;
-    }
-  }
-
-  /* Collapsible Search Area Styles (Example) */
-  .collapsible {
-    background-color: #777;
-    color: white;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-  }
-
-  .active, .collapsible:hover {
-    background-color: #555;
-  }
-
-  .content {
-    padding: 0 18px;
-    display: none;
-    overflow: hidden;
-    background-color: #f1f1f1;
-  }
-
-  .collapsible:after {
-    content: '\02795'; /* Unicode character for "plus" sign (+) */
-    font-size: 13px;
-    color: white;
-    float: right;
-    margin-left: 5px;
-  }
-
-  .active:after {
-    content: "\2796"; /* Unicode character for "minus" sign (-) */
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Property Search</title>
 </head>
-<body>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; background-color: #f0f2f5;">
 
-<div class="top-bar">
-  Property Search
-</div>
+    <!-- Main container to simulate a mobile screen (375x667 pixels) -->
+    <div style="
+        width: 375px;
+        height: 667px;
+        margin: 20px auto; /* Center on desktop, provide some breathing room */
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        overflow: hidden; /* Crucial to contain fixed elements within this box */
+        position: relative; /* Context for absolute/fixed children */
+        background-color: #fff;
+        box-sizing: border-box;
+    ">
 
-<button type="button" class="collapsible">Search Criteria</button>
-<div class="content">
-  <div class="search-area">
-    <label for="location">Location:</label>
-    <input type="text" id="location" name="location" placeholder="Enter a location">
+        <!-- 1. Fixed Header Section (Top) -->
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 375px; /* Match parent container width */
+            box-sizing: border-box;
+            background-color: #fff;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 100; /* Ensure header stays on top */
+        ">
+            <!-- 1.1 Search Scope Selector (Segmented Control) -->
+            <div style="
+                display: flex;
+                justify-content: space-around;
+                margin: 0 20px 15px 20px;
+                border: 1px solid #007bff; /* Blue border */
+                border-radius: 8px;
+                overflow: hidden;
+            ">
+                <div style="
+                    flex: 1;
+                    padding: 10px 0;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #fff;
+                    cursor: pointer;
+                    background-color: #007bff; /* Active segment highlighted */
+                    font-weight: 600;
+                ">Buy</div>
+                <div style="
+                    flex: 1;
+                    padding: 10px 0;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #007bff;
+                    cursor: pointer;
+                    border-left: 1px solid #007bff;
+                ">Rent</div>
+                <div style="
+                    flex: 1;
+                    padding: 10px 0;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #007bff;
+                    cursor: pointer;
+                    border-left: 1px solid #007bff;
+                ">Projects</div>
+            </div>
 
-    <label for="property-type">Property Type:</label>
-    <select id="property-type" name="property-type">
-      <option value="">Any</option>
-      <option value="house">House</option>
-      <option value="apartment">Apartment</option>
-      <option value="condo">Condo</option>
-    </select>
+            <!-- 1.2 Search Bar/Input Field -->
+            <div style="
+                display: flex;
+                align-items: center;
+                margin: 0 20px;
+                padding: 12px 15px;
+                background-color: #f0f2f5;
+                border-radius: 8px;
+                font-size: 16px;
+                color: #555;
+            ">
+                <span style="margin-right: 10px; color: #888; font-size: 18px;">🔍</span>
+                <input type="text" placeholder="Enter location, project name, or keyword" style="
+                    flex-grow: 1;
+                    border: none;
+                    background: none;
+                    outline: none;
+                    font-size: 16px;
+                    color: #333;
+                    padding: 0;
+                ">
+            </div>
+        </div>
 
-    <label for="min-price">Min Price:</label>
-    <input type="number" id="min-price" name="min-price" placeholder="Minimum Price">
+        <!-- 2. Scrollable Filters Section (Middle) -->
+        <div style="
+            position: absolute;
+            top: 140px; /* Adjusted based on header height */
+            bottom: 80px; /* Adjusted based on footer height */
+            left: 0;
+            right: 0;
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 0 20px;
+            box-sizing: border-box;
+            background-color: #fff;
+        ">
+            <h3 style="font-size: 18px; margin-top: 20px; margin-bottom: 15px; color: #333; font-weight: 600;">Refine Your Search</h3>
 
-    <label for="max-price">Max Price:</label>
-    <input type="number" id="max-price" name="max-price" placeholder="Maximum Price">
+            <!-- 2.1 Quick Filters Group -->
+            <div style="margin-bottom: 25px;">
+                <h4 style="font-size: 15px; margin-bottom: 10px; color: #555; font-weight: 500;">Quick Filters</h4>
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                ">
+                    <span style="font-size: 16px; color: #333;">PG Only Properties</span>
+                    <!-- Toggle Switch Simulation (ON state shown as per sketch) -->
+                    <label style="
+                        position: relative;
+                        display: inline-block;
+                        width: 44px;
+                        height: 24px;
+                    ">
+                        <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
+                        <span style="
+                            position: absolute;
+                            cursor: pointer;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            background-color: #28a745; /* Green for ON state */
+                            transition: .4s;
+                            border-radius: 24px;
+                        "></span>
+                        <span style="
+                            position: absolute;
+                            content: '';
+                            height: 20px;
+                            width: 20px;
+                            left: 22px; /* Position for ON state */
+                            bottom: 2px;
+                            background-color: white;
+                            transition: .4s;
+                            border-radius: 50%;
+                        "></span>
+                    </label>
+                </div>
+            </div>
 
-    <button onclick="searchProperties()">Search</button>
-  </div>
-</div>
+            <!-- 2.2 Property Details Group -->
+            <div style="margin-bottom: 25px;">
+                <h4 style="font-size: 15px; margin-bottom: 10px; color: #555; font-weight: 500;">Property Details</h4>
+                <!-- Property Type Filter -->
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                ">
+                    <span style="font-size: 16px; color: #333;">Property Type: <span style="font-weight: 600;">2 Selected</span></span>
+                    <span style="font-size: 18px; color: #888;">&gt;</span>
+                </div>
 
-<div class="results-area">
-  <h2>Search Results</h2>
-  <div class="result-item">
-    <strong>123 Main St</strong><br>
-    $500,000<br>
-    3 bedrooms, 2 baths
-  </div>
+                <!-- Number of Bedrooms Filter -->
+                <div style="margin-top: 20px;">
+                    <span style="font-size: 16px; color: #333; display: block; margin-bottom: 10px;">Number of Bedrooms:</span>
+                    <div style="
+                        display: flex;
+                        justify-content: space-around;
+                        border: 1px solid #ccc;
+                        border-radius: 8px;
+                        overflow: hidden;
+                    ">
+                        <div style="
+                            flex: 1;
+                            padding: 10px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #333;
+                            cursor: pointer;
+                        ">1</div>
+                        <div style="
+                            flex: 1;
+                            padding: 10px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #fff;
+                            cursor: pointer;
+                            background-color: #007bff; /* Active segment */
+                            font-weight: 600;
+                            border-left: 1px solid #007bff;
+                            border-right: 1px solid #007bff;
+                        ">2</div>
+                        <div style="
+                            flex: 1;
+                            padding: 10px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #333;
+                            cursor: pointer;
+                        ">3</div>
+                        <div style="
+                            flex: 1;
+                            padding: 10px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #333;
+                            cursor: pointer;
+                            border-left: 1px solid #ccc;
+                        ">4</div>
+                        <div style="
+                            flex: 1;
+                            padding: 10px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #333;
+                            cursor: pointer;
+                            border-left: 1px solid #ccc;
+                        ">5+</div>
+                    </div>
+                </div>
+            </div>
 
-  <div class="result-item">
-    <strong>456 Oak Ave</strong><br>
-    $750,000<br>
-    4 bedrooms, 3 baths
-  </div>
-</div>
+            <!-- 2.3 Price & Budget Group -->
+            <div style="margin-bottom: 25px;">
+                <h4 style="font-size: 15px; margin-bottom: 10px; color: #555; font-weight: 500;">Price & Budget</h4>
+                <!-- Price Range Filter (Dual-Handle Slider simulation) -->
+                <div style="
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 25px; /* More space for slider */
+                ">
+                    <div style="
+                        font-size: 15px;
+                        color: #333;
+                        padding: 8px 12px;
+                        background-color: #f0f2f5;
+                        border-radius: 5px;
+                    ">Min Price: <span style="font-weight: 600;">₹50L</span></div>
+                    <div style="
+                        font-size: 15px;
+                        color: #333;
+                        padding: 8px 12px;
+                        background-color: #f0f2f5;
+                        border-radius: 5px;
+                    ">Max Price: <span style="font-weight: 600;">₹1.5 Cr</span></div>
+                </div>
+                <!-- Visual representation of the dual-handle slider -->
+                <div style="
+                    width: 100%;
+                    height: 8px;
+                    background-color: #e0e0e0;
+                    border-radius: 4px;
+                    position: relative;
+                ">
+                    <!-- Active range (example values) -->
+                    <div style="
+                        position: absolute;
+                        left: 20%; /* Start of active range */
+                        right: 30%; /* End of active range (from right) */
+                        height: 100%;
+                        background-color: #007bff;
+                        border-radius: 4px;
+                    "></div>
+                    <!-- Left handle -->
+                    <div style="
+                        position: absolute;
+                        left: 20%; /* Match active range start */
+                        top: -8px; /* Center vertically on the track */
+                        transform: translateX(-50%); /* Adjust for handle width */
+                        width: 24px;
+                        height: 24px;
+                        background-color: #007bff;
+                        border: 2px solid #fff;
+                        border-radius: 50%;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    "></div>
+                    <!-- Right handle -->
+                    <div style="
+                        position: absolute;
+                        right: 30%; /* Match active range end */
+                        top: -8px; /* Center vertically on the track */
+                        transform: translateX(50%); /* Adjust for handle width */
+                        width: 24px;
+                        height: 24px;
+                        background-color: #007bff;
+                        border: 2px solid #fff;
+                        border-radius: 50%;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    "></div>
+                </div>
+            </div>
 
-<script>
-  function searchProperties() {
-    // In a real application, this function would:
-    // 1. Get the search criteria from the input fields.
-    // 2. Make an API call to fetch the search results.
-    // 3. Update the "results-area" with the retrieved data.
-    alert('Search functionality would be implemented here.');
-  }
+            <!-- More potential filters can be added here, pushing content further down -->
+            <div style="height: 50px;"></div> <!-- Spacer to ensure last filter isn't hidden by footer -->
+        </div>
 
-  // Collapsible script
-  var coll = document.getElementsByClassName("collapsible");
-  var i;
+        <!-- 3. Persistent Footer Section (Bottom) -->
+        <div style="
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 375px; /* Match parent container width */
+            box-sizing: border-box;
+            background-color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            z-index: 100; /* Ensure footer stays on top */
+        ">
+            <button style="
+                width: 100%;
+                padding: 15px 0;
+                background-color: #28a745; /* Distinct actionable green color */
+                color: #fff;
+                font-size: 18px;
+                font-weight: 600;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                outline: none;
+                box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+            ">Search</button>
+        </div>
 
-  for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
-      this.classList.toggle("active");
-      var content = this.nextElementSibling;
-      if (content.style.display === "block") {
-        content.style.display = "none";
-      } else {
-        content.style.display = "block";
-      }
-    });
-  }
-</script>
+    </div>
 
 </body>
 </html>

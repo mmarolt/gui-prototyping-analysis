@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Invoice</title>
+    <style>
+        /* General body styling for mobile-first approach */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px 15px; /* Padding around the entire content */
+            background-color: #f4f7f6; /* Light background for the page */
+            color: #333;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex; /* Use flexbox for vertical stacking of sections */
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        /* Styling for main heading */
+        h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+            margin-top: 5px; /* Adjust top margin for better spacing */
+        }
+
+        /* Styling for section subheadings */
+        h2 {
+            font-size: 18px;
+            color: #34495e;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee; /* Subtle separator */
+            padding-bottom: 8px;
+        }
+
+        /* Container for each logical section of the invoice */
+        .section-container {
+            background-color: #ffffff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Soft shadow for depth */
+            flex-shrink: 0; /* Prevent sections from shrinking if content is too tall */
+        }
+
+        /* Styling for labels */
+        label {
+            display: block; /* Each label on its own line */
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        /* Styling for all input fields, textareas, and select dropdowns */
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%; /* Take full width of parent container */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+            box-sizing: border-box; /* Crucial: padding and border are included in the element's total width and height */
+            -webkit-appearance: none; /* Remove default styling for iOS */
+            -moz-appearance: none; /* Remove default styling for Firefox */
+            appearance: none; /* Remove default styling */
+        }
+
+        /* Specific styling for textareas */
+        textarea {
+            resize: vertical; /* Allow only vertical resizing */
+            min-height: 60px; /* Minimum height for better usability */
+        }
+
+        /* Specific styling for select dropdowns */
+        select {
+            height: 40px; /* Consistent height with input fields */
+            background-color: #fff;
+            /* Custom arrow for select dropdown */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%01-1.3%2017l-123.2%20123.2a17.6%2017.6%200%200%01-24.9%200L6.7%2086.4a17.6%2017.6%200%200%01-1.3-17c1.3-3.8%204.1-6.9%207.9-8.7%203.8-1.8%208.1-1.8%2011.9%200l109.8%20109.8L267.4%2060.7c3.8-1.8%208.1-1.8%2011.9%200%203.8%201.8%206.6%204.9%207.9%208.7z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            padding-right: 30px; /* Make space for the custom arrow */
+        }
+
+        /* Layout for label-input pairs */
+        .input-group {
+            margin-bottom: 10px; /* Space between input groups */
+        }
+        .input-group:last-of-type {
+            margin-bottom: 0; /* No bottom margin for the last input group in a section */
+        }
+
+        /* Styling for the total amount display in the summary section */
+        .total-summary-display {
+            display: flex;
+            justify-content: space-between; /* Puts label and amount on opposite ends */
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee; /* Separator above total */
+            margin-top: 10px;
+        }
+
+        .total-summary-display span {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        #totalAmount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #27ae60; /* Green color for the total amount */
+        }
+
+        /* Container for the 'Next' button */
+        .button-container {
+            margin-top: 20px;
+            flex-grow: 1; /* Allows this container to take up remaining vertical space */
+            display: flex;
+            align-items: flex-end; /* Pushes the button to the bottom of the available space */
+            padding-bottom: 5px; /* Small padding at the very bottom of the page */
+        }
+
+        /* Styling for the 'Next' button */
+        button {
+            width: 100%; /* Full width button */
+            padding: 15px 20px;
+            background-color: #3498db; /* Blue button color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for the button */
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Invoice</h1>
+
+    <!-- Organization Details Section -->
+    <div class="section-container">
+        <h2>Organization Details</h2>
+        <div class="input-group">
+            <label for="orgName">Organization Name:</label>
+            <input type="text" id="orgName" value="My Awesome Company Inc." placeholder="Enter organization name">
+        </div>
+        <div class="input-group">
+            <label for="orgAddress">Address:</label>
+            <textarea id="orgAddress" rows="3" placeholder="Enter organization address">123 Business Street, Suite 400
+Invoice City, IN 12345
+USA</textarea>
+        </div>
+    </div>
+
+    <!-- Total Summary Section -->
+    <div class="section-container">
+        <h2>Total Summary</h2>
+        <div class="input-group">
+            <label for="subtotal">Subtotal:</label>
+            <input type="number" id="subtotal" value="100.00" step="0.01">
+        </div>
+        <div class="input-group">
+            <label for="salesTax">Sales Tax Amount:</label>
+            <input type="number" id="salesTax" value="8.00" step="0.01">
+        </div>
+        <div class="input-group">
+            <label for="currency">Currency:</label>
+            <select id="currency">
+                <option value="USD" selected>USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+            </select>
+        </div>
+        <div class="total-summary-display">
+            <span>Total Amount Due:</span>
+            <span id="totalAmount">USD 108.00</span>
+        </div>
+    </div>
+
+    <!-- Notes Section -->
+    <div class="section-container">
+        <h2>Notes</h2>
+        <textarea id="notes" rows="4" placeholder="Add custom notes here..."></textarea>
+    </div>
+
+    <!-- Terms & Conditions Section -->
+    <div class="section-container">
+        <h2>Terms & Conditions</h2>
+        <textarea id="terms" rows="6" placeholder="Add your terms and conditions for the invoice here..."></textarea>
+    </div>
+
+    <!-- Next Button Section -->
+    <div class="button-container">
+        <button>Next</button>
+    </div>
+
+    <script>
+        // JavaScript function to automatically calculate the total amount
+        function calculateTotal() {
+            const subtotalInput = document.getElementById('subtotal');
+            const salesTaxInput = document.getElementById('salesTax');
+            const currencySelect = document.getElementById('currency');
+            const totalAmountSpan = document.getElementById('totalAmount');
+
+            // Get values, default to 0 if input is empty or not a valid number
+            const subtotal = parseFloat(subtotalInput.value) || 0;
+            const salesTax = parseFloat(salesTaxInput.value) || 0;
+            const currency = currencySelect.value;
+
+            // Calculate total and format to two decimal places
+            const total = (subtotal + salesTax).toFixed(2);
+
+            // Update the display for the total amount
+            totalAmountSpan.innerText = `${currency} ${total}`;
+        }
+
+        // Add event listeners to trigger calculation whenever inputs change
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('subtotal').addEventListener('input', calculateTotal);
+            document.getElementById('salesTax').addEventListener('input', calculateTotal);
+            document.getElementById('currency').addEventListener('change', calculateTotal);
+
+            // Perform an initial calculation when the page first loads
+            calculateTotal();
+        });
+    </script>
+</body>
+</html>

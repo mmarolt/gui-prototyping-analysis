@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Directory</title>
+    <style>
+        /* General Reset and Base Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; /* Light background for the overall page */
+            display: flex; /* Use flexbox to center the app container */
+            justify-content: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* Main app container to simulate a mobile device screen */
+        #app-container {
+            width: 100%;
+            max-width: 375px; /* Target mobile screen width (e.g., iPhone 6/7/8) */
+            background-color: #ffffff; /* White background for the app content */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            display: flex;
+            flex-direction: column; /* Stack header, search, and list vertically */
+            overflow: hidden; /* Hide overflow for rounded corners, etc. */
+            min-height: 100vh; /* Ensure app container takes full height in mobile view */
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between; /* Space out title and refresh button */
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #4CAF50; /* Green header background */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for header */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .refresh-button {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.2s ease; /* Smooth hover effect */
+        }
+
+        .refresh-button:active {
+            background-color: rgba(255, 255, 255, 0.2); /* Feedback on tap */
+        }
+
+        /* Search Bar Styles */
+        .search-bar-container {
+            padding: 15px 20px;
+            background-color: #f0f0f0; /* Light grey background for search */
+            border-bottom: 1px solid #e0e0e0; /* Separator line */
+            flex-shrink: 0; /* Prevent search bar from shrinking */
+        }
+
+        .search-input {
+            width: calc(100% - 20px); /* Full width minus horizontal padding */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none; /* Remove default focus outline */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Inner shadow for depth */
+        }
+
+        .search-input::placeholder {
+            color: #aaa;
+        }
+
+        /* Event List Styles */
+        .event-list {
+            flex-grow: 1; /* Allow event list to take all available vertical space */
+            overflow-y: auto; /* Enable scrolling for the event list */
+            padding: 15px 20px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS devices */
+        }
+
+        .event-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08); /* Card shadow */
+            border-left: 5px solid #4CAF50; /* Accent color on the left */
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth interaction */
+        }
+
+        .event-card:hover {
+            transform: translateY(-3px); /* Slight lift on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .event-info {
+            flex-grow: 1; /* Allow event info to take most space */
+            margin-right: 10px;
+        }
+
+        .event-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .event-location,
+        .event-dates {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center; /* Align icon and text vertically */
+        }
+
+        /* Unicode icons for location and date */
+        .event-location::before {
+            content: '📍'; /* Location pin emoji */
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .event-dates::before {
+            content: '🗓️'; /* Calendar emoji */
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        .event-icons {
+            display: flex;
+            flex-direction: column; /* Stack icons vertically */
+            gap: 8px; /* Space between icons */
+            margin-left: 10px;
+            flex-shrink: 0; /* Prevent icons from shrinking */
+        }
+
+        .icon {
+            font-size: 18px;
+            color: #555; /* Default icon color */
+            text-align: center;
+            line-height: 1; /* Ensure icon is vertically centered */
+        }
+        
+        /* Specific colors for different icon types */
+        .icon[title="Password Protected"] {
+            color: #e74c3c; /* Red for password protected */
+        }
+
+        .icon[title="Downloadable Resources"] {
+            color: #3498db; /* Blue for downloadable resources */
+        }
+
+        /* Media query for slightly smaller mobile screens if needed, though 375px is the target */
+        @media (max-width: 320px) {
+            header h1 {
+                font-size: 20px;
+            }
+            .refresh-button {
+                padding: 6px 10px;
+                font-size: 16px;
+            }
+            .event-name {
+                font-size: 16px;
+            }
+            .event-location,
+            .event-dates {
+                font-size: 13px;
+            }
+            .icon {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Header: Title and Refresh Button -->
+        <header>
+            <h1>Event Directory</h1>
+            <button class="refresh-button" aria-label="Refresh Event List">↻</button>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-bar-container">
+            <input type="search" placeholder="Search events..." class="search-input" aria-label="Search events">
+        </div>
+
+        <!-- Event List -->
+        <main class="event-list">
+            <!-- Event Item 1 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">Global Tech Summit 2024</h2>
+                    <p class="event-location">San Francisco, CA</p>
+                    <p class="event-dates">Oct 26 - 28, 2024</p>
+                </div>
+                <div class="event-icons">
+                    <span class="icon" title="Password Protected">🔒</span>
+                    <span class="icon" title="Downloadable Resources">⬇️</span>
+                </div>
+            </div>
+
+            <!-- Event Item 2 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">Sustainable Future Forum</h2>
+                    <p class="event-location">Virtual Event</p>
+                    <p class="event-dates">Nov 10, 2024</p>
+                </div>
+                <div class="event-icons">
+                    <span class="icon" title="Downloadable Resources">⬇️</span>
+                </div>
+            </div>
+
+            <!-- Event Item 3 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">AI & Robotics Conference</h2>
+                    <p class="event-location">Tokyo, Japan</p>
+                    <p class="event-dates">Dec 1 - 3, 2024</p>
+                </div>
+                <div class="event-icons">
+                    <span class="icon" title="Password Protected">🔒</span>
+                </div>
+            </div>
+
+            <!-- Event Item 4 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">Digital Marketing Workshop</h2>
+                    <p class="event-location">London, UK</p>
+                    <p class="event-dates">Jan 15 - 16, 2025</p>
+                </div>
+                <div class="event-icons">
+                    <!-- No specific icons for this one -->
+                </div>
+            </div>
+
+            <!-- Event Item 5 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">Healthcare Innovation Summit</h2>
+                    <p class="event-location">New York, NY</p>
+                    <p class="event-dates">Feb 20 - 22, 2025</p>
+                </div>
+                <div class="event-icons">
+                    <span class="icon" title="Password Protected">🔒</span>
+                    <span class="icon" title="Downloadable Resources">⬇️</span>
+                </div>
+            </div>
+
+            <!-- Event Item 6 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">Cybersecurity Expo</h2>
+                    <p class="event-location">Berlin, Germany</p>
+                    <p class="event-dates">Mar 5 - 7, 2025</p>
+                </div>
+                <div class="event-icons">
+                    <span class="icon" title="Downloadable Resources">⬇️</span>
+                </div>
+            </div>
+
+            <!-- Event Item 7 -->
+            <div class="event-card">
+                <div class="event-info">
+                    <h2 class="event-name">Startup Pitch Competition</h2>
+                    <p class="event-location">Austin, TX</p>
+                    <p class="event-dates">Apr 10, 2025</p>
+                </div>
+                <div class="event-icons">
+                    <span class="icon" title="Password Protected">🔒</span>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

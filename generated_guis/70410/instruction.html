@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Graphic Design App</title>
+    <!-- 
+        Inline CSS is placed within a <style> tag in the <head> section.
+        This is a common interpretation of "inline CSS" when referring to styles
+        that are part of the HTML document itself, rather than external CSS files.
+        It allows for comprehensive styling of the page structure.
+    -->
+    <style>
+        /* Basic Reset and Body Styling */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the overall page */
+            display: flex;
+            justify-content: center; /* Center the app container horizontally */
+            align-items: center; /* Center the app container vertically */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            overflow: hidden; /* Prevent body scroll, app-container handles its own scroll */
+        }
+
+        /* Application Container - Simulates the mobile device screen */
+        #app-container {
+            width: 375px; /* Fixed width for mobile screen simulation */
+            height: 667px; /* Fixed height for mobile screen simulation */
+            background-color: #fff; /* White background for the app */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+            display: flex;
+            flex-direction: column; /* Stacks header, main content, and footer vertically */
+            overflow: hidden; /* Important to contain internal scrolling and elements */
+            border-radius: 10px; /* Soften the corners of the app screen */
+        }
+
+        /* Header Section */
+        #app-header {
+            background-color: #6200EE; /* Deep purple primary color */
+            color: #fff; /* White text */
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between; /* Aligns title to left, actions to right */
+            align-items: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow below header */
+            z-index: 100; /* Ensures header is on top of other content */
+        }
+
+        #app-header .header-actions button {
+            background: none; /* No background for buttons */
+            border: none;
+            color: #fff;
+            font-size: 1em;
+            margin-left: 15px; /* Space between buttons */
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s ease; /* Smooth hover effect */
+        }
+        #app-header .header-actions button:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Light transparent background on hover */
+        }
+
+        /* Main Content Area - Contains Canvas and Layers */
+        #main-content {
+            flex-grow: 1; /* Takes all available vertical space between header and footer */
+            display: flex;
+            flex-direction: column; /* Stacks canvas and layers vertically */
+            position: relative; /* For positioning floating elements within */
+            overflow: hidden; /* Prevents main content from scrolling itself */
+        }
+
+        /* Canvas Container */
+        #canvas-container {
+            flex-grow: 1; /* Canvas takes most of the main content space */
+            position: relative;
+            background-color: #f8f8f8; /* Light background behind the grid */
+            overflow: hidden; /* Ensures any elements on canvas stay within bounds */
+            border-bottom: 1px solid #eee; /* Visual separator from layers panel */
+        }
+
+        /* Canvas with Dotted Grid Background */
+        #canvas {
+            width: 100%;
+            height: 100%;
+            /* Creates a dotted grid using radial gradients */
+            background-image: radial-gradient(circle at 1px 1px, #ccc 1px, transparent 0);
+            background-size: 20px 20px; /* Size of each grid cell */
+            position: relative; /* Allows positioning elements directly on the canvas */
+        }
+
+        /* Floating Controls (Add Shape, Add Text, Import Image) */
+        #floating-controls {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column-reverse; /* Stacks buttons from bottom up */
+            gap: 10px; /* Space between buttons */
+            z-index: 50; /* Ensures controls are above canvas elements */
+        }
+
+        #floating-controls button {
+            background-color: #6200EE; /* Primary color */
+            color: #fff;
+            border: none;
+            border-radius: 50%; /* Makes buttons circular */
+            width: 50px;
+            height: 50px;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for floating effect */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        #floating-controls button:hover {
+            background-color: #3700B3; /* Darker primary color on hover */
+        }
+        #floating-controls button:active {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Smaller shadow on click */
+        }
+
+        /* Layers Panel */
+        #layers-panel {
+            min-height: 100px; /* Minimum height for the layers panel */
+            max-height: 150px; /* Maximum height, enabling scroll if more layers */
+            background-color: #f0f0f0; /* Light grey background */
+            border-top: 1px solid #eee; /* Separator from canvas */
+            padding: 10px;
+            overflow-y: auto; /* Enables vertical scrolling for the layer list */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* Inner shadow for depth */
+        }
+
+        #layers-panel h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #layers-panel ul {
+            list-style: none; /* Removes default list bullets */
+            padding: 0;
+            margin: 0;
+        }
+
+        #layers-panel li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between; /* Aligns layer name left, actions right */
+            align-items: center;
+            font-size: 0.9em;
+            color: #333;
+        }
+        #layers-panel li:last-child {
+            margin-bottom: 0; /* No bottom margin for the last layer item */
+        }
+        #layers-panel li .layer-actions button {
+            background: none;
+            border: none;
+            font-size: 0.9em;
+            color: #888; /* Grey color for layer action icons */
+            margin-left: 5px;
+            cursor: pointer;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        #layers-panel li .layer-actions button:hover {
+            background-color: #eee; /* Light background on hover */
+        }
+
+        /* Footer Section */
+        #app-footer {
+            background-color: #e0e0e0; /* Slightly darker grey for footer */
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-around; /* Distributes buttons evenly */
+            align-items: center;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05); /* Subtle shadow above footer */
+            z-index: 100; /* Ensures footer is on top */
+        }
+
+        #app-footer button {
+            background: none;
+            border: none;
+            color: #333; /* Dark grey text */
+            font-size: 1.1em;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between icon and text */
+        }
+        #app-footer button:hover {
+            background-color: #d0d0d0; /* Darker grey on hover */
+        }
+        #app-footer button:active {
+            background-color: #c0c0c0; /* Even darker grey on click */
+        }
+        #app-footer button:disabled {
+            color: #aaa; /* Lighter text for disabled state */
+            cursor: not-allowed;
+            background-color: #e0e0e0; /* No background change for disabled */
+        }
+
+        /* Utility classes for simple text/emoji icons */
+        .icon-save::before { content: '💾'; margin-right: 5px; }
+        .icon-share::before { content: '📤'; margin-right: 5px; }
+        .icon-plus::before { content: '+'; }
+        .icon-text::before { content: 'A'; }
+        .icon-image::before { content: '🖼️'; }
+        .icon-undo::before { content: '↩️'; }
+        .icon-redo::before { content: '↪️'; }
+        .icon-up::before { content: '⬆️'; }
+        .icon-down::before { content: '⬇️'; }
+        .icon-delete::before { content: '🗑️'; }
+
+    </style>
+</head>
+<body>
+    <div id="app-container">
+        <header id="app-header">
+            <span>Graphic Designer</span>
+            <div class="header-actions">
+                <button onclick="alert('Saving design to gallery!');"><span class="icon-save"></span> Save</button>
+                <button onclick="alert('Sharing design to other platforms!');"><span class="icon-share"></span> Share</button>
+            </div>
+        </header>
+
+        <div id="main-content">
+            <div id="canvas-container">
+                <div id="canvas">
+                    <!-- Placeholder for design elements (shapes, text, images) -->
+                    <!-- These elements are styled with inline styles for demonstration purposes -->
+                    <div style="position: absolute; top: 50px; left: 50px; padding: 10px; background-color: rgba(255,255,0,0.5); border: 1px dashed #333; z-index: 1;">Shape 1 (Rectangle)</div>
+                    <div style="position: absolute; top: 120px; left: 100px; width: 60px; height: 60px; background-color: rgba(0,255,255,0.5); border-radius: 50%; border: 1px dashed #333; display: flex; justify-content: center; align-items: center; z-index: 2;">Shape 2 (Circle)</div>
+                    <div style="position: absolute; top: 200px; left: 70px; font-size: 20px; font-weight: bold; color: #333; background-color: rgba(255,255,255,0.7); padding: 5px; border-radius: 3px; z-index: 3;">Hello Design!</div>
+                </div>
+                <div id="floating-controls">
+                    <button onclick="alert('Importing image from gallery!');" title="Import Image"><span class="icon-image"></span></button>
+                    <button onclick="alert('Adding text to canvas!');" title="Add Text"><span class="icon-text"></span></button>
+                    <button onclick="alert('Adding shape to canvas!');" title="Add Shape"><span class="icon-plus"></span></button>
+                </div>
+            </div>
+
+            <div id="layers-panel">
+                <h3>Layers</h3>
+                <ul>
+                    <!-- Dummy layer items to demonstrate the layered view -->
+                    <li>
+                        <span>Text: "Hello Design!"</span>
+                        <div class="layer-actions">
+                            <button onclick="alert('Move layer up!');" title="Move Up"><span class="icon-up"></span></button>
+                            <button onclick="alert('Move layer down!');" title="Move Down"><span class="icon-down"></span></button>
+                            <button onclick="alert('Delete layer!');" title="Delete"><span class="icon-delete"></span></button>
+                        </div>
+                    </li>
+                    <li>
+                        <span>Shape 2 (Circle)</span>
+                        <div class="layer-actions">
+                            <button onclick="alert('Move layer up!');" title="Move Up"><span class="icon-up"></span></button>
+                            <button onclick="alert('Move layer down!');" title="Move Down"><span class="icon-down"></span></button>
+                            <button onclick="alert('Delete layer!');" title="Delete"><span class="icon-delete"></span></button>
+                        </div>
+                    </li>
+                    <li>
+                        <span>Shape 1 (Rectangle)</span>
+                        <div class="layer-actions">
+                            <button onclick="alert('Move layer up!');" title="Move Up" disabled><span class="icon-up"></span></button> <!-- First layer cannot move up -->
+                            <button onclick="alert('Move layer down!');" title="Move Down"><span class="icon-down"></span></button>
+                            <button onclick="alert('Delete layer!');" title="Delete"><span class="icon-delete"></span></button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <footer id="app-footer">
+            <button onclick="alert('Undo last action!');" title="Undo"><span class="icon-undo"></span> Undo</button>
+            <button onclick="alert('Redo last undone action!');" title="Redo" disabled><span class="icon-redo"></span> Redo</button>
+        </footer>
+    </div>
+</body>
+</html>

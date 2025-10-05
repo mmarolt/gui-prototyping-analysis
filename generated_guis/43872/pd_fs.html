@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Acme Corp Tasks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Global Reset and Box Sizing */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Base Body and HTML Styles for Mobile Simulation */
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            height: 100%; /* Ensure body takes full viewport height */
+            overflow: hidden; /* Prevent body scroll, content will scroll within its container */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            /* Simulate specific mobile screen size (375x667px) for demonstration */
+            width: 375px;
+            height: 667px;
+            margin: auto; /* Center the simulated device in wider browser windows */
+            box-shadow: 0 0 15px rgba(0,0,0,0.2); /* Visual boundary for the device screen */
+            border-radius: 10px; /* Slightly rounded corners for a device feel */
+            position: relative; /* Crucial for FAB positioning context */
+            background-color: #f0f2f5; /* Light background for the main content area */
+        }
+
+        /* 1. Top Navigation Bar (Header) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 10px 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Prevent header from shrinking */
+            height: 60px; /* Fixed height for the header */
+        }
+
+        /* Company/Context Selector & Page Title */
+        .company-selector {
+            flex: 1; /* Allows it to take available space */
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            /* Offset to visually center, accounting for action icons on the right */
+            padding-left: 50px; 
+            white-space: nowrap; /* Prevent "Acme Corp" from wrapping */
+        }
+        .company-selector span:first-child {
+            margin-right: 5px;
+        }
+        .dropdown-arrow {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 2px; /* Slight vertical adjustment for arrow */
+        }
+
+        /* Right-aligned Action Icons */
+        .action-icons {
+            display: flex;
+            gap: 10px; /* Space between icons */
+            flex-shrink: 0; /* Prevent icons from shrinking */
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            font-size: 1.4em; /* Adjust icon size */
+            cursor: pointer;
+            padding: 5px;
+            color: #555;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: color 0.2s ease-in-out;
+        }
+        .icon-button:hover {
+            color: #007bff; /* Hover effect */
+        }
+
+        .info-icon {
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 1.5em; /* Make it a bit larger for the 'i' */
+            height: 1.5em;
+            font-size: 0.8em; /* Size of the 'i' inside the circle */
+            font-weight: bold;
+        }
+
+        /* 2. Main Content Area (Task List Display) */
+        .main-content-area {
+            flex-grow: 1; /* Takes all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for tasks */
+            padding: 10px;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            background-color: #f0f2f5;
+        }
+
+        .task-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Space between task items */
+        }
+
+        .task-item {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            min-height: 50px; /* Ensure a minimum height for task items */
+            transition: transform 0.2s ease-in-out;
+        }
+        .task-item:active {
+            transform: scale(0.98); /* Slight press effect */
+        }
+
+        .task-name {
+            font-size: 1em;
+            color: #333;
+            text-align: left;
+            flex-grow: 1; /* Allows task name to take available width */
+            margin-right: 10px; /* Space before indicator */
+        }
+
+        /* New/Recent Task Indicator */
+        .new-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #4CAF50; /* Green dot */
+            border-radius: 50%;
+            flex-shrink: 0; /* Prevent the dot from shrinking */
+        }
+
+        /* 3. Floating Action Buttons (FABs) */
+        .fab-container {
+            position: absolute; /* Position relative to the body (simulated device) */
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column-reverse; /* Primary FAB at bottom, secondary above */
+            align-items: flex-end; /* Align all FABs to the right */
+            gap: 10px; /* Space between FABs */
+            z-index: 100; /* Ensure FABs are on top of other content */
+        }
+
+        .fab {
+            width: 56px; /* Standard FAB size */
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background-color: #007bff; /* Primary blue color */
+            color: white;
+            font-size: 2em; /* Default icon size */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease-in-out; /* Smooth transitions for visual effects */
+        }
+
+        .primary-fab {
+            font-size: 2.5em; /* Larger '+' icon */
+        }
+
+        .secondary-fab {
+            background-color: #6c757d; /* Secondary grey for creation options */
+            width: 48px; /* Slightly smaller secondary FABs */
+            height: 48px;
+            font-size: 1.5em; /* Icon size for secondary FABs */
+            /* These are shown visible for this static HTML demo.
+               In a real application, they would typically be hidden
+               and animated into view when the primary FAB is tapped. */
+            /* Example of hidden state:
+               opacity: 0;
+               visibility: hidden;
+               transform: translateY(20px) scale(0.8); */
+        }
+        .fab:active {
+            transform: scale(0.95); /* Press effect on FABs */
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Top Navigation Bar (Header) -->
+    <div class="header">
+        <div class="company-selector">
+            <span>Acme Corp</span>
+            <span class="dropdown-arrow">&#9662;</span> <!-- Unicode down arrow for dropdown -->
+        </div>
+        <div class="action-icons">
+            <button class="icon-button" title="Projects">&#128193;</button> <!-- Folder icon -->
+            <button class="icon-button" title="Messaging">&#128488;</button> <!-- Chat bubble icon -->
+            <button class="icon-button" title="Search">&#128269;</button> <!-- Magnifying glass icon -->
+            <button class="icon-button" title="Notifications">&#128276;</button> <!-- Bell icon -->
+            <button class="icon-button info-icon" title="Info/Help">i</button> <!-- 'i' in a circle icon -->
+        </div>
+    </div>
+
+    <!-- 2. Main Content Area (Task List Display) -->
+    <div class="main-content-area">
+        <div class="task-list-container">
+            <!-- Example Task Items -->
+            <div class="task-item">
+                <span class="task-name">Prepare Q3 Financial Report</span>
+                <span class="new-indicator"></span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Review Marketing Campaign Draft</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Schedule Team Meeting with Client</span>
+                <span class="new-indicator"></span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Update Client Database Records</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Research New Software Vendors</span>
+                <span class="new-indicator"></span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Draft Project Proposal for Client X</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Follow up with Sales Leads</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Test new feature in dev environment</span>
+                <span class="new-indicator"></span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Onboard new team member: John Doe</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Plan company holiday party details</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Review Q2 Performance Metrics</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Prepare presentation for board meeting</span>
+                <span class="new-indicator"></span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Order office supplies for next quarter</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Send out weekly project updates</span>
+            </div>
+            <div class="task-item">
+                <span class="task-name">Configure new server instance</span>
+                <span class="new-indicator"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Floating Action Buttons (FABs) -->
+    <div class="fab-container">
+        <!-- Secondary FABs: These are shown visible for this static HTML demo.
+             In a real application, they would typically be hidden
+             and animated into view when the primary FAB is tapped. -->
+        <button class="fab secondary-fab create-conversation" title="Create New Conversation">&#x1F4AC;</button> <!-- Speech bubble icon -->
+        <button class="fab secondary-fab create-project" title="Create New Project">&#x1F4C1;</button> <!-- Open folder icon -->
+        <button class="fab secondary-fab create-task" title="Create New Task">&#x270E;</button> <!-- Pencil icon -->
+
+        <!-- Primary Expanding FAB -->
+        <button class="fab primary-fab" title="Create New Item">+</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Property Filters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the entire page, simulating a 375x667 mobile screen */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0 auto; /* Centers the body if it's narrower than viewport */
+            padding: 0;
+            background-color: #f8f8f8; /* Light background for the page */
+            display: flex;
+            flex-direction: column; /* Arranges header, content, footer vertically */
+            height: 667px; /* Fixed height for the target device */
+            width: 375px; /* Fixed width for the target device */
+            box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+            overflow: hidden; /* Prevents body scroll, allowing only the content area to scroll */
+            color: #333; /* Default text color */
+        }
+
+        /* Top Navigation Bar (Header) */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Spaces out items: back, title, placeholder */
+            align-items: center; /* Vertically aligns items */
+            padding: 15px 20px; /* Padding inside the header */
+            background-color: #fff; /* White background for the header */
+            border-bottom: 1px solid #eee; /* Subtle separator line */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Soft shadow for depth */
+            flex-shrink: 0; /* Prevents the header from shrinking */
+        }
+
+        .header .back-button {
+            font-size: 24px; /* Size for the arrow icon */
+            background: none; /* No background */
+            border: none; /* No border */
+            cursor: pointer; /* Indicates it's clickable */
+            color: #333; /* Icon color */
+            padding: 0; /* Remove default button padding */
+            line-height: 1; /* Aligns the arrow vertically */
+        }
+
+        .header .page-title {
+            font-size: 18px;
+            font-weight: bold;
+            flex-grow: 1; /* Allows the title to take available space and center */
+            text-align: center;
+        }
+
+        /* Placeholder to balance the header layout, matching the back button's visual space */
+        .header .reset-placeholder {
+            width: 24px; /* Matches back button width */
+        }
+
+        /* Scrollable Filter Options (Main Content Area) */
+        .scrollable-content {
+            flex-grow: 1; /* Allows this section to fill the remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling if content overflows */
+            padding: 20px; /* Padding around the filter options */
+            box-sizing: border-box;
+            -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+        }
+
+        /* General styling for each filter section */
+        .filter-section {
+            margin-bottom: 25px; /* Space between filter categories */
+        }
+
+        .filter-section-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px; /* Space below the label */
+            text-align: left;
+        }
+
+        /* Budget Range Input */
+        .budget-inputs {
+            display: flex; /* Arranges min and max input fields side-by-side */
+            justify-content: space-between;
+            gap: 10px; /* Space between the two input groups */
+        }
+
+        .budget-input-group {
+            display: flex;
+            align-items: center; /* Vertically aligns currency and input */
+            border: 1px solid #ddd; /* Border around the input field */
+            border-radius: 8px; /* Rounded corners */
+            padding: 8px 10px;
+            background-color: #fff;
+            flex: 1; /* Each input group takes equal space */
+        }
+
+        .budget-input-group span {
+            font-size: 16px;
+            margin-right: 5px; /* Space between currency and number */
+            color: #666;
+        }
+
+        .budget-input-group input {
+            border: none; /* Remove default input border */
+            outline: none; /* Remove outline on focus */
+            width: 100%; /* Input takes full width within its group */
+            font-size: 16px;
+            padding: 0;
+            background: transparent; /* Transparent background */
+        }
+
+        /* Property Type Checkboxes */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap; /* Allows checkboxes to wrap into multiple columns */
+            gap: 10px; /* Space between items */
+            justify-content: flex-start; /* Aligns items to the left */
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            width: calc(50% - 5px); /* Creates a two-column layout, accounting for the gap */
+            text-align: left;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            accent-color: #007bff; /* Custom checkbox color */
+        }
+
+        .checkbox-item label {
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* Number of Bedrooms Selection (Segmented Control) */
+        .segmented-control {
+            display: flex;
+            border: 1px solid #007bff; /* Primary color for the border */
+            border-radius: 8px; /* Rounded corners for the whole control */
+            overflow: hidden; /* Ensures child borders don't exceed parent's rounded corners */
+        }
+
+        .segmented-control input[type="radio"] {
+            display: none; /* Hides the actual radio button */
+        }
+
+        .segmented-control label {
+            flex: 1; /* Each label takes equal space */
+            padding: 10px 0;
+            text-align: center;
+            font-size: 15px;
+            color: #007bff; /* Text color when not selected */
+            background-color: #fff; /* Background when not selected */
+            cursor: pointer;
+            border-right: 1px solid #007bff; /* Separator between segments */
+            transition: background-color 0.2s ease, color 0.2s ease; /* Smooth transition on hover/select */
+        }
+
+        .segmented-control label:last-child {
+            border-right: none; /* No separator on the last item */
+        }
+
+        .segmented-control input[type="radio"]:checked + label {
+            background-color: #007bff; /* Background when selected */
+            color: #fff; /* Text color when selected */
+            font-weight: bold;
+        }
+
+        /* Posted By Radio Buttons */
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap; /* Allows radio buttons to wrap */
+            gap: 15px; /* Space between radio items */
+            justify-content: flex-start;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            text-align: left;
+        }
+
+        .radio-item input[type="radio"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            accent-color: #007bff; /* Custom radio button color */
+        }
+
+        .radio-item label {
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* Reset Button */
+        .reset-button {
+            width: 100%;
+            padding: 12px;
+            background: none; /* Transparent background */
+            border: 1px solid #ccc; /* Outline border */
+            border-radius: 8px;
+            font-size: 16px;
+            color: #666; /* Grey text color */
+            cursor: pointer;
+            margin-top: 20px; /* Space above */
+            margin-bottom: 20px; /* Space below before the footer */
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .reset-button:active {
+            background-color: #e0e0e0;
+        }
+
+        /* Bottom Action Bar (Footer) */
+        .footer {
+            flex-shrink: 0; /* Prevents the footer from shrinking */
+            padding: 15px 20px;
+            background-color: #fff;
+            border-top: 1px solid #eee; /* Subtle separator line */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Soft shadow for depth */
+        }
+
+        .apply-button {
+            width: 100%; /* Full width button */
+            padding: 15px;
+            background-color: #007bff; /* Prominent blue background */
+            color: white; /* White text */
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .apply-button:active {
+            background-color: #0056b3; /* Darker blue on press */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-button">&#x2190;</button> <!-- Left arrow icon -->
+        <span class="page-title">Filters</span>
+        <div class="reset-placeholder"></div> <!-- Balances the header layout -->
+    </div>
+
+    <div class="scrollable-content">
+        <!-- Budget Range Input Section -->
+        <div class="filter-section">
+            <div class="filter-section-label">Budget Range</div>
+            <div class="budget-inputs">
+                <div class="budget-input-group">
+                    <span>$</span>
+                    <input type="number" placeholder="Min" value="50000">
+                </div>
+                <div class="budget-input-group">
+                    <span>$</span>
+                    <input type="number" placeholder="Max" value="500000">
+                </div>
+            </div>
+        </div>
+
+        <!-- Property Type Selection Section -->
+        <div class="filter-section">
+            <div class="filter-section-label">Property Type</div>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="flat" name="property_type" checked>
+                    <label for="flat">Flat</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="house" name="property_type">
+                    <label for="house">House/Villa</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="office" name="property_type">
+                    <label for="office">Office Space</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="pg_hostel" name="property_type">
+                    <label for="pg_hostel">PG/Hostel</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="commercial" name="property_type">
+                    <label for="commercial">Other Commercial</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="shop" name="property_type">
+                    <label for="shop">Shop/Showroom</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Number of Bedrooms Selection Section -->
+        <div class="filter-section">
+            <div class="filter-section-label">Bedrooms</div>
+            <div class="segmented-control">
+                <input type="radio" id="bed1" name="bedrooms" value="1">
+                <label for="bed1">1</label>
+                <input type="radio" id="bed2" name="bedrooms" value="2" checked>
+                <label for="bed2">2</label>
+                <input type="radio" id="bed3" name="bedrooms" value="3">
+                <label for="bed3">3</label>
+                <input type="radio" id="bed4" name="bedrooms" value="4">
+                <label for="bed4">4</label>
+                <input type="radio" id="bed5plus" name="bedrooms" value=">4">
+                <label for="bed5plus">>4</label>
+            </div>
+        </div>
+
+        <!-- Posted By Selection Section -->
+        <div class="filter-section">
+            <div class="filter-section-label">Posted By</div>
+            <div class="radio-group">
+                <div class="radio-item">
+                    <input type="radio" id="owner" name="posted_by" value="owner" checked>
+                    <label for="owner">Owner</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="builder" name="posted_by" value="builder">
+                    <label for="builder">Builder</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="agent" name="posted_by" value="agent">
+                    <label for="agent">Agent</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <button class="reset-button">Reset</button>
+    </div>
+
+    <!-- Bottom Action Bar (Footer) -->
+    <div class="footer">
+        <button class="apply-button">Apply</button>
+    </div>
+
+</body>
+</html>

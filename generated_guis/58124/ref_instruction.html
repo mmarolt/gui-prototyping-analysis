@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Create Invoice</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts for Roboto (Material Design's default font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,500,700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Basic reset */
+        body, h1, h2, h3, p, div, input, textarea, button {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light grey background */
+            overflow: hidden; /* Prevent body scroll if mobile-screen is smaller than viewport */
+        }
+
+        /* Mobile screen simulation */
+        .mobile-screen {
+            width: 375px; /* Fixed width as per description */
+            height: 667px; /* Fixed height as per description */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Important to keep content within bounds and allow main content to scroll */
+        }
+
+        /* Material Design Top App Bar */
+        .mdc-top-app-bar {
+            background-color: #6200ee; /* Primary color */
+            color: #ffffff;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative; /* Stays within the flex column */
+            z-index: 101; /* Above other content */
+        }
+
+        .mdc-top-app-bar__row {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mdc-top-app-bar__section {
+            display: flex;
+            align-items: center;
+        }
+
+        .mdc-top-app-bar__section--align-start {
+            justify-content: flex-start;
+            flex-grow: 1;
+        }
+
+        .mdc-top-app-bar__navigation-icon {
+            font-size: 24px;
+            color: #ffffff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px; /* For touch target */
+            margin-right: 8px;
+            border-radius: 50%;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        .mdc-top-app-bar__navigation-icon:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .mdc-top-app-bar__title {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: 0.15px;
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center; /* Center the title visually */
+        }
+        /* Adjust title for start aligned content */
+        .mdc-top-app-bar__section--align-start > .mdc-top-app-bar__title {
+            text-align: left;
+            margin-left: 0;
+        }
+
+
+        /* Main scrollable content area */
+        .main-content-scrollable {
+            flex: 1; /* Takes all available space between top bar and bottom button */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 16px; /* Horizontal padding for all content */
+            padding-bottom: 24px; /* More padding at the bottom before fixed button */
+            background-color: #f8f8f8; /* Slightly off-white background for content */
+        }
+
+        .section-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px 16px; /* Inner padding for sections */
+            margin-bottom: 24px; /* Spacing between sections */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        .section-container:last-of-type {
+            margin-bottom: 0; /* No bottom margin for the last section */
+        }
+
+        .section-title {
+            font-size: 1.15em; /* Approximately 18-20px */
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee; /* Subtle separator */
+            padding-bottom: 12px;
+            letter-spacing: 0.01em;
+        }
+
+        /* Material Design Text Field emulation */
+        .mdc-text-field {
+            position: relative;
+            display: flex;
+            margin-bottom: 16px; /* Spacing between text fields */
+            width: 100%;
+        }
+        .mdc-text-field--filled {
+            background-color: #f0f0f0; /* Light grey background for filled fields */
+            border-radius: 4px 4px 0 0;
+            border-bottom: 1px solid #ccc;
+            padding-top: 20px; /* Space for floating label */
+        }
+        .mdc-text-field--filled:focus-within {
+             border-bottom: 2px solid #6200ee; /* Primary color on focus */
+             background-color: #e8e8e8; /* Slightly darker on focus */
+        }
+
+        .mdc-text-field__input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 8px 12px;
+            font-size: 16px;
+            color: #333;
+            outline: none;
+        }
+        .mdc-text-field--textarea .mdc-text-field__input {
+            resize: vertical; /* Allow vertical resizing for textareas */
+            min-height: 48px; /* Minimum height for textarea */
+        }
+        .mdc-text-field__input::placeholder {
+            color: #888;
+        }
+
+        .mdc-floating-label {
+            position: absolute;
+            top: 8px; /* Position above input */
+            left: 12px;
+            color: #666;
+            font-size: 13px;
+            pointer-events: none;
+            transition: top 0.15s ease-out, font-size 0.15s ease-out, color 0.15s ease-out;
+            transform-origin: left top;
+        }
+        /* Style for when label floats above */
+        .mdc-floating-label--float-above {
+            top: 8px;
+            font-size: 13px;
+            color: #6200ee; /* Primary color when active/filled */
+        }
+        /* For filled fields, the label is usually always floating if there's content */
+        .mdc-text-field--filled .mdc-floating-label {
+            top: 8px; /* Always float for filled variant */
+            font-size: 13px;
+        }
+        /* Example if an actual floating label was implemented, for focus */
+        .mdc-text-field__input:focus + .mdc-floating-label {
+            color: #6200ee; /* Primary color on focus */
+        }
+        .mdc-text-field__input:not(:placeholder-shown) + .mdc-floating-label {
+            color: #6200ee; /* Primary color when filled */
+        }
+        /* For inputs without `value` but with `placeholder`, label should also float on focus */
+        .mdc-text-field__input:placeholder-shown:not(:focus) + .mdc-floating-label {
+             top: 50%; /* Center the label when placeholder shown and not focused */
+             transform: translateY(-50%);
+             font-size: 16px;
+             color: #888;
+        }
+        .mdc-text-field__input:placeholder-shown:focus + .mdc-floating-label {
+            top: 8px;
+            font-size: 13px;
+            color: #6200ee;
+        }
+
+
+        /* Invoice Totals Display */
+        .total-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 16px 20px; /* Adjusted padding for better fit within section */
+            background-color: #e0e0e0;
+            border-radius: 8px; /* Match section container radius */
+            font-weight: 500;
+            font-size: 1.3em; /* Slightly larger total */
+            color: #333;
+            margin-top: 16px; /* Space from last input field */
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Subtle inner shadow */
+        }
+        .total-value {
+            color: #00796b; /* A distinct color for the total value */
+            font-weight: 700;
+        }
+
+
+        /* Bottom Action Button */
+        .bottom-action-bar {
+            position: sticky; /* Sticky or fixed, sticky is better if scrollable content */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            padding: 16px;
+            background-color: #fff;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            z-index: 100;
+            flex-shrink: 0; /* Prevents shrinking in flex column */
+        }
+
+        .mdc-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px; /* Standard touch target height */
+            min-width: 64px;
+            padding: 0 24px;
+            border-radius: 24px; /* Pill shape */
+            font-size: 15px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.25px;
+            cursor: pointer;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            outline: none;
+            border: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mdc-button--raised {
+            background-color: #6200ee; /* Primary color */
+            color: #ffffff;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            width: 100%;
+            max-width: 300px; /* Constrain button width */
+        }
+
+        .mdc-button--raised:hover {
+            background-color: #3700b3; /* Darker primary on hover */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2), 0 5px 10px rgba(0,0,0,0.25);
+        }
+
+        .mdc-button--raised:active {
+            background-color: #3700b3; /* Active state */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.12);
+        }
+
+        .mdc-button__label {
+            line-height: 1; /* Ensures text aligns correctly */
+        }
+
+        /* Material Icon styling */
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;  /* Preferred icon size */
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- 1. Top App Bar -->
+        <header class="mdc-top-app-bar">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <button class="material-icons mdc-top-app-bar__navigation-icon" aria-label="Back">arrow_back</button>
+                    <span class="mdc-top-app-bar__title">Create Invoice</span>
+                </section>
+                <!-- Optional: Right-aligned actions like Save or More options -->
+                <!--
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                    <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Save">save</button>
+                </section>
+                -->
+            </div>
+        </header>
+
+        <!-- Main scrollable content -->
+        <main class="main-content-scrollable">
+
+            <!-- 2. Organization Details -->
+            <div class="section-container">
+                <h2 class="section-title">Your Organization Details</h2>
+                <div class="mdc-text-field mdc-text-field--filled" style="margin-bottom: 16px;">
+                    <input class="mdc-text-field__input" type="text" id="org-name" value="Acme Corp." placeholder=" ">
+                    <label class="mdc-floating-label" for="org-name">Organization Name</label>
+                </div>
+                <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--filled">
+                    <textarea id="org-address" class="mdc-text-field__input" rows="3" placeholder=" ">123 Main St.
+Anytown, CA 90210</textarea>
+                    <label class="mdc-floating-label" for="org-address">Address</label>
+                </div>
+            </div>
+
+            <!-- 3. Invoice Summary & Totals -->
+            <div class="section-container">
+                <h2 class="section-title">Invoice Totals</h2>
+                <div class="mdc-text-field mdc-text-field--filled" style="margin-bottom: 16px;">
+                    <input class="mdc-text-field__input" type="number" step="0.01" id="subtotal-amount" value="120.00" placeholder=" ">
+                    <label class="mdc-floating-label" for="subtotal-amount">Subtotal ($)</label>
+                </div>
+                <div class="mdc-text-field mdc-text-field--filled">
+                    <input class="mdc-text-field__input" type="number" step="0.01" id="sales-tax-amount" value="12.00" placeholder=" ">
+                    <label class="mdc-floating-label" for="sales-tax-amount">Sales Tax ($)</label>
+                </div>
+                <div class="total-display">
+                    <span class="total-label">Total Amount Due</span>
+                    <span class="total-value">$132.00 USD</span>
+                </div>
+            </div>
+
+            <!-- 4. Additional Information -->
+            <div class="section-container">
+                <h2 class="section-title">Additional Information</h2>
+                <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--filled" style="margin-bottom: 16px;">
+                    <textarea id="notes" class="mdc-text-field__input" rows="4" placeholder=" "></textarea>
+                    <label class="mdc-floating-label" for="notes">Notes</label>
+                </div>
+                <div class="mdc-text-field mdc-text-field--textarea mdc-text-field--filled">
+                    <textarea id="terms" class="mdc-text-field__input" rows="6" placeholder=" "></textarea>
+                    <label class="mdc-floating-label" for="terms">Terms & Conditions</label>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- 5. Bottom Action Button -->
+        <div class="bottom-action-bar">
+            <button class="mdc-button mdc-button--raised">
+                <span class="mdc-button__label">Next</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

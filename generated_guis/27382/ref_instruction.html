@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Announcement</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font CDN (Standard Material Design font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global styles for the mobile screen (667x375) */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--mdc-theme-background); /* Material background color */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box;
+            width: 375px; /* Fixed width of the mobile screen */
+            height: 667px; /* Fixed height of the mobile screen */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-y: auto; /* Allow vertical scroll for content that exceeds height */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Material Design Color Palette variables */
+        :root {
+            --mdc-theme-primary: #6200EE;
+            --mdc-theme-on-primary: #FFFFFF;
+            --mdc-theme-surface: #FFFFFF;
+            --mdc-theme-on-surface: rgba(0, 0, 0, 0.87);
+            --mdc-theme-on-surface-medium-emphasis: rgba(0, 0, 0, 0.60);
+            --mdc-theme-on-surface-disabled: rgba(0, 0, 0, 0.38);
+            --mdc-theme-background: #F5F5F5;
+            --mdc-theme-text-field-border: rgba(0, 0, 0, 0.38);
+            --mdc-theme-divider: rgba(0, 0, 0, 0.12);
+        }
+
+        /* Helper for ensuring Material Design minimum tap target size */
+        .tap-target-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px; /* Material minimum tap target */
+            min-height: 48px; /* Material minimum tap target */
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            /* Ripple effect could be added here with ::after pseudo-element */
+        }
+
+        /* 1. Top App Bar (Header) */
+        .top-app-bar {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 56px; /* Standard Material Top App Bar height */
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 
+                        0px 4px 5px 0px rgba(0,0,0,0.14), 
+                        0px 1px 10px 0px rgba(0,0,0,0.12); /* dp4 elevation */
+            padding: 0 16px;
+            box-sizing: border-box;
+            position: sticky; /* Keeps the header at the top during scroll */
+            top: 0;
+            z-index: 100; /* Ensure it stays above scrolling content */
+        }
+
+        .top-app-bar .material-icons {
+            font-size: 24px; /* Standard icon size */
+        }
+
+        .top-app-bar h1 {
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center;
+            font-size: 20px; /* Material Design Headline6 */
+            font-weight: 500;
+            margin: 0;
+            /* Adjust padding to optically center title by counteracting back icon space */
+            padding-right: 24px; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Common section styling */
+        .ui-section {
+            background-color: var(--mdc-theme-surface); /* White background for content sections */
+            margin-bottom: 8px; /* Visual separation between sections */
+            padding: 16px;
+            box-sizing: border-box;
+            width: 100%; /* Ensures sections take full width */
+        }
+        
+        /* Override default section padding for specific inner elements */
+        .recipient-selection-section {
+            padding-top: 16px; 
+            padding-bottom: 0; /* List items have their own padding */
+        }
+        .message-composition-section {
+            padding-top: 0; 
+            padding-bottom: 0; /* Text fields have their own padding and margin */
+        }
+        .action-navigation-section {
+            background-color: transparent; /* Blends with body background */
+            margin-top: 16px; /* Additional separation from composition */
+            margin-bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 16px 24px 16px; /* Specific padding as per description */
+        }
+
+        /* 2. Recipient Selection Section */
+        .section-header {
+            font-size: 16px; /* Material Design Subtitle1 */
+            font-weight: 500;
+            margin: 0 0 8px 0;
+            color: var(--mdc-theme-on-surface);
+        }
+
+        .recipient-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .recipient-list li {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            min-height: 48px; /* Ensure tap target size for the whole row */
+            border-bottom: 1px solid var(--mdc-theme-divider);
+            cursor: pointer;
+            outline: none; /* Remove default focus outline */
+            transition: background-color 0.15s ease-out;
+        }
+        .recipient-list li:hover,
+        .recipient-list li:focus {
+            background-color: rgba(98, 0, 238, 0.04); /* Light hover/focus state */
+        }
+        .recipient-list li:last-child {
+            border-bottom: none; /* No divider after the last item */
+        }
+
+        /* Custom Material Design checkbox approximation */
+        .recipient-list input[type="checkbox"] {
+            appearance: none; /* Hide default browser checkbox */
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+            flex-shrink: 0;
+            border: 2px solid var(--mdc-theme-on-surface-medium-emphasis);
+            border-radius: 2px;
+            position: relative;
+            cursor: pointer;
+            background-color: var(--mdc-theme-surface);
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .recipient-list input[type="checkbox"]::before {
+            content: "\e5ca"; /* Material Icon 'check' */
+            font-family: 'Material Icons';
+            font-size: 20px;
+            line-height: 1; /* Adjust line height to center icon */
+            color: var(--mdc-theme-on-primary);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0); /* Hide initially */
+            opacity: 0;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .recipient-list input[type="checkbox"]:checked {
+            background-color: var(--mdc-theme-primary);
+            border-color: var(--mdc-theme-primary);
+        }
+        .recipient-list input[type="checkbox"]:checked::before {
+            transform: translate(-50%, -50%) scale(1); /* Show checkmark */
+            opacity: 1;
+        }
+
+        .recipient-list label {
+            flex-grow: 1;
+            font-size: 16px; /* Material Design Body1 */
+            color: var(--mdc-theme-on-surface);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            /* Padding right for label to ensure consistent spacing if content is pushed right */
+            padding-right: 8px; 
+        }
+
+        .recipient-list .attendee-count {
+            font-size: 12px; /* Material Design Caption */
+            color: var(--mdc-theme-on-surface-medium-emphasis);
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+
+        /* 3. Message Composition Section - Outlined Text Fields */
+        .text-field-container {
+            margin-bottom: 16px;
+            position: relative;
+            padding-top: 24px; /* Space for the floating label above the input */
+            width: 100%; /* Take full width of parent section */
+        }
+
+        .text-field-container input,
+        .text-field-container textarea {
+            width: 100%; /* Full width within its container */
+            padding: 12px 16px;
+            border: 1px solid var(--mdc-theme-text-field-border); /* Outlined variant border */
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            color: var(--mdc-theme-on-surface);
+            background-color: var(--mdc-theme-surface); /* Solid background to match Material spec */
+            box-sizing: border-box;
+            line-height: 24px;
+            outline: none; /* Remove default browser focus outline */
+            transition: border-color 0.2s ease-out, padding 0.2s ease-out;
+        }
+
+        .text-field-container input:focus,
+        .text-field-container textarea:focus {
+            border-color: var(--mdc-theme-primary); /* Highlight border on focus */
+            border-width: 2px; /* Thicker border on focus */
+            padding: 11px 15px; /* Adjust padding to keep content aligned with thicker border */
+        }
+
+        .text-field-container textarea {
+            resize: vertical; /* Allow vertical resizing, or 'none' for fixed height */
+            min-height: 120px; /* Example minimum height for message content */
+        }
+
+        .text-field-container label {
+            position: absolute;
+            top: 0;
+            left: 16px;
+            padding: 0 4px;
+            font-size: 16px;
+            color: var(--mdc-theme-on-surface-medium-emphasis); /* Hint text color */
+            pointer-events: none; /* Allows clicks to pass through to the input */
+            transform: translateY(36px); /* Initial position, aligned with input text */
+            transition: transform 0.2s ease-out, font-size 0.2s ease-out, color 0.2s ease-out;
+            background-color: var(--mdc-theme-surface); /* Covers the border underneath the label */
+            z-index: 1; /* Ensure label is above the input border */
+        }
+        
+        /* Floating label state when input has content or is focused */
+        .text-field-container input:not(:placeholder-shown) + label,
+        .text-field-container input:focus + label,
+        .text-field-container textarea:not(:placeholder-shown) + label,
+        .text-field-container textarea:focus + label {
+            transform: translateY(12px) translateX(-4px); /* Move above input, slightly left */
+            font-size: 12px; /* Shrink font size */
+            color: var(--mdc-theme-primary); /* Change color to primary */
+            z-index: 2; /* Ensure it stays above input border when transformed */
+        }
+
+        /* Hide the actual placeholder text to show only the floating label, as per Material spec */
+        .text-field-container input[placeholder],
+        .text-field-container textarea[placeholder] {
+            color: transparent;
+        }
+        .text-field-container input[placeholder]:focus,
+        .text-field-container textarea[placeholder]:focus {
+            color: var(--mdc-theme-on-surface); /* Show user's input text when focused */
+        }
+
+        /* 4. Action & Navigation Section */
+        .action-button {
+            width: 100%; /* Takes full width of parent section (minus padding) */
+            height: 48px; /* Standard Material button height */
+            margin-top: 24px;
+            background-color: var(--mdc-theme-primary);
+            color: var(--mdc-theme-on-primary);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 
+                        0px 2px 2px 0px rgba(0,0,0,0.14), 
+                        0px 1px 5px 0px rgba(0,0,0,0.12); /* dp2 elevation */
+            transition: box-shadow 0.2s ease-out, background-color 0.2s ease-out;
+            box-sizing: border-box;
+            letter-spacing: 0.0892857143em; /* Standard Material button letter spacing */
+            line-height: 1.25rem;
+        }
+        
+        /* Elevated button hover state (dp4 elevation) */
+        .action-button:not(:disabled):hover {
+             box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 
+                         0px 8px 10px 1px rgba(0,0,0,0.14), 
+                         0px 3px 14px 2px rgba(0,0,0,0.12); 
+        }
+        /* Elevated button active/pressed state (dp8 elevation) */
+        .action-button:not(:disabled):active {
+            box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2), 
+                        0px 12px 17px 2px rgba(0,0,0,0.14), 
+                        0px 5px 22px 4px rgba(0,0,0,0.12); 
+        }
+
+        .action-button:disabled {
+            background-color: rgba(0, 0, 0, 0.12); /* Disabled button background */
+            color: rgba(0, 0, 0, 0.38); /* Disabled button text */
+            box-shadow: none; /* No elevation when disabled */
+            cursor: not-allowed;
+        }
+
+        .dashboard-link {
+            margin-top: 16px;
+            font-size: 14px; /* Material Design Button typography size */
+            font-weight: 500;
+            color: var(--mdc-theme-primary); /* Primary color for text links/buttons */
+            text-decoration: none;
+            cursor: pointer;
+            padding: 8px 16px; /* Provides a larger tap target area for the text link */
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.0892857143em;
+            border-radius: 4px; /* For subtle hover background */
+            transition: background-color 0.15s ease-out;
+        }
+        
+        .dashboard-link:hover {
+            background-color: rgba(98, 0, 238, 0.04); /* Light ripple-like background on hover */
+        }
+    </style>
+</head>
+<body>
+    <!-- Main container for the fixed mobile screen size -->
+    <div id="app-container">
+        <!-- 1. Top App Bar (Header) -->
+        <header class="top-app-bar">
+            <div class="tap-target-wrapper">
+                <i class="material-icons">arrow_back</i>
+            </div>
+            <h1>New Announcement</h1>
+        </header>
+
+        <!-- 2. Recipient Selection Section -->
+        <section class="ui-section recipient-selection-section">
+            <h2 class="section-header">Select Recipients</h2>
+            <ul class="recipient-list">
+                <li tabindex="0" role="checkbox" aria-checked="false">
+                    <input type="checkbox" id="group-all">
+                    <label for="group-all">
+                        <span>All Attendees</span>
+                        <span class="attendee-count">(1234)</span>
+                    </label>
+                </li>
+                <li tabindex="0" role="checkbox" aria-checked="false">
+                    <input type="checkbox" id="group-speakers">
+                    <label for="group-speakers">
+                        <span>Speakers</span>
+                        <span class="attendee-count">(45)</span>
+                    </label>
+                </li>
+                <li tabindex="0" role="checkbox" aria-checked="false">
+                    <input type="checkbox" id="group-volunteers">
+                    <label for="group-volunteers">
+                        <span>Volunteers</span>
+                        <span class="attendee-count">(20)</span>
+                    </label>
+                </li>
+                <li tabindex="0" role="checkbox" aria-checked="false">
+                    <input type="checkbox" id="group-staff">
+                    <label for="group-staff">
+                        <span>Event Staff</span>
+                        <span class="attendee-count">(15)</span>
+                    </label>
+                </li>
+            </ul>
+        </section>
+
+        <!-- 3. Message Composition Section -->
+        <section class="ui-section message-composition-section">
+            <div class="text-field-container">
+                <input type="text" id="announcement-title" placeholder=" " autocomplete="off">
+                <label for="announcement-title">Title</label>
+            </div>
+
+            <div class="text-field-container">
+                <textarea id="announcement-content" placeholder=" " rows="5" autocomplete="off"></textarea>
+                <label for="announcement-content">Message Content</label>
+            </div>
+        </section>
+
+        <!-- 4. Action & Navigation Section -->
+        <section class="action-navigation-section">
+            <button type="button" class="action-button" disabled>Send Announcement</button> <!-- Initially disabled -->
+            <a href="/dashboard" class="dashboard-link">Access Dashboard for advanced options</a>
+        </section>
+    </div>
+
+    <script>
+        // Basic JavaScript for interactive elements (checkbox and button enable/disable)
+        const sendButton = document.querySelector('.action-button');
+        const recipientCheckboxes = document.querySelectorAll('.recipient-list input[type="checkbox"]');
+        const announcementTitle = document.getElementById('announcement-title');
+        const announcementContent = document.getElementById('announcement-content');
+
+        /**
+         * Updates the disabled state of the 'Send Announcement' button.
+         * The button is enabled only if at least one recipient is selected AND
+         * either the title or the message content fields are not empty.
+         */
+        function updateSendButtonState() {
+            const anyRecipientSelected = Array.from(recipientCheckboxes).some(cb => cb.checked);
+            const hasContent = announcementTitle.value.trim() !== '' || announcementContent.value.trim() !== '';
+            sendButton.disabled = !(anyRecipientSelected && hasContent);
+        }
+
+        // Add event listeners for recipient checkboxes
+        recipientCheckboxes.forEach(cb => {
+            // Listen for checkbox state changes to update button state
+            cb.addEventListener('change', updateSendButtonState);
+
+            // Enhance tap target: allow clicking anywhere on the list item to toggle the checkbox
+            const listItem = cb.parentElement;
+            listItem.addEventListener('click', (event) => {
+                // Prevent double toggling if the checkbox input itself is clicked
+                if (event.target !== cb) { 
+                    cb.checked = !cb.checked;
+                    cb.dispatchEvent(new Event('change')); // Manually trigger change to update button state
+                }
+            });
+            // Add keyboard accessibility for list items
+            listItem.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    cb.checked = !cb.checked;
+                    cb.dispatchEvent(new Event('change'));
+                    event.preventDefault(); // Prevent default scroll for space bar
+                }
+            });
+        });
+
+        // Add event listeners for title and content input fields
+        announcementTitle.addEventListener('input', updateSendButtonState);
+        announcementContent.addEventListener('input', updateSendButtonState);
+
+        // Initial check for button state when the page loads
+        updateSendButtonState();
+    </script>
+</body>
+</html>

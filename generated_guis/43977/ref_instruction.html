@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Networking App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font CDN for Material Design typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic reset for consistent rendering across browsers */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased; /* Better font rendering on macOS/iOS */
+            -moz-osx-font-smoothing: grayscale; /* Better font rendering on Firefox macOS */
+            background-color: #E0E0E0; /* A slightly darker background for the "body" to make the phone container stand out */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        /* Style for the main container to simulate mobile screen (667x375 as per request) */
+        .mobile-screen-container {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.15); /* Subtle shadow for depth */
+            overflow: hidden; /* Ensures content stays within bounds */
+            display: flex; /* Flexbox for vertical layout of sections */
+            flex-direction: column; /* Stack sections vertically */
+            background-color: #F5F5F5; /* Light background for the page content */
+            box-sizing: border-box; /* Padding and border are included in the element's total width and height */
+            border-radius: 8px; /* Slightly rounded corners for the phone container */
+        }
+
+        /* General button reset for Material Design styled buttons */
+        button {
+            outline: none;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+            border: none;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        button:active {
+            opacity: 0.8; /* Simple feedback on press */
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen-container">
+        <!-- Section 1: Top App Bar (Navigation & Status) -->
+        <header style="
+            background-color: #6200EE; /* Material Design Primary Color (Indigo 700) */
+            color: white;
+            height: 56px; /* Standard Material Design App Bar height on mobile */
+            display: flex;
+            align-items: center;
+            padding: 0 16px; /* Standard padding for content */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Material Design elevation (dp 4) */
+            z-index: 100; /* Ensure it stays on top of other content */
+            position: relative; /* For z-index to work */
+            box-sizing: border-box;
+        ">
+            <button aria-label="Open navigation menu" style="
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                padding: 8px; /* Touch target size */
+                font-size: 24px; /* Material Icon size */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">
+                <i class="material-icons">menu</i>
+            </button>
+            <div style="
+                flex-grow: 1; /* Takes up available space */
+                text-align: center;
+                font-size: 1.1em; /* Headline 6 / Subtitle 1 equivalent */
+                font-weight: 500; /* Medium weight for text */
+                letter-spacing: 0.15px; /* Standard letter spacing for Material text */
+            ">
+                3/10
+            </div>
+            <button aria-label="Open messages" style="
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                padding: 8px; /* Touch target size */
+                font-size: 24px; /* Material Icon size */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            ">
+                <i class="material-icons">chat</i>
+            </button>
+        </header>
+
+        <!-- Section 2: Profile Content Card (Main Content Area) -->
+        <main style="
+            flex-grow: 1; /* Allows it to take up all available vertical space between header and footer */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically center the card */
+            align-items: center; /* Horizontally center the card */
+            padding: 16px; /* Padding around the card */
+            box-sizing: border-box;
+            overflow-y: auto; /* Enable scrolling if card content exceeds height */
+        ">
+            <div style="
+                background-color: white;
+                border-radius: 12px; /* Material Design card rounded corners */
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* Elevated card shadow (dp 8) */
+                padding: 24px; /* Internal padding for card content */
+                text-align: center;
+                width: 100%; /* Occupy full width within padding */
+                max-width: 320px; /* Constrain card width for better readability on wider screens (even though fixed width here) */
+                display: flex;
+                flex-direction: column;
+                align-items: center; /* Center content horizontally within the card */
+                position: relative; /* For potential future gesture indicators or badges */
+                min-height: 480px; /* Ensure sufficient height for the profile content */
+                box-sizing: border-box;
+            ">
+                <img src="https://via.placeholder.com/150/6200EE/FFFFFF?text=JD" alt="Profile Photo" style="
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%; /* Circular profile photo */
+                    object-fit: cover; /* Ensures image covers the area without distortion */
+                    margin-bottom: 20px;
+                    border: 3px solid #6200EE; /* Accent border matching primary color */
+                ">
+                <h2 style="
+                    font-size: 1.8em; /* Material Design H5-like */
+                    font-weight: 600; /* Stronger weight for name */
+                    color: #212121; /* Dark gray for primary text */
+                    margin-bottom: 4px;
+                    line-height: 1.2;
+                ">
+                    Jane Doe
+                </h2>
+                <p style="
+                    font-size: 1.1em; /* Subtitle 1 equivalent */
+                    color: #757575; /* Medium gray for secondary text */
+                    margin-bottom: 8px;
+                ">
+                    Senior Product Designer at Acme Corp
+                </p>
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    color: #757575;
+                    font-size: 0.95em;
+                    margin-bottom: 20px;
+                ">
+                    <i class="material-icons" style="font-size: 1.2em; margin-right: 4px;">location_on</i>
+                    <span>2.5 miles away</span>
+                </div>
+                <p style="
+                    font-size: 1em; /* Body 1 equivalent */
+                    line-height: 1.5;
+                    color: #424242; /* Darker gray for body text */
+                    text-align: left; /* Aligns bio text to left for readability */
+                    margin-bottom: 24px;
+                    max-width: 280px; /* Max width for bio text block */
+                ">
+                    Passionate about creating user-centered designs that solve real-world problems. Always looking to connect with innovative minds in tech and collaborate on exciting projects.
+                </p>
+                <div style="
+                    display: flex;
+                    flex-wrap: wrap; /* Allows chips to wrap to the next line */
+                    justify-content: center;
+                    gap: 8px; /* Space between chips */
+                    margin-top: auto; /* Pushes interests to the bottom of the card content area */
+                ">
+                    <span style="
+                        background-color: #E0E0E0; /* Light gray chip background */
+                        border-radius: 16px; /* Pill shape for chips */
+                        padding: 6px 12px;
+                        font-size: 0.85em; /* Caption/Chip text size */
+                        color: #424242;
+                        white-space: nowrap; /* Prevents text from breaking within a chip */
+                    ">#UXDesign</span>
+                    <span style="
+                        background-color: #E0E0E0;
+                        border-radius: 16px;
+                        padding: 6px 12px;
+                        font-size: 0.85em;
+                        color: #424242;
+                        white-space: nowrap;
+                    ">#ProductManagement</span>
+                    <span style="
+                        background-color: #E0E0E0;
+                        border-radius: 16px;
+                        padding: 6px 12px;
+                        font-size: 0.85em;
+                        color: #424242;
+                        white-space: nowrap;
+                    ">#MobileApps</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Section 3: Action Buttons (Interaction Controls) -->
+        <footer style="
+            display: flex;
+            justify-content: center; /* Center buttons horizontally */
+            gap: 24px; /* Space between the two buttons */
+            padding: 16px; /* Padding around the buttons */
+            background-color: white; /* Matches card background for a seamless look or contrasting if preferred */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Subtle shadow for elevation (dp 4 from bottom) */
+            z-index: 90; /* Below app bar but above general content */
+            position: relative; /* For z-index to work */
+            box-sizing: border-box;
+        ">
+            <button aria-label="Pass on this profile" style="
+                background: none;
+                border: 2px solid #FF5252; /* Material Design Error/Negative color (Red A400) */
+                color: #FF5252;
+                text-transform: uppercase; /* Standard for Material buttons */
+                font-weight: 600; /* Medium weight for button text */
+                padding: 12px 28px; /* Ample padding for touch target */
+                border-radius: 28px; /* Pill-shaped button (large radius for height) */
+                cursor: pointer;
+                font-size: 1em; /* Button text size */
+                letter-spacing: 1.25px; /* Standard letter spacing for Material buttons */
+                min-width: 120px;
+                transition: background-color 0.3s, color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+            ">
+                Pass
+            </button>
+            <button aria-label="Meet this professional" style="
+                background-color: #1A73E8; /* Strong accent color for primary action (Blue 600) */
+                border: none;
+                color: white;
+                text-transform: uppercase;
+                font-weight: 600;
+                padding: 12px 28px;
+                border-radius: 28px; /* Pill-shaped button */
+                cursor: pointer;
+                font-size: 1em;
+                letter-spacing: 1.25px;
+                min-width: 120px;
+                box-shadow: 0 3px 6px rgba(0,0,0,0.2); /* Raised button shadow (dp 6) */
+                transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+            ">
+                Meet
+            </button>
+        </footer>
+    </div>
+</body>
+</html>

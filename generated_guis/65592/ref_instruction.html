@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Recording</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- MDC Web CSS (Material Design Components for the web) -->
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    
+    <style>
+        /* Material 3 Color System Emulation (using MDC Web's CSS custom properties) */
+        :root {
+            /* Primary (e.g., primary container, active states) */
+            --mdc-theme-primary: #6750A4; /* Deep Purple */
+            --mdc-theme-on-primary: #FFFFFF; /* Text/icons on primary */
+
+            /* Surface (e.g., page background, cards) */
+            --mdc-theme-surface: #FFFBFE; /* Lightest surface */
+            --mdc-theme-on-surface: #1C1B1F; /* Text/icons on surface */
+            
+            /* Surface Containers (for elevated components) */
+            --mdc-theme-surface-container-low: #F7F2FA; /* Small elevation */
+            --mdc-theme-surface-container: #F3EDF7; /* Default elevation */
+            --mdc-theme-surface-container-high: #EDE6F0; /* Medium elevation */
+            --mdc-theme-surface-container-highest: #E6E0E9; /* Highest elevation */
+
+            /* On Surface Variant (for secondary text, inactive elements, outlines) */
+            --mdc-theme-on-surface-variant: #49454F; 
+            
+            /* Text colors for specific Material Design roles */
+            --mdc-theme-text-primary-on-background: var(--mdc-theme-on-surface);
+            --mdc-theme-text-secondary-on-background: var(--mdc-theme-on-surface-variant);
+            --mdc-theme-text-hint-on-background: var(--mdc-theme-on-surface-variant);
+            --mdc-theme-text-icon-on-background: var(--mdc-theme-on-surface-variant);
+        }
+
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Background for the surrounding page */
+            font-family: Roboto, sans-serif; /* Default Material Design font */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .mobile-screen {
+            width: 375px; /* Mobile screen width as per 667x375 portrait */
+            height: 667px; /* Mobile screen height as per 667x375 portrait */
+            background-color: var(--mdc-theme-surface);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Device-like shadow */
+            border-radius: 24px; /* Softened device edges */
+            overflow: hidden; /* Ensure content stays within bounds */
+            display: flex;
+            flex-direction: column; /* Stack sections vertically */
+        }
+
+        /* 1. Top App Bar (Header) */
+        .mdc-top-app-bar--small {
+            height: 56px; /* Standard small top app bar height */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle elevation */
+            background-color: var(--mdc-theme-surface-container-high); /* As per description */
+            color: var(--mdc-theme-on-surface); /* Content color */
+        }
+        .mdc-top-app-bar__title {
+            /* Material 3 typography: title-large (or headline-small) */
+            font-size: 22px; 
+            font-weight: 400; 
+            letter-spacing: 0;
+            color: inherit; /* Inherits from top-app-bar */
+        }
+        /* Icons on the top app bar inherit color */
+        .mdc-top-app-bar__navigation-icon,
+        .mdc-top-app-bar__action-item {
+            color: inherit; 
+        }
+
+        /* Main content area below the app bar */
+        .main-content {
+            flex-grow: 1; /* Takes all available vertical space */
+            display: flex;
+            flex-direction: column; /* Stack its children vertically */
+            /* No overflow-y here, as we want specific sections to scroll */
+        }
+
+        /* 2. Global Recording Policy Selector */
+        .global-policy-selector {
+            padding: 12px 16px; /* Vertical and horizontal padding */
+            background-color: var(--mdc-theme-surface); 
+            border-bottom: 1px solid rgba(0,0,0,0.08); /* Subtle separator */
+        }
+        #global-policy-button {
+            width: 100%; /* Full width */
+            justify-content: space-between; /* Pushes label to left, icon to right */
+            background-color: var(--mdc-theme-primary); /* Elevated button with primary color */
+            color: var(--mdc-theme-on-primary);
+            height: 48px; /* Standard button height */
+            border-radius: 24px; /* Pill shape */
+        }
+        #global-policy-button .mdc-button__label {
+            /* Material 3 typography: label-large */
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+
+        /* 3. Contact List Tab Navigation */
+        .mdc-tab-bar {
+            background-color: var(--mdc-theme-surface); /* Surface color */
+            border-bottom: 1px solid rgba(0,0,0,0.08); /* Subtle separator */
+        }
+        .mdc-tab {
+            /* Material 3 typography: label-large */
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+            color: var(--mdc-theme-on-surface-variant); /* Inactive tab text */
+            /* Custom properties for MDC tab color */
+            --mdc-tab-color-on-surface: var(--mdc-theme-on-surface-variant); 
+        }
+        .mdc-tab--active {
+            color: var(--mdc-theme-primary); /* Active tab text */
+            --mdc-tab-color-on-surface: var(--mdc-theme-primary);
+        }
+        .mdc-tab-indicator__content--underline {
+            background-color: var(--mdc-theme-primary); /* Indicator line color */
+        }
+
+        /* 4. Contact List with Recording Controls & Filter */
+        .contact-list-section {
+            flex-grow: 1; /* Takes up remaining vertical space */
+            display: flex;
+            flex-direction: column; /* Stack filter button and list vertically */
+            overflow-y: auto; /* This section handles its own scrolling */
+            background-color: var(--mdc-theme-surface);
+        }
+
+        .filter-button-wrapper {
+            padding: 12px 16px;
+            background-color: var(--mdc-theme-surface);
+            position: sticky; /* Filter button sticks to the top of its scrolling parent */
+            top: 0;
+            z-index: 1; /* Ensure it's above the list items */
+            border-bottom: 1px solid rgba(0,0,0,0.05); /* Subtle separator */
+        }
+
+        .mdc-button--outlined.mdc-button--icon-leading {
+            height: 40px; /* Standard button height */
+            border-radius: 20px; /* Pill shape */
+            border-color: var(--mdc-theme-on-surface-variant);
+            color: var(--mdc-theme-on-surface-variant);
+        }
+        .mdc-button--outlined.mdc-button--icon-leading .mdc-button__label {
+            /* Material 3 typography: label-large */
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+        }
+        .mdc-button--outlined.mdc-button--icon-leading .mdc-button__icon {
+            margin-right: 8px; /* Space between icon and text */
+        }
+
+        .mdc-list {
+            flex-grow: 1; /* List takes remaining space in its parent */
+            padding-top: 0;
+            padding-bottom: 0;
+            background-color: var(--mdc-theme-surface);
+        }
+
+        .mdc-list-item {
+            min-height: 72px; /* Material Design standard for two-line list items */
+            padding-left: 16px; 
+            padding-right: 16px; 
+            align-items: center; /* Vertically align content */
+        }
+        .mdc-list-item__text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .mdc-list-item__primary-text {
+            /* Material 3 typography: body-large */
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: var(--mdc-theme-on-surface);
+        }
+        .mdc-list-item__secondary-text {
+            /* Material 3 typography: body-medium */
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.25px;
+            color: var(--mdc-theme-on-surface-variant);
+            margin-top: 4px; /* Space between primary and secondary text */
+        }
+
+        /* MDC Switch specific theming to match Material 3 */
+        .mdc-switch__track {
+            background-color: var(--mdc-theme-on-surface-variant) !important; /* Inactive track color */
+            opacity: 0.38; /* Standard inactive opacity */
+        }
+        .mdc-switch--checked .mdc-switch__track {
+            background-color: var(--mdc-theme-primary) !important; /* Active track color */
+            opacity: 0.5; /* Standard active opacity */
+        }
+        .mdc-switch__thumb {
+            background-color: #FFFFFF !important; /* Thumb color for inactive state (MD3) */
+        }
+        .mdc-switch--checked .mdc-switch__thumb {
+            background-color: var(--mdc-theme-primary) !important; /* Thumb color for active state (MD3) */
+        }
+        /* Ripple effect for the switch thumb */
+        .mdc-switch .mdc-switch__native-control:enabled + .mdc-switch__background .mdc-switch__thumb-underlay::before,
+        .mdc-switch .mdc-switch__native-control:enabled + .mdc-switch__background .mdc-switch__thumb-underlay::after {
+            background-color: var(--mdc-theme-primary); 
+        }
+
+        /* Divider styling */
+        .mdc-list-divider {
+            height: 1px;
+            background-color: rgba(0,0,0,0.08); /* Light grey separator */
+            margin: 0 16px; /* Match list item padding */
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- 1. Top App Bar (Header) -->
+        <header class="mdc-top-app-bar mdc-top-app-bar--small">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" aria-label="Open navigation drawer">menu</button>
+                    <span class="mdc-top-app-bar__title">Call Recording</span>
+                </section>
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                    <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
+                    <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Settings">settings</button>
+                </section>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- 2. Global Recording Policy Selector -->
+            <div class="global-policy-selector">
+                <button id="global-policy-button" class="mdc-button mdc-button--filled" type="button" aria-haspopup="menu" aria-expanded="false">
+                    <span class="mdc-button__ripple"></span>
+                    <span class="mdc-button__label">Record All Calls</span>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">arrow_drop_down</i>
+                </button>
+                <!-- The actual dropdown menu (mdc-menu) would be dynamically controlled by JavaScript -->
+            </div>
+
+            <!-- 3. Contact List Tab Navigation -->
+            <div class="mdc-tab-bar" role="tablist">
+                <div class="mdc-tab-scroller">
+                    <div class="mdc-tab-scroller__scroll-area">
+                        <div class="mdc-tab-scroller__scroll-content">
+                            <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                                <span class="mdc-tab__content">
+                                    <span class="mdc-tab__text-label">All Contacts</span>
+                                </span>
+                                <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                    <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                </span>
+                                <span class="mdc-tab__ripple"></span>
+                            </button>
+                            <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1">
+                                <span class="mdc-tab__content">
+                                    <span class="mdc-tab__text-label">Favorite Contacts</span>
+                                </span>
+                                <span class="mdc-tab-indicator">
+                                    <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                </span>
+                                <span class="mdc-tab__ripple"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Contact List with Recording Controls & Filter -->
+            <div class="contact-list-section">
+                <div class="filter-button-wrapper">
+                    <button class="mdc-button mdc-button--outlined mdc-button--icon-leading">
+                        <span class="mdc-button__ripple"></span>
+                        <i class="material-icons mdc-button__icon" aria-hidden="true">filter_list</i>
+                        <span class="mdc-button__label">Filter</span>
+                    </button>
+                </div>
+
+                <ul class="mdc-list">
+                    <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Alice Smith</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 987-6543</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch mdc-switch--checked">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-alice" class="mdc-switch__native-control" role="switch" checked aria-label="Record calls for Alice Smith">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                    <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Bob Johnson</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 111-2222</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-bob" class="mdc-switch__native-control" role="switch" aria-label="Record calls for Bob Johnson">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                    <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Charlie Brown</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 333-4444</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch mdc-switch--checked">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-charlie" class="mdc-switch__native-control" role="switch" checked aria-label="Record calls for Charlie Brown">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                    <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Diana Prince</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 555-6666</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-diana" class="mdc-switch__native-control" role="switch" aria-label="Record calls for Diana Prince">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                     <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Ethan Hunt</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 777-8888</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch mdc-switch--checked">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-ethan" class="mdc-switch__native-control" role="switch" checked aria-label="Record calls for Ethan Hunt">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                    <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Fiona Glenanne</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 999-0000</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-fiona" class="mdc-switch__native-control" role="switch" aria-label="Record calls for Fiona Glenanne">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                     <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Gregory House</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 101-2020</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch mdc-switch--checked">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-gregory" class="mdc-switch__native-control" role="switch" checked aria-label="Record calls for Gregory House">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                    <li class="mdc-list-item" tabindex="0">
+                        <span class="mdc-list-item__text">
+                            <span class="mdc-list-item__primary-text">Helen Parr</span>
+                            <span class="mdc-list-item__secondary-text">+1 (555) 303-4040</span>
+                        </span>
+                        <div class="mdc-list-item__meta mdc-switch">
+                            <div class="mdc-switch__track"></div>
+                            <div class="mdc-switch__thumb-underlay">
+                                <div class="mdc-switch__thumb">
+                                    <input type="checkbox" id="rec-helen" class="mdc-switch__native-control" role="switch" aria-label="Record calls for Helen Parr">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mdc-list-divider" role="separator"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- MDC Web JavaScript for full interactivity (ripple, tab activation, switch functionality etc.) -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script>
+        // Instantiate MDC Web components on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+            if (topAppBarElement) mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarElement);
+
+            const tabBarElement = document.querySelector('.mdc-tab-bar');
+            if (tabBarElement) new mdc.tabBar.MDCTabBar(tabBarElement);
+
+            document.querySelectorAll('.mdc-list').forEach(listElement => {
+                new mdc.list.MDCList(listElement);
+            });
+
+            document.querySelectorAll('.mdc-switch').forEach(switchElement => {
+                new mdc.switchControl.MDCSwitch(switchElement); 
+            });
+
+            document.querySelectorAll('.mdc-button').forEach(buttonElement => {
+                new mdc.ripple.MDCRipple(buttonElement); 
+                new mdc.button.MDCButton(buttonElement); // For button functionality and proper theming
+            });
+
+            // Basic functionality for global policy button (would open a menu in a real app)
+            const globalPolicyButton = document.getElementById('global-policy-button');
+            if (globalPolicyButton) {
+                globalPolicyButton.addEventListener('click', () => {
+                    alert('Global Recording Policy Menu would open here!');
+                    // In a full application, you would initialize and open an MDCMenu component here.
+                    // For example: new mdc.menu.MDCMenu(document.getElementById('global-policy-menu')).open = true;
+                });
+            }
+        });
+    </script>
+</body>
+</html>

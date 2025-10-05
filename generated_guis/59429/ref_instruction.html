@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Mobile App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto (for Material Design typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles & Material Design Color Variables */
+        :root {
+            --md-sys-color-primary: #6200EE; /* Deep Purple */
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-hover: #7E31EC; /* Lighter primary for hover */
+            --md-sys-color-background: #F8F9FA; /* Light gray background */
+            --md-sys-color-surface: #FFFFFF; /* White for cards */
+            --md-sys-color-on-surface: #1A1C1E; /* Dark gray for primary text on surface */
+            --md-sys-color-on-surface-variant: #44474B; /* Medium gray for secondary text on surface */
+            --md-sys-color-tertiary: #FFB300; /* Amber for warning/info icons */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f0f0; /* Overall background for the page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        /* Mobile Screen Wrapper */
+        .mobile-screen-wrapper {
+            width: 375px; /* Fixed width */
+            height: 667px; /* Fixed height */
+            background-color: var(--md-sys-color-background);
+            border: 1px solid #ddd;
+            border-radius: 8px; /* Slightly rounded corners for the 'device' */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            overflow: hidden; /* Crucial for containing scrolling content */
+            position: relative;
+        }
+
+        /* 1. Top App Bar (Header) */
+        .top-app-bar {
+            width: 100%;
+            height: 56px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed; /* Stays at the top of the mobile-screen-wrapper */
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .app-title {
+            font-size: 24px; /* Material Design headline-small */
+            font-weight: 400;
+            margin: 0;
+            letter-spacing: 0em; /* Defined in Material Design typography */
+        }
+
+        .refresh-button {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            /* For a 24px icon, padding: 12px creates a 48x48px touch target */
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.2s ease-in-out;
+            outline: none; /* Remove default outline */
+        }
+
+        .refresh-button:hover,
+        .refresh-button:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .refresh-button .material-icons {
+            font-size: 24px;
+        }
+
+        /* 2. Alerts List (Main Content Area) */
+        .alerts-container {
+            /* Adjust padding-top to account for the fixed app bar (56px) + desired margin */
+            padding: calc(56px + 16px) 16px 16px 16px;
+            background-color: var(--md-sys-color-background);
+            height: calc(100% - 56px); /* Occupy remaining height below the app bar */
+            overflow-y: auto; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Individual Alert Card */
+        .alert-card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: 8px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.05), 0 1px 4px rgba(0,0,0,0.08);
+            margin-bottom: 16px; /* Spacing between cards */
+            padding: 16px;
+            display: flex;
+            flex-direction: column; /* Stack content and actions */
+            justify-content: space-between;
+            gap: 12px; /* Space between content and actions */
+        }
+
+        .alert-card:last-child {
+            margin-bottom: 0; /* No margin after the last card */
+        }
+
+        .alert-content {
+            display: flex;
+            align-items: flex-start; /* Align icon to top of text */
+            gap: 16px; /* Space between icon and text */
+        }
+
+        .alert-icon {
+            font-size: 28px; /* Slightly larger icon */
+            color: var(--md-sys-color-tertiary); /* Example warning color */
+            flex-shrink: 0; /* Prevent icon from shrinking */
+            margin-top: 4px; /* Align with first line of text visually */
+        }
+
+        .text-content {
+            flex-grow: 1; /* Allows text content to take available space */
+        }
+
+        .alert-title {
+            font-size: 20px; /* Material Design title-medium */
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+            letter-spacing: 0.15px; /* Material Design title-medium letter-spacing */
+        }
+
+        .alert-description {
+            font-size: 16px; /* Material Design body-large */
+            font-weight: 400;
+            color: var(--md-sys-color-on-surface-variant);
+            margin: 0;
+            line-height: 1.4;
+            letter-spacing: 0.5px; /* Material Design body-large letter-spacing */
+        }
+
+        .alert-actions {
+            display: flex;
+            justify-content: flex-end; /* Align button to the right */
+            padding-top: 8px; /* Space from description to actions */
+        }
+
+        /* Material Design Button Base */
+        .md-button {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px; /* Material Design label-large */
+            font-weight: 500;
+            letter-spacing: 0.1px; /* Material Design label-large letter-spacing */
+            padding: 10px 24px;
+            border-radius: 20px; /* Pill-shaped button */
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, color 0.2s ease-in-out;
+            border: none;
+            outline: none;
+        }
+
+        /* Filled Button Specifics */
+        .filled-button {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .filled-button:hover,
+        .filled-button:focus {
+            background-color: var(--md-sys-color-primary-hover);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen-wrapper">
+        <!-- 1. Top App Bar (Header) -->
+        <header class="top-app-bar">
+            <h1 class="app-title">Home</h1>
+            <button class="refresh-button">
+                <span class="material-icons">refresh</span>
+            </button>
+        </header>
+
+        <!-- 2. Alerts List (Main Content Area) -->
+        <main class="alerts-container">
+            <!-- Enrollment Alert Card -->
+            <div class="alert-card">
+                <div class="alert-content">
+                    <span class="material-icons alert-icon">security</span>
+                    <div class="text-content">
+                        <h2 class="alert-title">Enrollment Required</h2>
+                        <p class="alert-description">
+                            Your device is not enrolled in a managed network. Enrollment is required for full security and access to company resources.
+                        </p>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="md-button filled-button">ENROLL</button>
+                </div>
+            </div>
+
+            <!-- Mobile Data Usage Alert Card -->
+            <div class="alert-card">
+                <div class="alert-content">
+                    <span class="material-icons alert-icon">data_usage</span>
+                    <div class="text-content">
+                        <h2 class="alert-title">Mobile Data History Disabled</h2>
+                        <p class="alert-description">
+                            Mobile data usage history is not enabled. Enable it to monitor your data consumption and stay within your plan limits.
+                        </p>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="md-button filled-button">ENABLE</button>
+                </div>
+            </div>
+
+            <!-- Device Administrator Alert Card -->
+            <div class="alert-card">
+                <div class="alert-content">
+                    <span class="material-icons alert-icon">admin_panel_settings</span>
+                    <div class="text-content">
+                        <h2 class="alert-title">Device Administrator Privileges</h2>
+                        <p class="alert-description">
+                            Device administrator privileges are not enabled. These are necessary for enhanced device management and security features.
+                        </p>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="md-button filled-button">ENABLE</button>
+                </div>
+            </div>
+
+            <!-- Example: Low Battery Alert Card -->
+            <div class="alert-card">
+                <div class="alert-content">
+                    <span class="material-icons alert-icon">battery_alert</span>
+                    <div class="text-content">
+                        <h2 class="alert-title">Low Battery Warning</h2>
+                        <p class="alert-description">
+                            Your device battery is critically low at 15%. Please charge your device soon to avoid interruption.
+                        </p>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="md-button filled-button">CHARGE NOW</button>
+                </div>
+            </div>
+
+            <!-- Example: App Update Alert Card -->
+            <div class="alert-card">
+                <div class="alert-content">
+                    <span class="material-icons alert-icon">system_update_alt</span>
+                    <div class="text-content">
+                        <h2 class="alert-title">App Update Available</h2>
+                        <p class="alert-description">
+                            A new version of the app is available. Update now to get the latest features and security patches.
+                        </p>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <button class="md-button filled-button">UPDATE</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

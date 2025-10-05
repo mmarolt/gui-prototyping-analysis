@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Material Design Calendar</title>
+    <!-- Roboto Font for Material Design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Basic Reset & Body Styling for Mobile View */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif; /* Material Design standard font */
+            color: rgba(0, 0, 0, 0.87); /* Default text color */
+            background-color: #e0e0e0; /* A slightly darker grey for the overall browser background */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center the mobile screen wrapper horizontally */
+            justify-content: center; /* Center the mobile screen wrapper vertically */
+            min-height: 100vh; /* Make body fill viewport height for centering */
+            box-sizing: border-box;
+            /* Prevent body from scrolling itself if content overflows beyond the mobile-screen area */
+            overflow: hidden; 
+        }
+
+        /* Material Design Color Palette (Example, can be customized) */
+        :root {
+            --md-primary: #6200EE;
+            --md-primary-variant: #3700B3;
+            --md-secondary: #03DAC6;
+            --md-background: #FFFFFF;
+            --md-surface: #FFFFFF;
+            --md-error: #B00020;
+            --md-on-primary: #FFFFFF;
+            --md-on-secondary: #000000;
+            --md-on-background: #000000;
+            --md-on-surface: #000000;
+            --md-on-error: #FFFFFF;
+        }
+
+        /* Typography Helper Classes (based on Material Design Spec) */
+        .md-headline6 { font-size: 20px; line-height: 32px; font-weight: 500; letter-spacing: 0.15px; }
+        .md-subtitle1 { font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: 0.15px; }
+        .md-body1 { font-size: 16px; line-height: 24px; font-weight: 400; letter-spacing: 0.5px; }
+        .md-caption { font-size: 12px; line-height: 16px; font-weight: 400; letter-spacing: 0.4px; }
+        .md-overline { font-size: 10px; line-height: 16px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; }
+
+        /* Mobile Screen Wrapper */
+        .mobile-screen {
+            height: 667px; /* Specified mobile screen height */
+            width: 375px; /* Specified mobile screen width */
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5; /* Light grey background for the app content */
+            overflow: hidden; /* Prevent scrolling within this "phone screen" area */
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.3); /* Simulates a device frame */
+            border-radius: 12px; /* Slight roundness for device look */
+            position: relative; /* Essential for positioning the FAB */
+            isolation: isolate; /* Creates a new stacking context for reliable z-index */
+        }
+
+        /* --- SECTION STYLES --- */
+
+        /* Section 1: Top App Bar */
+        .top-app-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px; /* Standard Material Design height for mobile */
+            background-color: var(--md-primary);
+            color: var(--md-on-primary);
+            padding: 0 16px;
+            box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),
+                        0px 4px 5px 0px rgba(0,0,0,0.14),
+                        0px 1px 10px 0px rgba(0,0,0,0.12); /* Material Design elevation (4dp) */
+            position: relative; /* For stacking context with z-index */
+            z-index: 10; /* Ensures it stays on top of other content */
+            flex-shrink: 0; /* Prevent app bar from shrinking */
+        }
+
+        .top-app-bar .navigation-button {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 24px; /* Material Icons standard size */
+            cursor: pointer;
+            padding: 8px; /* For touch target */
+            border-radius: 50%; /* Make it circular for ripple effect */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.15s ease-in-out;
+            min-width: 48px; /* Material Design minimum touch target size */
+            min-height: 48px; /* Material Design minimum touch target size */
+            outline: none; /* Remove default focus outline */
+        }
+
+        .top-app-bar .navigation-button:hover {
+            background-color: rgba(255, 255, 255, 0.08); /* Light hover effect */
+        }
+
+        .top-app-bar .title {
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center; /* Center the month/year */
+            white-space: nowrap; /* Prevent wrapping */
+            overflow: hidden; /* Hide overflow if text is too long */
+            text-overflow: ellipsis; /* Add ellipsis if text is too long */
+        }
+
+        /* Section 2: Days of the Week Header */
+        .days-of-week-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 8px 0;
+            background-color: var(--md-surface);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.12); /* Light separator */
+            position: relative;
+            z-index: 5; /* Below app bar, above main content */
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .days-of-week-header .day-label {
+            text-align: center;
+            color: rgba(0, 0, 0, 0.6); /* Hint text color */
+        }
+
+        /* Section 3: Monthly Calendar Grid */
+        .calendar-grid-container {
+            flex-grow: 1; /* Takes remaining vertical space */
+            background-color: var(--md-background); /* Overall background for the container */
+            padding: 8px; /* Padding around the grid */
+            overflow-y: auto; /* Allows vertical scrolling if the grid content exceeds height */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: minmax(75px, auto); /* Minimum height for each day cell, allows expansion */
+            gap: 1px; /* Small gap between cells */
+            background-color: rgba(0, 0, 0, 0.12); /* Background for the gap lines */
+            border: 1px solid rgba(0, 0, 0, 0.12); /* Border around the entire grid */
+            height: 100%; /* Ensure grid fills its container's height */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        .date-cell {
+            background-color: var(--md-surface);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* Align date number to top-right */
+            padding: 4px; /* Internal padding */
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
+            min-height: 48px; /* Ensures tap target is large enough even if grid-auto-rows is overridden */
+            box-sizing: border-box;
+        }
+
+        .date-cell:hover {
+            background-color: rgba(0, 0, 0, 0.04); /* Light hover effect */
+        }
+
+        .date-number {
+            color: var(--md-on-surface);
+        }
+
+        .date-cell.other-month .date-number {
+            color: rgba(0, 0, 0, 0.38); /* Lighter color for dates not in current month */
+        }
+
+        .date-cell.current-day {
+            background-color: rgba(var(--md-primary), 0.08); /* Slight tint for the current day's cell */
+        }
+
+        .date-cell.current-day .date-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: var(--md-primary); /* Primary color circle */
+            color: var(--md-on-primary);
+            font-weight: 500; /* Bold for the current date number */
+            /* Overriding align-items: flex-end from parent to center number in circle */
+            align-self: flex-end; /* Still keep it to the top-right of the available space */
+        }
+
+        .event-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--md-secondary); /* Accent color for events */
+        }
+
+        /* Section 4: Floating Action Button (FAB) */
+        .fab-container {
+            /* Positioned relative to .mobile-screen */
+            position: absolute;
+            bottom: 16px; /* Standard Material Design margin from bottom */
+            right: 16px; /* Standard Material Design margin from right */
+            z-index: 20; /* Highest z-index to ensure it floats above everything */
+        }
+
+        .fab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px; /* Standard FAB size */
+            height: 56px; /* Standard FAB size */
+            border-radius: 50%;
+            background-color: var(--md-secondary); /* Accent color */
+            color: var(--md-on-secondary);
+            box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),
+                        0px 6px 10px 0px rgba(0,0,0,0.14),
+                        0px 1px 18px 0px rgba(0,0,0,0.12); /* Material Design elevation (6dp resting) */
+            border: none;
+            cursor: pointer;
+            font-size: 24px; /* Material Icon size */
+            transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            outline: none; /* Remove default focus outline for better aesthetics */
+            -webkit-tap-highlight-color: rgba(0,0,0,0); /* Remove tap highlight on mobile */
+        }
+
+        .fab:hover {
+            background-color: #018786; /* Darker secondary color on hover */
+            box-shadow: 0px 5px 8px -1px rgba(0,0,0,0.2),
+                        0px 8px 13px 0px rgba(0,0,0,0.14),
+                        0px 3px 20px 0px rgba(0,0,0,0.12); /* Higher elevation on hover (8dp) */
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <!-- Section 1: Top App Bar -->
+        <header class="top-app-bar">
+            <button class="navigation-button" aria-label="Previous month">
+                <i class="material-icons">chevron_left</i>
+            </button>
+            <div class="title md-headline6">October 2023</div>
+            <button class="navigation-button" aria-label="Next month">
+                <i class="material-icons">chevron_right</i>
+            </button>
+        </header>
+
+        <!-- Section 2: Days of the Week Header -->
+        <div class="days-of-week-header">
+            <div class="day-label md-overline">S</div>
+            <div class="day-label md-overline">M</div>
+            <div class="day-label md-overline">T</div>
+            <div class="day-label md-overline">W</div>
+            <div class="day-label md-overline">T</div>
+            <div class="day-label md-overline">F</div>
+            <div class="day-label md-overline">S</div>
+        </div>
+
+        <!-- Section 3: Monthly Calendar Grid -->
+        <div class="calendar-grid-container">
+            <div class="calendar-grid">
+                <!-- Example Items for Monthly Calendar Grid -->
+                <!-- Dates from previous month -->
+                <div class="date-cell other-month"><span class="date-number">29</span></div>
+                <div class="date-cell other-month"><span class="date-number">30</span></div>
+                <div class="date-cell other-month"><span class="date-number">31</span></div>
+                <!-- Dates for current month -->
+                <div class="date-cell"><span class="date-number">1</span></div>
+                <div class="date-cell"><span class="date-number">2</span></div>
+                <div class="date-cell"><span class="date-number">3</span></div>
+                <div class="date-cell"><span class="date-number">4</span></div>
+                <div class="date-cell"><span class="date-number">5</span></div>
+                <div class="date-cell has-event"><span class="date-number">6</span><div class="event-indicator"></div></div>
+                <div class="date-cell"><span class="date-number">7</span></div>
+                <div class="date-cell"><span class="date-number">8</span></div>
+                <div class="date-cell"><span class="date-number">9</span></div>
+                <div class="date-cell"><span class="date-number">10</span></div>
+                <div class="date-cell"><span class="date-number">11</span></div>
+                <div class="date-cell has-event"><span class="date-number">12</span><div class="event-indicator"></div></div>
+                <div class="date-cell"><span class="date-number">13</span></div>
+                <div class="date-cell"><span class="date-number">14</span></div>
+                <div class="date-cell current-day"><span class="date-number">15</span></div> <!-- Current Day -->
+                <div class="date-cell"><span class="date-number">16</span></div>
+                <div class="date-cell"><span class="date-number">17</span></div>
+                <div class="date-cell has-event"><span class="date-number">18</span><div class="event-indicator"></div></div>
+                <div class="date-cell"><span class="date-number">19</span></div>
+                <div class="date-cell"><span class="date-number">20</span></div>
+                <div class="date-cell"><span class="date-number">21</span></div>
+                <div class="date-cell"><span class="date-number">22</span></div>
+                <div class="date-cell"><span class="date-number">23</span></div>
+                <div class="date-cell has-event"><span class="date-number">24</span><div class="event-indicator"></div></div>
+                <div class="date-cell"><span class="date-number">25</span></div>
+                <div class="date-cell"><span class="date-number">26</span></div>
+                <div class="date-cell"><span class="date-number">27</span></div>
+                <div class="date-cell"><span class="date-number">28</span></div>
+                <div class="date-cell"><span class="date-number">29</span></div>
+                <div class="date-cell"><span class="date-number">30</span></div>
+                <div class="date-cell"><span class="date-number">31</span></div>
+                <!-- Dates from next month -->
+                <div class="date-cell other-month"><span class="date-number">1</span></div>
+                <div class="date-cell other-month"><span class="date-number">2</span></div>
+                <div class="date-cell other-month"><span class="date-number">3</span></div>
+                <div class="date-cell other-month"><span class="date-number">4</span></div>
+            </div>
+        </div>
+
+        <!-- Section 4: Floating Action Button (FAB) -->
+        <div class="fab-container">
+            <button class="fab" aria-label="Add new event">
+                <i class="material-icons">add</i>
+            </button>
+        </div>
+    </div>
+</body>
+</html>

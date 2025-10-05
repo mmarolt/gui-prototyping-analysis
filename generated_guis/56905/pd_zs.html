@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Page: Vehicles Tab</title>
+    <!-- Google Material Icons CDN for icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background */
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            overflow: hidden; /* Prevent body scroll, content area will scroll */
+            color: #333;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* --- Mobile Viewport Simulation for Chrome DevTools --- */
+        /* These styles constrain the page to simulate a typical mobile device for development */
+        html, body {
+            width: 100%;
+            max-width: 375px; /* Simulate mobile width */
+            margin: 0 auto; /* Center the simulated device in the browser window */
+            border: 1px solid #ccc; /* Visual border for the simulated device */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for device frame */
+        }
+        body {
+            height: 667px; /* Simulate mobile height */
+        }
+        /* End of Mobile Viewport Simulation */
+
+        /* I. Header Bar (Persistent Top) */
+        .header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 375px; /* Match body max-width */
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 100; /* Ensure it's above other content */
+            box-sizing: border-box;
+        }
+        .header-bar__title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+        .header-bar__button {
+            background: none;
+            border: none;
+            color: #007bff; /* Primary blue color */
+            font-size: 1.5em; /* Icon size */
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            display: flex; /* For proper icon alignment */
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* II. Content Area (Scrollable Main Section) */
+        .content-area {
+            flex-grow: 1; /* Takes available space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 20px;
+            padding-top: 70px; /* Space for fixed header */
+            padding-bottom: 80px; /* Space for fixed bottom navigation */
+            box-sizing: border-box;
+            background-color: #f9f9f9; /* Slightly lighter background for content */
+        }
+
+        /* 1. Search & Toggle Section */
+        .search-section {
+            margin-bottom: 20px;
+        }
+        .search-input-container {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        .search-input-container .material-icons {
+            color: #888;
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .search-input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            padding: 5px 0;
+        }
+        .search-input-container .clear-button {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .segmented-control {
+            display: flex;
+            background-color: #e9ecef; /* Light grey for inactive segments */
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .segmented-control__segment {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            font-weight: bold;
+            color: #555;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            border: none; /* Remove default button border */
+            background-color: transparent; /* Default background */
+            font-size: 1em;
+        }
+        .segmented-control__segment.active {
+            background-color: #007bff; /* Primary blue for active segment */
+            color: #fff;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* 2. Filter Management & Action Section */
+        .filter-section {
+            margin-bottom: 20px;
+        }
+        .filter-button {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 15px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,123,255,0.2);
+        }
+        .filter-button .material-icons {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .selected-filters-area {
+            display: flex;
+            overflow-x: auto; /* Horizontal scrolling for chips */
+            white-space: nowrap; /* Keep chips on a single line */
+            padding-bottom: 10px; /* Space for potential scrollbar */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            margin-bottom: 15px;
+            /* Hide scrollbar for aesthetic purposes */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+        .selected-filters-area::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e0e0e0; /* Light grey chip background */
+            border-radius: 20px;
+            padding: 8px 12px;
+            margin-right: 8px;
+            font-size: 0.9em;
+            color: #333;
+            flex-shrink: 0; /* Prevent chips from shrinking */
+        }
+        .filter-chip__remove {
+            background: none;
+            border: none;
+            color: #666;
+            margin-left: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 3. Search Action & Results Display */
+        .search-action-button {
+            width: 100%;
+            background-color: #28a745; /* Green for search button */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(40,167,69,0.2);
+            margin-bottom: 20px;
+        }
+
+        .search-results-list {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 150px; /* Placeholder height */
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* III. Bottom Navigation Bar (Persistent Bottom) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            max-width: 375px; /* Match body max-width */
+            background-color: #fff;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+            box-sizing: border-box;
+        }
+        .nav-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.8em;
+            padding: 5px;
+            transition: color 0.2s ease;
+        }
+        .nav-tab .material-icons {
+            font-size: 1.8em;
+            margin-bottom: 3px;
+        }
+        .nav-tab.active {
+            color: #007bff; /* Primary blue for active tab */
+        }
+
+        /* IV. Filter Modal Sheet/Screen */
+        .filter-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 375px; /* Match body max-width */
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: flex-end; /* Appears from bottom */
+            z-index: 200; /* Above everything else */
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+        }
+        .filter-modal-overlay.active {
+            display: flex; /* Show when active */
+        }
+        .filter-modal {
+            background-color: #fff;
+            width: 100%;
+            max-height: 85%; /* Modal takes up 85% of screen height */
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            transform: translateY(100%); /* Start off-screen */
+            transition: transform 0.3s ease-out;
+        }
+        .filter-modal-overlay.active .filter-modal {
+            transform: translateY(0); /* Slide up into view */
+        }
+
+        .filter-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .filter-modal-header__title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+        .filter-modal-header__button {
+            background: none;
+            border: none;
+            color: #007bff;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 5px 10px;
+            font-weight: bold;
+        }
+
+        .filter-modal-content {
+            flex-grow: 1;
+            overflow-y: auto; /* Scrollable content within the modal */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .filter-category {
+            margin-bottom: 25px;
+        }
+        .filter-category__label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #444;
+        }
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap; /* Allow options to wrap to next line */
+            gap: 10px; /* Space between options */
+        }
+        .filter-option {
+            display: flex;
+            align-items: center;
+        }
+        /* Custom Checkbox/Radio Styling */
+        .filter-option input[type="checkbox"],
+        .filter-option input[type="radio"] {
+            margin-right: 8px;
+            -webkit-appearance: none; /* Hide default checkbox/radio */
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ccc;
+            border-radius: 4px; /* For checkbox */
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .filter-option input[type="radio"] {
+            border-radius: 50%; /* For radio button */
+        }
+        .filter-option input[type="checkbox"]:checked,
+        .filter-option input[type="radio"]:checked {
+            border-color: #007bff;
+            background-color: #007bff;
+        }
+        .filter-option input[type="checkbox"]:checked::before {
+            content: '✔'; /* Checkmark icon */
+            color: #fff;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .filter-option input[type="radio"]:checked::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .filter-option label {
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        .filter-min-max {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .filter-min-max input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .filter-modal-actions {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            background-color: #fff; /* Ensure it stands out */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-sizing: border-box;
+        }
+        .filter-modal-actions .button-primary,
+        .filter-modal-actions .button-secondary {
+            width: 100%;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        .filter-modal-actions .button-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .filter-modal-actions .button-secondary {
+            background-color: #e9ecef;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- I. Header Bar (Persistent Top) -->
+    <div class="header-bar">
+        <span class="header-bar__title">Vehicles</span>
+        <button class="header-bar__button" aria-label="Scan VIN or QR code">
+            <span class="material-icons">camera_alt</span>
+        </button>
+    </div>
+
+    <!-- II. Content Area (Scrollable Main Section) -->
+    <div class="content-area">
+
+        <!-- 1. Search & Toggle Section -->
+        <div class="search-section">
+            <!-- Keyword Search Input Field -->
+            <div class="search-input-container">
+                <span class="material-icons">search</span>
+                <input type="text" class="search-input" placeholder="Search by keyword, VIN, make...">
+                <button class="clear-button" aria-label="Clear search input">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <!-- Search Type Toggle -->
+            <div class="segmented-control">
+                <button class="segmented-control__segment active">Auctions</button>
+                <button class="segmented-control__segment">Direct Sales</button>
+            </div>
+        </div>
+
+        <!-- 2. Filter Management & Action Section -->
+        <div class="filter-section">
+            <!-- Filters Button -->
+            <button class="filter-button" onclick="openFilterModal()">
+                <span class="material-icons">filter_list</span>
+                Filters
+            </button>
+
+            <!-- "Selected Filters" Display Area -->
+            <div class="selected-filters-area">
+                <!-- Example Filter Chips (can be dynamically added/removed) -->
+                <div class="filter-chip">
+                    Make: Ford
+                    <button class="filter-chip__remove" aria-label="Remove filter">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="filter-chip">
+                    Loss Type: Flood
+                    <button class="filter-chip__remove" aria-label="Remove filter">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="filter-chip">
+                    Trans: Auto
+                    <button class="filter-chip__remove" aria-label="Remove filter">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <div class="filter-chip">
+                    Odometer: &lt;50k
+                    <button class="filter-chip__remove" aria-label="Remove filter">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <!-- More filter chips would appear here -->
+            </div>
+        </div>
+
+        <!-- 3. Search Action & Results Display -->
+        <div class="results-section">
+            <!-- Search Button -->
+            <button class="search-action-button">
+                Search (123 Results)
+            </button>
+
+            <!-- Search Results List (Implicit) -->
+            <div class="search-results-list">
+                <p>No results yet. Start searching!</p>
+                <p>(Individual vehicle cards/items would be displayed here)</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- III. Bottom Navigation Bar (Persistent Bottom) -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-tab">
+            <span class="material-icons">person</span>
+            <span>My Account</span>
+        </a>
+        <a href="#" class="nav-tab active">
+            <span class="material-icons">directions_car</span>
+            <span>Vehicles</span>
+        </a>
+        <a href="#" class="nav-tab">
+            <span class="material-icons">gavel</span>
+            <span>Auctions</span>
+        </a>
+        <a href="#" class="nav-tab">
+            <span class="material-icons">location_on</span>
+            <span>Locations</span>
+        </a>
+    </div>
+
+    <!-- IV. Filter Modal Sheet/Screen -->
+    <div class="filter-modal-overlay" id="filterModalOverlay">
+        <div class="filter-modal">
+            <!-- Modal Header -->
+            <div class="filter-modal-header">
+                <button class="filter-modal-header__button" onclick="clearAllFiltersInModal()">Clear All</button>
+                <span class="filter-modal-header__title">Filters</span>
+                <button class="filter-modal-header__button" onclick="closeFilterModal()">Done</button>
+            </div>
+
+            <!-- Modal Scrollable Content Area -->
+            <div class="filter-modal-content">
+                <div class="filter-category">
+                    <div class="filter-category__label">Automobile Type</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="checkbox" name="autoType" value="sedan"> Sedan</label>
+                        <label class="filter-option"><input type="checkbox" name="autoType" value="suv"> SUV</label>
+                        <label class="filter-option"><input type="checkbox" name="autoType" value="truck"> Truck</label>
+                        <label class="filter-option"><input type="checkbox" name="autoType" value="coupe"> Coupe</label>
+                        <label class="filter-option"><input type="checkbox" name="autoType" value="van"> Van</label>
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Make</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="checkbox" name="make" value="ford"> Ford</label>
+                        <label class="filter-option"><input type="checkbox" name="make" value="toyota"> Toyota</label>
+                        <label class="filter-option"><input type="checkbox" name="make" value="honda"> Honda</label>
+                        <label class="filter-option"><input type="checkbox" name="make" value="bmw"> BMW</label>
+                        <label class="filter-option"><input type="checkbox" name="make" value="mercedes"> Mercedes</label>
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Loss Type</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="checkbox" name="lossType" value="flood"> Flood</label>
+                        <label class="filter-option"><input type="checkbox" name="lossType" value="hail"> Hail</label>
+                        <label class="filter-option"><input type="checkbox" name="lossType" value="fire"> Fire</label>
+                        <label class="filter-option"><input type="checkbox" name="lossType" value="collision"> Collision</label>
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Transmission</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="radio" name="transmission" value="automatic"> Automatic</label>
+                        <label class="filter-option"><input type="radio" name="transmission" value="manual"> Manual</label>
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Sale Document</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="checkbox" name="saleDoc" value="clean"> Clean</label>
+                        <label class="filter-option"><input type="checkbox" name="saleDoc" value="salvage"> Salvage</label>
+                        <label class="filter-option"><input type="checkbox" name="saleDoc" value="rebuilt"> Rebuilt</label>
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Buyer Type</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="radio" name="buyerType" value="public"> Public</label>
+                        <label class="filter-option"><input type="radio" name="buyerType" value="dealer"> Dealer</label>
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Odometer</div>
+                    <div class="filter-min-max">
+                        <input type="number" placeholder="Min Odometer">
+                        <input type="number" placeholder="Max Odometer">
+                    </div>
+                </div>
+
+                <div class="filter-category">
+                    <div class="filter-category__label">Primary Damage</div>
+                    <div class="filter-options">
+                        <label class="filter-option"><input type="checkbox" name="primaryDamage" value="frontEnd"> Front End</label>
+                        <label class="filter-option"><input type="checkbox" name="primaryDamage" value="rearEnd"> Rear End</label>
+                        <label class="filter-option"><input type="checkbox" name="primaryDamage" value="side"> Side</label>
+                        <label class="filter-option"><input type="checkbox" name="primaryDamage" value="undercarriage"> Undercarriage</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons (Sticky Bottom of Modal) -->
+            <div class="filter-modal-actions">
+                <button class="button-primary" onclick="applyFiltersAndCloseModal()">Apply Filters</button>
+                <button class="button-secondary" onclick="clearAllFiltersInModal()">Clear All Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for Modal Interaction
+        function openFilterModal() {
+            document.getElementById('filterModalOverlay').classList.add('active');
+            // Optional: Prevent body scrolling when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFilterModal() {
+            document.getElementById('filterModalOverlay').classList.remove('active');
+            // Optional: Re-enable body scrolling
+            document.body.style.overflow = 'auto';
+        }
+
+        function applyFiltersAndCloseModal() {
+            // In a real application, you'd collect selected filter values here
+            // e.g., using document.querySelectorAll('input[name="filterName"]:checked')
+            console.log("Applying filters (logic would go here)...");
+            closeFilterModal();
+            // You might want to update the "Selected Filters" display and "Search (X Results)" button here
+        }
+
+        function clearAllFiltersInModal() {
+            // Reset all checkboxes, radio buttons, and text inputs within the modal
+            const checkboxes = document.querySelectorAll('#filterModalOverlay input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+
+            const radioButtons = document.querySelectorAll('#filterModalOverlay input[type="radio"]');
+            radioButtons.forEach(rb => rb.checked = false);
+
+            const textInputs = document.querySelectorAll('#filterModalOverlay input[type="text"], #filterModalOverlay input[type="number"]');
+            textInputs.forEach(input => input.value = '');
+
+            console.log("All filters cleared in modal.");
+        }
+    </script>
+
+</body>
+</html>

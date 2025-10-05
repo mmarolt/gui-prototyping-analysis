@@ -2,182 +2,327 @@
 <html>
 <head>
     <title>Property Search</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
+        /* Base styles for mobile simulation */
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
             font-family: Arial, sans-serif;
-            overflow: hidden; /* Prevent scrolling of the body */
-        }
-
-        .container {
+            background: #f8f8f8;
+            height: 100vh; /* Full viewport height */
             display: flex;
-            flex-direction: column;
-            height: 100%;
+            flex-direction: column; /* Stack header, filters, and action button vertically */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            
+            /* Simulate mobile screen size: 375 x 667 pixels */
+            width: 375px; 
+            max-width: 100%; /* Ensure it doesn't exceed viewport width */
+            margin-left: auto; /* Center the body if max-width is less than viewport */
+            margin-right: auto;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Top Section: Search & Location */
-        .top-section {
-            background-color: #f8f8f8;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
+        /* Header Section */
+        .header {
+            padding: 20px 15px 15px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
         }
 
+        /* Scrollable Filters Container */
+        .filters-container {
+            flex-grow: 1; /* Allows the container to take available space */
+            overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+            padding: 0 15px; /* Horizontal padding for content */
+            padding-bottom: 80px; /* Add padding to prevent content from being obscured by fixed bottom button */
+            box-sizing: border-box;
+        }
+
+        /* Filter Section Styling */
+        .filter-section {
+            padding: 15px 0; /* Vertical padding for filter sections */
+        }
+
+        /* Search Bar */
         .search-bar {
             display: flex;
             align-items: center;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-
-        .search-bar input[type="text"] {
-            flex: 1;
-            border: none;
-            padding: 5px;
-            font-size: 16px;
-        }
-
-        .search-bar button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-        }
-        .location-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            align-self: flex-end;
-        }
-
-
-        /* Middle Section: Map */
-        .map-section {
-            flex: 1;
-            background-color: #eee; /* Placeholder */
-            overflow: hidden; /* Ensure map doesn't overflow */
-        }
-
-        /* Bottom Section: Filters & Listings */
-        .bottom-section {
             background-color: #fff;
-            padding: 10px;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+        }
+        .search-bar .search-icon {
+            margin-right: 10px;
+            color: #888;
+            font-size: 18px;
+        }
+        .search-bar input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            padding: 0;
+            background: none;
+        }
+
+        /* PG Only Properties Filter (Toggle Switch) */
+        .toggle-filter {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee; /* Separator */
+        }
+        .toggle-filter label {
+            font-size: 16px;
+            color: #333;
+        }
+        /* Basic toggle switch styling (using checkbox hack) */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 45px;
+            height: 25px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 25px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 19px;
+            width: 19px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50;
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
         }
 
-        .filter-button {
-            background-color: #3498db;
+        /* Filter Group Label */
+        .filter-group-label {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+            text-align: left;
+        }
+
+        /* Segmented Control / Selectable Buttons */
+        .segmented-control {
+            display: flex;
+            border: 1px solid #007bff; /* Primary color for border */
+            border-radius: 8px;
+            overflow: hidden; /* Ensures inner borders are clipped */
+            margin-bottom: 20px;
+        }
+        .segmented-control button {
+            flex: 1; /* Distribute space equally */
+            padding: 10px 5px;
+            border: none;
+            background-color: #fff;
+            color: #007bff;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .segmented-control button:not(:last-child) {
+            border-right: 1px solid #007bff; /* Separator between buttons */
+        }
+        .segmented-control button.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        .segmented-control button:hover:not(.selected) {
+            background-color: #e6f2ff; /* Light hover effect */
+        }
+
+        /* Price Range Filter */
+        .price-range-filter {
+            margin-bottom: 20px;
+        }
+        .price-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Space between inputs */
+        }
+        .price-inputs div {
+            flex: 1; /* Each input wrapper takes equal space */
+        }
+        .price-inputs label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .price-inputs input {
+            width: calc(100% - 20px); /* Adjust for padding and border */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box; /* Crucial for width calculation */
+        }
+
+        /* Number of Bedrooms Filter - specific styling */
+        .bedrooms-filter .segmented-control {
+            border: 1px solid #4CAF50; /* Different color for bedrooms filter */
+        }
+        .bedrooms-filter .segmented-control button {
+            color: #4CAF50;
+        }
+        .bedrooms-filter .segmented-control button:not(:last-child) {
+            border-right: 1px solid #4CAF50;
+        }
+        .bedrooms-filter .segmented-control button.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .bedrooms-filter .segmented-control button:hover:not(.selected) {
+            background-color: #e8f5e9;
+        }
+
+        /* Action Button Section */
+        .action-button-section {
+            padding: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+            position: fixed; /* Always at the bottom of the viewport */
+            bottom: 0;
+            left: 0; /* Align to left edge of viewport */
+            right: 0; /* Align to right edge of viewport */
+            width: 375px; /* Match body's simulated width */
+            margin-left: auto; /* Center the fixed button */
+            margin-right: auto;
+            box-sizing: border-box;
+            z-index: 10; /* Ensure it stays on top of scrolling content */
+            flex-shrink: 0; /* Prevent action button from shrinking */
+        }
+        .search-button {
+            width: 100%;
+            padding: 15px 0;
+            background-color: #007bff; /* Primary button color */
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
             cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s;
         }
-        .listings-preview {
-            flex: 1;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 5px;
-        }
-
-        .property-card {
-            display: inline-block;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 8px;
-            margin-right: 5px;
-            width: 150px;
-            text-align: left;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .property-card img {
-            width: 100%;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-
-        /* Mobile-Specific Adjustments */
-        @media (max-width: 375px) {
-            .container {
-                width: 375px;
-                height: 667px;
-            }
-            .search-bar input[type="text"] {
-                font-size: 14px;
-            }
-            .location-button, .filter-button {
-                padding: 6px 10px;
-                font-size: 14px;
-            }
-            .property-card {
-                width: 130px;
-                padding: 6px;
-            }
-            .property-card img {
-                height: 70px;
-            }
-
+        .search-button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+    <!-- Header Section -->
+    <div class="header">
+        <h1>Find Properties</h1>
+    </div>
 
-    <!-- Top Section: Search & Location -->
-    <div class="top-section">
-        <div class="search-bar">
-            <input type="text" placeholder="Search by location or keyword">
-            <button>&#x1F50D;</button>  <!-- Search Icon -->
+    <!-- Filters Section (Scrollable Container) -->
+    <div class="filters-container">
+        <div class="filter-section">
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <span class="search-icon">&#128269;</span> <!-- Magnifying glass icon -->
+                <input type="text" placeholder="Search by location or keyword">
+            </div>
+
+            <!-- PG Only Properties Filter -->
+            <div class="toggle-filter">
+                <label for="pg-only">PG Only Properties</label>
+                <label class="switch">
+                    <input type="checkbox" id="pg-only">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <!-- Property Type Filter -->
+            <div class="property-type-filter">
+                <span class="filter-group-label">Property Type</span>
+                <div class="segmented-control">
+                    <button class="selected">Apartment</button>
+                    <button>House</button>
+                    <button>Villa</button>
+                    <button>Land</button>
+                </div>
+            </div>
+
+            <!-- Price Range Filter -->
+            <div class="price-range-filter">
+                <span class="filter-group-label">Price Range</span>
+                <div class="price-inputs">
+                    <div>
+                        <label for="min-price">Min Price</label>
+                        <input type="number" id="min-price" placeholder="$0">
+                    </div>
+                    <div>
+                        <label for="max-price">Max Price</label>
+                        <input type="number" id="max-price" placeholder="$1,000,000+">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Number of Bedrooms Filter -->
+            <div class="bedrooms-filter">
+                <span class="filter-group-label">Number of Bedrooms</span>
+                <div class="segmented-control">
+                    <button>1</button>
+                    <button class="selected">2</button>
+                    <button>3</button>
+                    <button>4+</button>
+                    <button>Any</button>
+                </div>
+            </div>
         </div>
-        <button class="location-button">Near Me</button>
     </div>
 
-    <!-- Middle Section: Map -->
-    <div class="map-section">
-        <!-- Replace with your map integration (e.g., Google Maps, Leaflet) -->
-        <p>Map Here</p>
+    <!-- Action Button Section -->
+    <div class="action-button-section">
+        <button class="search-button">Search</button>
     </div>
-
-    <!-- Bottom Section: Filters & Listings -->
-    <div class="bottom-section">
-        <button class="filter-button">Filters</button>
-
-        <div class="listings-preview">
-            <div class="property-card">
-                <img src="placeholder_image.jpg" alt="Property Image">
-                <p>Address 1</p>
-                <p>$1,200</p>
-            </div>
-            <div class="property-card">
-                <img src="placeholder_image.jpg" alt="Property Image">
-                <p>Address 2</p>
-                <p>$1,500</p>
-            </div>
-            <div class="property-card">
-                <img src="placeholder_image.jpg" alt="Property Image">
-                <p>Address 3</p>
-                <p>$1,800</p>
-            </div>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

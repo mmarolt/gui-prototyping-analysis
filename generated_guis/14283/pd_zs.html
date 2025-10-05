@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Share Sheet</title>
+    <style>
+        /* Basic Reset and Box Sizing */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the page */
+            overflow: hidden; /* Prevent body scroll, content area will scroll */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* Main Container for the entire mobile page */
+        .mobile-page-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            max-width: 375px; /* Simulates a common mobile device width */
+            margin: 0 auto; /* Centers the mobile view on larger screens */
+            background-color: white; /* Default background for the "app" */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Optional shadow for a framed look */
+        }
+
+        /* 1. Top Navigation Bar (Fixed) */
+        .top-nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+            height: 50px; /* Fixed height for the nav bar */
+            flex-shrink: 0; /* Prevents the bar from shrinking */
+        }
+
+        .top-nav-bar .nav-button {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #007aff; /* Standard iOS-like blue */
+            cursor: pointer;
+            padding: 5px 10px;
+            -webkit-appearance: none; /* Reset button styles for consistency */
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .top-nav-bar .nav-button.post {
+            background-color: #007aff;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            padding: 8px 15px;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .top-nav-bar .nav-button.post:disabled {
+            background-color: #a8d5ff; /* Lighter blue for disabled state */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .top-nav-bar .page-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* 2. Main Content Area (Scrollable) */
+        .main-content-area {
+            flex-grow: 1; /* Takes all available vertical space between fixed bars */
+            overflow-y: auto; /* Enables vertical scrolling for content */
+            padding: 15px;
+            background-color: #f8f8f8; /* Slightly different background for content area */
+        }
+
+        /* 1. Editable Text Input Field */
+        .comment-input-container {
+            margin-bottom: 15px;
+        }
+
+        .comment-input {
+            width: 100%;
+            min-height: 120px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical; /* Allows vertical resizing by user */
+            outline: none; /* Removes focus outline */
+            font-family: inherit; /* Inherit font from body */
+            color: #333;
+        }
+
+        .comment-input::placeholder {
+            color: #999;
+        }
+
+        /* Optional character count */
+        .char-count {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        /* 2. Pre-populated Post Preview Area */
+        .post-preview-card {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start; /* Aligns thumbnail and text to the top */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .post-preview-card .thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            margin-right: 15px;
+            object-fit: cover; /* Ensures image covers the area without distortion */
+            flex-shrink: 0; /* Prevents thumbnail from shrinking */
+        }
+
+        .post-preview-card .text-content {
+            flex-grow: 1; /* Allows text content to take remaining space */
+        }
+
+        .post-preview-card .title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
+        .post-preview-card .description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+            line-height: 1.4;
+            display: -webkit-box; /* For multi-line ellipsis */
+            -webkit-line-clamp: 2; /* Limits description to 2 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-preview-card .link {
+            font-size: 12px;
+            color: #007aff;
+            text-decoration: none;
+            display: block;
+            word-break: break-all; /* Breaks long links to prevent overflow */
+        }
+
+        /* 4. Options for Standard Facebook Sharing */
+        .sharing-options {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .sharing-option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: #555;
+            font-size: 13px;
+            text-align: center;
+            flex: 1; /* Distributes space evenly among items */
+            padding: 5px; /* Add some padding for touch target */
+        }
+
+        .sharing-option-item i { /* Using generic 'i' for icon placeholder */
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #007aff; /* Icon color */
+        }
+
+        /* 3. Bottom Contextual Area (Fixed) */
+        .bottom-context-area {
+            flex-shrink: 0; /* Prevents the bar from shrinking */
+            padding: 12px 15px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+            height: 40px; /* Fixed height for the bottom bar */
+            display: flex; /* Use flex to vertically center text */
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-page-container">
+
+        <!-- 1. Top Navigation Bar (Fixed) -->
+        <div class="top-nav-bar">
+            <button class="nav-button">X</button> <!-- Cancel/Back button -->
+            <span class="page-title">Share to Facebook</span>
+            <button id="postButton" class="nav-button post" disabled>Post</button>
+        </div>
+
+        <!-- 2. Main Content Area (Scrollable) -->
+        <div class="main-content-area">
+
+            <!-- 1. Editable Text Input Field for User Comments -->
+            <div class="comment-input-container">
+                <textarea id="commentInput" class="comment-input" placeholder="Say something about this..."></textarea>
+                <div class="char-count">0/200 characters</div> <!-- Optional character count -->
+            </div>
+
+            <!-- 2. Pre-populated Post Preview Area -->
+            <div class="post-preview-card">
+                <img src="https://via.placeholder.com/60x60/f0f0f0/333?text=IMG" alt="Thumbnail" class="thumbnail">
+                <div class="text-content">
+                    <h3 class="title">Exciting New Product Launch: Quantum Widgets!</h3>
+                    <p class="description">Discover the revolutionary Quantum Widgets, designed to streamline your workflow and boost productivity like never before. Learn more about their innovative features and how they can transform your daily tasks.</p>
+                    <a href="https://example.com/quantum-widgets" class="link">example.com/quantum-widgets</a>
+                </div>
+            </div>
+
+            <!-- 4. Options for Standard Facebook Sharing -->
+            <div class="sharing-options">
+                <div class="sharing-option-item">
+                    <i class="icon-tag-friends">👥</i> <!-- Placeholder for icon -->
+                    <span>Tag Friends</span>
+                </div>
+                <div class="sharing-option-item">
+                    <i class="icon-feeling">😊</i> <!-- Placeholder for icon -->
+                    <span>Feeling/Activity</span>
+                </div>
+                <div class="sharing-option-item">
+                    <i class="icon-check-in">📍</i> <!-- Placeholder for icon -->
+                    <span>Check In</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 3. Bottom Contextual Area (Fixed) -->
+        <div class="bottom-context-area">
+            <span>Posting as John Doe</span>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript for enabling/disabling the Post button based on comment input
+        const commentInput = document.getElementById('commentInput');
+        const postButton = document.getElementById('postButton');
+        const charCount = document.querySelector('.char-count');
+
+        commentInput.addEventListener('input', function() {
+            const textLength = this.value.trim().length;
+            postButton.disabled = textLength === 0; // Disable if no text is entered
+            charCount.textContent = `${textLength}/200 characters`; // Update character count
+        });
+
+        // Initialize button state on page load
+        commentInput.dispatchEvent(new Event('input'));
+    </script>
+
+</body>
+</html>

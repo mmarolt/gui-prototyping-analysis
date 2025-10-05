@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Set Password</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto for Material Design Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Material Design 3 Inspired Color System & Typography */
+        :root {
+            /* M3 Color Palette (Example values) */
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-surface: #FFFBFE; /* Light surface color */
+            --md-sys-color-on-surface: #1C1B1F; /* Text on surface */
+            --md-sys-color-surface-variant: #E7E0EC; /* Slightly different surface */
+            --md-sys-color-on-surface-variant: #49454F; /* Text on surface variant */
+            --md-sys-color-background: #FFFBFE;
+            --md-sys-color-on-background: #1C1B1F;
+            --md-sys-color-outline: #79747E; /* For borders/outlines */
+            --md-sys-color-shadow: #000000;
+
+            /* Helper for rgba alpha values (for hover/active states) */
+            --md-sys-color-on-surface-rgb: 28, 27, 31; /* RGB values for --md-sys-color-on-surface */
+
+            /* M3 Typography - Roboto */
+            --md-sys-typescale-headline-medium-size: 28px;
+            --md-sys-typescale-headline-medium-weight: 400;
+            --md-sys-typescale-headline-medium-line-height: 36px;
+
+            --md-sys-typescale-title-large-size: 22px;
+            --md-sys-typescale-title-large-weight: 400;
+            --md-sys-typescale-title-large-line-height: 28px;
+
+            --md-sys-typescale-label-large-size: 14px;
+            --md-sys-typescale-label-large-weight: 500;
+            --md-sys-typescale-label-large-line-height: 20px;
+
+            --md-sys-typescale-body-large-size: 16px;
+            --md-sys-typescale-body-large-weight: 400;
+            --md-sys-typescale-body-large-line-height: 24px;
+
+
+            /* M3 Elevation Shadows */
+            --md-elevation-0: none;
+            --md-elevation-1: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+            --md-elevation-2: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+            --md-elevation-3: 0px 2px 3px rgba(0, 0, 0, 0.3), 0px 3px 6px 2px rgba(0, 0, 0, 0.15); /* For App Bar (dp4 equivalent) */
+            --md-elevation-4: 0px 4px 5px rgba(0, 0, 0, 0.3), 0px 5px 8px 4px rgba(0, 0, 0, 0.15);
+            --md-elevation-5: 0px 8px 10px rgba(0, 0, 0, 0.3), 0px 10px 14px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Mobile Screen Dimensions */
+        html, body {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            color: var(--md-sys-color-on-background);
+            background-color: var(--md-sys-color-background);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            margin: 0 auto; /* Center the design on larger screens */
+            overflow: hidden; /* Prevent scrolling if content overflows */
+            border: 1px solid var(--md-sys-color-outline); /* Visual boundary for the mobile screen */
+            position: relative;
+        }
+
+        /* 1. Top Navigation Bar (App Bar) */
+        .app-bar {
+            display: flex;
+            align-items: center;
+            padding: 0 16px; /* Horizontal padding */
+            height: 64px; /* Common M3 App Bar height */
+            background-color: var(--md-sys-color-surface);
+            box-shadow: var(--md-elevation-3); /* dp4 elevation */
+            z-index: 10; /* Ensure it stays above content */
+        }
+
+        .app-bar__title {
+            flex-grow: 1; /* Title takes up available space */
+            color: var(--md-sys-color-on-surface);
+            font-size: var(--md-sys-typescale-headline-medium-size);
+            font-weight: var(--md-sys-typescale-headline-medium-weight);
+            line-height: var(--md-sys-typescale-headline-medium-line-height);
+        }
+
+        .app-bar__icon-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px; /* Minimum touch target */
+            height: 48px; /* Minimum touch target */
+            border-radius: 50%;
+            background: none;
+            border: none;
+            color: var(--md-sys-color-on-surface-variant); /* Icon color */
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .app-bar__icon-button:hover {
+            background-color: rgba(var(--md-sys-color-on-surface-rgb), 0.08);
+        }
+        .app-bar__icon-button:active {
+            background-color: rgba(var(--md-sys-color-on-surface-rgb), 0.12);
+        }
+
+        /* Material Icons general styling */
+        .material-icons {
+            font-size: 24px; /* Standard icon size */
+            user-select: none; /* Prevent text selection */
+        }
+
+        /* 2. Password Entry Display & Feedback Area */
+        .password-feedback-area {
+            flex-grow: 1; /* Takes up remaining vertical space above keypad */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Vertically center content */
+            padding: 32px 16px;
+            text-align: center;
+        }
+
+        .instruction-text {
+            color: var(--md-sys-color-on-surface);
+            font-size: var(--md-sys-typescale-title-large-size);
+            font-weight: var(--md-sys-typescale-title-large-weight);
+            line-height: var(--md-sys-typescale-title-large-line-height);
+            margin-bottom: 48px; /* Spacing below instruction text */
+        }
+
+        .password-indicators {
+            display: flex;
+            gap: 16px; /* Space between indicator circles */
+        }
+
+        .indicator {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%; /* Circular shape */
+            display: inline-block;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .indicator.empty {
+            border: 2px solid var(--md-sys-color-outline);
+            background-color: transparent;
+        }
+
+        .indicator.filled {
+            background-color: var(--md-sys-color-on-surface);
+            border: 2px solid var(--md-sys-color-on-surface); /* Solid border for filled */
+        }
+
+        .indicator.active {
+            border: 2px solid var(--md-sys-color-primary); /* Primary color border for active */
+            background-color: transparent;
+            /* Pulsating animation for active indicator */
+            animation: pulse-border 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-border {
+            0% { border-color: var(--md-sys-color-primary); }
+            50% { border-color: var(--md-sys-color-primary-container); } /* Lighter pulse */
+            100% { border-color: var(--md-sys-color-primary); }
+        }
+
+        /* 3. Numeric Keypad & Control Buttons Area */
+        .keypad-area {
+            background-color: var(--md-sys-color-surface);
+            padding: 16px;
+            border-top: 1px solid var(--md-sys-color-surface-variant); /* Subtle separation line */
+        }
+
+        .keypad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columns, equal width */
+            gap: 16px; /* Spacing between keypad buttons */
+            max-width: 320px; /* Limit keypad width for better aesthetics */
+            margin: 0 auto; /* Center the keypad horizontally */
+        }
+
+        .keypad-button {
+            width: 72px; /* Sufficiently large touch target */
+            height: 72px; /* Sufficiently large touch target */
+            border-radius: 36px; /* Makes numeric buttons circular */
+            border: none;
+            background-color: var(--md-sys-color-surface-variant); /* Tonal button background */
+            color: var(--md-sys-color-on-surface);
+            font-size: 32px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            outline: none;
+        }
+
+        .keypad-button:hover {
+            background-color: var(--md-sys-color-primary-container);
+        }
+        .keypad-button:active {
+            background-color: var(--md-sys-color-primary); /* Ripple-like effect on press */
+            color: var(--md-sys-color-on-primary);
+            box-shadow: var(--md-elevation-1); /* Subtle elevation on press */
+        }
+
+        .keypad-button.clear {
+            background: none; /* Text button style */
+            color: var(--md-sys-color-on-surface-variant); /* Muted color */
+            font-size: var(--md-sys-typescale-body-large-size);
+            font-weight: var(--md-sys-typescale-body-large-weight);
+            border-radius: 20px; /* Slightly rounded corners for text button */
+        }
+        .keypad-button.clear:hover {
+            background-color: rgba(var(--md-sys-color-on-surface-rgb), 0.08);
+            color: var(--md-sys-color-on-surface);
+        }
+        .keypad-button.clear:active {
+            background-color: rgba(var(--md-sys-color-on-surface-rgb), 0.12);
+            color: var(--md-sys-color-on-surface);
+            box-shadow: none;
+        }
+
+        .keypad-button.ok {
+            background-color: var(--md-sys-color-primary); /* Primary filled button */
+            color: var(--md-sys-color-on-primary);
+            font-size: var(--md-sys-typescale-label-large-size);
+            font-weight: var(--md-sys-typescale-label-large-weight);
+            border-radius: 20px; /* Standard Material Design Filled Button shape */
+            box-shadow: var(--md-elevation-1); /* Slight elevation for primary action */
+        }
+        .keypad-button.ok:hover {
+            filter: brightness(1.05); /* Slightly brighter on hover */
+            box-shadow: var(--md-elevation-2); /* More elevation on hover */
+        }
+        .keypad-button.ok:active {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            box-shadow: var(--md-elevation-1);
+        }
+
+        .keypad-button.ok:disabled {
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface-variant);
+            cursor: not-allowed;
+            box-shadow: none;
+            filter: none;
+            opacity: 0.8; /* Subtle visual cue for disabled */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Navigation Bar (App Bar) -->
+    <header class="app-bar">
+        <h1 class="app-bar__title">Set Password</h1>
+        <button class="app-bar__icon-button" aria-label="Close password setup">
+            <span class="material-icons">close</span> <!-- &#xe5cd; -->
+        </button>
+    </header>
+
+    <!-- 2. Password Entry Display & Feedback Area -->
+    <main class="password-feedback-area">
+        <p class="instruction-text">Enter your 4-digit password</p>
+        <div class="password-indicators">
+            <!--
+                Example State: Two digits have been entered, the third is active for input,
+                and the fourth is still empty.
+                This demonstrates all three indicator states: filled, active, and empty.
+            -->
+            <span class="indicator filled" aria-label="Digit 1 entered"></span>
+            <span class="indicator filled" aria-label="Digit 2 entered"></span>
+            <span class="indicator active" aria-label="Entering digit 3"></span>
+            <span class="indicator empty" aria-label="Digit 4 empty"></span>
+        </div>
+    </main>
+
+    <!-- 3. Numeric Keypad & Control Buttons Area -->
+    <div class="keypad-area">
+        <div class="keypad-grid">
+            <button class="keypad-button" aria-label="1">1</button>
+            <button class="keypad-button" aria-label="2">2</button>
+            <button class="keypad-button" aria-label="3">3</button>
+            <button class="keypad-button" aria-label="4">4</button>
+            <button class="keypad-button" aria-label="5">5</button>
+            <button class="keypad-button" aria-label="6">6</button>
+            <button class="keypad-button" aria-label="7">7</button>
+            <button class="keypad-button" aria-label="8">8</button>
+            <button class="keypad-button" aria-label="9">9</button>
+            <!-- Clear Button -->
+            <button class="keypad-button clear" aria-label="Clear last digit">Clear</button>
+            <button class="keypad-button" aria-label="0">0</button>
+            <!-- OK Button (initially disabled until 4 digits are entered) -->
+            <button class="keypad-button ok" disabled aria-label="Confirm password">OK</button>
+        </div>
+    </div>
+
+</body>
+</html>

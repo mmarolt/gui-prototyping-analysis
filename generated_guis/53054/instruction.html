@@ -1,107 +1,356 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Job Opportunities</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Finder Mobile</title>
+    <!-- 
+        All CSS is placed within a <style> tag in the head.
+        This is a common interpretation of "inline CSS code" for a single-file HTML document,
+        as opposed to external stylesheets, while maintaining readability and organization
+        compared to applying 'style="..."' attributes on every single element.
+    -->
+    <style>
+        /* Global styles and reset */
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background for the overall page */
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box; /* Ensure padding/border included in element's total width/height */
+            display: flex;
+            justify-content: center; /* Center the app container on larger screens */
+            align-items: center; /* Center vertically if body is larger than app container */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
 
-.container {
-  max-width: 375px; /* Match the mobile screen width */
-  margin: 0 auto;
-}
+        /* Main application container, simulating a mobile device screen */
+        .app-container {
+            width: 100%; /* Take full width on small screens */
+            max-width: 375px; /* Fixed width for mobile simulation */
+            height: 667px; /* Fixed height for mobile simulation */
+            margin: 0 auto; /* Center the app container on larger screens */
+            border: 1px solid #ddd; /* Visual border for the device screen */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            overflow: hidden; /* Hide scrollbars that might appear if content is too big */
+            display: flex;
+            flex-direction: column; /* Stack header, nav, and main content vertically */
+            background-color: #fff; /* Main app background */
+        }
 
-.header {
-  background-color: #007bff;
-  color: white;
-  padding: 15px;
-  text-align: center;
-  font-size: 1.2em;
-}
+        /* Header section with search bar */
+        .header {
+            padding: 15px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-input {
+            flex-grow: 1; /* Allows input to take up most of the space */
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 25px; /* Pill shape */
+            font-size: 1rem;
+            outline: none; /* Remove focus outline */
+            background-color: #fff;
+            color: #333;
+        }
+        .search-input::placeholder {
+            color: #999;
+        }
+        .search-icon {
+            font-size: 1.3rem;
+            color: #555;
+            padding: 5px;
+            cursor: pointer;
+            display: flex; /* For centering the emoji/icon */
+            align-items: center;
+            justify-content: center;
+        }
 
-.job-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+        /* Filter navigation bar */
+        .filter-nav {
+            display: flex;
+            justify-content: flex-start; /* Align items to the start, allow scrolling */
+            padding: 10px 10px; /* Horizontal padding */
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            overflow-x: auto; /* Allow horizontal scrolling for filters */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+            gap: 8px; /* Space between filter buttons */
+        }
+        .filter-nav::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+        }
+        .filter-button {
+            padding: 8px 16px;
+            border: none;
+            background-color: #e9eef2; /* Light background for inactive buttons */
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #555;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent text wrapping */
+            transition: background-color 0.2s, color 0.2s;
+            flex-shrink: 0; /* Prevent buttons from shrinking */
+        }
+        .filter-button.active {
+            background-color: #007bff; /* Primary blue for active filter */
+            color: #fff;
+            font-weight: bold;
+        }
+        .filter-button:hover:not(.active) {
+            background-color: #d8e0e6;
+        }
 
-.job-item {
-  background-color: white;
-  margin: 10px;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        /* Main content area for job listings */
+        .job-listings {
+            flex-grow: 1; /* Takes up all available vertical space */
+            overflow-y: auto; /* Allows vertical scrolling for job cards */
+            padding: 15px;
+            background-color: #f4f7f6; /* Slightly darker background for the list */
+        }
 
-.job-title {
-  font-size: 1.1em;
-  margin-bottom: 5px;
-  color: #333;
-}
+        /* Individual job posting card */
+        .job-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Soft shadow */
+            position: relative; /* For positioning the 'NEW!' label */
+            transition: transform 0.2s ease-in-out;
+        }
+        .job-card:last-child {
+            margin-bottom: 0; /* No margin after the last card */
+        }
+        .job-card:hover {
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
 
-.company {
-  font-style: italic;
-  color: #777;
-  margin-bottom: 5px;
-}
+        .job-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+        .job-company-location {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .job-details {
+            display: flex;
+            flex-wrap: wrap; /* Allow details to wrap onto multiple lines */
+            gap: 8px 15px; /* Row gap, column gap */
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+        .job-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: #eef5fb; /* Light background for detail items */
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        .job-detail-item span {
+            font-weight: 500;
+        }
+        .job-detail-item .icon { /* For emoji icons */
+            font-size: 0.9rem;
+        }
 
-.location {
-  color: #555;
-  margin-bottom: 10px;
-}
+        /* Action buttons below each job card */
+        .job-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee; /* Separator line */
+        }
+        .action-button {
+            flex: 1; /* Make buttons take equal width */
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .apply-button {
+            background-color: #007bff; /* Primary blue */
+            color: #fff;
+        }
+        .apply-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+        .dismiss-button {
+            background-color: #e0e0e0; /* Light grey */
+            color: #555;
+        }
+        .dismiss-button:hover {
+            background-color: #ccc;
+            transform: translateY(-1px);
+        }
 
-.apply-button {
-  background-color: #28a745;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
-  text-decoration: none;
-}
-
-.apply-button:hover {
-  background-color: #218838;
-}
-
-</style>
+        /* 'NEW!' label for new job postings */
+        .new-label {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #ffc107; /* Amber/Yellow for attention */
+            color: #333;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Utility styles for consistent emoji icon sizing */
+        .icon {
+            display: inline-block;
+            line-height: 1; /* Ensure emoji aligns well */
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
+    <div class="app-container">
+        <!-- Header with Search Bar -->
+        <div class="header">
+            <input type="search" class="search-input" placeholder="Search for jobs...">
+            <span class="search-icon icon">🔍</span>
+        </div>
 
-<div class="container">
-  <div class="header">
-    Job Opportunities
-  </div>
+        <!-- Filter Navigation -->
+        <nav class="filter-nav">
+            <button class="filter-button active">Suggested</button>
+            <button class="filter-button">Searches</button>
+            <button class="filter-button">Saved</button>
+            <button class="filter-button">Applied</button>
+            <button class="filter-button">Remote</button>
+            <button class="filter-button">Full-time</button>
+        </nav>
 
-  <ul class="job-list">
-    <li class="job-item">
-      <h2 class="job-title">Software Engineer</h2>
-      <p class="company">Acme Corp</p>
-      <p class="location">San Francisco, CA</p>
-      <a href="#" class="apply-button">Apply Now</a>
-    </li>
+        <!-- Job Listings -->
+        <main class="job-listings">
+            <!-- Job Card 1 (New Posting) -->
+            <div class="job-card">
+                <span class="new-label">NEW!</span>
+                <h3 class="job-title">Senior Frontend Developer (React/Vue)</h3>
+                <p class="job-company-location"><span class="icon">🏢</span> Tech Innovations Inc. <span class="icon">📍</span> San Francisco, CA</p>
+                <div class="job-details">
+                    <div class="job-detail-item"><span class="icon">💲</span><span>$120k - $160k/year</span></div>
+                    <div class="job-detail-item"><span class="icon">🎁</span><span>Health, Dental, 401k, PTO, Gym</span></div>
+                    <div class="job-detail-item"><span class="icon">💼</span><span>Full-time</span></div>
+                </div>
+                <div class="job-actions">
+                    <button class="action-button apply-button">Apply Now</button>
+                    <button class="action-button dismiss-button">Dismiss</button>
+                </div>
+            </div>
 
-    <li class="job-item">
-      <h2 class="job-title">Data Scientist</h2>
-      <p class="company">Beta Industries</p>
-      <p class="location">New York, NY</p>
-      <a href="#" class="apply-button">Apply Now</a>
-    </li>
+            <!-- Job Card 2 -->
+            <div class="job-card">
+                <h3 class="job-title">Product Manager, AI/ML Platform</h3>
+                <p class="job-company-location"><span class="icon">🏢</span> DataGenius Labs <span class="icon">📍</span> New York, NY (Hybrid)</p>
+                <div class="job-details">
+                    <div class="job-detail-item"><span class="icon">💲</span><span>$130k - $180k/year</span></div>
+                    <div class="job-detail-item"><span class="icon">🎁</span><span>Medical, Vision, Stock Options, Bonus</span></div>
+                    <div class="job-detail-item"><span class="icon">💼</span><span>Full-time</span></div>
+                </div>
+                <div class="job-actions">
+                    <button class="action-button apply-button">Apply Now</button>
+                    <button class="action-button dismiss-button">Dismiss</button>
+                </div>
+            </div>
 
-    <li class="job-item">
-      <h2 class="job-title">Web Developer</h2>
-      <p class="company">Gamma Solutions</p>
-      <p class="location">London, UK</p>
-      <a href="#" class="apply-button">Apply Now</a>
-    </li>
-  </ul>
-</div>
+            <!-- Job Card 3 (New Posting) -->
+            <div class="job-card">
+                <span class="new-label">NEW!</span>
+                <h3 class="job-title">UX/UI Designer (Mobile Focus)</h3>
+                <p class="job-company-location"><span class="icon">🏢</span> Creative Flow Studios <span class="icon">📍</span> Remote (US)</p>
+                <div class="job-details">
+                    <div class="job-detail-item"><span class="icon">💲</span><span>$85k - $120k/year</span></div>
+                    <div class="job-detail-item"><span class="icon">🎁</span><span>Flexible hours, Home office stipend, Wellness</span></div>
+                    <div class="job-detail-item"><span class="icon">💼</span><span>Contract (6 months)</span></div>
+                </div>
+                <div class="job-actions">
+                    <button class="action-button apply-button">Apply Now</button>
+                    <button class="action-button dismiss-button">Dismiss</button>
+                </div>
+            </div>
 
+            <!-- Job Card 4 -->
+            <div class="job-card">
+                <h3 class="job-title">Junior Data Scientist</h3>
+                <p class="job-company-location"><span class="icon">🏢</span> Quant Analytics Corp <span class="icon">📍</span> Austin, TX</p>
+                <div class="job-details">
+                    <div class="job-detail-item"><span class="icon">💲</span><span>$70k - $95k/year</span></div>
+                    <div class="job-detail-item"><span class="icon">🎁</span><span>Mentorship program, Education budget</span></div>
+                    <div class="job-detail-item"><span class="icon">💼</span><span>Full-time</span></div>
+                </div>
+                <div class="job-actions">
+                    <button class="action-button apply-button">Apply Now</button>
+                    <button class="action-button dismiss-button">Dismiss</button>
+                </div>
+            </div>
+
+            <!-- Job Card 5 (New Posting) -->
+            <div class="job-card">
+                <span class="new-label">NEW!</span>
+                <h3 class="job-title">Digital Marketing Manager</h3>
+                <p class="job-company-location"><span class="icon">🏢</span> BrandBoost Agency <span class="icon">📍</span> Los Angeles, CA</p>
+                <div class="job-details">
+                    <div class="job-detail-item"><span class="icon">💲</span><span>$90k - $115k/year</span></div>
+                    <div class="job-detail-item"><span class="icon">🎁</span><span>Performance bonus, Travel allowance, PTO</span></div>
+                    <div class="job-detail-item"><span class="icon">💼</span><span>Full-time</span></div>
+                </div>
+                <div class="job-actions">
+                    <button class="action-button apply-button">Apply Now</button>
+                    <button class="action-button dismiss-button">Dismiss</button>
+                </div>
+            </div>
+
+            <!-- Job Card 6 -->
+            <div class="job-card">
+                <h3 class="job-title">Cloud Solutions Architect</h3>
+                <p class="job-company-location"><span class="icon">🏢</span> Global Cloud Services <span class="icon">📍</span> Seattle, WA (Remote OK)</p>
+                <div class="job-details">
+                    <div class="job-detail-item"><span class="icon">💲</span><span>$150k - $200k/year</span></div>
+                    <div class="job-detail-item"><span class="icon">🎁</span><span>Top-tier benefits, Stock options, Certification bonus</span></div>
+                    <div class="job-detail-item"><span class="icon">💼</span><span>Full-time</span></div>
+                </div>
+                <div class="job-actions">
+                    <button class="action-button apply-button">Apply Now</button>
+                    <button class="action-button dismiss-button">Dismiss</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
 </body>
 </html>

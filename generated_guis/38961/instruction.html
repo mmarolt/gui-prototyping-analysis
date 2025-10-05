@@ -1,69 +1,345 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Recent Transactions</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance & Invoicing App</title>
+    <style>
+        /* Global Reset and Box Sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body and Mobile Container Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6; /* Light greyish background for the surrounding area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        .mobile-container {
+            width: 375px; /* Fixed width for mobile simulation */
+            height: 667px; /* Fixed height for mobile simulation */
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); /* Subtle shadow to mimic a device */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Hide overflow content within the container */
+            position: relative; /* For sticky elements inside */
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #6a1b9a; /* Deep Purple */
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: 500;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+
+        .settings-icon {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.4em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .settings-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Allows content to take available space */
+            padding: 20px;
+            overflow-y: auto; /* Enable vertical scrolling for content that exceeds height */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Balance Section */
+        .balance-section {
+            text-align: center;
+            padding: 25px 20px;
+            background-color: #e0f7fa; /* Light cyan */
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .balance-section:hover {
+            transform: translateY(-2px);
+        }
+
+        .balance-label {
+            font-size: 0.95em;
+            color: #6a1b9a; /* Deep Purple */
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .balance-amount {
+            font-size: 2.8em; /* Prominently displayed */
+            font-weight: 700;
+            color: #28a745; /* Green for positive balance */
+            text-decoration: none; /* Remove underline from link */
+            display: block; /* Ensure it takes full width */
+            letter-spacing: -0.5px;
+        }
+        .balance-amount:hover {
+            opacity: 0.9;
+        }
+
+        /* Activity Section */
+        .activity-section {
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section-header h3 {
+            font-size: 1.15em;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .view-all-link {
+            font-size: 0.9em;
+            color: #6a1b9a; /* Deep Purple */
+            text-decoration: none;
+            font-weight: 500;
+            transition: text-decoration 0.2s;
+        }
+        .view-all-link:hover {
+            text-decoration: underline;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95em;
+        }
+        .activity-item:last-child {
+            border-bottom: none; /* No border for the last item in the list */
+        }
+
+        .activity-desc {
+            color: #555;
+            flex-grow: 1;
+        }
+
+        .activity-amount {
+            font-weight: 600;
+            color: #28a745; /* Green for positive */
+        }
+        .activity-amount.negative {
+            color: #dc3545; /* Red for negative */
+        }
+
+
+        /* Invoices Section */
+        .invoices-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px; /* Space between invoice cards */
+            margin-bottom: 25px;
+        }
+
+        .invoice-card {
+            flex: 1; /* Distribute space equally */
+            background-color: #f9f9f9;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .invoice-card:hover {
+            transform: translateY(-2px);
+        }
+        .invoice-card p {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .invoice-count {
+            font-size: 2em;
+            font-weight: 700;
+            color: #6a1b9a; /* Deep Purple */
+            margin-bottom: 10px;
+            display: block; /* Ensure it takes full width for spacing */
+        }
+
+        .invoice-link {
+            font-size: 0.85em;
+            color: #6a1b9a; /* Deep Purple */
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 10px;
+            border: 1px solid #6a1b9a;
+            border-radius: 5px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .invoice-link:hover {
+            background-color: #6a1b9a;
+            color: #ffffff;
+        }
+
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #ffffff;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0; /* Prevent nav from shrinking */
+            position: sticky; /* Sticky to bottom */
+            bottom: 0;
+            width: 100%;
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            text-decoration: none;
+            color: #888;
+            font-size: 0.8em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #6a1b9a; /* Active color */
+            font-weight: 600;
+        }
+        .nav-item:hover {
+            color: #6a1b9a;
+        }
+        .nav-item span {
+            font-size: 1.4em; /* Icon size */
+            margin-bottom: 3px;
+        }
+    </style>
 </head>
-<body style="font-family: sans-serif; margin: 0; padding: 0; background-color: #f8f8f8;">
-
-  <div style="background-color: #fff; padding: 20px; border-bottom: 1px solid #eee; text-align: center;">
-    <h1 style="margin: 0; font-size: 20px; color: #333;">Recent Transactions</h1>
-  </div>
-
-  <div style="padding: 15px;">
-
-    <div style="background-color: #fff; border-radius: 8px; margin-bottom: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <p style="margin: 0; font-size: 16px; color: #333;">Grocery Store</p>
-          <p style="margin: 0; font-size: 12px; color: #777;">Yesterday, 5:30 PM</p>
+<body>
+    <div class="mobile-container">
+        <!-- Top Header Bar -->
+        <div class="header">
+            <span class="user-name">Hello, John Doe</span>
+            <button class="settings-icon" aria-label="Settings">⚙️</button>
         </div>
-        <p style="margin: 0; font-size: 16px; color: #e44d26;">-$45.50</p>
-      </div>
-    </div>
 
-    <div style="background-color: #fff; border-radius: 8px; margin-bottom: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <p style="margin: 0; font-size: 16px; color: #333;">Online Payment</p>
-          <p style="margin: 0; font-size: 12px; color: #777;">Yesterday, 10:00 AM</p>
+        <!-- Main Scrollable Content Area -->
+        <div class="main-content">
+            <!-- Available Balance Section -->
+            <div class="balance-section">
+                <p class="balance-label">Available</p>
+                <a href="#" class="balance-amount" aria-label="View balance details">
+                    $12,345.67
+                </a>
+            </div>
+
+            <!-- Recent Account Activity Section -->
+            <div class="activity-section">
+                <div class="section-header">
+                    <h3>Recent Activity</h3>
+                    <a href="#" class="view-all-link">View All</a>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <span class="activity-desc">Payment from Client A</span>
+                        <span class="activity-amount">+$1,500.00</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-desc">Invoice #1234 paid</span>
+                        <span class="activity-amount">+$250.00</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-desc">Subscription Fee</span>
+                        <span class="activity-amount negative">-$29.99</span>
+                    </div>
+                    <div class="activity-item">
+                        <span class="activity-desc">Transfer to Savings</span>
+                        <span class="activity-amount negative">-$500.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoices Sections -->
+            <div class="invoices-section">
+                <div class="invoice-card">
+                    <p>Unpaid Invoices</p>
+                    <span class="invoice-count">3</span>
+                    <a href="#" class="invoice-link">View Details</a>
+                </div>
+                <div class="invoice-card">
+                    <p>Draft Invoices</p>
+                    <span class="invoice-count">5</span>
+                    <a href="#" class="invoice-link">View Details</a>
+                </div>
+            </div>
         </div>
-        <p style="margin: 0; font-size: 16px; color: #2ecc71;">+$150.00</p>
-      </div>
-    </div>
 
-    <div style="background-color: #fff; border-radius: 8px; margin-bottom: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <p style="margin: 0; font-size: 16px; color: #333;">Coffee Shop</p>
-          <p style="margin: 0; font-size: 12px; color: #777;">2 days ago, 8:15 AM</p>
+        <!-- Bottom Navigation Bar -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item active">
+                <span>🏠</span>
+                Home
+            </a>
+            <a href="#" class="nav-item">
+                <span>💰</span>
+                Money
+            </a>
+            <a href="#" class="nav-item">
+                <span>📝</span>
+                Invoicing
+            </a>
+            <a href="#" class="nav-item">
+                <span>👥</span>
+                Customers
+            </a>
         </div>
-        <p style="margin: 0; font-size: 16px; color: #e44d26;">-$4.25</p>
-      </div>
     </div>
-
-      <div style="background-color: #fff; border-radius: 8px; margin-bottom: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <p style="margin: 0; font-size: 16px; color: #333;">Gas Station</p>
-          <p style="margin: 0; font-size: 12px; color: #777;">3 days ago, 6:00 PM</p>
-        </div>
-        <p style="margin: 0; font-size: 16px; color: #e44d26;">-$60.00</p>
-      </div>
-    </div>
-
-    <div style="background-color: #fff; border-radius: 8px; margin-bottom: 10px; padding: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <p style="margin: 0; font-size: 16px; color: #333;">Salary</p>
-          <p style="margin: 0; font-size: 12px; color: #777;">5 days ago, 12:00 PM</p>
-        </div>
-        <p style="margin: 0; font-size: 16px; color: #2ecc71;">+$2500.00</p>
-      </div>
-    </div>
-
-  </div>
-
 </body>
 </html>

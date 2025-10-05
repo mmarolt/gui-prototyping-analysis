@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coca-Cola Ambassador Resources</title>
+    <!-- Material Icons CDN (as per description) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts for Roboto (Material Design's default font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global styles for the mobile screen simulation */
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #F5F5F5; /* A slightly off-white for the main background */
+            line-height: 1.6;
+            color: #212121; /* Default dark text color */
+        }
+
+        /* Simulate mobile screen dimensions (667x375 portrait) */
+        body {
+            max-width: 375px; /* Simulating mobile width */
+            margin-left: auto;
+            margin-right: auto;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for the "phone" frame */
+            min-height: 667px; /* Simulating mobile height, content will scroll within this frame */
+            position: relative; /* For fixed app bar positioning */
+            display: flex; /* Enable flexbox for vertical layout */
+            flex-direction: column; /* Stack children vertically */
+        }
+
+        /* Styling for the main scrollable content area */
+        .content-scroll-area {
+            flex-grow: 1; /* Occupy remaining vertical space */
+            overflow-y: auto; /* Enable vertical scrolling for content below the app bar */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        /* Helper class for initially hidden content (for expansion panels) */
+        .hidden-content {
+            display: none;
+        }
+
+        /* Styling for search input placeholder text */
+        input::placeholder {
+            color: #757575; /* Material Design subtle grey */
+            font-weight: 400; /* Roboto Regular for body text */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top App Bar with Integrated Search -->
+    <div style="
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        height: 56px; /* Standard Material Design App Bar height (56dp) */
+        background-color: #FFFFFF; /* Clean white background */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+        font-family: 'Roboto', sans-serif;
+        position: sticky; /* Keeps the app bar fixed at the top during scroll */
+        top: 0;
+        z-index: 100; /* Ensures it stays on top of other content */
+    ">
+        <h1 style="
+            font-size: 20px; /* Material Design headline6 (20sp) */
+            font-weight: 500; /* Roboto Medium */
+            color: #212121; /* Dark text */
+            margin-right: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncate long titles */
+        ">Coca-Cola Info</h1>
+        <div style="
+            flex-grow: 1; /* Allows search bar to take up available space */
+            display: flex;
+            align-items: center;
+            background-color: #F0F0F0; /* Light grey for search field background */
+            border-radius: 8px; /* Slightly rounded corners */
+            padding: 8px 12px;
+        ">
+            <i class="material-icons" style="font-size: 24px; color: #757575; margin-right: 8px;">search</i>
+            <input type="search" placeholder="Search for information..." style="
+                border: none;
+                background: none;
+                font-size: 16px; /* Material Design subtitle1 or body1 for placeholder */
+                color: #212121;
+                flex-grow: 1;
+                outline: none; /* Remove focus outline */
+                padding: 0;
+            ">
+            <!-- Optional: <i class="material-icons" style="font-size: 24px; color: #757575; margin-left: 8px;">mic</i> -->
+        </div>
+    </div>
+
+    <!-- Main scrollable content area for Fast Facts and FAQ -->
+    <div class="content-scroll-area">
+
+        <!-- 2. Content Area: Fast Facts -->
+        <div style="padding: 16px; font-family: 'Roboto', sans-serif;">
+            <h2 style="
+                font-size: 24px; /* Material Design headline5/6 (24sp) */
+                font-weight: 500; /* Roboto Medium */
+                color: #212121;
+                margin-top: 8px; /* Adjusted margin for content below app bar */
+                margin-bottom: 16px;
+            ">Fast Facts</h2>
+
+            <!-- Expansion Panel for 'Coca-Cola 101' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px; /* Slightly rounded corners */
+                overflow: hidden; /* Ensures content stays within bounds when rounded */
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08); /* Light shadow for depth */
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px; /* Recommended touch target size */
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE; /* Separator for collapsed state */
+                ">
+                    <span style="
+                        font-size: 16px; /* Material Design subtitle1 (16sp) */
+                        font-weight: 500; /* Roboto Medium */
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Coca-Cola 101</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <!-- Expanded Content (initially hidden by CSS/JS) -->
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px; /* Material Design body1 (16sp) */
+                    color: #424242; /* Darker grey for body text */
+                    background-color: #F9F9F9; /* Slight background change when open */
+                ">
+                    <p style="margin-bottom: 12px;"><strong>The Coca-Cola Company:</strong> Founded in 1886, we are a total beverage company, offering over 500 brands in more than 200 countries and territories.</p>
+                    <p style="margin-bottom: 12px;"><strong>Our Purpose:</strong> To refresh the world and make a difference. We aim to inspire moments of optimism and happiness through our brands and actions.</p>
+                    <p><strong>Global Reach:</strong> Our portfolio includes iconic sparkling soft drinks, waters, sports drinks, juices, plant-based beverages, coffee, and tea.</p>
+                </div>
+            </div>
+
+            <!-- Expansion Panel for 'Products & Ingredients' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE;
+                ">
+                    <span style="
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Products & Ingredients</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px;
+                    color: #424242;
+                    background-color: #F9F9F9;
+                ">
+                    <p style="margin-bottom: 12px;"><strong>Product Portfolio:</strong> From Coca-Cola to smartwater, our diverse range includes options for every taste and occasion, focusing on sugar reduction and diverse offerings.</p>
+                    <p style="margin-bottom: 12px;"><strong>Ingredient Transparency:</strong> We are committed to transparency about our ingredients, providing clear information on packaging and our website for informed consumer choices.</p>
+                    <p><strong>Quality Standards:</strong> All our products adhere to rigorous quality and safety standards, ensuring consistent taste and reliability globally.</p>
+                </div>
+            </div>
+
+            <!-- Expansion Panel for 'Strengthening Communities' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE;
+                ">
+                    <span style="
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Strengthening Communities</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px;
+                    color: #424242;
+                    background-color: #F9F9F9;
+                ">
+                    <p style="margin-bottom: 12px;"><strong>Water Stewardship:</strong> We work to protect water resources, replenish what we use, and ensure sustainable water management in our operations and communities.</p>
+                    <p style="margin-bottom: 12px;"><strong>Economic Empowerment:</strong> Through initiatives like 5by20, we empower women entrepreneurs and support local economies where we operate.</p>
+                    <p><strong>Youth Development:</strong> We invest in programs that promote education, health, and well-being for youth, fostering future leaders and stronger communities.</p>
+                </div>
+            </div>
+
+            <!-- Expansion Panel for 'Diversity & Inclusion' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE;
+                ">
+                    <span style="
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Diversity & Inclusion</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px;
+                    color: #424242;
+                    background-color: #F9F9F9;
+                ">
+                    <p style="margin-bottom: 12px;"><strong>Inclusive Culture:</strong> We foster a workplace where every employee feels valued, respected, and empowered to contribute their unique perspectives.</p>
+                    <p style="margin-bottom: 12px;"><strong>Global Workforce:</strong> Our diverse workforce reflects the many cultures and communities we serve around the world, driving innovation and connection.</p>
+                    <p><strong>Equal Opportunity:</strong> We are committed to providing equal opportunities for all employees and applicants, free from discrimination and bias.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Content Area: Frequently Asked Questions (FAQ) -->
+        <div style="padding: 16px; font-family: 'Roboto', sans-serif;">
+            <h2 style="
+                font-size: 24px; /* Material Design headline5/6 (24sp) */
+                font-weight: 500; /* Roboto Medium */
+                color: #212121;
+                margin-top: 24px; /* More space to separate from previous section */
+                margin-bottom: 16px;
+            ">Frequently Asked Questions</h2>
+
+            <!-- Expansion Panel for 'Well-being' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE;
+                ">
+                    <span style="
+                        font-size: 16px; /* Material Design subtitle1 (16sp) */
+                        font-weight: 500;
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Well-being</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <!-- Expanded Content (initially hidden by CSS/JS) -->
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px; /* Material Design body1 (16sp) */
+                    color: #424242;
+                    background-color: #F9F9F9;
+                ">
+                    <p style="margin-bottom: 12px;">
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: What are Coca-Cola's healthy beverage options?</strong>
+                        A: We offer a wide range of low and no-sugar beverages across our portfolio, including Diet Coke, Coca-Cola Zero Sugar, Honest Tea, and various water brands, to help consumers manage their sugar intake.
+                    </p>
+                    <p style="margin-bottom: 12px;">
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: How does Coca-Cola promote active lifestyles?</strong>
+                        A: We support initiatives and programs that encourage physical activity and healthy living in communities worldwide, often partnering with local organizations to make active lifestyles accessible and enjoyable.
+                    </p>
+                    <p>
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: Where can I find nutritional information for products?</strong>
+                        A: Detailed nutritional information for all our products is available on our official website, product packaging, and through various digital platforms for easy access.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Expansion Panel for 'Environment' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE;
+                ">
+                    <span style="
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Environment</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px;
+                    color: #424242;
+                    background-color: #F9F9F9;
+                ">
+                    <p style="margin-bottom: 12px;">
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: What are Coca-Cola's sustainability goals?</strong>
+                        A: We are working towards a "World Without Waste," aiming to collect and recycle a bottle or can for every one we sell, and to make our packaging 100% recyclable.
+                    </p>
+                    <p style="margin-bottom: 12px;">
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: How does the company minimize its environmental footprint?</strong>
+                        A: We focus on sustainable sourcing, reducing water use, lowering carbon emissions, and increasing the use of recycled content in our packaging across our supply chain.
+                    </p>
+                    <p>
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: What initiatives are in place for plastic reduction?</strong>
+                        A: We are innovating in packaging design, investing in collection infrastructure, and partnering with NGOs to develop circular economy solutions for plastic waste.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Expansion Panel for 'Support & Contact' -->
+            <div class="expansion-panel" style="
+                margin-bottom: 8px;
+                background-color: #FFFFFF;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+            ">
+                <div class="expansion-panel-header" style="
+                    display: flex;
+                    align-items: center;
+                    padding: 16px;
+                    min-height: 56px;
+                    cursor: pointer;
+                    border-bottom: 1px solid #EEEEEE;
+                ">
+                    <span style="
+                        font-size: 16px;
+                        font-weight: 500;
+                        color: #212121;
+                        flex-grow: 1;
+                    ">Support & Contact</span>
+                    <i class="material-icons" style="font-size: 24px; color: #757575;">add_circle_outline</i>
+                </div>
+                <div class="expansion-panel-content hidden-content" style="
+                    padding: 16px;
+                    line-height: 1.5;
+                    font-size: 16px;
+                    color: #424242;
+                    background-color: #F9F9F9;
+                ">
+                    <p style="margin-bottom: 12px;">
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: How can I contact Coca-Cola customer service?</strong>
+                        A: You can reach our customer service team via phone, email, or through the contact form on our official website. Please visit the 'Contact Us' section for details.
+                    </p>
+                    <p style="margin-bottom: 12px;">
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: Where can I report a product quality issue?</strong>
+                        A: For product quality concerns, please contact our consumer affairs department immediately. Provide product details, batch codes, and purchase information for assistance.
+                    </p>
+                    <p>
+                        <strong style="display: block; font-size: 16px; margin-bottom: 4px;">Q: Are there resources for brand ambassadors?</strong>
+                        A: Yes, dedicated resources, guidelines, and support are available for our brand ambassadors through a specialized portal. Contact your program lead for access credentials.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of .content-scroll-area -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const expansionPanels = document.querySelectorAll('.expansion-panel');
+
+            expansionPanels.forEach(panel => {
+                const header = panel.querySelector('.expansion-panel-header');
+                const content = panel.querySelector('.expansion-panel-content');
+                const icon = header.querySelector('.material-icons');
+
+                header.addEventListener('click', () => {
+                    // Toggle visibility of the content
+                    if (content.classList.contains('hidden-content')) {
+                        content.classList.remove('hidden-content');
+                        icon.textContent = 'remove_circle_outline'; // Change icon to minus
+                        header.style.borderBottom = 'none'; // Remove separator when expanded
+                    } else {
+                        content.classList.add('hidden-content');
+                        icon.textContent = 'add_circle_outline'; // Change icon back to plus
+                        header.style.borderBottom = '1px solid #EEEEEE'; // Restore separator
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

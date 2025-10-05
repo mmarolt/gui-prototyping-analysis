@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detailed Property Information</title>
+    <!-- Google Fonts: Roboto for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Mobile Reset and Box Sizing */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f2f5; /* Light grey background for the "device" area */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure it takes full viewport height */
+        }
+
+        /* Mobile Screen Wrapper - Simulates a device viewport */
+        .mobile-screen-wrapper {
+            width: 375px; /* Target width for simulation */
+            height: 667px; /* Target height for simulation */
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.15); /* Soft shadow for device feel */
+            border-radius: 12px; /* Rounded corners for the device */
+            overflow: hidden; /* Important to contain fixed elements and scroll content */
+            display: flex;
+            flex-direction: column; /* Stacks header, content, footer vertically */
+            position: relative; /* Context for absolutely positioned children */
+            box-sizing: border-box; /* Include padding/border in element's total width and height */
+        }
+
+        /* App Bar/Navigation Bar (Fixed Header) */
+        .app-bar {
+            position: absolute; /* Fixed at the top of the mobile screen wrapper */
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 100; /* Ensure it stays on top */
+            border-bottom: 1px solid #eee;
+            height: 54px; /* Explicit height for consistent layout */
+            box-sizing: border-box;
+        }
+
+        .app-bar .back-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            padding: 0 10px 0 0;
+            line-height: 1;
+            outline: none; /* Remove focus outline */
+        }
+
+        .app-bar .property-title {
+            flex-grow: 1; /* Takes up available space */
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            text-align: center;
+            /* Adjust margin to visually center title despite back button */
+            margin-right: 34px; /* (back-button-width + padding) */
+            white-space: nowrap; /* Prevent title from wrapping */
+            overflow: hidden; /* Hide overflowing text */
+            text-overflow: ellipsis; /* Add ellipsis for hidden text */
+        }
+
+        /* Scrollable Content Area */
+        .scrollable-content {
+            flex-grow: 1; /* Takes up remaining vertical space within the flex container */
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS */
+            /* Padding to prevent content from being hidden under fixed header/footer */
+            padding-top: 54px; /* Height of the app bar */
+            padding-bottom: 70px; /* Height of the CTA footer */
+        }
+
+        /* Generic Section Styling */
+        .section {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .section:last-of-type {
+            border-bottom: none; /* No border for the last section */
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        /* Property Image Display (Carousel/Gallery) */
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 220px; /* Fixed height for image area */
+            background-color: #e0e0e0; /* Placeholder background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Ensures image fits */
+        }
+        .image-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the area, cropping if necessary */
+        }
+        .page-indicator-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 5px; /* Space between dots */
+        }
+        .page-indicator-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%; /* Circular dots */
+            background-color: rgba(255,255,255,0.6); /* Semi-transparent white */
+        }
+        .page-indicator-dots .dot.active {
+            background-color: #fff; /* Active dot is fully white */
+        }
+
+        /* Key Property Details Section */
+        .key-details {
+            padding: 15px; /* Separate padding, as it doesn't have a top border */
+            border-bottom: 1px solid #eee;
+        }
+        .key-details .price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50; /* Darker blue-grey for emphasis */
+            margin-bottom: 8px;
+        }
+        .key-details .price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: #7f8c8d; /* Muted grey for secondary info */
+        }
+        .key-details .info-row {
+            display: flex;
+            justify-content: space-between; /* Aligns key-value pairs */
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .key-details .info-row strong {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Property Location Section */
+        .location-section .address {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .map-container {
+            width: 100%;
+            height: 180px;
+            background-color: #e0e0e0; /* Placeholder background */
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures map iframe is contained */
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0; /* Remove default iframe border */
+        }
+        .view-larger-map {
+            display: block;
+            text-align: center;
+            padding: 10px 0;
+            color: #007bff; /* Bootstrap primary blue */
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .view-larger-map:hover {
+            text-decoration: underline;
+        }
+
+        /* Cost Breakdown Section (Expandable/Collapsible using <details>) */
+        .cost-breakdown details {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden; /* Ensures border-radius applies to content */
+        }
+        .cost-breakdown summary {
+            padding: 15px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            list-style: none; /* Remove default triangle marker */
+        }
+        .cost-breakdown summary::-webkit-details-marker {
+            display: none; /* Remove default marker for WebKit browsers */
+        }
+        .cost-breakdown summary::after {
+            content: '▼'; /* Custom down arrow icon */
+            font-size: 12px;
+            transition: transform 0.2s ease-in-out; /* Smooth rotation */
+        }
+        .cost-breakdown details[open] summary::after {
+            transform: rotate(180deg); /* Rotate arrow when expanded */
+        }
+        .cost-breakdown-content {
+            padding: 0 15px 15px; /* Padding for the detailed content */
+            border-top: 1px solid #eee; /* Separator from summary */
+        }
+        .cost-breakdown-content .charge-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .cost-breakdown-content .charge-row strong {
+            color: #333;
+        }
+        .cost-breakdown-content .total-charge {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee; /* Dashed line for total */
+        }
+
+        /* Call-to-Action (CTA) Section (Sticky Footer) */
+        .cta-footer {
+            position: absolute; /* Fixed at the bottom of the mobile screen wrapper */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Shadow above footer */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px; /* Space between buttons */
+            z-index: 100; /* Ensure it stays on top */
+            border-top: 1px solid #eee;
+            height: 70px; /* Explicit height for consistent layout */
+            box-sizing: border-box;
+        }
+
+        .cta-footer .button {
+            flex: 1; /* Distribute space evenly among buttons */
+            padding: 12px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s ease; /* Smooth hover effect */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border: none;
+            outline: none; /* Remove focus outline */
+        }
+
+        .cta-footer .button.primary {
+            background-color: #007bff; /* Primary action color */
+            color: #fff;
+        }
+        .cta-footer .button.primary:hover {
+            background-color: #0056b3;
+        }
+
+        .cta-footer .button.secondary {
+            background-color: #f8f9fa; /* Light background for secondary actions */
+            color: #333;
+            border: 1px solid #ced4da;
+        }
+        .cta-footer .button.secondary:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Icons for CTA buttons (using simple emojis for demonstration) */
+        .cta-footer .button.secondary::before {
+            margin-right: 5px;
+            font-size: 16px;
+            vertical-align: middle;
+        }
+        .cta-footer .button.chat::before {
+            content: '💬'; /* Chat icon emoji */
+        }
+        .cta-footer .button.call::before {
+            content: '📞'; /* Call icon emoji */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="mobile-screen-wrapper">
+        <!-- App Bar/Navigation Bar -->
+        <header class="app-bar">
+            <button class="back-button" aria-label="Go back">&lt;</button>
+            <h1 class="property-title">Luxurious 3BHK Apartment in Downtown</h1>
+        </header>
+
+        <!-- Scrollable Content Area -->
+        <main class="scrollable-content">
+
+            <!-- Property Image Display (Carousel/Gallery) -->
+            <div class="image-carousel">
+                <img src="https://via.placeholder.com/375x220?text=Property+Image" alt="Beautiful apartment living room">
+                <div class="page-indicator-dots">
+                    <div class="dot active" aria-label="Current image"></div>
+                    <div class="dot" aria-label="Image 2"></div>
+                    <div class="dot" aria-label="Image 3"></div>
+                </div>
+            </div>
+
+            <!-- Key Property Details Section -->
+            <div class="key-details">
+                <div class="price">₹1.2 Cr <span>(Negotiable)</span></div>
+                <div class="info-row">
+                    <span>Property Type:</span>
+                    <strong>Apartment</strong>
+                </div>
+                <div class="info-row">
+                    <span>Size:</span>
+                    <strong>1500 sqft (3BHK)</strong>
+                </div>
+                <div class="info-row">
+                    <span>Posting Date:</span>
+                    <strong>2 days ago</strong>
+                </div>
+            </div>
+
+            <!-- Property Location Section -->
+            <div class="section location-section">
+                <h3 class="section-title">Location</h3>
+                <p class="address">123, Green Meadows, Downtown, Cityville, State - 123456</p>
+                <div class="map-container">
+                    <!-- Google Maps Embed Placeholder -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12345.67890!2d77.0000!3d28.0000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjjCsDAwJzAwLjAiTiA3N8KwMDAnMDAuMCJF!5e0!3m2!1sen!2sin!4v1678901234567!5m2!1sen!2sin" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Property Location Map">
+                    </iframe>
+                </div>
+                <a href="https://maps.google.com/?q=123+Green+Meadows+Downtown" target="_blank" class="view-larger-map">View Larger Map</a>
+            </div>
+
+            <!-- Cost Breakdown Section (Expandable/Collapsible) -->
+            <div class="section cost-breakdown">
+                <details open> <!-- 'open' attribute makes it expanded by default -->
+                    <summary>View Other Charges</summary>
+                    <div class="cost-breakdown-content">
+                        <div class="charge-row">
+                            <span>Base Price:</span>
+                            <strong>₹1,20,00,000</strong>
+                        </div>
+                        <div class="charge-row">
+                            <span>Security Deposit:</span>
+                            <strong>₹2,00,000</strong>
+                        </div>
+                        <div class="charge-row">
+                            <span>Maintenance (Monthly):</span>
+                            <strong>₹5,000</strong>
+                        </div>
+                        <div class="charge-row">
+                            <span>Brokerage Fee:</span>
+                            <strong>1% of Property Value</strong>
+                        </div>
+                        <div class="charge-row total-charge">
+                            <span>Total Estimated Cost:</span>
+                            <strong>₹1,22,05,000</strong>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <!-- Placeholder for other potential sections to ensure scrolling -->
+            <div class="section">
+                <h3 class="section-title">Property Description</h3>
+                <p style="font-size: 14px; line-height: 1.6; color: #555;">
+                    This stunning 3BHK apartment offers spacious living with modern amenities. Located in the heart of Downtown, it provides easy access to public transport, shopping malls, and top-rated schools. Enjoy panoramic city views from your private balcony. The apartment features high-quality finishes, a modular kitchen, and well-appointed bathrooms. Perfect for families seeking comfort and convenience.
+                </p>
+            </div>
+            <div class="section">
+                <h3 class="section-title">Amenities</h3>
+                <ul style="font-size: 14px; color: #555; padding-left: 20px; margin-top: 0;">
+                    <li>Swimming Pool</li>
+                    <li>Gymnasium</li>
+                    <li>24/7 Security</li>
+                    <li>Power Backup</li>
+                    <li>Reserved Parking</li>
+                    <li>Children's Play Area</li>
+                    <li>Clubhouse</li>
+                    <li>Community Hall</li>
+                    <li>Intercom Facility</li>
+                    <li>Elevator</li>
+                </ul>
+            </div>
+            <div class="section">
+                <h3 class="section-title">Contact Information</h3>
+                <p style="font-size: 14px; color: #555; margin-bottom: 5px;">Lister: John Doe</p>
+                <p style="font-size: 14px; color: #555;">Phone: +1-XXX-XXX-XXXX</p>
+            </div>
+
+
+        </main>
+
+        <!-- Call-to-Action (CTA) Section (Sticky Footer) -->
+        <footer class="cta-footer">
+            <button class="button primary">Enquire Now</button>
+            <button class="button secondary chat">Chat with Lister</button>
+            <button class="button secondary call">Call Lister</button>
+        </footer>
+    </div>
+
+</body>
+</html>

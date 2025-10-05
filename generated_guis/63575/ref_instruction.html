@@ -1,208 +1,578 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Vitamin Capsules Suppliers</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"> <!-- Recommended Roboto font -->
-  <style>
-    /*  Basic Reset & General Styles (You'll likely want more comprehensive styles) */
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif; /*  Material Design Font */
-      font-size: 16px; /* Base font size */
-      color: #212121; /* Dark grey text */
-      background-color: #FAFAFA; /* Light grey background */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile App Page</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <!-- Roboto Font CDN (for Material Design typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic CSS Reset & Global Styling */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5; /* A subtle background for the page holding the mobile screen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
 
-    /* Utility Classes for Spacing (Adapt as needed) */
-    .mt-1 { margin-top: 8px; }
-    .mt-2 { margin-top: 16px; }
-    .mb-1 { margin-bottom: 8px; }
-    .mb-2 { margin-bottom: 16px; }
-    .p-1 { padding: 8px; }
-    .p-2 { padding: 16px; }
-    .text-secondary { color: #757575; } /* Grey text for secondary info */
-    .text-right { text-align: right; }
+        /* Material Design Colors (using CSS Variables for consistency) */
+        :root {
+            --mdc-theme-primary: #6200EE;
+            --mdc-theme-on-primary: #FFFFFF;
+            --mdc-theme-surface: #FFFFFF;
+            --mdc-theme-background: #FFFFFF;
+            --mdc-theme-text-primary-on-background: #212121;
+            --mdc-theme-text-secondary-on-background: #757575;
+            --mdc-theme-text-hint-on-background: #9e9e9e;
+            --mdc-theme-text-icon-on-background: #757575;
+        }
 
-    /*  Material Design Card Styles */
-    .card {
-      background-color: #fff;
-      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2); /* Subtle shadow */
-      border-radius: 4px;
-      margin-bottom: 16px;
-      overflow: hidden; /*  Ensure content doesn't overflow rounded corners */
-    }
-
-    /* Button styles (Material Design Raised Button) */
-    .button {
-      background-color: #6200EE; /*  Purple 500 */
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      margin: 4px 2px;
-      cursor: pointer;
-      border-radius: 4px;
-      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-    }
-
-    .button:hover {
-      background-color: #3700B3; /* Darker Purple */
-    }
-
-    /*  Specific to the layout */
-    header {
-      background-color: #6200EE;
-      color: white;
-      padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      position: sticky; /*  Keeps the app bar at the top on scroll */
-      top: 0;  /* Required for sticky positioning */
-      z-index: 100; /* Ensure it stays on top of other elements */
-    }
-
-    header i {
-      cursor: pointer;
-    }
-
-    header h6 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 500;
-    }
-
-    .search-filter-bar {
-      background-color: #fff;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #eee;
-    }
-
-    .search-filter-bar input[type="text"] {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      margin-right: 8px;
-    }
-
-    footer {
-      background-color: #fff;
-      border-top: 1px solid #eee;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 8px 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-
-    footer div {
-      text-align: center;
-    }
-
-    footer i {
-        font-size: 24px; /* Make the icons a bit larger */
-    }
-
-    /*  Media Query for larger screens (example) */
-    @media (min-width: 768px) {
-      body {
-        font-size: 18px; /* Increase base font size */
-      }
-      header {
-        padding: 24px; /* Increase padding on larger screens */
-      }
-    }
-  </style>
+        /* Styling for the simulated mobile screen */
+        .mobile-screen {
+            height: 667px;
+            width: 375px;
+            border: 1px solid #ddd; /* A subtle border to define the screen */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); /* More prominent shadow for a mobile device feel */
+            margin: 20px auto; /* Center the simulated screen on the page */
+            overflow: hidden; /* Ensure content doesn't spill out */
+            display: flex;
+            flex-direction: column;
+            background-color: var(--mdc-theme-background);
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+    </style>
 </head>
 <body>
+    <div class="mobile-screen">
 
-  <!--  App Content Goes Here -->
-  <header>
-    <div>
-      <i class="material-icons">menu</i>
-    </div>
-    <div>
-      <h6>Vitamin Capsules Suppliers</h6>
-    </div>
-    <div>
-      <i class="material-icons">search</i>
-      <i class="material-icons">filter_list</i>
-    </div>
-  </header>
+        <!-- Section 1: Top App Bar -->
+        <header style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px; /* Standard Material Design height */
+            background-color: var(--mdc-theme-primary); /* Material Design primary purple */
+            color: var(--mdc-theme-on-primary);
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box; /* Ensures padding doesn't affect fixed height */
+            flex-shrink: 0; /* Prevents this section from shrinking */
+        ">
+            <i class="material-icons" style="font-size: 24px; cursor: pointer;">menu</i>
+            <h1 style="font-size: 20px; font-weight: 500; margin: 0; flex-grow: 1; text-align: center;">Find Suppliers</h1>
+            <button style="
+                background-color: transparent;
+                color: var(--mdc-theme-on-primary);
+                border: 1px solid var(--mdc-theme-on-primary); /* Outlined button style */
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                white-space: nowrap; /* Prevent text wrapping */
+            ">
+                <i class="material-icons" style="font-size: 18px;">description</i>
+                Request Quote
+            </button>
+        </header>
 
-  <div class="search-filter-bar">
-    <input type="text" placeholder="Search Suppliers...">
-    <button class="button" style="background-color: #ddd; color: #333; box-shadow: none;">Filters</button>
-  </div>
+        <!-- Section 2: Search Input Area -->
+        <div style="
+            padding: 16px; /* Top and bottom padding for the section */
+            background-color: #f5f5f5; /* Light grey background to separate from header */
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box; /* Ensures padding doesn't affect calculated height */
+            flex-shrink: 0; /* Prevents this section from shrinking */
+        ">
+            <div style="
+                display: flex;
+                align-items: center;
+                background-color: var(--mdc-theme-surface);
+                border-radius: 8px; /* Rounded corners for the search bar */
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                padding: 8px 12px;
+                border: 1px solid #ddd; /* Subtle border */
+            ">
+                <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-secondary-on-background);">search</i>
+                <input type="text" placeholder="Search 'Vitamin Capsules'" style="
+                    flex-grow: 1;
+                    border: none;
+                    outline: none;
+                    padding: 0 12px;
+                    font-size: 16px;
+                    color: var(--mdc-theme-text-primary-on-background);
+                    background-color: transparent;
+                    height: 24px; /* Explicit height for input text */
+                ">
+                <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-secondary-on-background); cursor: pointer; margin-right: 8px;">location_on</i>
+                <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-secondary-on-background); cursor: pointer;">mic</i>
+            </div>
+        </div>
 
-  <div class="p-2">
-    <div class="card">
-      <div class="p-2">
-        <div style="display: flex; align-items: center; margin-bottom: 8px;">
-          <img src="placeholder-logo.png" alt="Supplier Logo" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 8px;">
-          <h6 style="margin: 0;">Acme Vitamin Co.</h6>
+        <!-- Section 3: Results View Toggle & Status Bar -->
+        <div style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px; /* Top/bottom padding for section content */
+            background-color: #fafafa;
+            border-bottom: 1px solid #eee; /* Separator from the results list */
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box; /* Ensures padding doesn't affect calculated height */
+            flex-shrink: 0; /* Prevents this section from shrinking */
+        ">
+            <span style="font-size: 14px; color: #424242; font-weight: 500;">120 Suppliers found in New York</span>
+            <div style="display: flex; gap: 8px;">
+                <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-primary); cursor: pointer;">view_list</i> <!-- Active view -->
+                <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-secondary-on-background); cursor: pointer;">grid_on</i>
+            </div>
         </div>
-        <p class="text-secondary" style="font-size: 0.875rem;">High-quality Vitamin Capsules, GMP Certified.</p>
-        <div style="display: flex; flex-wrap: wrap; margin-top: 8px;">
-          <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 16px; margin-right: 4px; margin-bottom: 4px; font-size: 0.75rem;">GMP Certified</span>
-          <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 16px; margin-right: 4px; margin-bottom: 4px; font-size: 0.75rem;">Organic Options</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-          <span class="text-secondary">New York, USA</span>
-          <button class="button">Contact Supplier</button>
-        </div>
-      </div>
-    </div>
 
-    <!-- Repeat the card for each supplier -->
-    <div class="card">
-      <div class="p-2">
-        <div style="display: flex; align-items: center; margin-bottom: 8px;">
-          <img src="placeholder-logo.png" alt="Supplier Logo" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 8px;">
-          <h6 style="margin: 0;">Beta Supplements Inc.</h6>
-        </div>
-        <p class="text-secondary" style="font-size: 0.875rem;">Leading supplier of Vitamin Capsules.</p>
-        <div style="display: flex; flex-wrap: wrap; margin-top: 8px;">
-          <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 16px; margin-right: 4px; margin-bottom: 4px; font-size: 0.75rem;">ISO 9001 Certified</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px;">
-          <span class="text-secondary">London, UK</span>
-          <button class="button">Contact Supplier</button>
-        </div>
-      </div>
-    </div>
-  </div>
+        <!-- Section 4: Search Results Display (List View - Default) -->
+        <div style="
+            padding: 0 16px 16px; /* Horizontal padding, and bottom padding for scroll */
+            background-color: var(--mdc-theme-background);
+            overflow-y: auto; /* Make this section vertically scrollable */
+            height: 491px; /* Calculated height for the scrollable area (667 - 56 - 72 - 48 = 491) */
+            font-family: 'Roboto', sans-serif;
+            box-sizing: border-box; /* Ensures padding doesn't affect fixed height */
+            flex-grow: 1; /* Allows this section to fill remaining vertical space */
+        ">
+            <!-- Supplier Card 1 -->
+            <div style="
+                display: flex;
+                align-items: center;
+                background-color: var(--mdc-theme-surface);
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                margin-top: 16px; /* Spacing between list items */
+                padding: 12px;
+                border: 1px solid #eee;
+            ">
+                <img src="https://via.placeholder.com/80x80/6200EE/FFFFFF?text=Capsule" alt="Vitamin Capsules" style="
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    margin-right: 12px;
+                ">
+                <div style="flex-grow: 1;">
+                    <h3 style="font-size: 16px; font-weight: 600; color: var(--mdc-theme-text-primary-on-background); margin: 0 0 4px 0;">Global Pharma Solutions</h3>
+                    <p style="font-size: 13px; color: var(--mdc-theme-text-secondary-on-background); margin: 0 0 4px 0;">New York, USA</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #000000; margin: 0;">From $0.15/capsule</p>
+                </div>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 8px; /* Spacing between action buttons */
+                    margin-left: 12px;
+                ">
+                    <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-icon-on-background); cursor: pointer;">favorite_border</i>
+                    <button style="
+                        background-color: var(--mdc-theme-primary); /* Primary button */
+                        color: var(--mdc-theme-on-primary);
+                        border: none;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px; /* Consistent width for buttons */
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">call</i>
+                        Call Now
+                    </button>
+                    <button style="
+                        background-color: transparent;
+                        color: var(--mdc-theme-primary);
+                        border: 1px solid var(--mdc-theme-primary); /* Outlined button */
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">email</i>
+                        Enquiry
+                    </button>
+                </div>
+            </div>
 
-  <footer style="background-color: #fff; border-top: 1px solid #eee; display: flex; justify-content: space-around; align-items: center; padding: 8px 0; position: fixed; bottom: 0; left: 0; right: 0;">
-    <div style="text-align: center;">
-        <i class="material-icons">home</i>
-        <div style="font-size: 0.75rem;">Home</div>
-    </div>
-    <div style="text-align: center;">
-        <i class="material-icons">category</i>
-        <div style="font-size: 0.75rem;">Categories</div>
-    </div>
-    <div style="text-align: center;">
-        <i class="material-icons">chat</i>
-        <div style="font-size: 0.75rem;">Messages</div>
-    </div>
-    <div style="text-align: center;">
-        <i class="material-icons">account_circle</i>
-        <div style="font-size: 0.75rem;">Profile</div>
-    </div>
-  </footer>
+            <!-- Supplier Card 2 (Duplicate for scrolling demo) -->
+            <div style="
+                display: flex;
+                align-items: center;
+                background-color: var(--mdc-theme-surface);
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                margin-top: 16px;
+                padding: 12px;
+                border: 1px solid #eee;
+            ">
+                <img src="https://via.placeholder.com/80x80/03DAC6/FFFFFF?text=Pill" alt="Vitamin Pills" style="
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    margin-right: 12px;
+                ">
+                <div style="flex-grow: 1;">
+                    <h3 style="font-size: 16px; font-weight: 600; color: var(--mdc-theme-text-primary-on-background); margin: 0 0 4px 0;">NutriLife Innovations</h3>
+                    <p style="font-size: 13px; color: var(--mdc-theme-text-secondary-on-background); margin: 0 0 4px 0;">London, UK</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #000000; margin: 0;">From $0.20/capsule</p>
+                </div>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 8px;
+                    margin-left: 12px;
+                ">
+                    <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-icon-on-background); cursor: pointer;">favorite_border</i>
+                    <button style="
+                        background-color: var(--mdc-theme-primary);
+                        color: var(--mdc-theme-on-primary);
+                        border: none;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">call</i>
+                        Call Now
+                    </button>
+                    <button style="
+                        background-color: transparent;
+                        color: var(--mdc-theme-primary);
+                        border: 1px solid var(--mdc-theme-primary);
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">email</i>
+                        Enquiry
+                    </button>
+                </div>
+            </div>
 
+            <!-- Supplier Card 3 (Duplicate for scrolling demo) -->
+            <div style="
+                display: flex;
+                align-items: center;
+                background-color: var(--mdc-theme-surface);
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                margin-top: 16px;
+                padding: 12px;
+                border: 1px solid #eee;
+            ">
+                <img src="https://via.placeholder.com/80x80/FF6200/FFFFFF?text=Supplement" alt="Vitamin Supplements" style="
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    margin-right: 12px;
+                ">
+                <div style="flex-grow: 1;">
+                    <h3 style="font-size: 16px; font-weight: 600; color: var(--mdc-theme-text-primary-on-background); margin: 0 0 4px 0;">Vitality Labs Inc.</h3>
+                    <p style="font-size: 13px; color: var(--mdc-theme-text-secondary-on-background); margin: 0 0 4px 0;">Los Angeles, USA</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #000000; margin: 0;">From $0.12/capsule</p>
+                </div>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 8px;
+                    margin-left: 12px;
+                ">
+                    <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-icon-on-background); cursor: pointer;">favorite_border</i>
+                    <button style="
+                        background-color: var(--mdc-theme-primary);
+                        color: var(--mdc-theme-on-primary);
+                        border: none;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">call</i>
+                        Call Now
+                    </button>
+                    <button style="
+                        background-color: transparent;
+                        color: var(--mdc-theme-primary);
+                        border: 1px solid var(--mdc-theme-primary);
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">email</i>
+                        Enquiry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Supplier Card 4 (Duplicate for scrolling demo) -->
+            <div style="
+                display: flex;
+                align-items: center;
+                background-color: var(--mdc-theme-surface);
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                margin-top: 16px;
+                padding: 12px;
+                border: 1px solid #eee;
+            ">
+                <img src="https://via.placeholder.com/80x80/29B6F6/FFFFFF?text=Vitamin" alt="Vitamin image" style="
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    margin-right: 12px;
+                ">
+                <div style="flex-grow: 1;">
+                    <h3 style="font-size: 16px; font-weight: 600; color: var(--mdc-theme-text-primary-on-background); margin: 0 0 4px 0;">HealthSpan Products</h3>
+                    <p style="font-size: 13px; color: var(--mdc-theme-text-secondary-on-background); margin: 0 0 4px 0;">Sydney, Australia</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #000000; margin: 0;">From $0.17/capsule</p>
+                </div>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 8px;
+                    margin-left: 12px;
+                ">
+                    <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-icon-on-background); cursor: pointer;">favorite_border</i>
+                    <button style="
+                        background-color: var(--mdc-theme-primary);
+                        color: var(--mdc-theme-on-primary);
+                        border: none;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">call</i>
+                        Call Now
+                    </button>
+                    <button style="
+                        background-color: transparent;
+                        color: var(--mdc-theme-primary);
+                        border: 1px solid var(--mdc-theme-primary);
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">email</i>
+                        Enquiry
+                    </button>
+                </div>
+            </div>
+
+            <!-- Supplier Card 5 (Duplicate for scrolling demo) -->
+            <div style="
+                display: flex;
+                align-items: center;
+                background-color: var(--mdc-theme-surface);
+                border-radius: 8px;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                margin-top: 16px;
+                padding: 12px;
+                border: 1px solid #eee;
+            ">
+                <img src="https://via.placeholder.com/80x80/9C27B0/FFFFFF?text=Gel" alt="Gel Capsules" style="
+                    width: 80px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    margin-right: 12px;
+                ">
+                <div style="flex-grow: 1;">
+                    <h3 style="font-size: 16px; font-weight: 600; color: var(--mdc-theme-text-primary-on-background); margin: 0 0 4px 0;">Purity Pharma Inc.</h3>
+                    <p style="font-size: 13px; color: var(--mdc-theme-text-secondary-on-background); margin: 0 0 4px 0;">Mumbai, India</p>
+                    <p style="font-size: 14px; font-weight: 500; color: #000000; margin: 0;">From $0.10/capsule</p>
+                </div>
+                <div style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 8px;
+                    margin-left: 12px;
+                ">
+                    <i class="material-icons" style="font-size: 24px; color: var(--mdc-theme-text-icon-on-background); cursor: pointer;">favorite_border</i>
+                    <button style="
+                        background-color: var(--mdc-theme-primary);
+                        color: var(--mdc-theme-on-primary);
+                        border: none;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">call</i>
+                        Call Now
+                    </button>
+                    <button style="
+                        background-color: transparent;
+                        color: var(--mdc-theme-primary);
+                        border: 1px solid var(--mdc-theme-primary);
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        gap: 4px;
+                        width: 100px;
+                        justify-content: center;
+                    ">
+                        <i class="material-icons" style="font-size: 16px;">email</i>
+                        Enquiry
+                    </button>
+                </div>
+            </div>
+            
+            <!-- More list items would follow here to enable scrolling -->
+
+            <!-- Example Grid View Item (commented out as List View is default) -->
+            <!--
+            <div style="
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                margin-top: 16px;
+            ">
+                <div style="
+                    background-color: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    border: 1px solid #eee;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                ">
+                    <img src="https://via.placeholder.com/180x120/03DAC6/FFFFFF?text=Capsule" alt="Vitamin Capsules" style="
+                        width: 100%;
+                        height: 120px;
+                        object-fit: cover;
+                        border-bottom: 1px solid #eee;
+                    ">
+                    <div style="padding: 8px; flex-grow: 1;">
+                        <h3 style="font-size: 14px; font-weight: 600; color: #212121; margin: 0 0 4px 0; line-height: 1.3;">NutriSupply Co.</h3>
+                        <p style="font-size: 12px; color: #757575; margin: 0 0 4px 0;">London, UK</p>
+                        <p style="font-size: 13px; font-weight: 500; color: #000000; margin: 0;">From $0.18/capsule</p>
+                    </div>
+                    <div style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 8px;
+                        border-top: 1px solid #eee;
+                    ">
+                        <button style="
+                            background-color: transparent;
+                            color: #6200EE;
+                            border: none;
+                            padding: 6px 0;
+                            font-size: 12px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            gap: 2px;
+                        ">
+                            <i class="material-icons" style="font-size: 16px;">call</i>
+                            Call
+                        </button>
+                        <button style="
+                            background-color: transparent;
+                            color: #6200EE;
+                            border: none;
+                            padding: 6px 0;
+                            font-size: 12px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            gap: 2px;
+                        ">
+                            <i class="material-icons" style="font-size: 16px;">email</i>
+                            Enquire
+                        </button>
+                        <i class="material-icons" style="font-size: 20px; color: #757575; cursor: pointer;">favorite_border</i>
+                    </div>
+                </div>
+            </div>
+            -->
+        </div>
+
+    </div>
 </body>
 </html>

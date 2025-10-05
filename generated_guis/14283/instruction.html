@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share to Facebook</title>
+    <style>
+        /* Base styles for the entire page */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5; /* Light gray background, typical for Facebook */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for scrolling content */
+            min-height: 100vh; /* Ensure it takes full viewport height */
+            box-sizing: border-box;
+        }
+
+        /* Main container for the mobile page content */
+        .container {
+            width: 100%;
+            max-width: 375px; /* Target mobile width */
+            min-height: 100vh; /* Ensure container takes full height */
+            background-color: #fff; /* White background for the app content */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for app boundary */
+            box-sizing: border-box;
+        }
+
+        /* Header section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e4e6eb; /* Light border */
+            background-color: #fff;
+            position: sticky; /* Keep header visible on scroll */
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-button {
+            font-size: 1.5em;
+            color: #65676b;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .header-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #050505;
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center;
+            margin-right: 60px; /* Offset for the post button */
+        }
+
+        .post-button {
+            background-color: #e4e6eb; /* Disabled background color */
+            color: #bcc0c4; /* Disabled text color */
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: not-allowed; /* Indicates it's initially disabled */
+            outline: none;
+        }
+
+        /* Styles for the user input area */
+        .user-input-area {
+            display: flex;
+            padding: 15px;
+            background-color: #fff;
+            align-items: flex-start; /* Align profile pic and textarea to top */
+            border-bottom: 1px solid #e4e6eb;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            background-color: #ddd; /* Placeholder background */
+        }
+
+        textarea {
+            flex-grow: 1; /* Allows textarea to fill remaining space */
+            border: none;
+            resize: none; /* Disable manual resize */
+            font-size: 1.1em;
+            padding: 5px 0; /* Adjust padding for a cleaner look */
+            outline: none; /* Remove focus outline */
+            color: #050505;
+            line-height: 1.4;
+            min-height: 80px; /* Minimum height for textarea */
+        }
+
+        textarea::placeholder {
+            color: #65676b;
+        }
+
+        /* Styles for the pre-populated post preview */
+        .post-preview {
+            margin: 15px;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures image and content stay within rounded corners */
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow for card effect */
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 180px; /* Fixed height for consistent preview */
+            object-fit: cover; /* Cover the area, cropping if necessary */
+            display: block; /* Remove extra space below image */
+        }
+
+        .preview-content {
+            padding: 10px 15px;
+        }
+
+        .preview-link {
+            color: #65676b;
+            font-size: 0.8em;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .preview-title {
+            font-size: 1em;
+            margin: 0 0 5px 0;
+            color: #050505;
+            line-height: 1.3;
+        }
+
+        .preview-description {
+            font-size: 0.9em;
+            color: #65676b;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* Styles for standard Facebook sharing options */
+        .sharing-options {
+            margin: 0 15px;
+            border: 1px solid #e4e6eb;
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 5px 0;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-item {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            color: #050505;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .option-item:not(:last-child) {
+            border-bottom: 1px solid #f0f2f5; /* Separator between options */
+        }
+
+        .option-item:hover {
+            background-color: #f0f2f5; /* Light hover effect */
+        }
+
+        /* Footer section for logged-in user */
+        .footer {
+            margin-top: auto; /* Pushes the footer to the bottom */
+            padding: 15px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #65676b;
+            background-color: #fff;
+            border-top: 1px solid #e4e6eb;
+            box-sizing: border-box;
+        }
+
+        .logged-in-user {
+            margin: 0;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <span class="back-button">✖</span>
+            <span class="header-title">Create Post</span>
+            <button class="post-button">Post</button>
+        </div>
+
+        <!-- User Input Area -->
+        <div class="user-input-area">
+            <!-- Placeholder for user profile picture -->
+            <img src="https://via.placeholder.com/40" alt="User Profile" class="profile-pic">
+            <!-- Textarea for user's comments -->
+            <textarea placeholder="What's on your mind, John Doe?"></textarea>
+        </div>
+
+        <!-- Pre-populated Post Preview -->
+        <div class="post-preview">
+            <!-- Placeholder for preview image -->
+            <img src="https://via.placeholder.com/375x180?text=Awesome+Content+Preview" alt="Preview Image" class="preview-image">
+            <div class="preview-content">
+                <!-- Link URL -->
+                <a href="https://www.example.com/awesome-article" class="preview-link">example.com</a>
+                <!-- Article Title -->
+                <h3 class="preview-title">Discover the Future of Mobile App Development</h3>
+                <!-- Article Description -->
+                <p class="preview-description">Explore the latest trends, technologies, and best practices shaping the mobile app landscape in 2023. A must-read for developers and tech enthusiasts.</p>
+            </div>
+        </div>
+
+        <!-- Standard Facebook Sharing Options -->
+        <div class="sharing-options">
+            <div class="option-item">
+                <span role="img" aria-label="Tag Friends" style="margin-right: 8px;">👥</span> Tag Friends
+            </div>
+            <div class="option-item">
+                <span role="img" aria-label="Feeling/Activity" style="margin-right: 8px;">😄</span> Feeling/Activity
+            </div>
+            <div class="option-item">
+                <span role="img" aria-label="Check In" style="margin-right: 8px;">📍</span> Check In
+            </div>
+        </div>
+
+        <!-- Footer with Logged-in User Name -->
+        <div class="footer">
+            <p class="logged-in-user">Logged in as <strong>John Doe</strong></p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Survey Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the entire page */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7; /* Light background for the page */
+            display: flex;
+            flex-direction: column; /* Arrange content vertically */
+            height: 100vh; /* Take full viewport height */
+            /* Simulate mobile screen size */
+            width: 375px; 
+            max-width: 100%; /* Ensure responsiveness on smaller screens if browser window is resized */
+            margin-left: auto; /* Center the entire body element if browser window is wider */
+            margin-right: auto; /* Center the entire body element if browser window is wider */
+            box-sizing: border-box;
+            overflow: hidden; /* Prevent body scroll, content sections will handle their own scroll if needed */
+        }
+
+        /* Top Header Section */
+        .header {
+            display: flex;
+            align-items: center; /* Vertically align items */
+            justify-content: center; /* Horizontally center the progress text */
+            padding: 15px 20px; /* Padding for top/bottom and left/right */
+            background-color: #fff; /* White background for the header */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow for separation */
+            position: relative; /* Needed for absolute positioning of the exit button */
+            min-height: 50px; /* Ensure sufficient height for header elements */
+        }
+
+        .progress-text {
+            font-size: 16px;
+            color: #555; /* Dark gray text color */
+            text-align: center; /* Ensure text is centered within its own space */
+        }
+
+        .exit-button {
+            position: absolute; /* Position relative to the header */
+            right: 20px; /* 20px from the right edge */
+            top: 50%; /* Vertically center */
+            transform: translateY(-50%); /* Adjust for true vertical centering */
+            background: none; /* No background */
+            border: none; /* No border */
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer; /* Indicate it's clickable */
+            color: #333; /* Dark text color */
+            padding: 5px;
+            line-height: 1; /* Ensure consistent line height for 'X' */
+            z-index: 10; /* Ensure it stays on top of other elements if any overlap */
+        }
+
+        /* Main Content Section */
+        .main-content {
+            flex-grow: 1; /* Allows this section to take up all available vertical space */
+            display: flex;
+            flex-direction: column; /* Arrange content vertically within this section */
+            justify-content: center; /* Vertically center the content within this section */
+            align-items: center; /* Horizontally center the content within this section */
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+            overflow-y: auto; /* Allows scrolling if content exceeds screen height */
+        }
+
+        .question-text {
+            font-size: 24px; /* Larger font size for prominence */
+            font-weight: bold; /* Bold styling */
+            margin-bottom: 40px; /* Space below the question */
+            line-height: 1.3; /* Improved readability for multi-line text */
+            max-width: 90%; /* Prevent text from touching screen edges */
+            color: #333; /* Dark text color */
+        }
+
+        .scale-input-group {
+            display: flex;
+            align-items: center; /* Vertically align labels and slider */
+            width: 90%; /* Wide enough to be prominent, but with side padding */
+            max-width: 350px; /* Max width for consistency on wider screens (though body is fixed) */
+            margin-bottom: 40px; /* Space below the scale group */
+        }
+
+        .scale-label {
+            font-size: 14px;
+            color: #666; /* Gray text color */
+            white-space: nowrap; /* Prevent labels from wrapping to new lines */
+            padding: 0 10px; /* Space between label and slider */
+            min-width: 80px; /* Give labels consistent minimum width */
+            text-align: center; /* Center label text if it's shorter than min-width */
+        }
+
+        /* Styling for the range input (slider) */
+        .slider {
+            flex-grow: 1; /* Allows the slider to take up remaining space */
+            margin: 0; /* Remove default margin */
+            -webkit-appearance: none; /* Remove default WebKit (Chrome/Safari) styles */
+            appearance: none; /* Standard property */
+            height: 8px; /* Height of the slider track */
+            background: #e0e0e0; /* Light gray track color */
+            outline: none; /* Remove outline on focus */
+            border-radius: 5px; /* Rounded corners for the track */
+            cursor: pointer; /* Indicate it's interactive */
+        }
+
+        /* WebKit (Chrome, Safari) specific styles for slider thumb */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none; /* Remove default WebKit thumb styles */
+            appearance: none; /* Standard property */
+            width: 24px; /* Width of the thumb */
+            height: 24px; /* Height of the thumb */
+            border-radius: 50%; /* Make the thumb circular */
+            background: #4CAF50; /* Green thumb color */
+            border: 2px solid #388E3C; /* Darker green border */
+            cursor: grab; /* Cursor style */
+            margin-top: -8px; /* Vertically center thumb on the track (half of (thumb_height - track_height)) */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+        }
+
+        /* Firefox specific styles for slider thumb */
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: 2px solid #388E3C;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* IE/Edge specific styles for slider thumb */
+        .slider::-ms-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #4CAF50;
+            border: 2px solid #388E3C;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .ask-differently-button {
+            padding: 12px 25px; /* Padding inside the button */
+            font-size: 16px;
+            border: 1px solid #ccc; /* Light gray border */
+            background-color: #f0f0f0; /* Light gray background */
+            border-radius: 25px; /* Rounded corners for a pill shape */
+            cursor: pointer;
+            color: #333; /* Dark text color */
+            transition: background-color 0.2s ease; /* Smooth transition on hover/tap */
+        }
+
+        .ask-differently-button:hover {
+            background-color: #e0e0e0; /* Slightly darker background on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Header Section -->
+    <div class="header">
+        <div class="progress-text">Question 5 of 20</div>
+        <button class="exit-button">X</button>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+        <p class="question-text">How satisfied are you with the overall user experience of this application?</p>
+        
+        <div class="scale-input-group">
+            <span class="scale-label left-label">Strongly Disagree</span>
+            <input type="range" min="0" max="100" value="50" class="slider">
+            <span class="scale-label right-label">Strongly Agree</span>
+        </div>
+        
+        <button class="ask-differently-button">Ask me differently</button>
+    </div>
+
+</body>
+</html>

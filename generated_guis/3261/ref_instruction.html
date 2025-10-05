@@ -2,225 +2,430 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real Estate Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Property Search</title>
+
+    <!-- Material Icons CDN -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Material Design Web CSS CDN (MDC Web) -->
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+
+    <!-- Custom Mobile UI/UX Styling -->
     <style>
+        /* Base styles for the document */
         body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             margin: 0;
-            font-family: 'Roboto', sans-serif;
-            -webkit-font-smoothing: antialiased; /* for smoother fonts on some browsers */
+            background-color: #f0f0f0; /* Light grey background for the environment */
+            font-family: Roboto, sans-serif; /* Standard Material Design font */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* App Bar */
-        header {
-            height: 56px;
-            background-color: #FFFFFF;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* Mobile Screen Wrapper - Simulates the device screen */
+        .mobile-screen-wrapper {
+            width: 375px; /* Specified mobile screen width */
+            height: 667px; /* Specified mobile screen height */
+            background-color: white; /* App background color */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow for depth */
+            border-radius: 12px; /* Rounded corners for the "device" */
+            overflow: hidden; /* Crucial to contain scrolling content */
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            position: sticky; /* Keep the header at the top when scrolling */
-            top: 0;
-            z-index: 10; /* Ensure it's above other content */
+            flex-direction: column; /* Stacks header, content, footer vertically */
+            position: relative; /* Needed for absolutely positioned footer */
         }
 
-        header i {
-            cursor: pointer;
-            font-size: 24px; /* Adjust icon size */
+        /* 1. Top Navigation & Primary Search */
+
+        /* Top App Bar - Contains the search input */
+        .mdc-top-app-bar {
+            position: relative; /* Position relative to its parent flex item */
+            z-index: 2; /* Ensures it stays above scrollable content */
+            background-color: white; /* Matches overall app background */
+            color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87)); /* Text color */
+            box-shadow: none; /* No shadow on the app bar itself for this design */
+            padding-bottom: 0; /* Remove default padding */
         }
 
-        header span {
-            font-size: 20px;
-            font-weight: 500;
-            color: rgba(0, 0, 0, 0.87);
+        .mdc-top-app-bar__row {
+            height: auto; /* Allow search input to define height */
+            padding: 8px 16px; /* Padding around the search field */
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center items vertically */
         }
 
-        /* Search Input */
-        .search-container {
+        .mdc-top-app-bar__section--align-start {
+            width: 100%; /* Make section span full width */
+        }
+
+        .search-input {
+            width: 100%; /* Search input takes full available width */
+        }
+        /* Adjust floating label font size within search input */
+        .search-input .mdc-floating-label {
+             font-size: 0.9rem; /* Slightly smaller for hint text */
+        }
+
+        /* Segmented Buttons - For "Buy", "Rent", "Projects" */
+        .mdc-segmented-button {
+            width: 100%;
+            box-sizing: border-box; /* Include padding in width calculation */
+            padding: 0 16px 16px 16px; /* Horizontal padding, and space below */
+            background-color: white; /* Matches app background */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Subtle shadow to separate from filters */
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+
+        .mdc-segmented-button__row {
+            display: flex;
+            justify-content: space-around; /* Distribute buttons evenly */
+            border-radius: 8px; /* Rounded corners for the entire group */
+            overflow: hidden; /* Ensures borders/shadows are contained */
+            border: 1px solid var(--mdc-theme-outline, rgba(0, 0, 0, 0.12)); /* Subtle border */
+        }
+
+        .mdc-segmented-button__segment {
+            flex-grow: 1; /* Each button takes equal width */
+            border: none; /* Remove default button border */
+            border-radius: 0; /* Remove default button border-radius */
+            --mdc-segmented-button-selected-container-color: var(--mdc-theme-primary); /* Primary color for selected state */
+            --mdc-segmented-button-selected-label-text-color: var(--mdc-theme-on-primary); /* Text color on primary */
+            --mdc-segmented-button-unselected-container-color: transparent; /* Transparent for unselected */
+            --mdc-segmented-button-unselected-label-text-color: var(--mdc-theme-on-surface); /* Text color on surface */
+            padding: 10px 0; /* Vertical padding */
+        }
+
+        /* 2. Property Filters (Scrollable Section) */
+
+        .filter-section {
+            flex: 1; /* Allows this section to grow and take available space */
+            overflow-y: auto; /* Enables vertical scrolling when content exceeds height */
             padding: 16px;
+            padding-bottom: 90px; /* Essential: Space for the fixed bottom button */
+            background-color: #f8f9fa; /* Slightly off-white background for filter area */
         }
 
-        .search-input-wrapper {
+        .filter-group {
+            margin-bottom: 24px; /* Spacing between filter categories */
+        }
+
+        .filter-group h3, .filter-group h4 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));
+            font-weight: 500;
+        }
+        .filter-group h3 {
+            font-size: 1.5rem; /* Headline 6 size for main Filters heading */
+        }
+        .filter-group h4 {
+            font-size: 1.15rem; /* Subtitle 1 size for sub-headings */
+        }
+
+        /* PG Only Switch */
+        .mdc-form-field {
             display: flex;
             align-items: center;
-            border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 4px;
-            padding: 8px;
+            justify-content: space-between; /* Pushes label and switch to opposite ends */
+            width: 100%;
+            margin-bottom: 8px;
         }
 
-        .search-input-wrapper i {
-            margin-right: 8px;
-            color: rgba(0, 0, 0, 0.54);
+        .mdc-form-field > label {
+            font-size: 1rem;
+            color: var(--mdc-theme-text-primary-on-background, rgba(0, 0, 0, 0.87));
         }
 
-        .search-input-wrapper input {
-            border: none;
-            outline: none;
-            flex: 1;
-            font-size: 16px;
-            color: rgba(0, 0, 0, 0.87);
-        }
-
-        /* Optional Clear Button */
-        .search-input-wrapper i.clear {
-          cursor: pointer;
-        }
-
-        /* Optional Location Button */
-        .location-button {
-            display: block;
+        /* Chips (Property Type, Bedrooms) */
+        .mdc-chip-set {
+            display: flex;
+            flex-wrap: wrap; /* Allows chips to wrap to the next line */
+            gap: 8px; /* Spacing between chips */
             margin-top: 8px;
-            padding: 8px 16px;
-            background-color: #f0f0f0;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            color: rgba(0, 0, 0, 0.87);
         }
 
-        /* Quick Filters/Chips */
-        .chips-container {
-            padding: 0 8px;
-            overflow-x: auto;
-            white-space: nowrap;
+        .mdc-chip {
+            --mdc-chip-container-shape: 18px; /* Rounded corners for chips */
+            --mdc-chip-text-label-text-color: var(--mdc-theme-on-surface); /* Default text color */
+            --mdc-chip-selected-container-color: var(--mdc-theme-primary); /* Primary color when selected */
+            --mdc-chip-selected-text-label-text-color: var(--mdc-theme-on-primary); /* Text color when selected */
+            --mdc-chip-container-color: var(--mdc-theme-surface); /* Default background */
+            border: 1px solid var(--mdc-theme-outline, rgba(0, 0, 0, 0.12)); /* Subtle border */
+            height: 36px; /* Standard chip height */
+        }
+        /* Style for selected chips */
+        .mdc-chip--selected {
+            border-color: var(--mdc-theme-primary); /* Primary border when selected */
         }
 
-        .chip {
-            display: inline-block;
-            padding: 8px 12px;
-            margin: 4px;
-            border-radius: 16px;
-            background-color: #E0E0E0;
-            color: rgba(0, 0, 0, 0.87);
-            font-size: 14px;
-            cursor: pointer;
-            user-select: none; /* prevent text selection when clicking */
-        }
-
-        /* Search Results */
-        .search-results-container {
-            /* No specific styling needed here, adjust padding/margin as needed in list items */
-        }
-
-        .location-suggestion, .property-listing {
-            padding: 16px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+        /* Price Range Inputs */
+        .price-range-inputs {
             display: flex;
-            align-items: center;
-            cursor: pointer; /* Indicate clickable items */
+            gap: 16px; /* Spacing between min/max price fields */
         }
 
-        .location-suggestion i {
-            margin-right: 16px;
-            color: rgba(0, 0, 0, 0.54);
+        .price-range-inputs .mdc-text-field {
+            flex: 1; /* Each text field takes half the width */
+            min-width: 0; /* Allows flex item to shrink correctly */
         }
 
-        .location-suggestion span {
-            font-size: 16px;
-            color: rgba(0, 0, 0, 0.87);
+        /* Dividers between sections */
+        .mdc-list-divider {
+            height: 1px;
+            background-color: var(--mdc-theme-on-surface, rgba(0, 0, 0, 0.12)); /* Subtle grey line */
+            margin: 24px 0; /* Spacing around dividers */
+            border: none; /* Override any default border */
         }
 
-        .property-listing img {
-            width: 80px;
-            height: 80px;
-            border-radius: 4px;
-            margin-right: 16px;
-            object-fit: cover; /* Prevent image distortion */
+        /* 3. Primary Action Button (Fixed Bottom) */
+
+        .bottom-action-bar {
+            position: absolute; /* Positions relative to .mobile-screen-wrapper */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            padding: 16px;
+            box-sizing: border-box; /* Include padding in width */
+            background-color: white; /* Matches app background */
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Shadow to lift it from content */
+            z-index: 3; /* Ensures it's above other content */
         }
 
-        .property-listing div span:first-child {
-            font-size: 16px;
-            font-weight: 500;
-            color: rgba(0, 0, 0, 0.87);
+        .search-button {
+            width: 100%;
+            height: 48px; /* Standard button height */
+            font-size: 1.1rem;
+            text-transform: capitalize; /* Material design buttons are often capitalized */
         }
 
-        .property-listing div span {
-            font-size: 14px;
-            color: rgba(0, 0, 0, 0.54);
-            display: block; /* Ensure spans stack vertically */
-        }
-
-        /* Utility classes for spacing */
-        .ml-16 {
-            margin-left: 16px;
-        }
-
-        /* Ensure proper sizing on smaller screens */
-        @media (max-width: 375px) {
-            header span {
-                font-size: 18px;
-            }
-
-            .search-input-wrapper input {
-                font-size: 14px;
-            }
+        /* MDC Theming Variables (Optional but good practice for consistency) */
+        :root {
+            --mdc-theme-primary: #6200EE; /* Deep Purple */
+            --mdc-theme-on-primary: #FFFFFF;
+            --mdc-theme-secondary: #03DAC6; /* Teal */
+            --mdc-theme-on-secondary: #000000;
+            --mdc-theme-surface: #FFFFFF;
+            --mdc-theme-on-surface: #000000;
+            --mdc-theme-background: #FFFFFF;
+            --mdc-theme-error: #B00020;
+            --mdc-theme-text-primary-on-background: rgba(0, 0, 0, 0.87);
+            --mdc-theme-text-secondary-on-background: rgba(0, 0, 0, 0.60);
+            --mdc-theme-outline: rgba(0, 0, 0, 0.12);
         }
     </style>
 </head>
 <body>
-
-    <header>
-        <i class="material-icons">menu</i>
-        <span>Search Properties</span>
-        <i class="material-icons">filter_list</i>
-    </header>
-
-    <div class="search-container">
-        <div class="search-input-wrapper">
-            <i class="material-icons">search</i>
-            <input type="text" placeholder="Enter a city, address, or ZIP code" enterkeyhint="search">
-            <!-- Optional Clear Button (Conditionally show this with JavaScript) -->
-            <!-- <i class="material-icons clear">clear</i> -->
-        </div>
-        <!-- Optional Location Button -->
-        <!-- <button class="location-button"><i class="material-icons">my_location</i> Use Current Location</button> -->
-    </div>
-
-    <div class="chips-container">
-        <span class="chip">For Sale</span>
-        <span class="chip">For Rent</span>
-        <span class="chip">Apartments</span>
-        <span class="chip">Houses</span>
-        <span class="chip">Open Houses</span>
-    </div>
-
-    <div class="search-results-container">
-        <div class="location-suggestion">
-            <i class="material-icons">location_on</i>
-            <span>Los Angeles, CA</span>
-        </div>
-        <div class="location-suggestion">
-            <i class="material-icons">location_on</i>
-            <span>New York, NY</span>
-        </div>
-        <div class="property-listing">
-            <img src="https://via.placeholder.com/80" alt="Property">
-            <div>
-                <span>123 Main St</span>
-                <span>$1,200,000</span>
-                <span>3 Beds | 2 Baths</span>
+    <div class="mobile-screen-wrapper">
+        <!-- Section 1: Top Navigation & Primary Search -->
+        <header class="mdc-top-app-bar">
+            <div class="mdc-top-app-bar__row">
+                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                    <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon search-input">
+                        <i class="material-icons mdc-text-field__icon" tabindex="0" role="button">search</i>
+                        <input class="mdc-text-field__input" type="text" id="search-input-field" placeholder="Location, project, or keyword">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                                <label class="mdc-floating-label" for="search-input-field">Location, project, or keyword</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
-        <div class="property-listing">
-            <img src="https://via.placeholder.com/80" alt="Property">
-            <div>
-                <span>456 Oak Ave</span>
-                <span>$850,000</span>
-                <span>2 Beds | 1 Bath</span>
+        </header>
+
+        <div class="mdc-segmented-button">
+            <div class="mdc-segmented-button__row" role="group" aria-label="Transaction Type Selector">
+                <button class="mdc-segmented-button__segment mdc-segmented-button__segment--selected" aria-pressed="true">
+                    <div class="mdc-segmented-button__segment-scrim"></div>
+                    <span class="mdc-segmented-button__label">Buy</span>
+                </button>
+                <button class="mdc-segmented-button__segment" aria-pressed="false">
+                    <div class="mdc-segmented-button__segment-scrim"></div>
+                    <span class="mdc-segmented-button__label">Rent</span>
+                </button>
+                <button class="mdc-segmented-button__segment" aria-pressed="false">
+                    <div class="mdc-segmented-button__segment-scrim"></div>
+                    <span class="mdc-segmented-button__label">Projects</span>
+                </button>
             </div>
         </div>
 
-        <div class="property-listing">
-            <img src="https://via.placeholder.com/80" alt="Property">
-            <div>
-                <span>789 Pine Ln</span>
-                <span>$600,000</span>
-                <span>1 Bed | 1 Bath</span>
+        <!-- Section 2: Property Filters (Scrollable) -->
+        <main class="filter-section">
+            <div class="filter-group">
+                <h3 class="mdc-typography--headline6">Filters</h3>
+                <div class="mdc-form-field">
+                    <label for="pg-only-switch">PG Only Properties</label>
+                    <div class="mdc-switch">
+                        <div class="mdc-switch__track"></div>
+                        <div class="mdc-switch__thumb-underlay">
+                            <div class="mdc-switch__thumb">
+                                <input type="checkbox" id="pg-only-switch" class="mdc-switch__native-control" role="switch">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <div class="mdc-list-divider"></div>
+
+            <div class="filter-group">
+                <h4 class="mdc-typography--subtitle1">Property Type</h4>
+                <div class="mdc-chip-set mdc-chip-set--filter property-type-chips" role="group" aria-label="Select Property Type(s)">
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">Apartment</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">House/Villa</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">Builder Floor</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">Farm House</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mdc-list-divider"></div>
+
+            <div class="filter-group">
+                <h4 class="mdc-typography--subtitle1">Price Range</h4>
+                <div class="price-range-inputs">
+                    <div class="mdc-text-field mdc-text-field--outlined min-price">
+                        <input class="mdc-text-field__input" type="number" id="min-price-input" placeholder="Min (e.g., 50L)">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                                <label class="mdc-floating-label" for="min-price-input">Min Price</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                    <div class="mdc-text-field mdc-text-field--outlined max-price">
+                        <input class="mdc-text-field__input" type="number" id="max-price-input" placeholder="Max (e.g., 2Cr)">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                                <label class="mdc-floating-label" for="max-price-input">Max Price</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mdc-list-divider"></div>
+
+            <div class="filter-group">
+                <h4 class="mdc-typography--subtitle1">Bedrooms</h4>
+                <div class="mdc-chip-set mdc-chip-set--filter bedroom-chips" role="group" aria-label="Select Number of Bedrooms">
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">1</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">2</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">3</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">4</span>
+                        </div>
+                    </div>
+                    <div class="mdc-chip" role="button" tabindex="0">
+                        <div class="mdc-chip__primary-action">
+                            <span class="mdc-chip__text">5+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Section 3: Primary Action Button -->
+        <footer class="bottom-action-bar">
+            <button class="mdc-button mdc-button--raised search-button">
+                <span class="mdc-button__label">Search</span>
+            </button>
+        </footer>
     </div>
 
+    <!-- Material Design Web JavaScript CDN -->
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <script>
+        // Initialize MDC Web components after the DOM is loaded
+        window.addEventListener('load', () => {
+            // Initialize all text fields
+            document.querySelectorAll('.mdc-text-field').forEach((el) => {
+                mdc.textField.MDCTextField.attachTo(el);
+            });
+
+            // Initialize all segmented buttons
+            document.querySelectorAll('.mdc-segmented-button').forEach((el) => {
+                mdc.segmentedButton.MDCSegmentedButton.attachTo(el);
+            });
+
+            // Initialize all switches
+            document.querySelectorAll('.mdc-switch').forEach((el) => {
+                mdc.switchControl.MDCSwitch.attachTo(el);
+            });
+
+            // Initialize and handle interaction for filter chips
+            document.querySelectorAll('.mdc-chip-set--filter').forEach((el) => {
+                const chipSet = mdc.chips.MDCChipSet.attachTo(el);
+                chipSet.listen('MDCChip:interaction', (event) => {
+                    const chip = event.detail.chip;
+                    const primaryAction = chip.root.querySelector('.mdc-chip__primary-action');
+                    let leadingIcon = primaryAction.querySelector('.mdc-chip__icon--leading');
+
+                    // Toggle the selected state internally within MDC Web
+                    chip.setSelected(!chip.selected);
+
+                    // Manually toggle the 'mdc-chip--selected' class and add/remove the leading checkmark icon
+                    if (chip.selected) {
+                        chip.root.classList.add('mdc-chip--selected');
+                        if (!leadingIcon) { // If icon is not present, create and prepend it
+                            leadingIcon = document.createElement('i');
+                            leadingIcon.className = 'material-icons mdc-chip__icon mdc-chip__icon--leading';
+                            leadingIcon.textContent = 'check';
+                            primaryAction.prepend(leadingIcon);
+                        }
+                    } else {
+                        chip.root.classList.remove('mdc-chip--selected');
+                        if (leadingIcon) { // If icon is present, remove it
+                            leadingIcon.remove();
+                        }
+                    }
+                });
+            });
+
+            // Initialize all Material buttons for ripple effect
+            document.querySelectorAll('.mdc-button').forEach((el) => {
+                mdc.ripple.MDCRipple.attachTo(el);
+            });
+        });
+    </script>
 </body>
 </html>

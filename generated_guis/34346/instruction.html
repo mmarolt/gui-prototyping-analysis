@@ -1,53 +1,436 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - Job Search App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job App - Profile</title>
+    <!-- 
+        Inline CSS is implemented using a <style> block within the HTML head.
+        This is a common interpretation of "inline CSS" when an external stylesheet
+        is not allowed, as it keeps all styling within the HTML file itself,
+        as opposed to using 'style=""' attributes on every single element,
+        which would make the code extremely verbose and hard to maintain for a full page.
+    -->
+    <style>
+        /* Basic Reset and Box Sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Using a common system font stack for clean mobile rendering */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5; /* Light grey background for the app */
+            color: #333; /* Dark grey for general text */
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased; /* Smoother fonts on macOS/iOS */
+            -moz-osx-font-smoothing: grayscale; /* Smoother fonts on Firefox */
+            display: flex; /* Use flexbox for overall layout (header, main, footer) */
+            flex-direction: column; /* Stack elements vertically */
+            min-height: 100vh; /* Ensure body takes at least full viewport height */
+        }
+
+        /* Container to simulate mobile width and center content */
+        .container {
+            max-width: 375px; /* Target width for Google Chrome Dev Tools simulation */
+            margin: 0 auto; /* Center the container on larger screens */
+            padding: 0 15px; /* Horizontal padding for content inside the container */
+            width: 100%; /* Ensure it takes full width within its max-width */
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; /* Sticky header */
+            top: 0;
+            z-index: 1000; /* Ensure header is on top of other content */
+        }
+
+        .header .search-bar {
+            flex-grow: 1; /* Allow search bar to take up most of the space */
+            margin-right: 10px;
+            position: relative; /* For the search icon positioning */
+        }
+
+        .header .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px; /* Left padding for search icon */
+            border: 1px solid #ddd;
+            border-radius: 25px; /* Pill-shaped search bar */
+            font-size: 16px;
+            background-color: #f5f5f5; /* Light grey background for input */
+            outline: none; /* Remove default focus outline */
+        }
+
+        .header .search-bar input::placeholder {
+            color: #888;
+        }
+
+        .header .search-bar::before {
+            content: "🔍"; /* Search icon (emoji) */
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 18px;
+        }
+
+        .header .menu-icon {
+            font-size: 24px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1; /* Allows main content to grow and push the footer down */
+            padding-top: 15px; /* Space between header and first section */
+            padding-bottom: 80px; /* Space for the fixed footer */
+        }
+
+        /* Generic Section Styling */
+        .section {
+            background-color: #fff;
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Subtle shadow for sections */
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Profile Header Section */
+        .profile-header {
+            text-align: center;
+            padding: 25px 0;
+        }
+
+        .profile-header .avatar {
+            width: 90px;
+            height: 90px;
+            background-color: #ccc; /* Placeholder background */
+            border-radius: 50%; /* Circular avatar */
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px; /* Emoji size */
+            color: #fff;
+            overflow: hidden; /* In case an image is added later */
+        }
+
+        .profile-header .user-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .profile-header .user-location {
+            font-size: 15px;
+            color: #666;
+        }
+
+        /* Call to Action Prompt */
+        .cta-prompt {
+            background-color: #e6f7ff; /* Light blue background */
+            border: 1px solid #91d5ff; /* Slightly darker blue border */
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .cta-prompt .icon {
+            font-size: 24px;
+            margin-right: 10px;
+            color: #1890ff; /* Blue icon color */
+        }
+
+        .cta-prompt p {
+            font-size: 15px;
+            color: #333;
+            flex-grow: 1;
+        }
+
+        .cta-prompt button {
+            background-color: #1890ff; /* Primary blue button */
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 20px; /* Pill-shaped button */
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent button text from wrapping */
+            outline: none;
+        }
+
+        /* Profile Details Section */
+        .profile-details .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .profile-details .detail-item label {
+            width: 80px; /* Fixed width for labels for alignment */
+            font-weight: 500;
+            color: #555;
+            font-size: 15px;
+            flex-shrink: 0; /* Prevent label from shrinking */
+        }
+
+        .profile-details .detail-item input {
+            flex-grow: 1; /* Allow input to fill remaining space */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+            outline: none; /* Remove default focus outline */
+        }
+
+        .profile-details .detail-item input:focus {
+            border-color: #1890ff; /* Blue border on focus */
+            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2); /* Subtle blue shadow on focus */
+        }
+
+        .profile-details .edit-button {
+            background-color: #1890ff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%; /* Full width button */
+            margin-top: 15px;
+            outline: none;
+        }
+
+        /* Video Profile Section */
+        .video-profile .video-placeholder {
+            background-color: #e0e0e0; /* Light grey placeholder */
+            height: 180px; /* Fixed height for video preview */
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .video-profile .video-placeholder .icon {
+            font-size: 40px; /* Emoji size */
+            margin-bottom: 10px;
+        }
+
+        .video-profile button {
+            background-color: #28a745; /* Green for "add" action */
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            outline: none;
+        }
+
+        /* Employer Reviews Section */
+        .employer-reviews .review-summary {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .employer-reviews .rating {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffc107; /* Gold color for rating number */
+            margin-right: 10px;
+        }
+
+        .employer-reviews .stars {
+            display: flex;
+            margin-right: 10px;
+        }
+
+        .employer-reviews .stars span {
+            color: #ffc107; /* Gold for filled stars */
+            font-size: 24px;
+        }
+
+        .employer-reviews .stars .empty {
+            color: #e0e0e0; /* Light grey for empty stars */
+        }
+
+        .employer-reviews .review-count {
+            font-size: 15px;
+            color: #666;
+        }
+
+        .employer-reviews .request-review-button {
+            background-color: #007bff; /* Primary blue for "request" action */
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            outline: none;
+        }
+
+        /* Footer Navigation */
+        .footer-nav {
+            background-color: #fff;
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Shadow above the footer */
+            position: fixed; /* Fixed at the bottom */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around; /* Distribute items evenly */
+            align-items: center;
+            z-index: 1000;
+            max-width: 375px; /* Match the target device width */
+            margin: 0 auto; /* Center the fixed footer within the simulated width */
+        }
+
+        .footer-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888; /* Default icon/text color */
+            font-size: 12px;
+            padding: 5px;
+            flex: 1; /* Each link takes equal space */
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .footer-nav a.active {
+            color: #1890ff; /* Active link color */
+        }
+
+        .footer-nav a .icon {
+            font-size: 24px; /* Icon size */
+            margin-bottom: 3px;
+        }
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333;">
-
-  <div style="background-color: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-bottom: 20px;">
-    <img src="https://via.placeholder.com/80" alt="Profile Picture" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 10px;">
-    <h1 style="font-size: 1.5em; margin: 0; color: #222;">John Doe</h1>
-    <p style="font-size: 0.9em; color: #666; margin: 5px 0;">Software Engineer</p>
-    <p style="font-size: 0.9em; color: #666; margin: 5px 0;">San Francisco, CA</p>
-  </div>
-
-  <div style="padding: 0 20px;">
-    <h2 style="font-size: 1.2em; margin-bottom: 10px; color: #222;">About Me</h2>
-    <p style="font-size: 0.9em; color: #444; line-height: 1.4;">
-      Highly motivated software engineer with 5+ years of experience in developing web applications. Passionate about clean code and user-centered design. Seeking new opportunities to contribute to innovative projects.
-    </p>
-  </div>
-
-  <div style="padding: 20px;">
-    <h2 style="font-size: 1.2em; margin-bottom: 10px; color: #222;">Skills</h2>
-    <ul style="list-style: none; padding: 0; margin: 0;">
-      <li style="background-color: #e9e9e9; padding: 8px 12px; border-radius: 20px; display: inline-block; margin: 5px; font-size: 0.8em; color: #555;">JavaScript</li>
-      <li style="background-color: #e9e9e9; padding: 8px 12px; border-radius: 20px; display: inline-block; margin: 5px; font-size: 0.8em; color: #555;">React</li>
-      <li style="background-color: #e9e9e9; padding: 8px 12px; border-radius: 20px; display: inline-block; margin: 5px; font-size: 0.8em; color: #555;">Node.js</li>
-      <li style="background-color: #e9e9e9; padding: 8px 12px; border-radius: 20px; display: inline-block; margin: 5px; font-size: 0.8em; color: #555;">HTML</li>
-      <li style="background-color: #e9e9e9; padding: 8px 12px; border-radius: 20px; display: inline-block; margin: 5px; font-size: 0.8em; color: #555;">CSS</li>
-    </ul>
-  </div>
-
-  <div style="padding: 20px;">
-    <h2 style="font-size: 1.2em; margin-bottom: 10px; color: #222;">Experience</h2>
-    <div style="margin-bottom: 15px;">
-      <h3 style="font-size: 1em; margin: 0; color: #333;">Software Engineer</h3>
-      <p style="font-size: 0.8em; color: #666; margin: 5px 0;">Acme Corp - 2018-2023</p>
-      <p style="font-size: 0.9em; color: #444;">Developed and maintained web applications using React and Node.js. Collaborated with cross-functional teams to deliver high-quality products.</p>
+<body>
+    <!-- Header Section with Search Bar -->
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" placeholder="Search for jobs, companies...">
+        </div>
+        <div class="menu-icon">☰</div> <!-- Hamburger menu icon -->
     </div>
-  </div>
 
-  <div style="padding: 20px;">
-    <button style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em;">Edit Profile</button>
-  </div>
+    <!-- Main Content Area -->
+    <div class="main-content container">
+        <!-- Profile Header Section -->
+        <div class="profile-header section">
+            <div class="avatar">👤</div> <!-- Placeholder for profile picture -->
+            <h1 class="user-name">John Doe</h1>
+            <p class="user-location">New York, NY</p>
+        </div>
 
-  <footer style="text-align: center; padding: 20px; background-color: #eee; font-size: 0.8em; color: #777;">
-    &copy; 2024 Job Search App
-  </footer>
+        <!-- Prompt to Add Personal Details (Call to Action) -->
+        <div class="cta-prompt">
+            <span class="icon">💡</span>
+            <p>Complete your profile to increase your job application success!</p>
+            <button>Add Details</button>
+        </div>
 
+        <!-- Personal Information Section (View/Edit) -->
+        <div class="section profile-details">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="detail-item">
+                <label for="name">Name</label>
+                <input type="text" id="name" value="John Doe">
+            </div>
+            <div class="detail-item">
+                <label for="location">Location</label>
+                <input type="text" id="location" value="New York, NY">
+            </div>
+            <div class="detail-item">
+                <label for="email">Email</label>
+                <input type="email" id="email" value="john.doe@example.com">
+            </div>
+            <div class="detail-item">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" value="+1 (555) 123-4567">
+            </div>
+            <button class="edit-button">Save Changes</button>
+        </div>
+
+        <!-- Video Profile Section -->
+        <div class="section video-profile">
+            <h2 class="section-title">Video Profile</h2>
+            <div class="video-placeholder">
+                <span class="icon">🎥</span> <!-- Video camera icon -->
+                <p>Add a video to stand out!</p>
+            </div>
+            <button>Add Video Profile</button>
+        </div>
+
+        <!-- Employer Reviews Section -->
+        <div class="section employer-reviews">
+            <h2 class="section-title">Employer Reviews</h2>
+            <div class="review-summary">
+                <span class="rating">4.5</span>
+                <div class="stars">
+                    <span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span class="empty">⭐</span> <!-- Star rating -->
+                </div>
+                <span class="review-count">(120 Reviews)</span>
+            </div>
+            <button class="request-review-button">Request Employer Review</button>
+        </div>
+    </div>
+
+    <!-- Fixed Footer Navigation -->
+    <div class="footer-nav">
+        <a href="#">
+            <span class="icon">🏠</span> <!-- Home icon -->
+            <span>Home</span>
+        </a>
+        <a href="#">
+            <span class="icon">🔖</span> <!-- Saved Items icon -->
+            <span>Saved</span>
+        </a>
+        <a href="#">
+            <span class="icon">✉️</span> <!-- Messaging icon -->
+            <span>Messages</span>
+        </a>
+        <a href="#">
+            <span class="icon">💼</span> <!-- Jobs icon -->
+            <span>Jobs</span>
+        </a>
+        <a href="#" class="active">
+            <span class="icon">👤</span> <!-- Profile icon -->
+            <span>Profile</span>
+        </a>
+    </div>
 </body>
 </html>

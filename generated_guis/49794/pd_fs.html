@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Connect Phone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        /* Global Reset and Base Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* A modern, readable font */
+            background-color: #f8f9fa; /* Light grey background for a clean look */
+            height: 100vh; /* Make body fill viewport height */
+            display: flex;
+            flex-direction: column; /* Arrange sections vertically */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+            width: 375px; /* Target device width for Google Chrome Developer Tools simulation */
+            max-width: 100%; /* Ensures it doesn't exceed actual screen width on larger displays */
+            overflow-x: hidden; /* Prevents horizontal scrolling */
+            margin-left: auto; /* Centers the body content if the screen is wider than 375px */
+            margin-right: auto;
+            color: #343a40; /* Darker text color for better contrast */
+        }
+
+        /* 1. Top Bar (Header Section) */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px; /* Padding around header elements */
+            background-color: #ffffff;
+            border-bottom: 1px solid #e9ecef; /* Subtle border at the bottom */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Soft shadow for depth */
+            min-height: 55px; /* Ensures a decent height for the header */
+            position: sticky; /* Keeps the header visible when scrolling */
+            top: 0;
+            z-index: 1000; /* Ensures header is above other content */
+        }
+        .header-button {
+            background: none;
+            border: none;
+            font-size: 26px; /* Larger font size for better touch target */
+            cursor: pointer;
+            padding: 0 8px; /* More padding for a larger clickable area */
+            color: #6c757d; /* Muted button color */
+            display: flex; /* For consistent icon alignment */
+            align-items: center;
+            justify-content: center;
+            line-height: 1; /* Helps vertically center the icon */
+        }
+        .header-title {
+            font-size: 19px;
+            font-weight: 600; /* Medium bold for prominence */
+            color: #212529; /* Darker title text */
+            flex-grow: 1; /* Allows title to take available space and center */
+            text-align: center;
+            margin: 0 10px; /* Space from buttons */
+        }
+        /* Specific button styling for icons (using Unicode characters) */
+        .header-button.add {
+            font-size: 32px; /* Larger for the '+' icon */
+        }
+        .header-button.search {
+            font-size: 22px; /* Standard icon size for search */
+        }
+
+
+        /* 2. Main Content Area (Scrollable) */
+        .main-content {
+            flex-grow: 1; /* Takes all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding: 15px;
+            -webkit-overflow-scrolling: touch; /* Smoother scrolling on iOS devices */
+            padding-bottom: 20px; /* Extra padding at bottom to prevent content from being hidden by the bottom navigation */
+        }
+
+        /* Main Function Buttons/Cards Grid */
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns, each taking equal space */
+            gap: 12px; /* Space between grid items */
+            margin-bottom: 25px; /* Space below the grid */
+        }
+        .function-card {
+            background-color: #ffffff;
+            border-radius: 12px; /* Rounded corners for cards */
+            padding: 20px 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Stronger, softer shadow for a "lifted" effect */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 110px; /* Ensures cards have a minimum height */
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover/tap effects */
+        }
+        .function-card:active { /* Visual feedback on tap/click */
+            transform: translateY(2px); /* Slight downward movement */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Reduced shadow */
+        }
+        .function-card .icon {
+            font-size: 32px; /* Larger icons within cards */
+            margin-bottom: 10px;
+            color: #007bff; /* Primary blue color for icons */
+        }
+        .function-card .label {
+            font-size: 13px;
+            color: #343a40;
+            font-weight: 500;
+            line-height: 1.3; /* Improved readability for multi-line labels */
+        }
+
+        /* 'My Apps' Section Display */
+        .my-apps-section {
+            margin-top: 20px;
+        }
+        .my-apps-section h2 {
+            font-size: 17px; /* Heading size for "My Apps" */
+            color: #212529;
+            margin-bottom: 12px;
+            text-align: left;
+            padding-left: 5px; /* Aligns with app list items */
+            font-weight: 600;
+        }
+        .app-list-container {
+            /* This container itself doesn't need to be scrollable if main-content is */
+        }
+        .app-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 10px; /* Rounded corners for app list items */
+            padding: 14px 15px; /* More padding for better spacing */
+            margin-bottom: 8px; /* Space between list items */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06); /* Soft shadow */
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .app-list-item:active {
+            background-color: #f0f0f0; /* Visual feedback on tap */
+        }
+        .app-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            flex-grow: 1; /* Allows info to take available space */
+            margin-right: 15px; /* Space from checkbox */
+        }
+        .app-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #343a40;
+            margin-bottom: 4px;
+        }
+        .app-details {
+            font-size: 11px; /* Smaller detail text */
+            color: #6c757d; /* Muted color for details */
+        }
+        .app-checkbox {
+            width: 22px; /* Larger checkbox for easier tapping */
+            height: 22px;
+            cursor: pointer;
+            accent-color: #007bff; /* Primary blue for checkbox color */
+        }
+
+        /* 3. Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #ffffff;
+            border-top: 1px solid #e9ecef;
+            padding: 8px 0; /* Reduced vertical padding */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.08); /* Shadow at the top of the nav bar */
+            min-height: 65px; /* Slightly taller nav bar */
+            z-index: 1000;
+            position: sticky; /* Keeps the navigation bar visible */
+            bottom: 0;
+            width: 375px; /* Matches the body width */
+            margin: 0 auto; /* Centers the nav bar with the body */
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #6c757d; /* Muted color for inactive items */
+            text-decoration: none;
+            font-size: 11px; /* Smaller label text */
+            position: relative; /* Essential for badge positioning */
+            padding: 5px 0;
+            flex: 1; /* Distributes space evenly among nav items */
+            transition: color 0.2s ease;
+        }
+        .nav-item:active {
+            color: #0056b3; /* Darker active color on tap */
+        }
+        .nav-item.active {
+            color: #007bff; /* Primary blue for the active navigation item */
+        }
+        .nav-item .icon {
+            font-size: 26px; /* Larger icons in the nav bar */
+            margin-bottom: 3px;
+            line-height: 1; /* Helps vertically center the icon */
+        }
+        .nav-item .label {
+            font-size: 10px; /* Very small label text */
+            font-weight: 500;
+        }
+        .badge {
+            background-color: #dc3545; /* Bootstrap red color for notification */
+            color: white;
+            border-radius: 50%; /* Makes it a circle */
+            padding: 3px 7px; /* Padding for the badge text */
+            font-size: 10px;
+            position: absolute;
+            top: 0px; /* Position above the icon */
+            right: calc(50% - 22px); /* Adjust to place it above and slightly to the right of the icon */
+            min-width: 10px; /* Ensures it's a circle even with single digit */
+            text-align: center;
+            line-height: 1;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Small shadow for badge */
+        }
+
+        /* Iconography - Using simple Unicode characters for icons */
+        /* These are defined using pseudo-elements for better separation of concerns */
+        .icon-plus:before { content: "＋"; } /* Unicode plus sign */
+        .icon-search:before { content: "🔍"; } /* Magnifying glass */
+        .icon-friends:before { content: "🤝"; } /* Handshake for friends */
+        .icon-received:before { content: "📥"; } /* Download box for received files */
+        .icon-storage:before { content: "🗄️"; } /* File cabinet for storage */
+        .icon-apps:before { content: "📱"; } /* Mobile phone for apps */
+        .icon-pictures:before { content: "🏞️"; } /* Mountain for pictures */
+        .icon-videos:before { content: "🎬"; } /* Clapperboard for videos */
+        .icon-music:before { content: "🎶"; } /* Musical notes for music */
+        .icon-documents:before { content: "📄"; } /* Document icon */
+
+        /* Bottom Nav Icons */
+        .icon-phone:before { content: "📞"; } /* Phone receiver */
+        .icon-computer:before { content: "💻"; } /* Laptop computer */
+        .icon-nearby:before { content: "📡"; } /* Satellite dish for nearby */
+        .icon-profile:before { content: "👤"; } /* Bust in silhouette for profile */
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Bar (Header Section) -->
+    <div class="header">
+        <button class="header-button add icon-plus" aria-label="Add new item"></button>
+        <div class="header-title">Connect phone</div>
+        <button class="header-button search icon-search" aria-label="Search"></button>
+    </div>
+
+    <!-- 2. Main Content Area (Scrollable) -->
+    <div class="main-content">
+
+        <!-- Main Function Buttons/Cards Grid -->
+        <div class="function-grid">
+            <div class="function-card">
+                <span class="icon icon-friends"></span>
+                <span class="label">Connect friends sync file</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-received"></span>
+                <span class="label">Received files</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-storage"></span>
+                <span class="label">Storage</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-apps"></span>
+                <span class="label">My Apps</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-pictures"></span>
+                <span class="label">Pictures</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-videos"></span>
+                <span class="label">Videos</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-music"></span>
+                <span class="label">Music</span>
+            </div>
+            <div class="function-card">
+                <span class="icon icon-documents"></span>
+                <span class="label">Documents</span>
+            </div>
+        </div>
+
+        <!-- 'My Apps' Section Display -->
+        <div class="my-apps-section">
+            <h2>My Apps</h2>
+            <div class="app-list-container">
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">WhatsApp</span>
+                        <span class="app-details">50MB &bull; Installed 2023-01-15</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Facebook</span>
+                        <span class="app-details">120MB &bull; Installed 2022-11-01</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Instagram</span>
+                        <span class="app-details">80MB &bull; Installed 2023-03-20</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Spotify</span>
+                        <span class="app-details">70MB &bull; Installed 2023-02-10</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                 <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Gmail</span>
+                        <span class="app-details">65MB &bull; Installed 2023-01-05</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Netflix</span>
+                        <span class="app-details">90MB &bull; Installed 2022-12-01</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Google Maps</span>
+                        <span class="app-details">110MB &bull; Installed 2023-04-01</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">Twitter</span>
+                        <span class="app-details">75MB &bull; Installed 2023-03-01</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">YouTube</span>
+                        <span class="app-details">130MB &bull; Installed 2022-10-10</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+                 <div class="app-list-item">
+                    <div class="app-info">
+                        <span class="app-name">TikTok</span>
+                        <span class="app-details">95MB &bull; Installed 2023-05-01</span>
+                    </div>
+                    <input type="checkbox" class="app-checkbox">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 3. Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="icon icon-phone"></span>
+            <span class="label">Phone</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon icon-computer"></span>
+            <span class="label">Computer</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon icon-nearby"></span>
+            <span class="label">Nearby</span>
+            <span class="badge">3</span> <!-- Notification Badge -->
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icon icon-profile"></span>
+            <span class="label">Profile</span>
+        </a>
+    </div>
+
+</body>
+</html>

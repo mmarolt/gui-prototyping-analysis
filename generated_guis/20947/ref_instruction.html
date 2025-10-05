@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Make a Payment</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Google Fonts - Roboto for Material Design typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Material Design inspired base styles -->
+    <style>
+      :root {
+        --mdc-theme-primary: #6200EE;
+        --mdc-theme-on-primary: #FFFFFF;
+        --mdc-theme-secondary: #03DAC6;
+        --mdc-theme-on-secondary: #000000;
+        --mdc-theme-surface: #FFFFFF;
+        --mdc-theme-on-surface: #000000;
+        --mdc-theme-background: #F5F5F5; /* A slightly off-white for background */
+        --mdc-theme-error: #B00020;
+        --mdc-text-field-ink-color: rgba(0, 0, 0, 0.87);
+        --mdc-text-field-label-text-color: rgba(0, 0, 0, 0.6);
+        --mdc-text-field-outline-color: rgba(0, 0, 0, 0.38);
+        --mdc-text-field-focused-outline-color: var(--mdc-theme-primary);
+        --mdc-text-field-hover-outline-color: rgba(0, 0, 0, 0.87);
+      }
+      body {
+        margin: 0;
+        font-family: 'Roboto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: var(--mdc-theme-background);
+        color: var(--mdc-theme-on-surface);
+        width: 375px; /* Mobile screen width */
+        height: 667px; /* Mobile screen height */
+        overflow: hidden; /* Prevent scrolling of the entire body */
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        position: relative; /* For absolute positioning if needed */
+      }
+      /* Basic MDC-Web like styles for elements */
+      .mdc-button {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        position: relative;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: 0 16px;
+        height: 36px;
+        min-width: 64px; /* Standard min-width for buttons */
+        border-radius: 4px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.0892857143em;
+        text-transform: uppercase;
+        transition: box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), background-color 280ms cubic-bezier(0.4, 0, 0.2, 1);
+        -webkit-tap-highlight-color: transparent; /* Prevent default tap highlight */
+      }
+      .mdc-button--raised {
+        background-color: var(--mdc-theme-primary);
+        color: var(--mdc-theme-on-primary);
+        box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2), 0px 2px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0,0.12);
+      }
+      .mdc-button--raised:hover {
+        box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+      }
+      .mdc-button:disabled {
+        background-color: rgba(0, 0, 0, 0.12);
+        color: rgba(0, 0, 0, 0.38);
+        box-shadow: none;
+        cursor: default;
+      }
+      .mdc-text-field {
+        position: relative;
+        display: inline-flex;
+        width: 100%;
+        vertical-align: top;
+      }
+      .mdc-text-field--outlined {
+        height: 56px; /* Standard outlined text field height */
+      }
+      .mdc-text-field__input {
+        width: 100%;
+        height: 100%;
+        padding: 0 16px; /* Adjust padding for notched outline */
+        box-sizing: border-box;
+        border: none;
+        background: none;
+        outline: none;
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0.009375em;
+        color: var(--mdc-text-field-ink-color);
+      }
+      .mdc-notched-outline {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid var(--mdc-text-field-outline-color);
+        border-radius: 4px;
+        box-sizing: border-box;
+        pointer-events: none;
+      }
+      .mdc-text-field--outlined:focus-within .mdc-notched-outline {
+        border-color: var(--mdc-text-field-focused-outline-color);
+        border-width: 2px;
+      }
+      .mdc-floating-label {
+        position: absolute;
+        left: 16px;
+        top: 16px;
+        color: var(--mdc-text-field-label-text-color);
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0.009375em;
+        transform-origin: left top;
+        transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none; /* Allows clicks to pass through to input */
+      }
+      /* Apply floating label style for fields that have content or are focused */
+      /* For this static example, we apply mdc-text-field--label-floating directly */
+      .mdc-text-field--label-floating .mdc-floating-label,
+      .mdc-text-field--outlined:focus-within .mdc-floating-label {
+        transform: translateY(-50%) scale(0.75);
+        top: 10px; /* Adjust based on field height and notch requirements */
+        left: 16px;
+        padding: 0 4px;
+        background-color: var(--mdc-theme-surface); /* Background for the notch */
+        z-index: 1; /* Ensure label is above outline border */
+      }
+      .mdc-text-field--outlined:focus-within .mdc-floating-label {
+        color: var(--mdc-text-field-focused-outline-color);
+      }
+      /* Trailing icon styling */
+      .mdc-text-field__icon--trailing {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        color: rgba(0, 0, 0, 0.54); /* Material icon color */
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mdc-tab-bar {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: var(--mdc-theme-surface);
+        height: 48px; /* Standard tab bar height */
+        box-shadow: inset 0px -1px 0px rgba(0, 0, 0, 0.12); /* Subtle bottom border */
+      }
+      .mdc-tab {
+        flex-grow: 1;
+        height: 100%;
+        border: none;
+        background: none;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        color: rgba(0, 0, 0, 0.6); /* Inactive tab color */
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.0892857143em;
+        text-transform: uppercase;
+        display: flex; /* Align text vertically */
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .mdc-tab--active {
+        color: var(--mdc-theme-primary); /* Active tab color */
+      }
+      .mdc-tab-indicator {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: transparent; /* Default for inactive */
+        transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .mdc-tab-indicator--active .mdc-tab-indicator__content--underline {
+        background-color: var(--mdc-theme-secondary); /* Active indicator color */
+      }
+      /* Checkbox styling approximations */
+      .mdc-form-field {
+        display: flex;
+        align-items: center;
+        user-select: none;
+      }
+      .mdc-checkbox {
+        position: relative;
+        display: inline-block;
+        width: 18px; /* Standard size */
+        height: 18px;
+        box-sizing: border-box;
+        border: 2px solid rgba(0, 0, 0, 0.54);
+        border-radius: 2px;
+        background-color: transparent;
+        transition: background-color 90ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 90ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .mdc-checkbox__native-control {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .mdc-checkbox__native-control:checked + .mdc-checkbox__background {
+        background-color: var(--mdc-theme-primary);
+        border-color: var(--mdc-theme-primary);
+      }
+      .mdc-checkbox__background {
+        position: absolute;
+        top: -2px; /* Adjust for border */
+        left: -2px; /* Adjust for border */
+        width: 100%;
+        height: 100%;
+        border: inherit;
+        border-radius: inherit;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .mdc-checkbox__checkmark {
+        width: 100%;
+        height: 100%;
+        fill: none;
+        stroke: var(--mdc-theme-on-primary);
+        stroke-width: 2.5px;
+        stroke-dasharray: 29.78333; /* For animation */
+        stroke-dashoffset: 29.78333; /* For animation */
+        transition: stroke-dashoffset 180ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+      }
+      .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background .mdc-checkbox__checkmark {
+        stroke-dashoffset: 0;
+      }
+    </style>
+</head>
+<body>
+    <!-- Section 1: Top Bar / Header -->
+    <header style="background-color: var(--mdc-theme-primary); color: var(--mdc-theme-on-primary); height: 56px; display: flex; align-items: center; padding: 0 16px; box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12); z-index: 1;">
+        <h1 style="font-family: 'Roboto', sans-serif; font-size: 20px; font-weight: 500; line-height: 24px; margin: 0; letter-spacing: 0.009375em;">Make a Payment</h1>
+    </header>
+
+    <!-- Section 2: Input Method Selector (Tabs) -->
+    <div class="mdc-tab-bar" role="tablist" style="width: 100%; background-color: var(--mdc-theme-surface);">
+        <div class="mdc-tab-scroller">
+            <div class="mdc-tab-scroller__scroll-area">
+                <div class="mdc-tab-scroller__scroll-content" style="display: flex;">
+                    <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                        <span class="mdc-tab__content">
+                            <span class="mdc-tab__text-label">Service Address</span>
+                        </span>
+                        <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                            <span class="mdc-tab-indicator__content--underline" style="background-color: var(--mdc-theme-secondary);"></span>
+                        </span>
+                    </button>
+                    <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1">
+                        <span class="mdc-tab__content">
+                            <span class="mdc-tab__text-label">Account Number</span>
+                        </span>
+                        <span class="mdc-tab-indicator">
+                            <span class="mdc-tab-indicator__content--underline"></span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Input Fields - Service Address (Tab Content) -->
+    <!-- This div acts as the main scrollable content area for the current tab -->
+    <div id="service-address-tab-content" style="padding: 16px; flex-grow: 1; overflow-y: auto; background-color: var(--mdc-theme-background);">
+        <!-- Account Holder's Last Name -->
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating" style="width: 100%; margin-bottom: 20px;">
+            <input type="text" id="last-name" class="mdc-text-field__input" aria-labelledby="last-name-label">
+            <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                    <label id="last-name-label" class="mdc-floating-label" for="last-name">Account Holder's Last Name</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+
+        <!-- Street Address with help cue -->
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--label-floating" style="width: 100%; margin-bottom: 20px;">
+            <input type="text" id="street-address" class="mdc-text-field__input" aria-labelledby="street-address-label">
+            <i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0" role="button" aria-label="Help with street address" title="Enter the primary street number and street name. Do not include city or state." style="cursor: pointer;">info_outline</i>
+            <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                    <label id="street-address-label" class="mdc-floating-label" for="street-address">Street Address</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+
+        <!-- Apartment/Suite Number (optional) -->
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating" style="width: 100%; margin-bottom: 20px;">
+            <input type="text" id="apt-suite" class="mdc-text-field__input" aria-labelledby="apt-suite-label">
+            <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                    <label id="apt-suite-label" class="mdc-floating-label" for="apt-suite">Apartment/Suite Number (optional)</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+
+        <!-- Zip Code -->
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating" style="width: 100%; margin-bottom: 20px;">
+            <input type="tel" id="zip-code" class="mdc-text-field__input" pattern="[0-9]{5}" inputmode="numeric" maxlength="5" aria-labelledby="zip-code-label">
+            <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                    <label id="zip-code-label" class="mdc-floating-label" for="zip-code">Zip Code</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+        
+        <!-- Placeholder for Account Number tab content (hidden by default) -->
+        <div id="account-number-tab-content" style="display: none;">
+            <p style="font-family: 'Roboto', sans-serif; font-size: 16px; color: rgba(0,0,0,0.6);">Account Number input fields would appear here if this tab were active.</p>
+        </div>
+    </div>
+
+    <!-- Section 4: Action Button & Options -->
+    <div style="padding: 16px; background-color: var(--mdc-theme-surface); box-shadow: 0px -2px 4px -1px rgba(0,0,0,0.2), 0px -4px 5px 0px rgba(0,0,0,0.14), 0px -1px 10px 0px rgba(0,0,0,0.12); z-index: 1;">
+        <!-- Remember Info Checkbox -->
+        <div class="mdc-form-field" style="margin-bottom: 20px;">
+            <div class="mdc-checkbox">
+                <input type="checkbox" id="remember-info" class="mdc-checkbox__native-control"/>
+                <div class="mdc-checkbox__background">
+                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                    </svg>
+                    <div class="mdc-checkbox__mixedmark"></div>
+                </div>
+            </div>
+            <label for="remember-info" style="font-family: 'Roboto', sans-serif; font-size: 16px; line-height: 24px; letter-spacing: 0.009375em; margin-left: 8px;">Remember this information</label>
+        </div>
+
+        <!-- Continue Button -->
+        <button class="mdc-button mdc-button--raised" style="width: 100%; height: 48px;" disabled>
+            <span class="mdc-button__label">Continue</span>
+        </button>
+    </div>
+
+    <!-- JavaScript for basic tab switching and button enablement (conceptual, for a real app) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const serviceAddressTabContent = document.getElementById('service-address-tab-content');
+            const accountNumberTabContent = document.getElementById('account-number-tab-content');
+            const serviceAddressTabButton = document.querySelector('.mdc-tab-bar .mdc-tab:nth-child(1)');
+            const accountNumberTabButton = document.querySelector('.mdc-tab-bar .mdc-tab:nth-child(2)');
+            const continueButton = document.querySelector('.mdc-button--raised');
+            const requiredInputs = document.querySelectorAll('#service-address-tab-content input[type="text"]:not([id="apt-suite"]), #service-address-tab-content input[type="tel"]');
+
+            const updateContinueButtonState = () => {
+                const allRequiredFilled = Array.from(requiredInputs).every(input => input.value.trim() !== '');
+                continueButton.disabled = !allRequiredFilled;
+            };
+
+            requiredInputs.forEach(input => {
+                input.addEventListener('input', updateContinueButtonState);
+            });
+
+            // Initial state update
+            updateContinueButtonState();
+
+            serviceAddressTabButton.addEventListener('click', () => {
+                serviceAddressTabButton.classList.add('mdc-tab--active');
+                serviceAddressTabButton.querySelector('.mdc-tab-indicator').classList.add('mdc-tab-indicator--active');
+                accountNumberTabButton.classList.remove('mdc-tab--active');
+                accountNumberTabButton.querySelector('.mdc-tab-indicator').classList.remove('mdc-tab-indicator--active');
+
+                serviceAddressTabContent.style.display = 'block';
+                accountNumberTabContent.style.display = 'none';
+
+                // Re-evaluate button state for the active tab (Service Address)
+                updateContinueButtonState();
+            });
+
+            accountNumberTabButton.addEventListener('click', () => {
+                accountNumberTabButton.classList.add('mdc-tab--active');
+                accountNumberTabButton.querySelector('.mdc-tab-indicator').classList.add('mdc-tab-indicator--active');
+                serviceAddressTabButton.classList.remove('mdc-tab--active');
+                serviceAddressTabButton.querySelector('.mdc-tab-indicator').classList.remove('mdc-tab-indicator--active');
+
+                accountNumberTabContent.style.display = 'block';
+                serviceAddressTabContent.style.display = 'none';
+
+                // For a real app, you would have new required inputs for "Account Number" and update button state accordingly.
+                // For this example, if Account Number tab is active, the continue button remains disabled (as no inputs are provided for it).
+                continueButton.disabled = true; 
+            });
+
+            // Handle info icon click (simple alert for demonstration)
+            document.querySelector('#street-address + .mdc-text-field__icon--trailing').addEventListener('click', (event) => {
+                alert(event.target.title);
+            });
+        });
+    </script>
+</body>
+</html>

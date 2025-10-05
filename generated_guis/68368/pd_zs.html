@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Calendar Page</title>
+</head>
+<body style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5;">
+
+    <!-- Mobile Page (Root Container) -->
+    <!-- Simulates a mobile device screen (375x667 pixels) for demonstration. -->
+    <!-- The `position: relative` is crucial for absolutely positioned child elements like the FAB and modals. -->
+    <div style="
+        width: 375px;
+        height: 667px;
+        margin: 20px auto; /* Centers the simulated mobile screen on larger displays */
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* Ensures content doesn't spill out of the simulated screen */
+        background-color: white;
+        position: relative;
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    ">
+
+        <!-- I. Main Calendar View (Default State) -->
+        <!-- This container holds the primary calendar interface elements. -->
+        <div id="mainCalendarView" style="
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Allows this view to take up all available vertical space */
+            height: 100%; /* Important for flex children to correctly calculate heights */
+            box-sizing: border-box;
+        ">
+            <!-- 1. App Header (Top Bar) -->
+            <!-- Fixed at the top of the main view. Uses flexbox for layout. -->
+            <div style="
+                background-color: #4CAF50; /* Green color */
+                color: white;
+                padding: 10px 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                z-index: 10; /* Ensures header is above other scrollable content */
+                height: 50px; /* Fixed height */
+                flex-shrink: 0; /* Prevents header from shrinking */
+                box-sizing: border-box;
+            ">
+                <!-- 1.1. Calendar Header (Container) -->
+                <!-- Contains navigation for the calendar (prev/next week, month/year display). -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    flex-grow: 1; /* Allows it to take available space and center content */
+                    justify-content: center;
+                ">
+                    <!-- 1.1.1. Previous Week Button (Left Arrow Icon) -->
+                    <span style="
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 0 10px;
+                        user-select: none; /* Prevents text selection */
+                    ">&#9664;</span> <!-- Unicode Left Arrow -->
+                    <!-- 1.1.2. Month/Year Display (Text Label) -->
+                    <span style="
+                        font-size: 18px;
+                        font-weight: bold;
+                        margin: 0 15px;
+                    ">October 2023</span>
+                    <!-- 1.1.3. Next Week Button (Right Arrow Icon) -->
+                    <span style="
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 0 10px;
+                        user-select: none;
+                    ">&#9654;</span> <!-- Unicode Right Arrow -->
+                </div>
+                <!-- 1.2. Search Button (Magnifying Glass Icon) -->
+                <span id="searchButton" style="
+                    font-size: 22px;
+                    cursor: pointer;
+                    margin-left: 15px;
+                    user-select: none;
+                ">&#128269;</span> <!-- Unicode Magnifying Glass -->
+            </div>
+
+            <!-- 2. Calendar Display Area (Vertical Stack) -->
+            <!-- Contains day headers and the weekly date grid. -->
+            <div style="
+                background-color: #f9f9f9;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+                flex-shrink: 0; /* Prevents this area from shrinking */
+                box-sizing: border-box;
+            ">
+                <!-- 2.1. Day of Week Headers (Container) -->
+                <!-- Static labels for days (Mon, Tue, etc.). -->
+                <div style="
+                    display: flex;
+                    justify-content: space-around;
+                    padding: 5px 0;
+                    font-size: 12px;
+                    color: #777;
+                    font-weight: bold;
+                    box-sizing: border-box;
+                ">
+                    <span style="width: calc(100%/7); text-align: center;">Mon</span>
+                    <span style="width: calc(100%/7); text-align: center;">Tue</span>
+                    <span style="width: calc(100%/7); text-align: center;">Wed</span>
+                    <span style="width: calc(100%/7); text-align: center;">Thu</span>
+                    <span style="width: calc(100%/7); text-align: center;">Fri</span>
+                    <span style="width: calc(100%/7); text-align: center;">Sat</span>
+                    <span style="width: calc(100%/7); text-align: center;">Sun</span>
+                </div>
+                <!-- 2.2. Weekly Calendar Grid/List (Container) -->
+                <!-- Interactive date selector, supports horizontal swipe. -->
+                <div style="
+                    display: flex;
+                    overflow-x: scroll; /* Enables horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+                    scrollbar-width: none; /* Hides scrollbar for Firefox */
+                    -ms-overflow-style: none; /* Hides scrollbar for IE/Edge */
+                    padding-bottom: 5px; /* Space for activity indicator dots */
+                    box-sizing: border-box;
+                ">
+                    <!-- Note: Hiding scrollbars for Webkit browsers (Chrome, Safari) typically requires a ::-webkit-scrollbar pseudo-element, which cannot be styled with inline CSS. Thus, it remains visible in Webkit browsers. -->
+
+                    <!-- Example: Previous Week -->
+                    <div style="
+                        display: flex;
+                        flex-shrink: 0; /* Prevents this "week" from shrinking */
+                        width: 100%; /* Each "week" takes the full width of its parent */
+                        justify-content: space-around;
+                        box-sizing: border-box;
+                    ">
+                        <!-- Date Cell (Example: Day 25) -->
+                        <div style="
+                            width: calc(100%/7 - 10px); /* Distribute width for 7 days with some margin */
+                            padding: 8px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #aaa; /* Faded color for non-current month */
+                            cursor: pointer;
+                            border-radius: 8px;
+                            margin: 0 5px;
+                            box-sizing: border-box;
+                        ">
+                            <span style="display: block; font-weight: bold;">25</span>
+                        </div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #aaa; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">26</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #aaa; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">27</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #aaa; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">28</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #aaa; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">29</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #aaa; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">30</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #aaa; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">1</span></div>
+                    </div>
+
+                    <!-- Example: Current Week -->
+                    <div style="
+                        display: flex;
+                        flex-shrink: 0;
+                        width: 100%;
+                        justify-content: space-around;
+                        box-sizing: border-box;
+                    ">
+                        <!-- 2.2.1. Date Cell - Current Date Highlight -->
+                        <div style="
+                            width: calc(100%/7 - 10px);
+                            padding: 8px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #333;
+                            cursor: pointer;
+                            background-color: #e0f2f1; /* Light teal for current date */
+                            border-radius: 8px;
+                            margin: 0 5px;
+                            box-sizing: border-box;
+                        ">
+                            <span style="display: block; font-weight: bold;">2</span>
+                            <!-- Activity Indicator -->
+                            <span style="
+                                display: block;
+                                width: 5px;
+                                height: 5px;
+                                background-color: #4CAF50; /* Green dot */
+                                border-radius: 50%;
+                                margin: 3px auto 0;
+                            "></span>
+                        </div>
+                        <!-- 2.2.1. Date Cell - Selected Date Highlight -->
+                        <div style="
+                            width: calc(100%/7 - 10px);
+                            padding: 8px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: white;
+                            cursor: pointer;
+                            background-color: #4CAF50; /* Green for selected date */
+                            border-radius: 8px;
+                            margin: 0 5px;
+                            box-sizing: border-box;
+                        ">
+                            <span style="display: block; font-weight: bold;">3</span>
+                            <!-- Activity Indicator -->
+                            <span style="
+                                display: block;
+                                width: 5px;
+                                height: 5px;
+                                background-color: white;
+                                border-radius: 50%;
+                                margin: 3px auto 0;
+                            "></span>
+                        </div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">4</span></div>
+                        <div style="
+                            width: calc(100%/7 - 10px);
+                            padding: 8px 0;
+                            text-align: center;
+                            font-size: 14px;
+                            color: #333;
+                            cursor: pointer;
+                            border-radius: 8px;
+                            margin: 0 5px;
+                            box-sizing: border-box;
+                        ">
+                            <span style="display: block; font-weight: bold;">5</span>
+                            <!-- Activity Indicator -->
+                            <span style="
+                                display: block;
+                                width: 5px;
+                                height: 5px;
+                                background-color: #4CAF50;
+                                border-radius: 50%;
+                                margin: 3px auto 0;
+                            "></span>
+                        </div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">6</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">7</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">8</span></div>
+                    </div>
+
+                    <!-- Example: Next Week -->
+                    <div style="
+                        display: flex;
+                        flex-shrink: 0;
+                        width: 100%;
+                        justify-content: space-around;
+                        box-sizing: border-box;
+                    ">
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">9</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">10</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">11</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">12</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">13</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">14</span></div>
+                        <div style="width: calc(100%/7 - 10px); padding: 8px 0; text-align: center; font-size: 14px; color: #333; cursor: pointer; border-radius: 8px; margin: 0 5px; box-sizing: border-box;"><span style="display: block; font-weight: bold;">15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Daily Activity List Container (Scrollable Area) -->
+            <!-- Displays activities for the selected date. Occupies remaining vertical space. -->
+            <div style="
+                flex-grow: 1; /* Occupy remaining vertical space */
+                overflow-y: scroll; /* Enables vertical scrolling */
+                -webkit-overflow-scrolling: touch;
+                padding: 15px;
+                background-color: #fff;
+                box-sizing: border-box;
+            ">
+                <!-- 3.1. Activity List Item (Multiple instances) -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    box-sizing: border-box;
+                ">
+                    <!-- 3.1.1. Activity Type Icon/Indicator -->
+                    <span style="
+                        font-size: 20px;
+                        margin-right: 15px;
+                        color: #FFC107; /* Star icon color (e.g., for Work) */
+                    ">&#9733;</span> <!-- Unicode Star Icon -->
+                    <!-- 3.1.2. Activity Title/Description Text -->
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-weight: bold; font-size: 16px; color: #333;">Team Meeting</span>
+                        <span style="display: block; font-size: 13px; color: #777;">Discuss Q4 Strategy</span>
+                    </div>
+                    <!-- 3.1.3. Activity Time Text -->
+                    <span style="font-size: 13px; color: #555;">10:00 AM</span>
+                </div>
+
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    box-sizing: border-box;
+                ">
+                    <span style="
+                        font-size: 20px;
+                        margin-right: 15px;
+                        color: #2196F3; /* Blue color (e.g., for Personal) */
+                    ">&#128172;</span> <!-- Unicode Speech Bubble Icon -->
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-weight: bold; font-size: 16px; color: #333;">Client Call</span>
+                        <span style="display: block; font-size: 13px; color: #777;">Project Alpha update</span>
+                    </div>
+                    <span style="font-size: 13px; color: #555;">02:30 PM</span>
+                </div>
+
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    box-sizing: border-box;
+                ">
+                    <span style="
+                        font-size: 20px;
+                        margin-right: 15px;
+                        color: #FF5722; /* Orange color (e.g., for Other) */
+                    ">&#127860;</span> <!-- Unicode Coffee Cup Icon -->
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-weight: bold; font-size: 16px; color: #333;">Coffee Break</span>
+                        <span style="display: block; font-size: 13px; color: #777;">With John Doe</span>
+                    </div>
+                    <span style="font-size: 13px; color: #555;">04:00 PM</span>
+                </div>
+
+                <!-- 3.2. No Activities Message (Text Label) -->
+                <!-- This message would typically be conditionally displayed if the list is empty. -->
+                <!-- <div style="text-align: center; color: #999; padding: 20px; font-size: 16px;">No activities for this day.</div> -->
+            </div>
+
+            <!-- 4. Add New Activity Floating Action Button (FAB) -->
+            <!-- Fixed position, floating above other content. -->
+            <button id="addActivityFab" style="
+                position: absolute; /* Positioned relative to the Mobile Page (Root Container) */
+                bottom: 20px;
+                right: 20px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%; /* Makes it circular */
+                background-color: #4CAF50; /* Green background */
+                color: white;
+                font-size: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: none;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Adds a shadow for floating effect */
+                cursor: pointer;
+                z-index: 20; /* Ensures it's above other content */
+                user-select: none;
+                box-sizing: border-box;
+            ">+</button>
+        </div>
+
+        <!-- II. Add New Activity Flow (Modal/New Screen State) -->
+        <!-- This view appears when the FAB is tapped. Initially hidden. -->
+        <div id="addActivityModal" style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 100; /* Higher z-index to overlay other content */
+            display: none; /* Initially hidden, will be set to 'flex' by JS */
+            flex-direction: column;
+            box-sizing: border-box;
+        ">
+            <!-- 1.1. Modal Header (Top Bar) -->
+            <div style="
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #eee;
+                padding: 10px 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 50px;
+                flex-shrink: 0; /* Prevents header from shrinking */
+                box-sizing: border-box;
+            ">
+                <!-- 1.1.1. Modal Title -->
+                <span style="font-size: 18px; font-weight: bold; color: #333;">Add New Activity</span>
+                <!-- 1.1.2. Cancel Activity Button -->
+                <span id="cancelAddActivityButton" style="
+                    font-size: 24px;
+                    color: #777;
+                    cursor: pointer;
+                    padding: 0 5px;
+                    user-select: none;
+                ">&#x2715;</span> <!-- Unicode 'X' Icon -->
+            </div>
+
+            <!-- 1.2. Form Body (Scrollable Container) -->
+            <div style="
+                flex-grow: 1; /* Occupies remaining vertical space */
+                overflow-y: scroll; /* Enables vertical scrolling for form fields */
+                -webkit-overflow-scrolling: touch;
+                padding: 20px 15px;
+                box-sizing: border-box;
+            ">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 14px; color: #555; margin-bottom: 8px;">Activity Type</label>
+                    <!-- 1.2.1. Activity Type Selector (Segmented Control / Radio Buttons) -->
+                    <div style="
+                        display: flex;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        overflow: hidden; /* Ensures rounded corners for children */
+                        box-sizing: border-box;
+                    ">
+                        <span style="
+                            flex-grow: 1;
+                            text-align: center;
+                            padding: 10px 0;
+                            background-color: #4CAF50; /* Selected state */
+                            color: white;
+                            font-size: 14px;
+                            cursor: pointer;
+                            border-right: 1px solid #45a049;
+                            user-select: none;
+                        ">Work</span>
+                        <span style="
+                            flex-grow: 1;
+                            text-align: center;
+                            padding: 10px 0;
+                            background-color: #f0f0f0; /* Unselected state */
+                            color: #555;
+                            font-size: 14px;
+                            cursor: pointer;
+                            border-right: 1px solid #ddd;
+                            user-select: none;
+                        ">Personal</span>
+                        <span style="
+                            flex-grow: 1;
+                            text-align: center;
+                            padding: 10px 0;
+                            background-color: #f0f0f0;
+                            color: #555;
+                            font-size: 14px;
+                            cursor: pointer;
+                            user-select: none;
+                        ">Other</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="activityTitle" style="display: block; font-size: 14px; color: #555; margin-bottom: 8px;">Title/Description</label>
+                    <!-- 1.2.2. Activity Title/Description Input Field -->
+                    <textarea id="activityTitle" placeholder="e.g., Project meeting, Gym session" rows="3" style="
+                        width: calc(100% - 20px); /* Adjust for padding */
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        resize: vertical; /* Allows vertical resizing */
+                        box-sizing: border-box;
+                    "></textarea>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="activityDate" style="display: block; font-size: 14px; color: #555; margin-bottom: 8px;">Date</label>
+                    <!-- 1.2.3. Date Picker -->
+                    <input type="date" id="activityDate" value="2023-10-03" style="
+                        width: calc(100% - 20px);
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        box-sizing: border-box;
+                    ">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="activityTime" style="display: block; font-size: 14px; color: #555; margin-bottom: 8px;">Time</label>
+                    <!-- 1.2.4. Time Picker -->
+                    <input type="time" id="activityTime" value="10:00" style="
+                        width: calc(100% - 20px);
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 8px;
+                        font-size: 16px;
+                        box-sizing: border-box;
+                    ">
+                </div>
+            </div>
+
+            <!-- 1.3. Modal Footer (Bottom Bar) -->
+            <div style="
+                background-color: #f8f8f8;
+                border-top: 1px solid #eee;
+                padding: 10px 15px;
+                display: flex;
+                justify-content: flex-end; /* Aligns buttons to the right */
+                gap: 10px; /* Space between buttons */
+                height: 60px;
+                align-items: center;
+                flex-shrink: 0;
+                box-sizing: border-box;
+            ">
+                <!-- 1.3.1. Save Activity Button -->
+                <button style="
+                    padding: 10px 20px;
+                    border: none;
+                    border-radius: 8px;
+                    background-color: #4CAF50;
+                    color: white;
+                    font-size: 16px;
+                    cursor: pointer;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    box-sizing: border-box;
+                ">Save Activity</button>
+            </div>
+        </div>
+
+        <!-- III. Search Functionality (Overlay/State Change) -->
+        <!-- This view appears when the Search Button is tapped. Initially hidden. -->
+        <div id="searchOverlay" style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 90; /* Lower than Add Activity Modal, but higher than main content */
+            display: none; /* Initially hidden, will be set to 'flex' by JS */
+            flex-direction: column;
+            box-sizing: border-box;
+        ">
+            <!-- 1. Search Bar (Container - Overlays App Header) -->
+            <div style="
+                background-color: #f8f8f8;
+                border-bottom: 1px solid #eee;
+                padding: 10px 15px;
+                display: flex;
+                align-items: center;
+                height: 50px;
+                flex-shrink: 0;
+                box-sizing: border-box;
+            ">
+                <!-- 1.1. Close Search Button (Back Arrow) -->
+                <span id="closeSearchButton" style="
+                    font-size: 24px;
+                    color: #777;
+                    cursor: pointer;
+                    margin-right: 10px;
+                    user-select: none;
+                ">&#x2190;</span> <!-- Unicode Left Arrow -->
+                <!-- 1.2. Search Input Field -->
+                <input type="text" placeholder="Search activities..." style="
+                    flex-grow: 1;
+                    padding: 8px 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    outline: none; /* Removes default focus outline */
+                    box-sizing: border-box;
+                ">
+                <!-- 1.3. Clear Search Button (Small 'X' Icon - Optional) -->
+                <span style="
+                    font-size: 18px;
+                    color: #aaa;
+                    margin-left: -30px; /* Positions 'X' inside the input field visually */
+                    cursor: pointer;
+                    z-index: 1; /* Ensures it's clickable over the input */
+                    user-select: none;
+                ">&#x2715;</span> <!-- Unicode 'X' Icon -->
+            </div>
+
+            <!-- 2. Search Results List Container (Scrollable Area) -->
+            <div style="
+                flex-grow: 1;
+                overflow-y: scroll;
+                -webkit-overflow-scrolling: touch;
+                padding: 15px;
+                box-sizing: border-box;
+            ">
+                <!-- 2.1. Search Result Item (Multiple instances) -->
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    box-sizing: border-box;
+                ">
+                    <span style="
+                        font-size: 20px;
+                        margin-right: 15px;
+                        color: #FFC107;
+                    ">&#9733;</span>
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-weight: bold; font-size: 16px; color: #333;">Team Meeting</span>
+                        <span style="display: block; font-size: 13px; color: #777;">October 3, 10:00 AM</span>
+                    </div>
+                </div>
+
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    box-sizing: border-box;
+                ">
+                    <span style="
+                        font-size: 20px;
+                        margin-right: 15px;
+                        color: #2196F3;
+                    ">&#128172;</span>
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-weight: bold; font-size: 16px; color: #333;">Client Call</span>
+                        <span style="display: block; font-size: 13px; color: #777;">October 3, 02:30 PM</span>
+                    </div>
+                </div>
+
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    padding: 12px 0;
+                    border-bottom: 1px solid #eee;
+                    box-sizing: border-box;
+                ">
+                    <span style="
+                        font-size: 20px;
+                        margin-right: 15px;
+                        color: #FF5722;
+                    ">&#127860;</span>
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-weight: bold; font-size: 16px; color: #333;">Coffee Break</span>
+                        <span style="display: block; font-size: 13px; color: #777;">October 3, 04:00 PM</span>
+                    </div>
+                </div>
+
+                <!-- 2.2. No Search Results Message (Text Label) -->
+                <!-- This message would typically be conditionally displayed if no results are found. -->
+                <!-- <div style="text-align: center; color: #999; padding: 20px; font-size: 16px;">No results found.</div> -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Basic JavaScript for toggling views -->
+    <!-- While not "inline CSS", this JS is essential for demonstrating the described interactive states. -->
+    <script>
+        const mainCalendarView = document.getElementById('mainCalendarView');
+        const addActivityFab = document.getElementById('addActivityFab');
+        const addActivityModal = document.getElementById('addActivityModal');
+        const cancelAddActivityButton = document.getElementById('cancelAddActivityButton');
+        const searchButton = document.getElementById('searchButton');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const closeSearchButton = document.getElementById('closeSearchButton');
+
+        // Function to show Add Activity Modal
+        addActivityFab.onclick = () => {
+            mainCalendarView.style.display = 'none'; // Hide main view
+            searchOverlay.style.display = 'none'; // Ensure search is hidden
+            addActivityModal.style.display = 'flex'; // Show modal
+        };
+
+        // Function to hide Add Activity Modal
+        cancelAddActivityButton.onclick = () => {
+            addActivityModal.style.display = 'none'; // Hide modal
+            mainCalendarView.style.display = 'flex'; // Show main view
+        };
+
+        // Function to show Search Overlay
+        searchButton.onclick = () => {
+            mainCalendarView.style.display = 'none'; // Hide main view
+            addActivityModal.style.display = 'none'; // Ensure modal is hidden
+            searchOverlay.style.display = 'flex'; // Show search overlay
+        };
+
+        // Function to hide Search Overlay
+        closeSearchButton.onclick = () => {
+            searchOverlay.style.display = 'none'; // Hide search overlay
+            mainCalendarView.style.display = 'flex'; // Show main view
+        };
+    </script>
+
+</body>
+</html>

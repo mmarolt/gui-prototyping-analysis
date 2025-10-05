@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Forms Page</title>
+</head>
+<body style="margin: 0; font-family: 'Roboto', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #e0e0e0;">
+
+    <!-- Mobile Frame: Simulates a device screen with specified dimensions (375x667px) -->
+    <!-- Acts as the Root Layout (CoordinatorLayout) for positioning FAB and managing content -->
+    <div class="mobile-frame" style="
+        width: 375px;
+        height: 667px;
+        border: 1px solid #ccc;
+        margin: 20px auto; /* Center the mobile frame on the page */
+        overflow: hidden; /* Ensures content stays within bounds, crucial for fixed/absolute elements */
+        position: relative; /* Essential for positioning the FAB relative to this container */
+        background-color: #f0f0f0; /* Overall page background */
+        display: flex;
+        flex-direction: column; /* Stacks App Bar, Content, etc., vertically */
+        box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for the device frame */
+        border-radius: 8px; /* Rounded corners for the device frame */
+    ">
+
+        <!-- I. Top App Bar (Header Area) -->
+        <!-- This is the default App Bar, visible when not in multi-selection mode -->
+        <div class="app-bar" style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px; /* Horizontal padding, no vertical padding as height is fixed */
+            min-height: 56px; /* Standard AppBar height */
+            background-color: #6200ee; /* Primary color for the App Bar */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Shadow for depth */
+            z-index: 5; /* Ensures it's above main content but below CAB */
+            flex-shrink: 0; /* Prevents the App Bar from shrinking if content needs more space */
+        ">
+            <!-- Left Section: Page Title/App Name -->
+            <span style="font-size: 20px; font-weight: bold;">My Forms</span>
+
+            <!-- Right Section: Action Icons -->
+            <div style="display: flex; gap: 16px;">
+                <!-- Search Icon (9) -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none;">&#128269;</button> <!-- 🔍 -->
+                <!-- Information Icon (7) -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none;">&#9432;</button> <!-- ⓘ -->
+                <!-- Messaging Icon (8) with Badge -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none; position: relative;">
+                    &#128172; <!-- 💬 -->
+                    <span style="
+                        position: absolute;
+                        top: -5px;
+                        right: -5px;
+                        background-color: #ff4081; /* Accent color for badge */
+                        color: white;
+                        border-radius: 50%;
+                        padding: 2px 6px;
+                        font-size: 12px;
+                        line-height: 1; /* Ensures text is centered vertically */
+                        min-width: 10px; /* Minimum width for single digits */
+                        text-align: center;
+                        border: 1px solid #ff4081; /* Matches background for a seamless look */
+                    ">3</span>
+                </button>
+                <!-- User Profile Icon (10) -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none;">&#128100;</button> <!-- 👤 -->
+            </div>
+        </div>
+
+        <!-- Contextual Action Bar (CAB) - Dynamically appearing -->
+        <!-- To activate CAB, change 'display: none;' to 'display: flex;' and set 'display: none;' for '.app-bar' -->
+        <div class="cab" style="
+            display: none; /* Hidden by default */
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            min-height: 56px;
+            background-color: #00796b; /* A distinct color for CAB */
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: absolute; /* Overlays the regular App Bar */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10; /* Ensures CAB is on top of the regular App Bar */
+            flex-shrink: 0;
+        ">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <!-- Close/Cancel Selection Icon -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none;">&#x2715;</button> <!-- ✕ -->
+                <!-- Selection Counter -->
+                <span style="font-size: 18px; font-weight: 500;">3 items selected</span>
+            </div>
+            <div style="display: flex; gap: 16px;">
+                <!-- Document Export/Sharing Icon (11) -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none;">&#x2197;</button> <!-- ↗ -->
+                <!-- Example Delete Action (Implicit Other Bulk Actions) -->
+                <button style="background: none; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; outline: none;">&#x1F5D1;</button> <!-- 🗑️ -->
+            </div>
+        </div>
+
+        <!-- II. Main Content Area: Form List Display & Sorting -->
+        <!-- Occupies remaining vertical space, contains sort bar and scrollable list -->
+        <div class="main-content" style="
+            flex-grow: 1; /* Allows this container to take all available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for the content within */
+            padding-bottom: 80px; /* Provides space at the bottom to prevent FAB from obscuring list items */
+            box-sizing: border-box; /* Includes padding in the element's total height */
+            display: flex;
+            flex-direction: column; /* Stacks the sort bar and form list vertically */
+        ">
+
+            <!-- Sort Control Bar -->
+            <div class="sort-bar" style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 16px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #eee;
+                box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle shadow below the sort bar */
+                flex-shrink: 0; /* Prevents the sort bar from shrinking */
+            ">
+                <span style="font-size: 14px; color: #555;">Sorted by: Date (Newest)</span>
+                <!-- Sort Control (5) Icon -->
+                <button style="background: none; border: none; color: #6200ee; font-size: 20px; cursor: pointer; padding: 4px; outline: none;">&#x2195;</button> <!-- ↕ -->
+            </div>
+
+            <!-- Form List Display (2) -->
+            <!-- This is the scrollable container for individual form items -->
+            <div class="form-list" style="
+                padding: 8px 0; /* Vertical padding around the list items */
+                flex-grow: 1; /* Allows the list to fill remaining space and handle scrolling */
+            ">
+                <!-- Individual Form List Item (6, 3, 4) - Normal State Example -->
+                <div class="list-item" style="
+                    display: flex;
+                    align-items: center;
+                    background-color: white;
+                    margin: 8px 16px; /* Spacing between list items and from frame edges */
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Card-like shadow */
+                    cursor: pointer; /* Indicates tappable item */
+                    transition: background-color 0.2s ease; /* Smooth hover/tap feedback */
+                ">
+                    <!-- Conditional Selection Indicator (hidden by default) -->
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <!-- Form Name Display (3) -->
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">Project Proposal Form</span>
+                        <!-- Last Modified Date Display (4) -->
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-26 10:30 AM</span>
+                    </div>
+                </div>
+
+                <!-- Individual Form List Item - Normal State Example -->
+                <div class="list-item" style="
+                    display: flex;
+                    align-items: center;
+                    background-color: white;
+                    margin: 8px 16px;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    cursor: pointer;
+                    transition: background-color 0.2s ease;
+                ">
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">Client Onboarding Checklist</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-25 04:15 PM</span>
+                    </div>
+                </div>
+
+                <!-- Individual Form List Item - Multi-selection State Example -->
+                <!-- This item is styled to show how it would look when selected (checkbox visible, different background/border) -->
+                <div class="list-item selected" style="
+                    display: flex;
+                    align-items: center;
+                    background-color: #e3f2fd; /* Light blue background for selected item */
+                    margin: 8px 16px;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    cursor: pointer;
+                    border: 2px solid #2196f3; /* Blue border for selected item */
+                    transition: background-color 0.2s ease;
+                ">
+                    <!-- Conditional Selection Indicator (visible when selected) -->
+                    <input type="checkbox" class="selection-indicator" checked style="margin-right: 12px;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">Expense Report Template</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-24 09:00 AM</span>
+                    </div>
+                </div>
+
+                <!-- More List Items to demonstrate scrolling behavior -->
+                <div class="list-item" style="display: flex; align-items: center; background-color: white; margin: 8px 16px; padding: 12px 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: background-color 0.2s ease;">
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">Vacation Request Form</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-23 02:00 PM</span>
+                    </div>
+                </div>
+                <div class="list-item" style="display: flex; align-items: center; background-color: white; margin: 8px 16px; padding: 12px 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: background-color 0.2s ease;">
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">Performance Review Sheet</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-22 11:00 AM</span>
+                    </div>
+                </div>
+                <div class="list-item" style="display: flex; align-items: center; background-color: white; margin: 8px 16px; padding: 12px 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: background-color 0.2s ease;">
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">New Hire Onboarding Form</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-21 03:45 PM</span>
+                    </div>
+                </div>
+                <div class="list-item" style="display: flex; align-items: center; background-color: white; margin: 8px 16px; padding: 12px 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: background-color 0.2s ease;">
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">Travel Expense Claim</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-20 10:00 AM</span>
+                    </div>
+                </div>
+                 <div class="list-item" style="display: flex; align-items: center; background-color: white; margin: 8px 16px; padding: 12px 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: background-color 0.2s ease;">
+                    <input type="checkbox" class="selection-indicator" style="margin-right: 12px; display: none;">
+                    <div style="flex-grow: 1;">
+                        <span style="display: block; font-size: 16px; font-weight: bold; color: #333;">IT Support Request</span>
+                        <span style="display: block; font-size: 12px; color: #777; margin-top: 4px;">Last Modified: 2023-10-19 01:00 PM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- III. Floating Action Button (FAB) -->
+        <!-- 'New Document' Button (1) anchored to bottom-right -->
+        <button class="fab" style="
+            position: absolute; /* Positioned relative to the '.mobile-frame' parent */
+            bottom: 16px; /* 16px from the bottom edge */
+            right: 16px; /* 16px from the right edge */
+            width: 56px; /* Standard FAB size */
+            height: 56px;
+            border-radius: 50%; /* Makes the button perfectly circular */
+            background-color: #03a9f4; /* Accent color for FAB */
+            color: white;
+            border: none;
+            font-size: 32px; /* Size of the '+' icon */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Prominent shadow for floating effect */
+            cursor: pointer;
+            z-index: 100; /* Ensures FAB is on top of all other content */
+            outline: none; /* Removes the default focus outline */
+            transition: background-color 0.2s ease; /* Smooth color transition on interaction */
+        ">
+            &#x2795; <!-- Plus icon -->
+        </button>
+    </div>
+
+</body>
+</html>

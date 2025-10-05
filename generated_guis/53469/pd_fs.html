@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Product Catalog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile page */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            height: 100%; /* Ensure body takes full viewport height */
+            width: 100%;  /* Ensure body takes full viewport width */
+            display: flex; /* Use flexbox for main page layout */
+            flex-direction: column; /* Stack sections vertically */
+            overflow-x: hidden; /* Prevent horizontal scrolling of the entire page */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        /* 1. Top Section (Search & Quick Actions) */
+        .top-section {
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            z-index: 10; /* Ensure it stays above scrollable content */
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: #f0f0f0;
+            border-radius: 25px; /* Fully rounded corners for search bar */
+            padding: 8px 15px;
+            margin-bottom: 15px;
+        }
+
+        .search-bar .search-icon {
+            font-size: 18px;
+            color: #888;
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            flex-grow: 1; /* Input field takes available space */
+            border: none;
+            background: transparent;
+            outline: none; /* Remove outline on focus */
+            font-size: 16px;
+            color: #333;
+            padding: 0; /* Remove default input padding */
+        }
+
+        .search-bar input::placeholder {
+            color: #aaa;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-around; /* Evenly space buttons */
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none; /* Remove underline from links */
+            color: #555;
+            font-size: 12px;
+            padding: 5px 0;
+            flex-basis: 30%; /* Allocate space for each button */
+            text-align: center;
+        }
+
+        .action-button .icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        /* 2. Main Content Section (Vertically Scrollable) */
+        .main-content {
+            flex-grow: 1; /* Allows this section to fill remaining vertical space */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 15px 0; /* Vertical padding, horizontal padding for content is inside sections */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .section-heading {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 0 15px 15px 15px; /* Margin around headings */
+            text-align: left;
+        }
+
+        .horizontal-scroll-container {
+            display: flex; /* Arrange products horizontally */
+            overflow-x: auto; /* Enable horizontal scrolling */
+            padding: 0 15px 15px 15px; /* Padding for the ends of the scroll view */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+        }
+
+        .horizontal-scroll-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+        }
+
+        .product-item {
+            flex-shrink: 0; /* Prevent items from shrinking */
+            width: 150px; /* Fixed width for each product item */
+            margin-right: 15px; /* Space between items */
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: left;
+            padding-bottom: 10px;
+        }
+
+        .product-item:last-child {
+            margin-right: 0; /* No margin on the last item in a row */
+        }
+
+        .product-image {
+            width: 100%;
+            height: 120px; /* Fixed height for images */
+            background-color: #e0e0e0; /* Placeholder background color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #f0f0f0; /* Slight separator */
+        }
+
+        .product-name {
+            font-size: 14px;
+            color: #333;
+            padding: 0 8px;
+            white-space: normal; /* Allow text to wrap */
+            line-height: 1.3; /* Adjust line height for readability */
+            height: 2.6em; /* Ensure consistent height for names (approx 2 lines) */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+        }
+
+        /* 3. Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #fff;
+            border-top: 1px solid #eee; /* Separator from content */
+            padding: 10px 0;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+            z-index: 10; /* Ensure it stays above scrollable content */
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #888;
+            font-size: 10px;
+            flex: 1; /* Distribute space evenly among nav items */
+        }
+
+        .nav-item .nav-icon {
+            font-size: 22px;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: #007bff; /* Highlight color for the active tab */
+        }
+
+        .nav-item.active .nav-icon {
+             color: #007bff; /* Highlight color for the active tab icon */
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Section (Search & Quick Actions) -->
+    <div class="top-section">
+        <div class="search-bar">
+            <span class="search-icon">&#x1F50D;</span> <!-- Magnifying Glass Icon -->
+            <input type="text" placeholder="Search for products or suppliers">
+        </div>
+        <div class="action-buttons">
+            <a href="#" class="action-button">
+                <span class="icon">&#x1F4AC;</span> <!-- Speech Bubble Icon -->
+                <span>Messages</span>
+            </a>
+            <a href="#" class="action-button">
+                <span class="icon">&#x1F4C4;</span> <!-- Page with Curl Icon (for quotations) -->
+                <span>Get Quotations</span>
+            </a>
+            <a href="#" class="action-button">
+                <span class="icon">&#x2764;</span> <!-- Red Heart Icon -->
+                <span>Favorites</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content Section (Vertically Scrollable) -->
+    <div class="main-content">
+        <!-- 'What's Popular' Section -->
+        <h2 class="section-heading">What's Popular</h2>
+        <div class="horizontal-scroll-container">
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Ergonomic Office Chair with Lumbar Support</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Smart Home Speaker with Voice Assistant</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Wireless Bluetooth Earbuds with Charging Case</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Portable Power Bank 10000mAh Fast Charging</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">High-Definition Webcam for Video Conferencing</div>
+            </div>
+        </div>
+
+        <!-- 'Don't Miss' Section -->
+        <h2 class="section-heading">Don't Miss</h2>
+        <div class="horizontal-scroll-container">
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Luxury Leather Wallet with RFID Protection</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">High-Performance Gaming Laptop 16GB RAM</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Noise-Cancelling Over-Ear Headphones</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Fitness Tracker Watch with Heart Rate Monitor</div>
+            </div>
+            <div class="product-item">
+                <div class="product-image">Image</div>
+                <div class="product-name">Compact Espresso Machine for Home Baristas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <span class="nav-icon">&#x1F3E0;</span> <!-- House Icon -->
+            <span>Home</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">&#x1F9ED;</span> <!-- Compass Icon -->
+            <span>Discover</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">&#x1F6CD;</span> <!-- Shopping Bags Icon -->
+            <span>Easy Sourcing</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="nav-icon">&#x1F464;</span> <!-- Person Icon -->
+            <span>My Account</span>
+        </a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Graphic Design Mobile App</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Optional: Include a Material Design typography font like Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Reset and Material Design Color Variables (from Material 3 color system) */
+        :root {
+            /* Light Theme Colors */
+            --md-sys-color-primary: #6750A4;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-primary-container: #EADDFF;
+            --md-sys-color-on-primary-container: #21005D;
+            --md-sys-color-secondary: #625B71;
+            --md-sys-color-on-secondary: #FFFFFF;
+            --md-sys-color-secondary-container: #E8DEF8;
+            --md-sys-color-on-secondary-container: #1D192B;
+            --md-sys-color-tertiary: #7D5260;
+            --md-sys-color-on-tertiary: #FFFFFF;
+            --md-sys-color-tertiary-container: #FFD8E4;
+            --md-sys-color-on-tertiary-container: #31111D;
+            --md-sys-color-error: #B3261E;
+            --md-sys-color-on-error: #FFFFFF;
+            --md-sys-color-error-container: #F9DEDC;
+            --md-sys-color-on-error-container: #410E0B;
+            --md-sys-color-background: #FFFBFE;
+            --md-sys-color-on-background: #1C1B1F;
+            --md-sys-color-surface: #FFFBFE;
+            --md-sys-color-on-surface: #1C1B1F;
+            --md-sys-color-surface-variant: #E7E0EC;
+            --md-sys-color-on-surface-variant: #49454F;
+            --md-sys-color-outline: #79747E;
+            --md-sys-color-shadow: #000000;
+            --md-sys-color-inverse-surface: #313033;
+            --md-sys-color-inverse-on-surface: #F4EFF4;
+            --md-sys-color-inverse-primary: #D0BCFF;
+            
+            /* Surface Tones (Material 3) */
+            --md-sys-color-surface-container-lowest: #FFFFFF;
+            --md-sys-color-surface-container-low: #F7F2F6;
+            --md-sys-color-surface-container: #F3EDF7; /* Often used for app bars */
+            --md-sys-color-surface-container-high: #EDE6F0;
+            --md-sys-color-surface-container-highest: #E6E0E7;
+
+            /* Custom App Variables */
+            --app-bar-height: 56px; /* Standard Material Top/Bottom App Bar height */
+            --bottom-sheet-max-height: 460px; /* Approximately 70% of 667px screen height */
+        }
+
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body and app container for screen simulation */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0; /* Page background, outside the simulated device */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent body scroll if content overflows */
+        }
+
+        /* Simulates the mobile device screen */
+        .app-container {
+            width: 375px; /* Mobile screen width */
+            height: 667px; /* Mobile screen height */
+            background-color: var(--md-sys-color-background);
+            border-radius: 24px; /* Soft rounded corners, simulating a device */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), /* Inner shadow for depth */
+                        0 20px 40px rgba(0, 0, 0, 0.2); /* Outer shadow for device presence */
+            position: relative; /* Crucial for absolute positioning of bars and sheet */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensures child elements don't spill out */
+        }
+
+        /* Reusable Icon Button Styling */
+        .icon-button {
+            background: none;
+            border: none;
+            color: var(--md-sys-color-on-surface-variant);
+            cursor: pointer;
+            padding: 12px; /* Material recommends 48x48dp touch target for 24dp icons */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+            font-size: 24px; /* Default Material Icon size */
+            line-height: 1; /* Ensures icons are vertically centered */
+            flex-shrink: 0; /* Prevents buttons from shrinking in flex containers */
+        }
+
+        .icon-button:hover,
+        .icon-button:focus {
+            background-color: rgba(var(--md-sys-color-on-surface-variant), 0.08);
+            outline: none;
+        }
+
+        .icon-button:disabled {
+            color: var(--md-sys-color-outline); /* Lighter color for disabled icons */
+            cursor: not-allowed;
+            background: none; /* No hover effect when disabled */
+        }
+
+        /* UI Section 1: Top App Bar */
+        .top-app-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--app-bar-height);
+            background-color: var(--md-sys-color-surface-container);
+            box-shadow: 0 2px 4px -2px var(--md-sys-color-shadow); /* Subtle bottom shadow */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px; /* Horizontal padding from Material Design */
+            z-index: 10; /* Ensures it's above canvas */
+        }
+
+        .top-app-bar .left-actions,
+        .top-app-bar .right-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px; /* Small space between adjacent icons */
+        }
+
+        .top-app-bar .app-title {
+            flex-grow: 1; /* Allows title to take available space */
+            text-align: center; /* Centers the title visually */
+            color: var(--md-sys-color-on-surface);
+            font-size: 1.125rem; /* ~18px, common for app bar titles */
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncates long titles */
+            margin: 0 8px; /* Space between icons and title */
+        }
+        
+        /* UI Section 2: Canvas Area */
+        .canvas-area {
+            flex-grow: 1; /* Takes all remaining vertical space */
+            background-color: #FFFFFF; /* Pure white canvas */
+            /* Dotted grid background using radial-gradient */
+            background-image: radial-gradient(circle, var(--md-sys-color-outline) 1px, transparent 1px);
+            background-size: 20px 20px; /* Controls spacing of dots */
+            background-position: center center; /* Centers the grid pattern */
+            margin-top: var(--app-bar-height); /* Offset from top app bar */
+            margin-bottom: var(--app-bar-height); /* Offset from bottom tool bar */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* For absolutely positioned design objects */
+        }
+
+        .canvas-area .placeholder-text {
+            color: var(--md-sys-color-outline);
+            padding: 16px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* UI Section 3: Bottom Tool Bar */
+        .bottom-tool-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--app-bar-height);
+            background-color: var(--md-sys-color-surface-container);
+            box-shadow: 0 -2px 4px -2px var(--md-sys-color-shadow); /* Shadow on top */
+            display: flex;
+            justify-content: space-around; /* Distributes icons evenly */
+            align-items: center;
+            padding: 0 16px;
+            z-index: 10; /* Ensures it's above canvas */
+        }
+
+        /* UI Section 4: Layers Panel (Bottom Sheet) */
+        .backdrop {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+            z-index: 15; /* Below layers panel, above other content */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+        }
+
+        .backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .layers-panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--md-sys-color-surface-container-lowest); /* Lighter surface for content */
+            border-top-left-radius: 28px; /* Material Design large radius */
+            border-top-right-radius: 28px;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* Elevation shadow */
+            padding-top: 16px; /* Padding above drag handle */
+            max-height: var(--bottom-sheet-max-height);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(100%); /* Initially off-screen */
+            transition: transform 0.3s ease-out, visibility 0.3s ease-out, opacity 0.3s ease-out;
+            visibility: hidden;
+            opacity: 0;
+            z-index: 20; /* Ensures it's above everything else */
+            pointer-events: none; /* Prevents interaction when hidden */
+        }
+
+        .layers-panel.active {
+            transform: translateY(0); /* Slides up */
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto; /* Allows interaction when active */
+        }
+
+        .layers-panel .drag-handle-container {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 8px; /* Space between handle and title */
+        }
+
+        .layers-panel .drag-handle {
+            width: 32px;
+            height: 4px;
+            background-color: var(--md-sys-color-outline);
+            border-radius: 2px;
+        }
+
+        .layers-panel .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px 16px 16px; /* Padding around title/close button */
+            border-bottom: 1px solid var(--md-sys-color-surface-variant); /* Subtle separator */
+        }
+
+        .layers-panel .header h2 {
+            font-size: 1.25rem; /* ~20px */
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .layers-panel .layer-list {
+            list-style: none;
+            overflow-y: auto; /* Enable scrolling for layer items */
+            padding-bottom: 16px; /* Padding at the bottom of the scroll area */
+            /* Calculate max-height: Total max-height minus header/drag-handle space */
+            max-height: calc(var(--bottom-sheet-max-height) - 80px); /* Approx. 460 - (16+8+16+40) */
+        }
+        
+        .layers-panel .layer-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--md-sys-color-on-surface);
+            font-size: 0.95rem;
+            border-bottom: 1px solid var(--md-sys-color-surface-container); /* Very subtle separator */
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .layers-panel .layer-item:last-child {
+            border-bottom: none;
+        }
+
+        .layers-panel .layer-item.selected {
+            background-color: var(--md-sys-color-primary-container); /* Highlight selected layer */
+            color: var(--md-sys-color-on-primary-container);
+        }
+        .layers-panel .layer-item.selected .drag-handle-icon,
+        .layers-panel .layer-item.selected .visibility-toggle,
+        .layers-panel .layer-item.selected .layer-icon {
+            color: var(--md-sys-color-on-primary-container); /* Adjust icon color for selected state */
+        }
+
+        .layers-panel .layer-item .drag-handle-icon {
+            margin-right: 8px;
+            color: var(--md-sys-color-outline);
+            cursor: grab;
+            font-size: 20px; /* Slightly smaller than default */
+            flex-shrink: 0;
+        }
+
+        .layers-panel .layer-item .visibility-toggle {
+            margin-right: 8px;
+            color: var(--md-sys-color-on-surface-variant);
+            cursor: pointer;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .layers-panel .layer-item .layer-icon {
+            margin-right: 12px;
+            font-size: 20px;
+            color: var(--md-sys-color-secondary);
+            flex-shrink: 0;
+        }
+
+        .layers-panel .layer-item .layer-name {
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+    <!-- Backdrop for the bottom sheet (for dismiss-on-tap-outside) -->
+    <div id="backdrop" class="backdrop"></div>
+
+    <!-- The main container simulating the mobile screen -->
+    <div class="app-container">
+        <!-- UI Section 1: Top App Bar -->
+        <div class="top-app-bar">
+            <div class="left-actions">
+                <button class="icon-button" disabled title="Undo last action">
+                    <span class="material-icons">undo</span>
+                </button>
+                <button class="icon-button" disabled title="Redo last action">
+                    <span class="material-icons">redo</span>
+                </button>
+            </div>
+            <span class="app-title">Untitled Design</span>
+            <div class="right-actions">
+                <button class="icon-button" title="Save current design">
+                    <span class="material-icons">save</span>
+                </button>
+                <button class="icon-button" title="Share design">
+                    <span class="material-icons">share</span>
+                </button>
+                <button id="layers-panel-toggle" class="icon-button" title="Toggle Layers Panel">
+                    <span class="material-icons">layers</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- UI Section 2: Canvas Area -->
+        <div class="canvas-area">
+            <p class="placeholder-text">Tap a tool below to start designing.</p>
+            <!-- Design objects (shapes, text, images) would be dynamically added here.
+                 For example, a simple rectangle:
+            <div style="position: absolute; top: 120px; left: 80px; width: 100px; height: 80px; background-color: #D0BCFF; border: 2px solid var(--md-sys-color-primary);"></div>
+            <p style="position: absolute; top: 250px; left: 60px; font-family: 'Roboto', sans-serif; font-size: 24px; color: var(--md-sys-color-on-surface);">Hello World!</p>
+            -->
+        </div>
+
+        <!-- UI Section 3: Bottom Tool Bar -->
+        <div class="bottom-tool-bar">
+            <button class="icon-button" title="Add Shape">
+                <span class="material-icons">shape_line</span>
+            </button>
+            <button class="icon-button" title="Add Text">
+                <span class="material-icons">text_fields</span>
+            </button>
+            <button class="icon-button" title="Import Image">
+                <span class="material-icons">image</span>
+            </button>
+        </div>
+
+        <!-- UI Section 4: Layers Panel (Bottom Sheet) -->
+        <div id="layers-panel" class="layers-panel">
+            <div class="drag-handle-container">
+                <div class="drag-handle"></div>
+            </div>
+            <div class="header">
+                <h2>Layers</h2>
+                <!-- A close button can be added here, though drag/tap backdrop is primary -->
+            </div>
+            <ul class="layer-list">
+                <li class="layer-item">
+                    <span class="material-icons drag-handle-icon" title="Drag to reorder">drag_indicator</span>
+                    <span class="material-icons visibility-toggle" title="Toggle visibility">visibility</span>
+                    <span class="material-icons layer-icon">image</span>
+                    <span class="layer-name">Image from Gallery (Landscape)</span>
+                </li>
+                <li class="layer-item selected">
+                    <span class="material-icons drag-handle-icon" title="Drag to reorder">drag_indicator</span>
+                    <span class="material-icons visibility-toggle" title="Toggle visibility">visibility_off</span>
+                    <span class="material-icons layer-icon">abc</span>
+                    <span class="layer-name">My First Text Element</span>
+                </li>
+                <li class="layer-item">
+                    <span class="material-icons drag-handle-icon" title="Drag to reorder">drag_indicator</span>
+                    <span class="material-icons visibility-toggle" title="Toggle visibility">visibility</span>
+                    <span class="material-icons layer-icon">add_box</span>
+                    <span class="layer-name">Primary Rectangle Shape</span>
+                </li>
+                <li class="layer-item">
+                    <span class="material-icons drag-handle-icon" title="Drag to reorder">drag_indicator</span>
+                    <span class="material-icons visibility-toggle" title="Toggle visibility">visibility</span>
+                    <span class="material-icons layer-icon">circle</span>
+                    <span class="layer-name">Decorative Circle</span>
+                </li>
+                <li class="layer-item">
+                    <span class="material-icons drag-handle-icon" title="Drag to reorder">drag_indicator</span>
+                    <span class="material-icons visibility-toggle" title="Toggle visibility">visibility</span>
+                    <span class="material-icons layer-icon">text_format</span>
+                    <span class="layer-name">Title Text "Awesome Design"</span>
+                </li>
+                 <li class="layer-item">
+                    <span class="material-icons drag-handle-icon" title="Drag to reorder">drag_indicator</span>
+                    <span class="material-icons visibility-toggle" title="Toggle visibility">visibility</span>
+                    <span class="material-icons layer-icon">image</span>
+                    <span class="layer-name">Background Image Layer</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle the Layers Panel visibility
+        document.addEventListener('DOMContentLoaded', () => {
+            const layersPanelToggle = document.getElementById('layers-panel-toggle');
+            const layersPanel = document.getElementById('layers-panel');
+            const backdrop = document.getElementById('backdrop');
+
+            const toggleLayersPanel = () => {
+                layersPanel.classList.toggle('active');
+                backdrop.classList.toggle('active');
+            };
+
+            layersPanelToggle.addEventListener('click', toggleLayersPanel);
+
+            // Close layers panel by tapping the backdrop
+            backdrop.addEventListener('click', toggleLayersPanel);
+        });
+    </script>
+</body>
+</html>

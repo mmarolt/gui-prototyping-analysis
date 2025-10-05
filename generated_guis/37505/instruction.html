@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardScan Pro - Mobile App</title>
+    <style>
+        /* General Mobile Reset and Base Styles */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f2f5; /* Light grey background for the 'device' outside the app */
+            color: #333;
+            display: flex;
+            justify-content: center; /* Center the app container horizontally */
+            align-items: center; /* Center the app container vertically */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box;
+        }
+
+        /* Main App Container - Simulates a mobile device screen */
+        .app-container {
+            width: 375px; /* Specific width for Google Chrome Dev Tools simulation */
+            height: 667px; /* Specific height for Google Chrome Dev Tools simulation */
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15); /* Soft shadow for app depth */
+            border-radius: 20px; /* Rounded corners for the app screen */
+            overflow: hidden; /* Ensures content respects rounded corners */
+            display: flex;
+            flex-direction: column; /* Stack header, main content, and nav vertically */
+            box-sizing: border-box;
+        }
+
+        /* App Header */
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #6A1B9A; /* Deep Purple */
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .header-icon {
+            font-size: 1.5em; /* Larger icons for tap targets */
+            cursor: pointer;
+            padding: 5px; /* Add padding to make icons easier to tap */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Allows main content to take up all available space */
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically center content */
+            align-items: center; /* Horizontally center content */
+            text-align: center;
+            gap: 30px; /* Space between the main button and feature sections */
+            overflow-y: auto; /* Enable scrolling if content exceeds height */
+        }
+
+        /* 'Add a New Card' Button */
+        .add-card-button {
+            width: 90%; /* Wide button for prominence */
+            max-width: 300px; /* Limit max width on larger screens (though fixed here) */
+            padding: 22px 0;
+            background-color: #007BFF; /* Primary blue color */
+            color: #fff;
+            border: none;
+            border-radius: 35px; /* Rounded pill shape */
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); /* Soft shadow for depth */
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* Space between icon and text */
+        }
+        .add-card-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px); /* Slight lift on hover */
+        }
+        .add-card-button .icon {
+            font-size: 1.5em;
+            line-height: 1;
+        }
+
+        /* Feature Sections (WebSync, Reminders) */
+        .feature-section {
+            width: 90%;
+            max-width: 300px;
+            padding: 18px;
+            background-color: #f8f9fa; /* Light background for feature cards */
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .feature-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .feature-section .icon {
+            font-size: 2em; /* Large icons for visual appeal */
+            line-height: 1;
+        }
+        .feature-text strong {
+            display: block; /* Make title bold and on its own line */
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .feature-text p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .feature-text a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .feature-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around; /* Distribute items evenly */
+            padding: 10px 0;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+            box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.05); /* Shadow for nav bar */
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column; /* Stack icon and text */
+            align-items: center;
+            text-decoration: none;
+            color: #777; /* Default grey color */
+            font-size: 0.75em; /* Smaller text for nav items */
+            padding: 8px 0; /* Make entire area tappable */
+            min-width: 80px; /* Ensure sufficient tap area */
+            transition: color 0.3s ease;
+        }
+        .nav-item:hover, .nav-item.active {
+            color: #6A1B9A; /* Active/hover color: Deep Purple */
+        }
+        .nav-item-icon {
+            font-size: 1.8em; /* Larger icons for nav bar */
+            margin-bottom: 4px;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- App Header: Settings, Title, Favorites -->
+        <div class="app-header">
+            <span class="header-icon" title="Settings">⚙️</span>
+            <span>CardScan Pro</span>
+            <span class="header-icon" title="Favorites">⭐</span>
+        </div>
+
+        <!-- Main Content Area: Add Card Button, WebSync, Reminders -->
+        <div class="main-content">
+            <button class="add-card-button" title="Scan a new business card">
+                <span class="icon">➕</span> Add a New Card
+            </button>
+
+            <div class="feature-section" title="Set up secure cloud backup">
+                <span class="icon">☁️</span>
+                <div class="feature-text">
+                    <strong>Secure Backup</strong>
+                    <p>Protect your cards with <a href="#" onclick="return false;">WebSync Cloud Backup</a>.</p>
+                </div>
+            </div>
+
+            <div class="feature-section" title="Manage your contact reminders">
+                <span class="icon">🔔</span>
+                <div class="feature-text">
+                    <strong>Stay Organized</strong>
+                    <p>Set up <a href="#" onclick="return false;">reminders</a> for your scanned contacts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar: Reminders, Explore Cards, Update Contacts -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item" title="View and manage reminders">
+                <span class="nav-item-icon">⏰</span>
+                Reminders
+            </a>
+            <a href="#" class="nav-item active" title="Explore your collection of cards">
+                <span class="nav-item-icon">🔍</span>
+                Explore Cards
+            </a>
+            <a href="#" class="nav-item" title="Update your phone contacts">
+                <span class="nav-item-icon">🔄</span>
+                Update Contacts
+            </a>
+        </div>
+    </div>
+</body>
+</html>

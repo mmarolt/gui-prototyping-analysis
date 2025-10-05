@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Earn Coins</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* General body and HTML settings for mobile screen simulation */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5; /* Light grey background for the page */
+            color: #333; /* Default text color */
+            width: 375px; /* Target width for Google Chrome Dev Tools simulation */
+            height: 667px; /* Target height for Google Chrome Dev Tools simulation */
+            overflow: hidden; /* Prevent body scrolling, allow inner sections to scroll */
+            display: flex;
+            flex-direction: column; /* Arrange sections vertically */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        /* Basic styling for buttons */
+        button {
+            cursor: pointer;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            outline: none; /* Remove outline on focus */
+            -webkit-appearance: none; /* Remove default button styles for consistency */
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* Styling for section headings */
+        .section-heading {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 15px 15px 10px 15px; /* Top, right, bottom, left margin */
+            text-align: left;
+            color: #555;
+        }
+
+        /* Styling for list items within scrollable sections */
+        .list-item {
+            display: flex;
+            justify-content: space-between; /* Space out description and button */
+            align-items: center; /* Vertically align items */
+            padding: 12px 15px;
+            background-color: #fff; /* White background for list items */
+            border-bottom: 1px solid #eee; /* Subtle separator between items */
+        }
+        .list-item:last-child {
+            border-bottom: none; /* No border for the last item in a list */
+        }
+        .list-item-description {
+            flex-grow: 1; /* Allow description to take available space */
+            text-align: left;
+            margin-right: 10px; /* Space between description and button */
+        }
+
+        /* 1. Top Section (Header): Coin Balance Display */
+        .coin-balance {
+            display: flex;
+            justify-content: flex-end; /* Align content to the right */
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow for depth */
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4CAF50; /* Green color for coin balance */
+        }
+        .coin-icon {
+            font-size: 1.2em; /* Size of the coin icon */
+            margin-right: 5px;
+        }
+
+        /* Main content area that will handle overall scrolling */
+        .main-content {
+            flex-grow: 1; /* Allows this section to fill available vertical space */
+            overflow-y: auto; /* Enable vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-bottom: 10px; /* Padding at the bottom of the scrollable area */
+        }
+
+        /* 2. "Social Offers to Share" Section */
+        .social-offers-list {
+            background-color: #fff; /* White background for the list */
+            margin-bottom: 15px; /* Space after this section */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .social-offers-list .share-button {
+            background-color: #007bff; /* Blue for share buttons */
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+
+        /* 3. "More Ways to Earn" Section */
+        .more-ways-to-earn-section {
+            background-color: #fff;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .facebook-button {
+            width: calc(100% - 30px); /* Full width minus 15px padding on each side */
+            background-color: #3b5998; /* Facebook blue */
+            color: white;
+            margin: 0 15px 10px 15px; /* Top 0, right 15px, bottom 10px, left 15px */
+            padding: 12px 15px;
+            font-weight: bold;
+        }
+
+        /* Toggle Switch styling */
+        .toggle-switch-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee; /* Separator */
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4CAF50; /* Green when checked */
+        }
+        input:focus + .slider {
+            box-shadow: 0 0 1px #4CAF50;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px); /* Move the slider thumb */
+        }
+
+        .simple-offers-list .action-button {
+            background-color: #4CAF50; /* Green for action buttons */
+            color: white;
+            padding: 8px 12px;
+            font-size: 0.9em;
+        }
+
+        /* 4. Bottom Section (Footer/Action): Cash Out Button */
+        .cash-out-button {
+            width: 100%; /* Full width */
+            background-color: #ff5722; /* Prominent orange color */
+            color: white;
+            padding: 15px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: auto; /* Pushes the button to the bottom in a flex column */
+            border-radius: 0; /* No border radius for a full-width button */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Shadow at the top of the button */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Section (Header) -->
+    <div class="coin-balance">
+        <span class="coin-icon">&#128176;</span> <!-- Unicode for a coin icon -->
+        Coins: 1,250
+    </div>
+
+    <!-- Main content area, scrollable -->
+    <div class="main-content">
+        <!-- 2. "Social Offers to Share" Section -->
+        <div class="section-heading">Social Offers to Share</div>
+        <div class="social-offers-list">
+            <div class="list-item">
+                <span class="list-item-description">Share "Get 20% off your first order" on Facebook</span>
+                <button class="share-button">Share</button>
+            </div>
+            <div class="list-item">
+                <span class="list-item-description">Invite a friend and get 50 coins!</span>
+                <button class="share-button">Share</button>
+            </div>
+            <div class="list-item">
+                <span class="list-item-description">Tweet about us and earn 10 coins!</span>
+                <button class="share-button">Share</button>
+            </div>
+            <div class="list-item">
+                <span class="list-item-description">Share your favorite product to earn 15 coins</span>
+                <button class="share-button">Share</button>
+            </div>
+            <div class="list-item">
+                <span class="list-item-description">Get 100 coins for sharing a special offer</span>
+                <button class="share-button">Share</button>
+            </div>
+        </div>
+
+        <!-- 3. "More Ways to Earn" Section -->
+        <div class="section-heading">More Ways to Earn</div>
+        <div class="more-ways-to-earn-section">
+            <button class="facebook-button">Log in with Facebook</button>
+
+            <div class="toggle-switch-container">
+                <span>Enable Lock Screen Offers</span>
+                <label class="switch">
+                    <input type="checkbox" checked> <!-- Toggle switch input -->
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="simple-offers-list">
+                <div class="list-item">
+                    <span class="list-item-description">Watch a short video ad</span>
+                    <button class="action-button">Earn 5 Coins</button>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-description">Complete a survey (5 min)</span>
+                    <button class="action-button">Earn 20 Coins</button>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-description">Download and try our partner app</span>
+                    <button class="action-button">Earn 100 Coins</button>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-description">Read an article for 30 seconds</span>
+                    <button class="action-button">Earn 2 Coins</button>
+                </div>
+                <div class="list-item">
+                    <span class="list-item-description">Refer a new user to earn big!</span>
+                    <button class="action-button">Earn 250 Coins</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Bottom Section (Footer/Action) -->
+    <button class="cash-out-button">Cash Out</button>
+
+</body>
+</html>

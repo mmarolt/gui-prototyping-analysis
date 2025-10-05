@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Card Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for mobile screen simulation */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Ensures html and body take full viewport height */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8; /* Light gray background for the page */
+            width: 100%;
+            max-width: 375px; /* Constrain width to typical mobile screen size */
+            height: 100vh; /* Full viewport height */
+            margin: 0 auto; /* Center the mobile view on larger screens */
+            overflow: hidden; /* Prevent body scroll; content scrolling managed by .main-content */
+            position: relative; /* Needed for absolute positioning of .main-content */
+        }
+
+        /* Header Section */
+        .header {
+            position: fixed; /* Fixes the header at the top of the viewport */
+            top: 0;
+            left: 0;
+            width: 100%; /* Spans full width of the constrained body */
+            max-width: 375px; /* Matches body's max-width */
+            height: 60px; /* Fixed height for the header */
+            display: flex;
+            justify-content: space-between; /* Pushes buttons to left and right */
+            align-items: center; /* Vertically centers content */
+            padding: 0 15px; /* Horizontal padding */
+            background-color: #fff; /* White background for the header */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            z-index: 10; /* Ensures header is above other content */
+            box-sizing: border-box;
+        }
+
+        .header button {
+            background: none; /* No background for icon buttons */
+            border: none; /* No border */
+            font-size: 24px; /* Large font size for icons */
+            cursor: pointer; /* Indicates interactivity */
+            color: #555; /* Dark gray color for icons */
+            padding: 5px; /* Padding around icons */
+            display: flex; /* For centering icon if it's not a single char */
+            align-items: center;
+            justify-content: center;
+            outline: none; /* Remove outline on focus */
+        }
+
+        /* Main Content Area */
+        .main-content {
+            position: absolute; /* Positions content relative to the body */
+            top: 60px; /* Starts below the header */
+            bottom: 70px; /* Ends above the bottom navigation bar */
+            left: 0;
+            right: 0;
+            width: 100%; /* Fills available width */
+            max-width: 375px; /* Inherits/matches body's max-width */
+            margin: 0 auto; /* Centers the main content area */
+            
+            display: flex;
+            flex-direction: column; /* Arranges children vertically */
+            justify-content: flex-end; /* Pushes the button towards the bottom of this section */
+            align-items: center; /* Centers the button horizontally */
+            box-sizing: border-box;
+            overflow-y: auto; /* Allows content to scroll if it overflows this area */
+        }
+
+        .add-card-button {
+            padding: 20px 40px; /* Generous padding for a prominent button */
+            font-size: 1.2em; /* Larger font size */
+            background-color: #007bff; /* Primary blue color */
+            color: white; /* White text */
+            border: none;
+            border-radius: 30px; /* Rounded corners for a modern look */
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Shadow for a lifted effect */
+            margin-bottom: 30px; /* Lifts the button slightly from the bottom navigation */
+            white-space: nowrap; /* Prevents text from wrapping */
+            text-align: center;
+            outline: none; /* Remove outline on focus */
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed; /* Fixes the navigation bar at the bottom of the viewport */
+            bottom: 0;
+            left: 0;
+            width: 100%; /* Spans full width of the constrained body */
+            max-width: 375px; /* Matches body's max-width */
+            height: 70px; /* Fixed height for the navigation bar */
+            display: flex;
+            justify-content: space-around; /* Distributes items evenly with space around them */
+            align-items: center; /* Vertically centers content */
+            background-color: #fff; /* White background */
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            z-index: 10; /* Ensures nav bar is above other content */
+            box-sizing: border-box;
+        }
+
+        .bottom-nav .nav-item {
+            flex: 1; /* Each item takes equal available space */
+            height: 100%; /* Fills parent height */
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em; /* Slightly smaller font size for navigation items */
+            color: #555; /* Dark gray color */
+            display: flex;
+            flex-direction: column; /* For potential icon+text layout, currently just text */
+            justify-content: center;
+            align-items: center;
+            text-decoration: none; /* In case anchor tags are used */
+            outline: none; /* Remove outline on focus */
+        }
+
+        .bottom-nav .nav-item:hover,
+        .bottom-nav .nav-item:focus {
+            color: #007bff; /* Highlight color on hover/focus */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <!-- Favorites Icon Button (top-left) -->
+        <button class="favorites-button" aria-label="Favorites">&#x2B50;</button> <!-- Star icon -->
+        <!-- Settings Icon Button (top-right) -->
+        <button class="settings-button" aria-label="Settings">&#x2699;</button>   <!-- Gear icon -->
+    </div>
+
+    <div class="main-content">
+        <!-- 'Add a New Card' Button (bottom-center of main content area) -->
+        <button class="add-card-button">Add a New Card</button>
+    </div>
+
+    <div class="bottom-nav">
+        <!-- Navigation Item - Reminders (leftmost) -->
+        <button class="nav-item">Reminders</button>
+        <!-- Navigation Item - Explore Cards (center) -->
+        <button class="nav-item">Explore Cards</button>
+        <!-- Navigation Item - Update Contacts (rightmost) -->
+        <button class="nav-item">Update Contacts</button>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Announcement Panel</title>
+    <style>
+        /* Basic Reset & Box Sizing */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body & Main Container Styles for Mobile-First Design */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5; /* Light grey background for the page */
+            color: #333;
+            display: flex;
+            justify-content: center; /* Center the app container horizontally */
+            align-items: flex-start; /* Align to top vertically */
+            min-height: 100vh; /* Full viewport height */
+            padding: 15px; /* Padding around the app container */
+            overflow-y: auto; /* Enable scrolling if content exceeds viewport height */
+        }
+
+        /* Application Container Styling */
+        .app-container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 375px; /* Restrict width to typical mobile screen size */
+            min-height: 637px; /* Target height (667px - 2*15px padding) for the content area */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensures rounded corners are respected for children */
+        }
+
+        /* Header Styling */
+        .header {
+            background-color: #007bff; /* Primary blue for header */
+            color: #ffffff;
+            padding: 18px 20px;
+            text-align: center;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            position: relative; /* For dashboard link positioning */
+        }
+
+        .header h1 {
+            font-size: 1.4em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        /* Dashboard Link Styling */
+        .dashboard-link {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.8); /* Slightly transparent white */
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .dashboard-link:hover {
+            color: #ffffff; /* Solid white on hover */
+        }
+
+        /* Section Styling (for Recipient Selection and Message Composition) */
+        .section {
+            padding: 20px;
+            margin-bottom: 1px; /* Small visual separator */
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0; /* Light grey border */
+        }
+
+        .section:last-of-type {
+            border-bottom: none; /* No border for the last section */
+            flex-grow: 1; /* Message content section takes remaining vertical space */
+            display: flex; /* Use flex for internal layout if needed */
+            flex-direction: column;
+        }
+
+        .section h2 {
+            font-size: 1.1em;
+            color: #007bff; /* Primary blue for section titles */
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            font-weight: 500;
+        }
+
+        /* Recipient Groups Styling */
+        .group-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Space between group items */
+        }
+
+        .group-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background-color: #f8f9fa; /* Very light grey */
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+
+        .group-item:has(input:checked) {
+            background-color: #eaf3ff; /* Lighter blue when checked */
+            border-color: #007bff; /* Primary blue border when checked */
+        }
+
+        .group-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            flex-grow: 1; /* Allows label to take available space */
+        }
+
+        .group-label input[type="checkbox"] {
+            margin-right: 10px;
+            /* Custom checkbox styling */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            background-color: #fff;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .group-label input[type="checkbox"]:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .group-label input[type="checkbox"]:checked::after {
+            content: '✓'; /* Checkmark symbol */
+            color: #fff;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .group-label span {
+            font-size: 1em;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .group-count {
+            background-color: #e9ecef; /* Light grey for count background */
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 15px; /* Pill shape */
+            font-size: 0.8em;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        /* Message Input Fields Styling */
+        .form-group {
+            margin-bottom: 18px;
+            flex-shrink: 0; /* Prevent form group from shrinking */
+        }
+        .section.message-composition .form-group:last-of-type {
+            margin-bottom: 0; /* No margin below the last form group */
+            flex-grow: 1; /* Allow textarea to take remaining space */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333;
+            background-color: #fcfcfc; /* Off-white for input background */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus {
+            border-color: #007bff; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Light blue shadow on focus */
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical; /* Allow vertical resizing */
+            flex-grow: 1; /* Allows textarea to grow and fill space */
+        }
+
+        /* Footer & Send Button Styling */
+        .footer {
+            padding: 18px 20px;
+            background-color: #f8f9fa; /* Light grey footer background */
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .send-button {
+            width: 100%;
+            padding: 14px;
+            background-color: #28a745; /* Green for send button */
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+
+        .send-button:hover {
+            background-color: #218838; /* Darker green on hover */
+        }
+
+        .send-button:active {
+            transform: scale(0.99); /* Slight press effect */
+        }
+
+        /* Admin Note Styling */
+        .admin-note {
+            font-size: 0.8em;
+            color: #6c757d; /* Dark grey for muted text */
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>Announcement Panel</h1>
+            <a href="#dashboard" class="dashboard-link">Dashboard &rarr;</a>
+        </header>
+
+        <section class="section recipient-selection">
+            <h2>Select Recipients</h2>
+            <div class="group-list">
+                <div class="group-item">
+                    <label class="group-label">
+                        <input type="checkbox" name="recipients" value="all-attendees" checked>
+                        <span>All Attendees</span>
+                    </label>
+                    <span class="group-count">2,500</span>
+                </div>
+                <div class="group-item">
+                    <label class="group-label">
+                        <input type="checkbox" name="recipients" value="speakers">
+                        <span>Speakers</span>
+                    </label>
+                    <span class="group-count">120</span>
+                </div>
+                <div class="group-item">
+                    <label class="group-label">
+                        <input type="checkbox" name="recipients" value="faculty-staff">
+                        <span>Faculty & Staff</span>
+                    </label>
+                    <span class="group-count">350</span>
+                </div>
+                <div class="group-item">
+                    <label class="group-label">
+                        <input type="checkbox" name="recipients" value="graduate-students">
+                        <span>Graduate Students</span>
+                    </label>
+                    <span class="group-count">800</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section message-composition">
+            <h2>Compose Message</h2>
+            <div class="form-group">
+                <label for="message-title">Message Title</label>
+                <input type="text" id="message-title" placeholder="e.g., Important Update: Room Change">
+            </div>
+            <div class="form-group">
+                <label for="message-content">Message Content</label>
+                <textarea id="message-content" placeholder="Type your announcement here..."></textarea>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <button class="send-button">Send Announcement</button>
+            <p class="admin-note">
+                <small><em>Access restricted to event administrators only.</em></small>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

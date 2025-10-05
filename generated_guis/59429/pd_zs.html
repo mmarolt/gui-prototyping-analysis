@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alerts/Device Status</title>
+    <style>
+        /*
+         * Mobile Page Structure: Alerts/Device Status Screen
+         *
+         * This CSS is "internal CSS" meaning it's embedded within the HTML file
+         * using a <style> tag. This is generally preferred over literal `style="..."`
+         * attributes on every element for readability and maintainability, especially
+         * for complex layouts and responsive design, while still keeping all CSS
+         * "inline" within the single HTML document.
+         */
+
+        /* A. Overall Page Structure: Root Container */
+        body {
+            display: flex;
+            flex-direction: column; /* Stacks children vertically */
+            height: 100vh; /* Occupies full viewport height */
+            margin: 0; /* Remove default body margin */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5; /* Light grey background */
+            color: #333; /* Default text color */
+            width: 100vw; /* Ensure it takes full viewport width */
+            max-width: 100%;
+            overflow-x: hidden; /* Prevent horizontal scrolling issues */
+        }
+
+        /* 1. App Bar / Header (Top of the Screen) */
+        .app-bar {
+            display: flex;
+            justify-content: space-between; /* Puts title and refresh icon at ends */
+            align-items: center; /* Vertically centers items */
+            padding: 16px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            position: sticky; /* Keeps app bar visible when scrolling */
+            top: 0;
+            z-index: 1000; /* Ensures it stays on top of other content */
+        }
+
+        .app-bar__title {
+            font-size: 1.4em; /* Page Title */
+            margin: 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .refresh-button {
+            background: none; /* No background for button */
+            border: none; /* No border */
+            font-size: 24px; /* Icon size */
+            color: #007bff; /* Primary accent color */
+            cursor: pointer; /* Indicates interactivity */
+            outline: none; /* Remove outline on focus */
+            padding: 0;
+            display: flex; /* Helps center the icon */
+            align-items: center;
+            transition: color 0.2s ease-in-out; /* Smooth color transition on hover */
+        }
+
+        .refresh-button:hover {
+            color: #0056b3; /* Darker shade on hover */
+        }
+
+        /* Spinning animation for refresh icon */
+        .refresh-button.spinning .icon-spin {
+            animation: spin 1s linear infinite; /* Apply spin animation */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 2. Main Content Area (Below App Bar) */
+        .main-content {
+            flex-grow: 1; /* Occupies remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for content */
+            padding: 16px;
+            display: flex;
+            flex-direction: column; /* Allows empty state to center itself */
+        }
+
+        /* B. Alert List Display (within Main Content Area) */
+
+        /* 1. Scrollable Container */
+        .alert-list-container {
+            display: flex;
+            flex-direction: column; /* Stacks alert items vertically */
+            gap: 12px; /* Provides clear item separation */
+            /* This container will naturally scroll if its content exceeds main-content's height due to overflow-y: auto on .main-content */
+        }
+
+        /* 2. Empty State Message */
+        .empty-state {
+            flex-grow: 1; /* Takes full available height to center content */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Centers content vertically */
+            align-items: center; /* Centers content horizontally */
+            text-align: center;
+            color: #666;
+            font-size: 1.1em;
+            padding: 20px;
+            /* By default, this is hidden. Uncomment the HTML block and comment out the alert-list-container to see it. */
+        }
+
+        .empty-state__icon {
+            font-size: 48px;
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+
+        .empty-state__message {
+            margin-top: 10px;
+            max-width: 280px; /* Constrain message width for better readability */
+            line-height: 1.5;
+        }
+
+        /* C. Individual Alert Items (within the Scrollable Container) */
+
+        /* 1. Alert Item Container */
+        .alert-item {
+            background-color: #ffffff; /* Distinct background */
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow for "card" appearance */
+            display: flex;
+            flex-direction: column; /* Vertical stack for icon/message and button */
+            gap: 12px; /* Space between message and action button */
+        }
+
+        /* 2. Alert Icon & Visible Message */
+        .alert-header {
+            display: flex;
+            align-items: flex-start; /* Aligns icon and text at the top */
+            gap: 12px; /* Space between icon and message */
+        }
+
+        .alert-icon {
+            font-size: 24px; /* Icon size */
+            min-width: 24px; /* Prevents icon from shrinking */
+            /* Specific colors for different alert types */
+        }
+
+        .alert-icon--warning { color: #ffc107; } /* Yellow for warning */
+        .alert-icon--error { color: #dc3545; }   /* Red for error */
+        .alert-icon--info { color: #17a2b8; }    /* Blue for information */
+
+        .alert-message {
+            flex-grow: 1; /* Message takes up remaining space */
+            margin: 0;
+            line-height: 1.4; /* Improved readability for text */
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        /* 3. Action Button */
+        .action-button {
+            width: 100%; /* Full-width within its container */
+            padding: 12px;
+            background-color: #007bff; /* Prominent accent color */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out; /* Smooth hover effect */
+            text-transform: uppercase; /* Uppercase text for prominence */
+            letter-spacing: 0.5px;
+        }
+
+        .action-button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+        /* Responsive adjustments for smaller mobile screens (e.g., 320px width) */
+        @media (max-width: 400px) {
+            .app-bar, .main-content {
+                padding: 12px; /* Slightly reduce padding on smaller screens */
+            }
+            .app-bar__title {
+                font-size: 1.3em;
+            }
+            .alert-item {
+                padding: 14px;
+            }
+            .action-button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- A. Overall Page Structure: App Bar / Header -->
+    <header class="app-bar">
+        <h1 class="app-bar__title">Alerts</h1>
+        <button class="refresh-button" onclick="this.classList.toggle('spinning'); setTimeout(() => this.classList.toggle('spinning'), 2000);">
+            <span class="icon-spin">&#x21BB;</span> <!-- Unicode for refresh icon -->
+        </button>
+    </header>
+
+    <!-- A. Overall Page Structure: Main Content Area -->
+    <main class="main-content">
+        <!-- Conditional Display Area:
+             - Uncomment `alert-list-container` to show alerts.
+             - Uncomment `empty-state` and set its display to 'flex' (or remove 'display: none;')
+               while commenting `alert-list-container` to show empty state.
+        -->
+
+        <!-- Scenario 1: Alerts Exist (Visible by default for this example) -->
+        <div class="alert-list-container">
+            <!-- C. Individual Alert Items -->
+            <div class="alert-item">
+                <div class="alert-header">
+                    <span class="alert-icon alert-icon--warning">&#x26A0;</span> <!-- Warning sign icon -->
+                    <p class="alert-message">Device is not enrolled. Please enroll your device to receive full security benefits.</p>
+                </div>
+                <button class="action-button">ENROLL DEVICE</button>
+            </div>
+
+            <div class="alert-item">
+                <div class="alert-header">
+                    <span class="alert-icon alert-icon--error">&#x26A0;</span> <!-- Warning sign icon (often used for errors too) -->
+                    <p class="alert-message">Mobile data usage is exceeding your monthly limit. Consider disabling data for non-essential apps.</p>
+                </div>
+                <button class="action-button">REVIEW USAGE</button>
+            </div>
+
+            <div class="alert-item">
+                <div class="alert-header">
+                    <span class="alert-icon alert-icon--info">&#x2139;</span> <!-- Information sign icon -->
+                    <p class="alert-message">Software update available. Update your device to the latest version for new features and security patches.</p>
+                </div>
+                <button class="action-button">UPDATE NOW</button>
+            </div>
+
+            <div class="alert-item">
+                <div class="alert-header">
+                    <span class="alert-icon alert-icon--warning">&#x26A0;</span>
+                    <p class="alert-message">Your password will expire in 7 days. Please change it to maintain account security.</p>
+                </div>
+                <button class="action-button">CHANGE PASSWORD</button>
+            </div>
+
+            <div class="alert-item">
+                <div class="alert-header">
+                    <span class="alert-icon alert-icon--info">&#x2139;</span>
+                    <p class="alert-message">New privacy policy released. Please review the updated terms and conditions.</p>
+                </div>
+                <button class="action-button">READ POLICY</button>
+            </div>
+        </div>
+
+        <!-- Scenario 2: No Alerts (Uncomment the div below and comment out the `alert-list-container` above to see this view) -->
+        <!--
+        <div class="empty-state" style="display: none;">
+            <span class="empty-state__icon">&#x1F6C5;</span> 
+            <p class="empty-state__message">No active alerts at this time. Your devices are looking good!</p>
+        </div>
+        -->
+    </main>
+</body>
+</html>

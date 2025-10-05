@@ -1,118 +1,250 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Real Estate Filter</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Filter</title>
+    <style>
+        /* General Body and Container Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Light grey background */
+            color: #343a40; /* Dark grey text */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+        }
 
-.container {
-  padding: 16px;
-}
+        .container {
+            max-width: 375px; /* Target mobile width for simulation */
+            margin: 0 auto; /* Center the container on wider screens */
+            padding: 20px 15px;
+            background-color: #ffffff; /* White background for the filter card */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            min-height: 100vh; /* Ensure it takes full viewport height on mobile */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
 
-h1 {
-  font-size: 20px;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333;
-}
+        /* Headings */
+        h1 {
+            text-align: center;
+            color: #007bff; /* Primary blue for main heading */
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #555;
-}
+        h2 {
+            font-size: 1.2em;
+            color: #495057; /* Slightly darker grey for section headings */
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e9ecef; /* Light grey separator */
+            padding-bottom: 8px;
+            font-weight: 500;
+        }
 
-input[type="number"],
-select {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Important for padding to not affect width */
-  font-size: 14px;
-}
+        /* Filter Sections */
+        .filter-section {
+            margin-bottom: 20px;
+        }
 
-.checkbox-group {
-  margin-bottom: 15px;
-}
+        /* Input Groups (Budget) */
+        .input-group {
+            margin-bottom: 15px;
+        }
 
-.checkbox-group label {
-  display: inline-block;
-  margin-right: 10px;
-  font-weight: normal;
-}
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+            color: #495057;
+        }
 
-button {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  width: 100%;
-  margin-top: 20px;
-}
+        .input-group input[type="number"] {
+            width: calc(100% - 22px); /* Account for padding and border */
+            padding: 10px;
+            border: 1px solid #ced4da; /* Light grey border */
+            border-radius: 5px;
+            font-size: 1em;
+            box-sizing: border-box;
+            -webkit-appearance: none; /* Remove default spinner for number inputs in Webkit browsers */
+            -moz-appearance: textfield; /* Remove default spinner for number inputs in Firefox */
+        }
 
-button:hover {
-  background-color: #0056b3;
-}
+        .input-group input[type="number"]:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Focus highlight */
+        }
 
-.range-inputs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
+        /* Options Groups (Property Type, Bedrooms, Posted By) */
+        .options-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
+            gap: 10px; /* Space between items */
+            justify-content: flex-start; /* Align items to the start */
+        }
 
-.range-inputs input {
-  width: 100%; /* Take up equal space */
-}
-</style>
+        /* Hide default radio/checkbox inputs */
+        .options-group input[type="radio"],
+        .options-group input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none; /* Ensure it doesn't interfere with label clicks */
+        }
+
+        /* Style the labels to look like buttons */
+        .options-group label {
+            background-color: #e9ecef; /* Light grey background */
+            padding: 10px 15px;
+            border-radius: 25px; /* Pill shape */
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #495057;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+            flex-grow: 1; /* Allow labels to grow to fill space */
+            text-align: center;
+            min-width: 70px; /* Minimum width for touch target */
+            box-sizing: border-box;
+            border: 1px solid #e9ecef; /* Subtle border */
+        }
+
+        /* Hover state for labels */
+        .options-group label:hover {
+            background-color: #dee2e6;
+            color: #343a40;
+        }
+
+        /* Checked state for radio/checkbox labels */
+        .options-group input[type="radio"]:checked + label,
+        .options-group input[type="checkbox"]:checked + label {
+            background-color: #007bff; /* Primary blue when checked */
+            color: #fff; /* White text */
+            border-color: #007bff;
+            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* Subtle shadow when checked */
+        }
+
+        /* Hover state for checked labels */
+        .options-group input[type="radio"]:checked + label:hover,
+        .options-group input[type="checkbox"]:checked + label:hover {
+            background-color: #0056b3; /* Darker blue on hover when checked */
+            border-color: #0056b3;
+        }
+
+        /* Specific adjustments for Bedroom options to fit more per row */
+        #bedrooms-options label {
+            flex-grow: 0; /* Prevent aggressive growing */
+            flex-basis: calc(20% - 10px); /* Approximately 5 items per row with gap */
+            min-width: 45px; /* Smaller min-width for numbers */
+        }
+        /* Specific adjustments for Posted By options */
+        #posted-by-options label {
+            flex-grow: 1;
+            flex-basis: calc(33.33% - 10px); /* Approximately 3 items per row with gap */
+            min-width: 90px;
+        }
+
+
+        /* Action Buttons */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px; /* Space between buttons */
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef; /* Separator above buttons */
+        }
+
+        .action-button {
+            flex: 1; /* Make buttons take equal space */
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .action-button.reset {
+            background-color: #dc3545; /* Red for reset */
+            color: #fff;
+        }
+
+        .action-button.reset:hover {
+            background-color: #c82333;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+        }
+
+        .action-button.apply {
+            background-color: #28a745; /* Green for apply */
+            color: #fff;
+        }
+
+        .action-button.apply:hover {
+            background-color: #218838;
+            box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Filter Properties</h1>
 
-<div class="container">
-  <h1>Filter Properties</h1>
+        <div class="filter-section">
+            <h2>Budget Range</h2>
+            <div class="input-group">
+                <label for="min-budget">Minimum Budget (₹)</label>
+                <input type="number" id="min-budget" value="0" min="0" placeholder="e.g., 5000">
+            </div>
+            <div class="input-group">
+                <label for="max-budget">Maximum Budget (₹)</label>
+                <input type="number" id="max-budget" value="99999999" min="0" placeholder="e.g., 500000">
+            </div>
+        </div>
 
-  <label for="propertyType">Property Type:</label>
-  <select id="propertyType">
-    <option value="">Any</option>
-    <option value="apartment">Apartment</option>
-    <option value="house">House</option>
-    <option value="condo">Condo</option>
-  </select>
+        <div class="filter-section">
+            <h2>Property Type</h2>
+            <div class="options-group" id="property-type-options">
+                <input type="checkbox" id="type-flat" name="property-type" value="Flat"><label for="type-flat">Flat</label>
+                <input type="checkbox" id="type-house" name="property-type" value="House/Villa"><label for="type-house">House/Villa</label>
+                <input type="checkbox" id="type-office" name="property-type" value="Office Space"><label for="type-office">Office Space</label>
+                <input type="checkbox" id="type-pg" name="property-type" value="PG/Hostel"><label for="type-pg">PG/Hostel</label>
+                <input type="checkbox" id="type-other-comm" name="property-type" value="Other Commercial"><label for="type-other-comm">Other Commercial</label>
+                <input type="checkbox" id="type-shop" name="property-type" value="Shop/Showroom"><label for="type-shop">Shop/Showroom</label>
+            </div>
+        </div>
 
-  <label>Price Range:</label>
-  <div class="range-inputs">
-    <input type="number" id="minPrice" placeholder="Min Price">
-    <input type="number" id="maxPrice" placeholder="Max Price">
-  </div>
+        <div class="filter-section">
+            <h2>Number of Bedrooms</h2>
+            <div class="options-group" id="bedrooms-options">
+                <input type="radio" id="bed-1" name="bedrooms" value="1"><label for="bed-1">1</label>
+                <input type="radio" id="bed-2" name="bedrooms" value="2"><label for="bed-2">2</label>
+                <input type="radio" id="bed-3" name="bedrooms" value="3"><label for="bed-3">3</label>
+                <input type="radio" id="bed-4" name="bedrooms" value="4"><label for="bed-4">4</label>
+                <input type="radio" id="bed-gt4" name="bedrooms" value=">4"><label for="bed-gt4">>4</label>
+            </div>
+        </div>
 
+        <div class="filter-section">
+            <h2>Posted By</h2>
+            <div class="options-group" id="posted-by-options">
+                <input type="radio" id="posted-owner" name="posted-by" value="Owner"><label for="posted-owner">Owner</label>
+                <input type="radio" id="posted-builder" name="posted-by" value="Builder"><label for="posted-builder">Builder</label>
+                <input type="radio" id="posted-agent" name="posted-by" value="Agent"><label for="posted-agent">Agent</label>
+            </div>
+        </div>
 
-  <label>Bedrooms:</label>
-  <select id="bedrooms">
-    <option value="">Any</option>
-    <option value="1">1 Bedroom</option>
-    <option value="2">2 Bedrooms</option>
-    <option value="3">3+ Bedrooms</option>
-  </select>
-
-  <div class="checkbox-group">
-    <label><input type="checkbox" id="pool"> Pool</label>
-    <label><input type="checkbox" id="garage"> Garage</label>
-    <label><input type="checkbox" id="petFriendly"> Pet Friendly</label>
-  </div>
-
-  <button>Apply Filters</button>
-</div>
-
+        <div class="button-group">
+            <button id="reset-button" class="action-button reset">Reset</button>
+            <button id="apply-button" class="action-button apply">Apply</button>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Property Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures body takes full viewport height for sticky footer */
+            width: 375px; /* Simulates the target mobile width */
+            max-width: 100%; /* Allows it to shrink on smaller actual screens */
+            margin-left: auto; /* Centers the layout on larger screens */
+            margin-right: auto; /* Centers the layout on larger screens */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Optional: visual for the device frame */
+            overflow-x: hidden; /* Prevents horizontal scroll */
+        }
+
+        /* 1. Top Section: Visuals & Key Highlights */
+        .image-carousel {
+            position: relative;
+            width: 100%;
+            height: 220px; /* Fixed height for the image area */
+            background-color: #e0e0e0; /* Placeholder background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Ensures images don't overflow */
+        }
+        .image-carousel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Covers the area without distortion */
+            display: block;
+        }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+        .carousel-indicators span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            margin: 0 4px;
+        }
+        .carousel-indicators span.active {
+            background-color: #fff; /* Active indicator */
+        }
+
+        .key-details {
+            padding: 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+        .key-details .price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .key-details .property-type-size {
+            display: flex;
+            justify-content: flex-start; /* Align to left */
+            gap: 15px; /* Space between type and size */
+            font-size: 16px;
+            color: #555;
+            margin-top: 5px;
+        }
+
+        /* 2. Middle Section: Detailed Information */
+        .content-scrollable {
+            flex-grow: 1; /* Allows this section to take available vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            padding-bottom: 118px; /* Space for the fixed footer (calculated below) */
+            /* Add some padding to the sides to match key-details */
+            padding-left: 15px;
+            padding-right: 15px;
+            box-sizing: border-box;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 16px;
+            text-align: left;
+        }
+        .info-item.full-address {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        .info-item.posting-date {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .cost-breakdown-section {
+            background-color: #fff;
+            margin: 15px 0; /* No side margin as content-scrollable has padding */
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+        .cost-breakdown-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #333;
+        }
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #555;
+        }
+        .cost-item:last-child {
+            margin-bottom: 0;
+        }
+        .cost-item .amount {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 200px;
+            background-color: #ccc; /* Placeholder for map */
+            margin-top: 20px;
+            margin-bottom: 20px; /* Space before footer's content */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 18px;
+            text-align: center;
+            /* Placeholder static map image from via.placeholder.com */
+            background-image: url('https://via.placeholder.com/375x200/a0c4ff/ffffff?text=Map+of+Property+Location');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures pin doesn't overflow corners */
+        }
+        .map-container .map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.2); /* Darken map slightly for pin visibility */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .location-pin {
+            font-size: 40px;
+            color: red;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            position: absolute; /* Position relative to .map-overlay */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -85%); /* Adjust for pin's base */
+        }
+
+
+        /* 3. Bottom Section: Call to Actions (Sticky Footer) */
+        .sticky-footer {
+            position: fixed;
+            bottom: 0;
+            width: 375px; /* Matches body width */
+            max-width: 100%; /* Inherits max-width from body */
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-sizing: border-box; /* Includes padding in width/height */
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between the two rows of buttons */
+            /* Calculated height of footer for content-scrollable padding-bottom:
+               10px (footer-padding-top)
+             + 40px (height of action-buttons-top: 12px padding + 16px font-size + 12px padding)
+             + 10px (gap)
+             + 48px (height of enquire-button: 15px padding + 18px font-size + 15px padding)
+             + 10px (footer-padding-bottom)
+             = 118px */
+        }
+
+        .action-buttons-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px; /* Space between chat and call buttons */
+        }
+        .action-buttons-top button {
+            flex: 1; /* Make buttons take equal space */
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #333;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px; /* Space between icon and text */
+        }
+        .action-buttons-top button:hover {
+            background-color: #f0f0f0;
+        }
+        .action-buttons-top button .icon {
+            font-size: 20px;
+        }
+
+
+        .enquire-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #007bff; /* Primary action color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .enquire-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Section: Visuals & Key Highlights -->
+    <div class="image-carousel">
+        <img src="https://via.placeholder.com/375x220/87CEEB/FFFFFF?text=Property+Image+1" alt="Property Image 1">
+        <!-- For a real carousel, you'd have multiple images and JS to handle transitions -->
+        <div class="carousel-indicators">
+            <span class="active"></span> <!-- Active image indicator -->
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div class="key-details">
+        <div class="price">₹1,50,00,000</div>
+        <div class="property-type-size">
+            <span>Apartment</span>
+            <span>1200 sqft</span>
+        </div>
+    </div>
+
+    <!-- 2. Middle Section: Detailed Information (Scrollable) -->
+    <div class="content-scrollable">
+        <div class="info-item full-address">123, Main Street, Anytown, State - 12345</div>
+        <div class="info-item posting-date">Posted on: 25th Oct 2023</div>
+
+        <div class="cost-breakdown-section">
+            <h3>Cost Breakdown</h3>
+            <div class="cost-item">
+                <span>Price:</span>
+                <span class="amount">₹1,50,00,000</span>
+            </div>
+            <div class="cost-item">
+                <span>Security Deposit:</span>
+                <span class="amount">₹3,00,000</span>
+            </div>
+            <div class="cost-item">
+                <span>Maintenance:</span>
+                <span class="amount">₹5,000/month</span>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div class="map-overlay">
+                <span class="location-pin">&#x1F4CD;</span> <!-- Unicode for location pin -->
+                <!-- The map background image is set via CSS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Bottom Section: Call to Actions (Sticky Footer) -->
+    <div class="sticky-footer">
+        <div class="action-buttons-top">
+            <button class="chat-button">
+                <span class="icon">&#x1F4AC;</span> Chat with Lister
+            </button>
+            <button class="call-button">
+                <span class="icon">&#x1F4DE;</span> Call
+            </button>
+        </div>
+        <button class="enquire-button">Enquire Now</button>
+    </div>
+
+</body>
+</html>

@@ -1,151 +1,355 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Email List</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox - Mobile Email Client</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body, html {
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
-            height: 667px; /* Fixed height for demonstration */
-            width: 375px;  /* Fixed width for demonstration */
-            max-width: 100%;
-            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            /* Simulate mobile screen size (375 x 667 pixels) */
+            width: 375px; 
+            height: 667px;
+            margin: 0 auto; /* Center the body on larger screens for demonstration */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent body scroll, the email list will scroll */
+            position: relative; /* Needed for absolute positioning of FAB */
         }
 
-        /* Top App Bar */
-        .top-app-bar {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
+        /* --- 1. Top Bar (Header Section) --- */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #ffffff;
+            padding: 0 15px; /* Horizontal padding */
+            height: 56px; /* Typical mobile header height */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10; /* Ensure header is above scrollable content */
+            flex-shrink: 0; /* Prevent header from shrinking */
         }
 
-        .top-app-bar .refresh-icon,
-        .top-app-bar .search-icon {
-            font-size: 20px;
+        .header button {
+            background: none;
+            border: none;
             cursor: pointer;
+            padding: 8px; /* Touch target size */
+            font-size: 22px; /* Icon size */
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1; /* For better icon alignment */
         }
 
-        .top-app-bar .category {
+        .inbox-title {
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1; /* Allows it to take up available space */
+            text-align: center;
+            color: #333;
+        }
+
+        /* Email Selection Mode Header (initially hidden) */
+        .selection-header {
+            background-color: #e0e0e0; /* Different background for selection mode */
+            color: #333;
+            display: none; /* Hidden by default */
+            /* In a real app, JavaScript would toggle this display property */
+        }
+        .selection-header .selected-count {
             font-size: 18px;
+            font-weight: bold;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .selection-header button {
+             color: #333;
+             font-size: 20px;
         }
 
-        /* Email List Container */
+        /* --- 2. Email List Display (Main Content Section) --- */
         .email-list-container {
-            overflow-y: auto;
-            height: calc(667px - 60px - 60px); /* Total Height - Top Bar Height - Compose Button Height */
-            padding: 10px;
+            flex-grow: 1; /* Takes all available space between header and FAB */
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            padding-bottom: 76px; /* Space for the FAB to float above, 56px FAB height + 20px bottom margin */
         }
 
-        /* Email List Item */
-        .email-list-item {
-            background-color: white;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        .email-item {
+            display: flex;
+            align-items: flex-start; /* Align items to the top of the flex container */
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
         }
 
-        .email-list-item .sender-name {
+        .email-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        /* Email Selection Indicator: Highlight for selected emails */
+        .email-item.selected {
+            background-color: #e8f0fe; /* Light blue background */
+        }
+
+        .sender-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4285f4; /* Google Blue */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-size: 16px;
             font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0; /* Prevent avatar from shrinking */
+            cursor: pointer; /* Indicates it's tappable for selection */
         }
 
-        .email-list-item .subject {
-            font-size: 14px;
-        }
-
-        .email-list-item .snippet {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .email-list-item .timestamp {
-            font-size: 10px;
-            color: #999;
-            float: right;
-        }
-
-        /* Compose Button */
-        .compose-button {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 50%;
+        /* When selected, avatar changes to a checkmark */
+        .email-item.selected .sender-avatar {
+            background-color: #1a73e8; /* Darker blue for selected state */
             font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        /* For the example email that is pre-selected */
+        .sender-avatar.selected-avatar {
+            background-color: #1a73e8;
+            font-size: 20px;
         }
 
-        /* Unread Styling */
-        .email-list-item.unread .sender-name,
-        .email-list-item.unread .subject {
+
+        .email-content {
+            flex-grow: 1; /* Takes remaining space */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Helps with text ellipsis */
+        }
+
+        .top-row, .middle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .sender-name {
             font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px; /* Space before time */
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 20px;
-            color: #888;
+        .received-time {
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            flex-shrink: 0; /* Prevent time from shrinking */
         }
 
+        .email-subject {
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+            flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 2px;
+            margin-right: 10px; /* Space before star */
+        }
+
+        .star-icon {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #999; /* Grey for outlined star */
+            cursor: pointer;
+            padding: 0; /* Remove default button padding */
+            flex-shrink: 0; /* Prevent star from shrinking */
+            align-self: flex-start; /* Align to the top of its row */
+            line-height: 1; /* For better icon alignment */
+        }
+
+        .star-icon.filled {
+            color: gold; /* Yellow for filled star */
+        }
+
+        .email-snippet {
+            font-size: 14px;
+            color: #555;
+            margin-top: 2px;
+            line-height: 1.4;
+            /* Multi-line ellipsis for truncated content */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Show up to 2 lines */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-height: calc(1.4em * 2); /* Approximate height for 2 lines */
+        }
+
+        /* --- 3. Compose Email Button (Floating Action Button - FAB) --- */
+        .fab {
+            position: absolute; /* Positioned relative to the body */
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            font-size: 30px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 20; /* Ensure it's above other content */
+            line-height: 1; /* Adjust vertical alignment of the plus sign */
+        }
     </style>
 </head>
 <body>
-
-    <!-- Top App Bar -->
-    <div class="top-app-bar">
-        <div class="refresh-icon">&#x21bb;</div>
-        <div class="category">Category: Inbox</div>
-        <div class="search-icon">&#x1F50D;</div>
+    <!-- 1. Top Bar (Header Section) - Default State -->
+    <div class="header default-header">
+        <button class="nav-menu-icon">☰</button>
+        <div class="inbox-title">Inbox</div>
+        <button class="search-icon">🔍</button>
     </div>
 
-    <!-- Email List Container -->
+    <!-- 4. Email Selection Mode - Selection Toolbar (initially hidden) -->
+    <!-- This header would replace the default header when emails are selected via JavaScript. -->
+    <!-- To see this, uncomment the div below and comment out the "default-header" div above. -->
+    <!--
+    <div class="header selection-header">
+        <button class="close-selection-icon">✕</button>
+        <div class="selected-count">3 selected</div>
+        <button class="delete-icon">🗑️</button>
+    </div>
+    -->
+
+    <!-- 2. Email List Display (Main Content Section) -->
     <div class="email-list-container">
-
-        <!-- Email List Item (Unread Example) -->
-        <div class="email-list-item unread">
-            <div class="sender-name">John Doe</div>
-            <div class="subject">Important Project Update</div>
-            <div class="snippet">Hey team, just wanted to provide a quick update...</div>
-            <div class="timestamp">1 hour ago</div>
+        <!-- Email Entry 1 -->
+        <div class="email-item">
+            <div class="sender-avatar">JD</div>
+            <div class="email-content">
+                <div class="top-row">
+                    <div class="sender-name">John Doe</div>
+                    <div class="received-time">10:30 AM</div>
+                </div>
+                <div class="middle-row">
+                    <div class="email-subject">Meeting Reminder</div>
+                    <button class="star-icon">☆</button>
+                </div>
+                <div class="bottom-row">
+                    <div class="email-snippet">Hi team, just a reminder about our meeting tomorrow at 11 AM in room 302. Please review the agenda beforehand.</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Email List Item (Read Example) -->
-        <div class="email-list-item">
-            <div class="sender-name">Jane Smith</div>
-            <div class="subject">Meeting Agenda</div>
-            <div class="snippet">Attached is the agenda for our upcoming meeting...</div>
-            <div class="timestamp">Yesterday</div>
+        <!-- Email Entry 2 (Example of a Selected Email) -->
+        <div class="email-item selected">
+            <div class="sender-avatar selected-avatar">✓</div> <!-- Checkmark for selected avatar -->
+            <div class="email-content">
+                <div class="top-row">
+                    <div class="sender-name">Alice Smith</div>
+                    <div class="received-time">Yesterday</div>
+                </div>
+                <div class="middle-row">
+                    <div class="email-subject">Project Update - Q3 Report</div>
+                    <button class="star-icon filled">★</button> <!-- Filled star for favorite -->
+                </div>
+                <div class="bottom-row">
+                    <div class="email-snippet">Here's the latest Q3 report for the project. Let me know if you have any questions or feedback.</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Email List Item (Another Example) -->
-        <div class="email-list-item">
-            <div class="sender-name">Support Team</div>
-            <div class="subject">Your Account Security</div>
-            <div class="snippet">We've detected suspicious activity on your account...</div>
-            <div class="timestamp">2 days ago</div>
+        <!-- Email Entry 3 -->
+        <div class="email-item">
+            <div class="sender-avatar">BW</div>
+            <div class="email-content">
+                <div class="top-row">
+                    <div class="sender-name">Bob Williams</div>
+                    <div class="received-time">Mon</div>
+                </div>
+                <div class="middle-row">
+                    <div class="email-subject">Re: Your recent inquiry</div>
+                    <button class="star-icon">☆</button>
+                </div>
+                <div class="bottom-row">
+                    <div class="email-snippet">Thank you for reaching out. We have received your inquiry and will get back to you within 24 hours.</div>
+                </div>
+            </div>
         </div>
 
-        <!-- Add more email list items as needed -->
-        
-        <!-- Example of Empty State (If no emails) -->
-        <!-- <div class="empty-state">No emails</div> -->
-
+        <!-- More email items for scrollability -->
+        <div class="email-item">
+            <div class="sender-avatar">CC</div>
+            <div class="email-content">
+                <div class="top-row">
+                    <div class="sender-name">Customer Care</div>
+                    <div class="received-time">2 days ago</div>
+                </div>
+                <div class="middle-row">
+                    <div class="email-subject">Order #12345 Confirmed</div>
+                    <button class="star-icon">☆</button>
+                </div>
+                <div class="bottom-row">
+                    <div class="email-snippet">Your order #12345 has been confirmed and will be shipped soon. Track your order here.</div>
+                </div>
+            </div>
+        </div>
+        <div class="email-item">
+            <div class="sender-avatar">MK</div>
+            <div class="email-content">
+                <div class="top-row">
+                    <div class="sender-name">Marketing Team</div>
+                    <div class="received-time">3 days ago</div>
+                </div>
+                <div class="middle-row">
+                    <div class="email-subject">New Product Launch!</div>
+                    <button class="star-icon">☆</button>
+                </div>
+                <div class="bottom-row">
+                    <div class="email-snippet">Exciting news! Our new product is finally here. Click to learn more and get an exclusive discount.</div>
+                </div>
+            </div>
+        </div>
+        <div class="email-item">
+            <div class="sender-avatar">HR</div>
+            <div class="email-content">
+                <div class="top-row">
+                    <div class="sender-name">Human Resources</div>
+                    <div class="received-time">Last week</div>
+                </div>
+                <div class="middle-row">
+                    <div class="email-subject">Important: Annual Leave Policy Update</div>
+                    <button class="star-icon">☆</button>
+                </div>
+                <div class="bottom-row">
+                    <div class="email-snippet">Please review the updated annual leave policy. Changes effective from next month.</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Compose Button -->
-    <button class="compose-button">+</button>
-
+    <!-- 3. Compose Email Button (Floating Action Button - FAB) -->
+    <button class="fab">＋</button>
 </body>
 </html>

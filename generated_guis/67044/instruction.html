@@ -1,104 +1,313 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Refine Search</title>
-<style>
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Search App</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center; /* Center horizontally for larger screens */
+            align-items: flex-start; /* Align to top for mobile scroll */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
 
-.container {
-  width: 100%;
-  max-width: 375px; /* Match mobile screen width */
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-}
+        /* Main Container for the app, mimicking a mobile screen */
+        .app-container {
+            width: 100%; /* Take full width on small screens */
+            max-width: 375px; /* Max width for device simulation */
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin: 20px 0; /* Add some vertical margin for desktop view */
+            box-sizing: border-box;
+            overflow-y: auto; /* Allow scrolling if content exceeds viewport height */
+        }
 
-h1 {
-  font-size: 1.5em;
-  margin-bottom: 20px;
-  text-align: center;
-  color: #333;
-}
+        /* Page Title */
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #555;
-}
+        /* Section Titles */
+        h2 {
+            color: #555;
+            font-size: 18px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
 
-input[type="text"],
-select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box; /* Important for padding & border */
-}
+        /* Form Group Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  width: 100%;
-  font-size: 1em;
-}
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+            font-size: 14px;
+        }
 
-button:hover {
-  background-color: #3e8e41;
-}
+        .form-group input[type="text"],
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box; /* Crucial for full width with padding */
+            -webkit-appearance: none; /* Remove default dropdown arrow on WebKit browsers */
+            -moz-appearance: none;    /* Remove default dropdown arrow on Firefox */
+            appearance: none;         /* Remove default dropdown arrow */
+            background-color: #fff;
+            /* Custom arrow for select elements */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13.2-5.4H18.6c-5%200-9.3%201.8-13.2%205.4A17.6%2017.6%200%200%200%200%2082.6c0%204.8%201.8%209.3%205.4%2013.2l130.4%20130.4c4%204%209.1%205.4%2014.2%205.4s10.2-1.4%2014.2-5.4L287%2095.8c3.8-4%205.4-8.2%205.4-13.2%200-4.8-1.8-9-5.4-13.2z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 12px;
+            padding-right: 30px; /* Make space for the custom arrow */
+        }
 
-.location-container {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically on mobile */
+            gap: 10px; /* Space between buttons */
+            margin-top: 25px;
+        }
 
-.location-container input[type="text"] {
-    width: 50%;
-}
+        .button-group button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
 
-</style>
+        .button-group .search-button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .button-group .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        .button-group .clear-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .button-group .clear-button:hover {
+            background-color: #5a6268;
+        }
+
+        /* Past Searches */
+        .past-searches {
+            margin-bottom: 25px;
+        }
+
+        .past-searches-tags {
+            display: flex;
+            flex-wrap: wrap; /* Allow tags to wrap to next line */
+            gap: 8px; /* Space between tags */
+            margin-top: 10px;
+        }
+
+        .past-searches-tags span {
+            background-color: #e2e6ea;
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .past-searches-tags span:hover {
+            background-color: #d1d7dc;
+        }
+
+        /* More Options Section (Checkbox Hack for pure CSS toggle) */
+        #moreOptionsToggle {
+            display: none; /* Hide the actual checkbox */
+        }
+
+        .more-options-toggle-label {
+            display: block; /* Make it a block element to take full width */
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 15px;
+            transition: background-color 0.3s ease;
+            user-select: none; /* Prevent text selection on label */
+        }
+
+        .more-options-toggle-label:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Arrow styling for the toggle label */
+        .more-options-toggle-label::after {
+            content: ' ▼'; /* Down arrow when collapsed */
+            margin-left: 5px;
+        }
+
+        #moreOptionsToggle:checked + .more-options-toggle-label::after {
+            content: ' ▲'; /* Up arrow when expanded */
+        }
+
+        #moreOptionsContent {
+            display: none; /* Hidden by default */
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #fcfcfc;
+        }
+
+        #moreOptionsToggle:checked ~ #moreOptionsContent {
+            display: block; /* Show when checkbox is checked */
+        }
+
+        /* Responsive adjustments for very small screens (e.g., full width on mobile) */
+        @media (max-width: 375px) {
+            .app-container {
+                margin: 0; /* Remove vertical margin on very small screens to maximize space */
+                border-radius: 0; /* No border-radius on full-width mobile */
+                box-shadow: none; /* No shadow on full-width mobile */
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="app-container">
+        <h1>Job Search</h1>
 
-<div class="container">
-  <h1>Refine Your Search</h1>
+        <div class="past-searches">
+            <h2>Recent Searches</h2>
+            <div class="past-searches-tags">
+                <span>Software Engineer, NYC</span>
+                <span>Marketing, Remote</span>
+                <span>Data Scientist, London</span>
+                <span>Product Manager</span>
+            </div>
+        </div>
 
-  <form>
-    <label for="keywords">Keywords:</label>
-    <input type="text" id="keywords" name="keywords" placeholder="e.g., Software Engineer, Manager">
+        <div class="search-form">
+            <div class="form-group">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" placeholder="e.g., Software Engineer, UX Designer">
+            </div>
 
-    <label for="location">Location:</label>
-    <div class="location-container">
-        <input type="text" id="city" name="city" placeholder="City">
-        <input type="text" id="state" name="state" placeholder="State">
+            <div class="form-group">
+                <label for="industryCompany">Industry / Company</label>
+                <select id="industryCompany">
+                    <option value="">Select Industry or Company</option>
+                    <option value="tech">Technology</option>
+                    <option value="finance">Finance</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="education">Education</option>
+                    <option value="retail">Retail</option>
+                    <option value="google">Google</option>
+                    <option value="microsoft">Microsoft</option>
+                    <option value="apple">Apple</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <select id="location">
+                    <option value="">Select Location</option>
+                    <option value="remote">Remote</option>
+                    <option value="nyc">New York City</option>
+                    <option value="sf">San Francisco</option>
+                    <option value="london">London</option>
+                    <option value="berlin">Berlin</option>
+                    <option value="tokyo">Tokyo</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="salaryRange">Salary Range</label>
+                <select id="salaryRange">
+                    <option value="">Select Salary Range</option>
+                    <option value="0-50k">Up to $50,000</option>
+                    <option value="50k-80k">$50,000 - $80,000</option>
+                    <option value="80k-120k">$80,000 - $120,000</option>
+                    <option value="120k-150k">$120,000 - $150,000</option>
+                    <option value="150k+">$150,000+</option>
+                </select>
+            </div>
+
+            <!-- More Options Section -->
+            <!-- Using a checkbox hack for a CSS-only expand/collapse functionality -->
+            <input type="checkbox" id="moreOptionsToggle">
+            <label for="moreOptionsToggle" class="more-options-toggle-label">More options</label>
+
+            <div id="moreOptionsContent">
+                <div class="form-group">
+                    <label for="jobType">Job Type</label>
+                    <select id="jobType">
+                        <option value="">Any</option>
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                        <option value="internship">Internship</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="experienceLevel">Experience Level</label>
+                    <select id="experienceLevel">
+                        <option value="">Any</option>
+                        <option value="entry">Entry Level</option>
+                        <option value="junior">Junior</option>
+                        <option value="mid">Mid-level</option>
+                        <option value="senior">Senior</option>
+                        <option value="lead">Lead/Manager</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="remoteOnsite">Work Model</label>
+                    <select id="remoteOnsite">
+                        <option value="">Any</option>
+                        <option value="remote">Remote</option>
+                        <option value="on-site">On-site</option>
+                        <option value="hybrid">Hybrid</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="search-button">Search</button>
+                <button type="button" class="clear-button">Clear All</button>
+            </div>
+        </div>
     </div>
-
-
-    <label for="jobType">Job Type:</label>
-    <select id="jobType" name="jobType">
-      <option value="">Any</option>
-      <option value="fulltime">Full-time</option>
-      <option value="parttime">Part-time</option>
-      <option value="contract">Contract</option>
-      <option value="internship">Internship</option>
-    </select>
-
-    <button type="submit">Apply Filters</button>
-  </form>
-</div>
-
 </body>
 </html>

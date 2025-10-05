@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coca-Cola Ambassador Resources</title>
+    <style>
+        /*
+         * Inline CSS for Coca-Cola Ambassador Resource Page
+         * Designed for mobile (375x667px)
+         */
+
+        /* Global Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7; /* Light grey background */
+            color: #333; /* Dark grey text */
+            line-height: 1.6;
+            -webkit-text-size-adjust: 100%; /* Prevent text scaling issues on mobile Safari */
+            box-sizing: border-box; /* Include padding/border in element's total width/height */
+        }
+
+        /* Main Container for Mobile View */
+        .container {
+            max-width: 375px; /* Target width for mobile simulation */
+            margin: 0 auto; /* Center container on larger screens */
+            padding: 15px;
+            background-color: #fff; /* White background for content */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            min-height: 100vh; /* Ensure container fills viewport height */
+            box-sizing: border-box;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #e60023; /* Coca-Cola Red */
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            border-radius: 8px 8px 0 0; /* Rounded top corners */
+            /* Adjust negative margins to make header full-width within padded container */
+            margin: -15px -15px 15px -15px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5em; /* Larger title font */
+        }
+
+        /* Search Bar Styling */
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-bar input[type="search"] {
+            width: calc(100% - 30px); /* Full width minus padding */
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px; /* Rounded search bar */
+            font-size: 1em;
+            box-sizing: border-box;
+            outline: none; /* Remove focus outline */
+        }
+
+        .search-bar input[type="search"]::placeholder {
+            color: #888; /* Placeholder text color */
+        }
+
+        /* Section Title Styling */
+        h2 {
+            color: #e60023; /* Coca-Cola Red for section titles */
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #eee; /* Underline effect */
+            padding-bottom: 5px;
+        }
+
+        /* Expandable Sections (details/summary) Styling */
+        details {
+            background-color: #f9f9f9; /* Slightly off-white background for details */
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden; /* Ensures border-radius applies correctly to content */
+        }
+
+        summary {
+            display: block; /* Make summary a block to control padding and pseudo-elements */
+            padding: 12px 15px;
+            background-color: #fff; /* White background for summary header */
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none; /* Remove focus outline */
+            position: relative;
+            list-style: none; /* Remove default marker (triangle) */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        /* Hide default details marker for various browsers */
+        summary::-webkit-details-marker,
+        summary::marker {
+            display: none;
+        }
+
+        /* Custom '+' icon for closed state */
+        summary::after {
+            content: '+';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+            color: #e60023; /* Red icon */
+            transition: transform 0.2s ease-in-out; /* Smooth transition for icon change */
+        }
+
+        /* Custom '-' icon for open state */
+        details[open] summary::after {
+            content: '-';
+            transform: translateY(-50%) rotate(0deg); /* No rotation needed for '-' */
+        }
+
+        /* Content inside expandable sections */
+        details p {
+            padding: 10px 15px 15px;
+            margin: 0;
+            font-size: 0.95em;
+            color: #555; /* Slightly lighter text for content */
+            border-top: 1px solid #eee; /* Separator line for content */
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #888;
+            font-size: 0.8em;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Coca-Cola Ambassador Resources</h1>
+        </header>
+
+        <div class="search-bar">
+            <input type="search" placeholder="Search for information...">
+        </div>
+
+        <section class="fast-facts">
+            <h2>Fast Facts</h2>
+
+            <details>
+                <summary>Coca-Cola 101</summary>
+                <p>
+                    <strong>The Coca-Cola Company</strong> is a total beverage company with products sold in more than 200 countries and territories. Our purpose is to refresh the world and make a difference. We offer a wide range of beverages, from sparkling soft drinks to waters, sports drinks, juices, and plant-based beverages. Founded in 1886 by John Pemberton, Coca-Cola was first served in Atlanta, Georgia.
+                </p>
+            </details>
+
+            <details>
+                <summary>Products & Ingredients</summary>
+                <p>
+                    Our portfolio features brands like Coca-Cola, Sprite, Fanta, Dasani, Smartwater, Minute Maid, and many more. We are constantly innovating to offer more choices, including low- and no-sugar options. Ingredients vary by product but typically include carbonated water, high fructose corn syrup (or sugar), natural flavors, and phosphoric acid. We are committed to transparency about our ingredients.
+                </p>
+            </details>
+
+            <details>
+                <summary>Strengthening Communities</summary>
+                <p>
+                    We believe in giving back to the communities where we operate. Our initiatives focus on water stewardship, women's economic empowerment, and sustainable packaging. We work with local partners to implement programs that create shared value and positively impact people's lives. This includes supporting local economies and promoting community well-being.
+                </p>
+            </details>
+
+            <details>
+                <summary>Diversity & Inclusion</summary>
+                <p>
+                    Diversity and inclusion are fundamental to our success. We strive to create a workplace where everyone feels valued, respected, and empowered to bring their authentic selves to work. Our commitment extends to our workforce, our suppliers, our customers, and the communities we serve. We believe a diverse workforce fosters innovation and better understanding of our global consumers.
+                </p>
+            </details>
+        </section>
+
+        <section class="faq">
+            <h2>FAQ</h2>
+
+            <details>
+                <summary>Well-being</summary>
+                <p>
+                    <strong>Q: What is Coca-Cola doing about sugar?</strong><br>
+                    A: We are committed to reducing sugar across our portfolio by offering more low- and no-sugar options, developing new beverages, and introducing smaller package sizes to help people manage their sugar intake.
+                </p>
+                <p>
+                    <strong>Q: Are your ingredients safe?</strong><br>
+                    A: Yes, all ingredients used in our beverages are safe and approved by relevant regulatory authorities worldwide. We adhere to strict quality and safety standards.
+                </p>
+            </details>
+
+            <details>
+                <summary>Environment</summary>
+                <p>
+                    <strong>Q: What is Coca-Cola's World Without Waste vision?</strong><br>
+                    A: Our "World Without Waste" vision aims to collect and recycle a bottle or can for every one we sell by 2030, make our packaging 100% recyclable, and use more recycled content in our packaging.
+                </p>
+                <p>
+                    <strong>Q: How does Coca-Cola address water scarcity?</strong><br>
+                    A: We are committed to water stewardship, focusing on reducing water use in our operations, recycling water, and replenishing the water we use back to communities and nature.
+                </p>
+            </details>
+
+            <details>
+                <summary>Support & Contact</summary>
+                <p>
+                    <strong>Q: How can I get further support as an Ambassador?</strong><br>
+                    A: Please refer to your Ambassador program guide or contact your program coordinator directly. You can also find resources on the official Ambassador portal.
+                </p>
+                <p>
+                    <strong>Q: Where can I find official company statements or press releases?</strong><br>
+                    A: Visit The Coca-Cola Company's official website under the 'News & Stories' or 'Investors' sections for the latest information and press releases.
+                </p>
+            </details>
+        </section>
+
+        <footer>
+            &copy; 2023 The Coca-Cola Company. All rights reserved.
+        </footer>
+    </div>
+</body>
+</html>

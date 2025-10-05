@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Recorder App</title>
+    <!-- All CSS is inline, no external stylesheets are linked. -->
+    <!-- A small internal style block is used for range input pseudo-elements,
+         as these cannot be styled directly via inline 'style' attributes. -->
+    <style>
+        /* Styles for the playback range input thumb (cannot be inline on element) */
+        #playback-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #4CAF50; /* Green */
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        #playback-slider::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #4CAF50; /* Green */
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        /* Keyframes for microphone pulse animation (cannot be inline on element) */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.05); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body style="margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; height: 100vh; background-color: #f0f2f5;">
+
+    <!-- Main App Container - Simulates a mobile device screen -->
+    <div id="app-container" style="display: flex; flex-direction: column; flex: 1; max-width: 375px; height: 667px; margin: 0 auto; border: 1px solid #ccc; box-shadow: 0 0 15px rgba(0,0,0,0.1); background-color: #fff; border-radius: 10px; overflow: hidden;">
+
+        <!-- Main Content Area - Changes based on selected tab -->
+        <div id="main-content" style="flex: 1; overflow-y: auto; padding: 15px; position: relative;">
+
+            <!-- Screen 1: 'Recorder' Tab (Recording Interface) -->
+            <div id="recorder-screen" class="app-screen" style="display: block; text-align: center;">
+                <div style="font-size: 1.8em; font-weight: bold; margin-bottom: 20px; color: #333;">
+                    <span id="recording-time">00:00</span>
+                </div>
+                <div id="progress-bar" style="width: 80%; height: 50px; background: #e0e0e0; border-radius: 25px; margin: 0 auto 40px auto; overflow: hidden; display: flex; align-items: center; justify-content: space-around; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <!-- Recording Progress Bar (Audio Waveform Visualizer) -->
+                    <!-- Simple waveform simulation with varying height bars -->
+                    <div style="width: 2%; height: 40%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 60%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 30%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 70%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 50%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 80%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 45%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 65%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 35%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 75%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 55%; background-color: #4CAF50; border-radius: 2px;"></div>
+                </div>
+
+                <div id="microphone-graphic" style="width: 150px; height: 150px; background-color: #e0e0e0; border-radius: 50%; margin: 40px auto; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <span style="font-size: 4em; color: #666;">🎙️</span> <!-- Microphone Unicode Character -->
+                </div>
+
+                <div style="margin-top: 60px;">
+                    <button id="record-button" style="width: 80px; height: 80px; border-radius: 50%; background-color: #e53935; border: none; color: white; font-size: 2.5em; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); margin: 0 auto; outline: none; transition: background-color 0.3s, transform 0.3s;">
+                        <span id="record-icon">●</span> <!-- Red circle for record -->
+                    </button>
+                </div>
+            </div>
+
+            <!-- Screen 2: 'Voice Memos' Tab (Saved Recordings List) -->
+            <div id="voice-memos-screen" class="app-screen" style="display: none;">
+                <h2 style="margin-top: 0; color: #333; text-align: center;">Voice Memos</h2>
+                <div id="recordings-list" style="border-top: 1px solid #eee;">
+                    <!-- Sample Individual Recording List Items -->
+                    <div class="recording-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background-color 0.2s;">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: bold; font-size: 1.1em; color: #333;">Meeting Notes</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">2023-10-26 10:30 AM</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 0.9em; color: #666; margin-right: 15px;">02:45</span>
+                            <button class="play-button" style="background: none; border: none; font-size: 1.4em; color: #4CAF50; cursor: pointer; margin-right: 10px; outline: none;">▶</button>
+                            <button class="more-options-button" style="background: none; border: none; font-size: 1.4em; color: #999; cursor: pointer; outline: none;">⋮</button>
+                        </div>
+                    </div>
+                    <div class="recording-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background-color 0.2s;">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: bold; font-size: 1.1em; color: #333;">Idea for New Feature</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">2023-10-25 04:15 PM</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 0.9em; color: #666; margin-right: 15px;">01:10</span>
+                            <button class="play-button" style="background: none; border: none; font-size: 1.4em; color: #4CAF50; cursor: pointer; margin-right: 10px; outline: none;">▶</button>
+                            <button class="more-options-button" style="background: none; border: none; font-size: 1.4em; color: #999; cursor: pointer; outline: none;">⋮</button>
+                        </div>
+                    </div>
+                    <div class="recording-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background-color 0.2s;">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: bold; font-size: 1.1em; color: #333;">Quick Memo</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">2023-10-24 09:00 AM</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 0.9em; color: #666; margin-right: 15px;">00:35</span>
+                            <button class="play-button" style="background: none; border: none; font-size: 1.4em; color: #4CAF50; cursor: pointer; margin-right: 10px; outline: none;">▶</button>
+                            <button class="more-options-button" style="background: none; border: none; font-size: 1.4em; color: #999; cursor: pointer; outline: none;">⋮</button>
+                        </div>
+                    </div>
+                    <div class="recording-item" style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; cursor: pointer; transition: background-color 0.2s;">
+                        <div style="flex-grow: 1;">
+                            <div style="font-weight: bold; font-size: 1.1em; color: #333;">Grocery List</div>
+                            <div style="font-size: 0.85em; color: #666; margin-top: 3px;">2023-10-23 06:00 PM</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 0.9em; color: #666; margin-right: 15px;">00:50</span>
+                            <button class="play-button" style="background: none; border: none; font-size: 1.4em; color: #4CAF50; cursor: pointer; margin-right: 10px; outline: none;">▶</button>
+                            <button class="more-options-button" style="background: none; border: none; font-size: 1.4em; color: #999; cursor: pointer; outline: none;">⋮</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Screen 3: Recording Playback/Detail Screen -->
+            <div id="playback-screen" class="app-screen" style="display: none; text-align: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <button id="playback-back-button" style="background: none; border: none; font-size: 1.5em; color: #333; cursor: pointer; outline: none;">←</button>
+                    <div style="flex-grow: 1;">
+                        <h3 id="playback-title" style="margin: 0; color: #333;">Meeting Notes</h3>
+                        <div style="font-size: 0.85em; color: #666; margin-top: 3px;">2023-10-26 10:30 AM • 02:45</div>
+                    </div>
+                    <button id="playback-more-options-button" style="background: none; border: none; font-size: 1.5em; color: #999; cursor: pointer; outline: none;">⋮</button>
+                </div>
+
+                <div id="playback-waveform" style="width: 100%; height: 80px; background-color: #e0e0e0; border-radius: 10px; margin: 30px 0; display: flex; align-items: center; justify-content: space-around; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+                    <!-- Larger, more detailed waveform visualization -->
+                    <div style="width: 2%; height: 50%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 70%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 40%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 80%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 60%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 90%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 55%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 75%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 45%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 85%; background-color: #4CAF50; border-radius: 2px;"></div>
+                    <div style="width: 2%; height: 65%; background-color: #4CAF50; border-radius: 2px;"></div>
+                </div>
+
+                <input type="range" min="0" max="100" value="25" id="playback-slider" style="width: 100%; margin: 20px 0; -webkit-appearance: none; appearance: none; height: 5px; background: #ddd; border-radius: 5px; outline: none;">
+                <div style="display: flex; justify-content: space-between; width: 100%; font-size: 0.9em; color: #666;">
+                    <span id="current-playback-time">00:40</span>
+                    <span id="total-playback-duration">02:45</span>
+                </div>
+
+                <div style="margin-top: 50px; display: flex; justify-content: center; align-items: center;">
+                    <button style="background: none; border: none; font-size: 2em; color: #666; cursor: pointer; outline: none; margin: 0 15px;">⏮</button>
+                    <button id="playback-play-pause-button" style="width: 70px; height: 70px; border-radius: 50%; background-color: #4CAF50; border: none; color: white; font-size: 2em; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); outline: none; transition: background-color 0.3s, transform 0.3s;">
+                        ▶
+                    </button>
+                    <button style="background: none; border: none; font-size: 2em; color: #666; cursor: pointer; outline: none; margin: 0 15px;">⏭</button>
+                </div>
+            </div>
+
+            <!-- Contextual Menu / Action Sheet (for More Options) -->
+            <div id="contextual-menu" style="display: none; position: absolute; bottom: 0; left: 0; width: 100%; background-color: white; border-top-left-radius: 15px; border-top-right-radius: 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1); padding-top: 10px; z-index: 1000;">
+                <div style="text-align: center; padding: 10px; font-weight: bold; color: #333; border-bottom: 1px solid #eee;">Recording Actions</div>
+                <button class="menu-option" style="width: 100%; padding: 15px; background: none; border: none; text-align: left; font-size: 1.1em; color: #333; cursor: pointer; border-bottom: 1px solid #eee; outline: none; transition: background-color 0.2s;">
+                    <span style="margin-right: 10px;">▶</span> Play
+                </button>
+                <button class="menu-option" style="width: 100%; padding: 15px; background: none; border: none; text-align: left; font-size: 1.1em; color: #333; cursor: pointer; border-bottom: 1px solid #eee; outline: none; transition: background-color 0.2s;">
+                    <span style="margin-right: 10px;">✏️</span> Rename
+                </button>
+                <button class="menu-option" style="width: 100%; padding: 15px; background: none; border: none; text-align: left; font-size: 1.1em; color: #333; cursor: pointer; border-bottom: 1px solid #eee; outline: none; transition: background-color 0.2s;">
+                    <span style="margin-right: 10px;">🔗</span> Share
+                </button>
+                <button class="menu-option" style="width: 100%; padding: 15px; background: none; border: none; text-align: left; font-size: 1.1em; color: #e53935; cursor: pointer; outline: none; transition: background-color 0.2s;">
+                    <span style="margin-right: 10px;">🗑️</span> Delete
+                </button>
+                <button id="close-contextual-menu" style="width: 100%; padding: 15px; background-color: #f0f0f0; border: none; font-size: 1.1em; color: #333; cursor: pointer; margin-top: 10px; border-top: 1px solid #eee; outline: none; transition: background-color 0.2s;">Cancel</button>
+            </div>
+
+            <!-- Overlay for contextual menu -->
+            <div id="overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 999;"></div>
+
+        </div>
+
+        <!-- Global Navigation Bar (A.1) - Persistent Bottom Navigation Bar -->
+        <div id="bottom-nav" style="display: flex; justify-content: space-around; align-items: center; height: 60px; background-color: #fff; border-top: 1px solid #eee; box-shadow: 0 -2px 5px rgba(0,0,0,0.05); position: sticky; bottom: 0; width: 100%;">
+            <div id="nav-recorder" class="nav-item active" style="flex: 1; text-align: center; padding: 10px 0; color: #4CAF50; font-size: 0.9em; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: color 0.2s;">
+                <span style="font-size: 1.5em; margin-bottom: 3px;">🎙️</span>
+                <span>Recorder</span>
+            </div>
+            <div id="nav-memos" class="nav-item" style="flex: 1; text-align: center; padding: 10px 0; color: #666; font-size: 0.9em; cursor: pointer; display: flex; flex-direction: column; align-items: center; transition: color 0.2s;">
+                <span style="font-size: 1.5em; margin-bottom: 3px;">📝</span>
+                <span>Voice Memos</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Get references to UI elements
+        const recorderScreen = document.getElementById('recorder-screen');
+        const voiceMemosScreen = document.getElementById('voice-memos-screen');
+        const playbackScreen = document.getElementById('playback-screen');
+        const navRecorder = document.getElementById('nav-recorder');
+        const navMemos = document.getElementById('nav-memos');
+        const recordButton = document.getElementById('record-button');
+        const recordIcon = document.getElementById('record-icon');
+        const recordingTime = document.getElementById('recording-time');
+        const microphoneGraphic = document.getElementById('microphone-graphic');
+        const progressBar = document.getElementById('progress-bar');
+        const recordingsList = document.getElementById('recordings-list');
+        const playbackBackButton = document.getElementById('playback-back-button');
+        const contextualMenu = document.getElementById('contextual-menu');
+        const overlay = document.getElementById('overlay');
+        const closeContextualMenuButton = document.getElementById('close-contextual-menu');
+        const playbackPlayPauseButton = document.getElementById('playback-play-pause-button');
+
+        let isRecording = false;
+        let recordingTimer;
+        let seconds = 0;
+        let isPlaying = false; // For playback screen
+
+        // Helper function to format time (MM:SS)
+        function formatTime(sec) {
+            const minutes = Math.floor(sec / 60).toString().padStart(2, '0');
+            const remainingSeconds = (sec % 60).toString().padStart(2, '0');
+            return `${minutes}:${remainingSeconds}`;
+        }
+
+        // Function to start the recording timer and animations
+        function startTimer() {
+            seconds = 0;
+            recordingTime.textContent = formatTime(seconds);
+            recordingTimer = setInterval(() => {
+                seconds++;
+                recordingTime.textContent = formatTime(seconds);
+                // Simulate waveform animation by randomly adjusting bar heights
+                const bars = progressBar.children;
+                for (let i = 0; i < bars.length; i++) {
+                    bars[i].style.height = `${Math.floor(Math.random() * 60) + 20}%`; // 20% to 80% height
+                }
+            }, 1000); // Update every second
+
+            // Apply active recording styles
+            microphoneGraphic.style.backgroundColor = '#FFEBEE'; // Lighter red to indicate active
+            microphoneGraphic.style.boxShadow = '0 0 15px rgba(229, 57, 53, 0.4)'; // Glow effect
+            microphoneGraphic.querySelector('span').style.animation = 'pulse 1.5s infinite alternate'; // Pulse animation
+            progressBar.style.background = 'linear-gradient(to right, #e53935 0%, #e53935 100%)'; // Solid red for recording
+            progressBar.style.boxShadow = '0 0 10px rgba(229, 57, 53, 0.2)';
+        }
+
+        // Function to stop the recording timer and revert animations
+        function stopTimer() {
+            clearInterval(recordingTimer);
+            microphoneGraphic.style.backgroundColor = '#e0e0e0';
+            microphoneGraphic.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+            microphoneGraphic.querySelector('span').style.animation = 'none';
+            progressBar.style.background = '#e0e0e0'; // Revert to idle background
+            progressBar.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+            // Reset individual bar heights visually (optional)
+            const bars = progressBar.children;
+            for (let i = 0; i < bars.length; i++) {
+                bars[i].style.height = '50%'; // Or any default idle state
+                bars[i].style.backgroundColor = '#4CAF50'; // Green for idle
+            }
+        }
+
+        // Event listener for the Record/Stop button
+        recordButton.addEventListener('click', () => {
+            if (isRecording) {
+                // Stop recording
+                isRecording = false;
+                recordIcon.textContent = '●'; // Red circle for record
+                recordButton.style.backgroundColor = '#e53935';
+                stopTimer();
+                console.log('Recording stopped. Duration:', formatTime(seconds));
+                // In a real app, save recording here and add to voice memos list
+            } else {
+                // Start recording
+                isRecording = true;
+                recordIcon.textContent = '■'; // Square for stop
+                recordButton.style.backgroundColor = '#4CAF50'; // Green for stop
+                startTimer();
+                console.log('Recording started.');
+            }
+        });
+
+        // Function to switch screens
+        function showScreen(screenId) {
+            const screens = document.querySelectorAll('.app-screen');
+            screens.forEach(screen => {
+                screen.style.display = 'none';
+            });
+            document.getElementById(screenId).style.display = 'block';
+
+            // Update navigation bar active state
+            navRecorder.style.color = '#666';
+            navMemos.style.color = '#666';
+            if (screenId === 'recorder-screen') {
+                navRecorder.style.color = '#4CAF50';
+            } else if (screenId === 'voice-memos-screen') {
+                navMemos.style.color = '#4CAF50';
+            }
+        }
+
+        // Event listeners for bottom navigation tabs
+        navRecorder.addEventListener('click', () => showScreen('recorder-screen'));
+        navMemos.addEventListener('click', () => showScreen('voice-memos-screen'));
+
+        // Handle clicks on recording list items
+        recordingsList.addEventListener('click', (event) => {
+            const item = event.target.closest('.recording-item');
+            if (item) {
+                if (event.target.classList.contains('more-options-button')) {
+                    showContextualMenu(item);
+                } else {
+                    // Simulate navigating to playback screen
+                    const title = item.querySelector('div:first-child > div:first-child').textContent;
+                    const details = item.querySelector('div:first-child > div:last-child').textContent;
+                    const duration = item.querySelector('span:not([class])').textContent;
+
+                    document.getElementById('playback-title').textContent = title;
+                    document.getElementById('playback-screen').querySelector('div:first-of-type > div:nth-of-type(2) > div').textContent = `${details} • ${duration}`;
+                    document.getElementById('total-playback-duration').textContent = duration;
+
+                    showScreen('playback-screen');
+                }
+            }
+        });
+
+        // Event listener for playback screen's back button
+        playbackBackButton.addEventListener('click', () => {
+            showScreen('voice-memos-screen');
+            // Reset playback state if needed
+            isPlaying = false;
+            playbackPlayPauseButton.textContent = '▶';
+        });
+
+        // Function to show the contextual menu
+        function showContextualMenu(item) {
+            contextualMenu.style.display = 'block';
+            overlay.style.display = 'block';
+            console.log('Showing contextual menu for:', item ? item.querySelector('div:first-child > div:first-child').textContent : 'Current Playback');
+        }
+
+        // Event listener to close the contextual menu
+        closeContextualMenuButton.addEventListener('click', () => {
+            contextualMenu.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Event listener for clicking on the overlay to close menu
+        overlay.addEventListener('click', () => {
+            contextualMenu.style.display = 'none';
+            overlay.style.display = 'none';
+        });
+
+        // Event listener for "More Options" button on playback screen
+        document.getElementById('playback-more-options-button').addEventListener('click', () => {
+             showContextualMenu(null); // No specific list item, just show general menu
+        });
+
+        // Event listener for playback play/pause button
+        playbackPlayPauseButton.addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            playbackPlayPauseButton.textContent = isPlaying ? '❚❚' : '▶'; // Play/Pause Unicode characters
+            console.log('Playback:', isPlaying ? 'Playing' : 'Paused');
+            // In a real app, this would control actual audio playback
+        });
+
+        // Initial screen setup
+        showScreen('recorder-screen');
+    </script>
+</body>
+</html>

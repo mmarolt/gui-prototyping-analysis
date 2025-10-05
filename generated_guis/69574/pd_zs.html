@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager Categories</title>
+    <!-- Font Awesome for Icons (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /*
+        * General Body and Page Container Styles
+        * The .mobile-page-container simulates the device screen at 375x667px.
+        * The body styles center this container on larger screens.
+        */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f2f5; /* Background for the area outside the mobile screen */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensures the body takes full viewport height */
+        }
+
+        .mobile-page-container {
+            width: 375px; /* Simulated mobile width */
+            height: 667px; /* Simulated mobile height */
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for the device frame */
+            border-radius: 10px;
+            overflow: hidden; /* Important for header shadow and scrollable content */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HeaderContainer Component */
+        .header-container {
+            padding: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Subtle shadow at the bottom */
+            z-index: 1; /* Ensures shadow is above main content if scrolled */
+        }
+
+        /* StorageLocationSwitcher Component (Segmented Control) */
+        .storage-switcher {
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures segments respect border-radius */
+            background-color: #e0e0e0; /* Background for the unselected segments */
+            margin: 0 auto; /* Center the switcher horizontally */
+            width: fit-content; /* Adjust width to content */
+            font-size: 14px;
+        }
+
+        .switcher-segment {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out; /* Smooth transition on selection */
+            color: #555;
+            font-weight: 500;
+            user-select: none; /* Prevent text selection on tap */
+        }
+
+        .switcher-segment.selected {
+            background-color: #007aff; /* iOS blue for selected segment */
+            color: white;
+            font-weight: bold;
+        }
+
+        /* MainContentArea Component */
+        .main-content-area {
+            flex-grow: 1; /* Allows this area to take remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling if content overflows */
+            padding: 15px;
+            background-color: #f0f2f5; /* Light grey background */
+            position: relative; /* Essential for positioning the loading indicator */
+        }
+
+        /* GlobalLoadingIndicator Component */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white overlay */
+            z-index: 10; /* Ensures it's on top of other content */
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none; /* Makes it unclickable when hidden */
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3; /* Light grey border */
+            border-top: 4px solid #007aff; /* Blue top border for spinning effect */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite; /* Spinner animation */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* CategoryTilesGrid Component */
+        .category-tiles-grid {
+            display: flex;
+            flex-wrap: wrap; /* Allows tiles to wrap to the next line */
+            justify-content: space-between; /* Distributes tiles evenly with space between them */
+            gap: 15px; /* Spacing between rows and columns of tiles */
+            margin-top: 20px;
+        }
+
+        /* CategoryTile Component */
+        .category-tile {
+            /* Calculate width for 3 tiles per row, accounting for 15px gap */
+            width: calc(33.33% - 10px); /* (375px - 2*15px padding - 2*15px gap) / 3 = 95px. This calc is for 33.33% of (375-30) = 115 - 10px gap */
+            min-width: 90px; /* Minimum size to prevent tiles from becoming too small */
+            max-width: 110px; /* Maximum size to keep consistent layout */
+            background-color: white;
+            border-radius: 12px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Subtle tile shadow */
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Smooth hover/active effects */
+            box-sizing: border-box; /* Ensures padding is included in the width calculation */
+        }
+
+        .category-tile:hover {
+            transform: translateY(-3px); /* Lift tile slightly on hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+
+        .category-tile:active {
+            transform: translateY(0); /* Return to original position on click */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tile-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            color: #333; /* Default icon color, overridden by specific tile color classes */
+        }
+
+        /* Specific icon colors based on conceptual structure */
+        .tile-color-blue .tile-icon { color: #007aff; } /* Docs */
+        .tile-color-red .tile-icon { color: #ff3b30; } /* Video */
+        .tile-color-green .tile-icon { color: #34c759; } /* Audio */
+        .tile-color-orange .tile-icon { color: #ff9500; } /* Images */
+        .tile-color-purple .tile-icon { color: #af52de; } /* RAR */
+        .tile-color-teal .tile-icon { color: #5ac8fa; } /* Downloads */
+
+        .tile-label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 4px;
+            white-space: nowrap; /* Prevent labels from wrapping too early */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Add ellipsis if text overflows */
+            max-width: 100%; /* Constrain text width within the tile */
+        }
+
+        .tile-count {
+            font-size: 12px;
+            color: #666;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- MainScreen Component (Parent Container) -->
+    <div class="mobile-page-container">
+        <!-- HeaderContainer Component -->
+        <div class="header-container">
+            <!-- StorageLocationSwitcher Component (Segmented Control) -->
+            <div class="storage-switcher">
+                <div class="switcher-segment selected" id="localFolderSegment">Local Folder</div>
+                <div class="switcher-segment" id="sdCardSegment">SD Card</div>
+            </div>
+        </div>
+
+        <!-- MainContentArea Component -->
+        <div class="main-content-area">
+            <!-- GlobalLoadingIndicator Component -->
+            <div class="loading-overlay hidden" id="loadingIndicator">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- CategoryTilesGrid Component -->
+            <div class="category-tiles-grid" id="categoryGrid">
+                <!-- CategoryTile components will be dynamically rendered here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data Simulation ---
+        const categoryData = {
+            'local_folder': [
+                { categoryName: 'Docs', fileCount: 120, iconName: 'fa-file-alt', tileColor: 'tile-color-blue' },
+                { categoryName: 'Video', fileCount: 35, iconName: 'fa-video', tileColor: 'tile-color-red' },
+                { categoryName: 'Audio', fileCount: 88, iconName: 'fa-headphones', tileColor: 'tile-color-green' },
+                { categoryName: 'Images', fileCount: 450, iconName: 'fa-image', tileColor: 'tile-color-orange' },
+                { categoryName: 'RAR', fileCount: 12, iconName: 'fa-archive', tileColor: 'tile-color-purple' },
+                { categoryName: 'Downloads', fileCount: 210, iconName: 'fa-download', tileColor: 'tile-color-teal' },
+                { categoryName: 'Apps', fileCount: 5, iconName: 'fa-th-large', tileColor: 'tile-color-blue' },
+                { categoryName: 'Others', fileCount: 78, iconName: 'fa-folder-open', tileColor: 'tile-color-red' }
+            ],
+            'sd_card': [
+                { categoryName: 'Docs', fileCount: 15, iconName: 'fa-file-alt', tileColor: 'tile-color-blue' },
+                { categoryName: 'Video', fileCount: 120, iconName: 'fa-video', tileColor: 'tile-color-red' },
+                { categoryName: 'Audio', fileCount: 250, iconName: 'fa-headphones', tileColor: 'tile-color-green' },
+                { categoryName: 'Images', fileCount: 1200, iconName: 'fa-image', tileColor: 'tile-color-orange' },
+                { categoryName: 'RAR', fileCount: 3, iconName: 'fa-archive', tileColor: 'tile-color-purple' },
+                { categoryName: 'Downloads', fileCount: 50, iconName: 'fa-download', tileColor: 'tile-color-teal' }
+            ]
+        };
+
+        // --- State Variables ---
+        let selectedStorageLocation = 'local_folder';
+        let isLoading = false; // Initial state
+
+        // --- DOM Elements ---
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const categoryGrid = document.getElementById('categoryGrid');
+        const localFolderSegment = document.getElementById('localFolderSegment');
+        const sdCardSegment = document.getElementById('sdCardSegment');
+
+        // --- Methods ---
+
+        /**
+         * Shows the loading indicator.
+         */
+        function showLoading() {
+            isLoading = true;
+            loadingIndicator.classList.remove('hidden');
+        }
+
+        /**
+         * Hides the loading indicator.
+         */
+        function hideLoading() {
+            isLoading = false;
+            loadingIndicator.classList.add('hidden');
+        }
+
+        /**
+         * Creates a single CategoryTile HTML element.
+         * @param {object} category - The category data object.
+         * @returns {HTMLElement} The created tile div element.
+         */
+        function createTile(category) {
+            const tileDiv = document.createElement('div');
+            // Add tile-color class for icon styling
+            tileDiv.className = `category-tile ${category.tileColor}`;
+            tileDiv.onclick = () => onTilePress(category); // Simulate onPress for interaction
+
+            // Populate tile content
+            tileDiv.innerHTML = `
+                <i class="fas ${category.iconName} tile-icon"></i>
+                <div class="tile-label">${category.categoryName}</div>
+                <div class="tile-count">${category.fileCount}</div>
+            `;
+            return tileDiv;
+        }
+
+        /**
+         * Renders all category tiles for the given storage location.
+         * @param {string} location - 'local_folder' or 'sd_card'.
+         */
+        function renderCategoryTiles(location) {
+            categoryGrid.innerHTML = ''; // Clear existing tiles
+            const data = categoryData[location];
+            data.forEach(category => {
+                categoryGrid.appendChild(createTile(category));
+            });
+        }
+
+        /**
+         * Handles the change of storage location.
+         * @param {string} newLocation - The newly selected location.
+         */
+        function onStorageLocationChange(newLocation) {
+            if (selectedStorageLocation === newLocation) return; // No change needed
+
+            selectedStorageLocation = newLocation;
+
+            // Update segmented control visual state
+            localFolderSegment.classList.remove('selected');
+            sdCardSegment.classList.remove('selected');
+            if (newLocation === 'local_folder') {
+                localFolderSegment.classList.add('selected');
+            } else {
+                sdCardSegment.classList.add('selected');
+            }
+
+            showLoading();
+            // Simulate asynchronous data fetching delay
+            setTimeout(() => {
+                renderCategoryTiles(selectedStorageLocation);
+                hideLoading();
+            }, 800); // Simulate an 800ms network request
+        }
+
+        /**
+         * Handles a tile press event.
+         * @param {object} category - The category data of the pressed tile.
+         */
+        function onTilePress(category) {
+            alert(`Navigating to ${category.categoryName} details!`);
+            console.log('Tile pressed:', category);
+            // In a real app, this would navigate to a new screen
+        }
+
+        // --- Initial Render and Event Listeners ---
+
+        // Render initial tiles when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            showLoading();
+            // Simulate initial data load
+            setTimeout(() => {
+                renderCategoryTiles(selectedStorageLocation);
+                hideLoading();
+            }, 500); // Shorter initial load simulation
+        });
+
+        // Attach event listeners to the segmented control segments
+        localFolderSegment.addEventListener('click', () => onStorageLocationChange('local_folder'));
+        sdCardSegment.addEventListener('click', () => onStorageLocationChange('sd_card'));
+    </script>
+</body>
+</html>

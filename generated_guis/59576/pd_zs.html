@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Page UI</title>
+</head>
+<body style="margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #f8f8f8; color: #333; line-height: 1.6;">
+
+    <!-- Overall Page Structure: Scrollable View/Container -->
+    <div class="mobile-wrapper" style="width: 100%; max-width: 375px; margin: 0 auto; min-height: 100vh; box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #fff; overflow-y: auto; box-sizing: border-box;">
+
+        <!-- 1. Top Section: Search and Discovery -->
+        <div style="padding: 15px; background-color: #f0f0f0; border-bottom: 1px solid #eee;">
+            <!-- 1.1. Search Bar -->
+            <div style="display: flex; align-items: center; background-color: #fff; border: 1px solid #ddd; border-radius: 25px; padding: 8px 15px;">
+                <span style="font-size: 18px; color: #888; margin-right: 10px;">&#128269;</span> <!-- Search Icon (Magnifying Glass) -->
+                <input type="text" placeholder="Search for resources..." id="searchInput"
+                       style="flex-grow: 1; border: none; outline: none; font-size: 16px; padding: 0;">
+                <span id="clearSearchButton"
+                      style="font-size: 18px; color: #888; margin-left: 10px; cursor: pointer; display: none;">&#10006;</span> <!-- Clear Button (X icon, initially hidden) -->
+            </div>
+
+            <!-- 1.2. Search Results Display (Initially hidden) -->
+            <div id="searchResults" style="display: none; margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;">
+                <p style="font-size: 14px; color: #666; margin-bottom: 10px;">Showing results for: "<span id="searchQuerySpan" style="font-weight: bold;"></span>"</p>
+
+                <!-- Example Result Item 1 -->
+                <div class="search-result-item" style="background-color: #fff; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; padding: 12px; cursor: pointer;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 16px; color: #007bff;">Product Innovations in 2023</h4>
+                    <p style="margin: 0; font-size: 13px; color: #555;">Discover the latest advancements and new product lines launched by Coca-Cola...</p>
+                </div>
+                <!-- Example Result Item 2 -->
+                <div class="search-result-item" style="background-color: #fff; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; padding: 12px; cursor: pointer;">
+                    <h4 style="margin: 0 0 5px 0; font-size: 16px; color: #007bff;">Sustainable Sourcing of Ingredients</h4>
+                    <p style="margin: 0; font-size: 13px; color: #555;">Learn about our commitment to ethical and sustainable sourcing practices for all our products...</p>
+                </div>
+                <!-- "No Results" Message (initially hidden, shown dynamically) -->
+                <p id="noResultsMessage" style="display: none; text-align: center; color: #888; font-style: italic; margin-top: 20px; padding: 10px;">No results found for your query.</p>
+            </div>
+        </div>
+
+        <!-- 2. Main Content Section: Fast Facts -->
+        <div style="padding: 15px;">
+            <!-- 2.1. "Fast Facts" Section Header/Title -->
+            <h2 style="font-size: 22px; color: #333; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">Fast Facts</h2>
+
+            <!-- 2.2. Fast Facts Categories (Expandable/Collapsible Accordion) -->
+
+            <!-- Fast Facts Category 1 -->
+            <div class="accordion-item" style="margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div class="accordion-header"
+                     style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; cursor: pointer;">
+                    <h3 style="margin: 0; font-size: 18px; color: #333;">Coca-Cola 101</h3>
+                    <span class="toggle-icon" style="font-size: 20px; font-weight: bold; color: #555;">&#43;</span> <!-- Plus icon -->
+                </div>
+                <div class="accordion-content" style="display: none; padding: 15px; background-color: #fff; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #444;">Coca-Cola was first introduced in 1886 by pharmacist John Pemberton in Atlanta, Georgia. It was initially marketed as a patent medicine.</p>
+                    <p style="margin: 0; font-size: 14px; color: #444;">Today, The Coca-Cola Company offers more than 500 brands in over 200 countries, serving 1.9 billion drinks daily.</p>
+                </div>
+            </div>
+
+            <!-- Fast Facts Category 2 -->
+            <div class="accordion-item" style="margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div class="accordion-header"
+                     style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; cursor: pointer;">
+                    <h3 style="margin: 0; font-size: 18px; color: #333;">Products & Ingredients</h3>
+                    <span class="toggle-icon" style="font-size: 20px; font-weight: bold; color: #555;">&#43;</span>
+                </div>
+                <div class="accordion-content" style="display: none; padding: 15px; background-color: #fff; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #444;">Our portfolio includes sparkling soft drinks, water, sports drinks, juices, dairy, plant-based beverages, and coffee.</p>
+                    <p style="margin: 0; font-size: 14px; color: #444;">Key ingredients in Coca-Cola include carbonated water, high fructose corn syrup (or sugar), caramel color, phosphoric acid, natural flavors, and caffeine.</p>
+                </div>
+            </div>
+
+            <!-- Fast Facts Category 3 -->
+            <div class="accordion-item" style="margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div class="accordion-header"
+                     style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; cursor: pointer;">
+                    <h3 style="margin: 0; font-size: 18px; color: #333;">Global Impact</h3>
+                    <span class="toggle-icon" style="font-size: 20px; font-weight: bold; color: #555;">&#43;</span>
+                </div>
+                <div class="accordion-content" style="display: none; padding: 15px; background-color: #fff; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #444;">Coca-Cola's global operations support millions of jobs directly and indirectly through its vast supply chain and distribution network.</p>
+                    <p style="margin: 0; font-size: 14px; color: #444;">We are committed to various sustainability initiatives, including water stewardship, packaging recycling, and climate action.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Main Content Section: FAQ -->
+        <div style="padding: 15px; margin-top: 20px;">
+            <!-- 3.1. "FAQ" Section Header/Title -->
+            <h2 style="font-size: 22px; color: #333; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 1px solid #eee;">FAQ</h2>
+
+            <!-- 3.2. FAQ Categories (Expandable/Collapsible Accordion) -->
+
+            <!-- FAQ Category 1 -->
+            <div class="accordion-item" style="margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div class="accordion-header"
+                     style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; cursor: pointer;">
+                    <h3 style="margin: 0; font-size: 18px; color: #333;">Well-being</h3>
+                    <span class="toggle-icon" style="font-size: 20px; font-weight: bold; color: #555;">&#43;</span>
+                </div>
+                <div class="accordion-content" style="display: none; padding: 15px; background-color: #fff; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 14px; color: #333;">Q: Are there sugar-free options available?</p>
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #444;">A: Yes, we offer a wide range of no-sugar and low-sugar beverages, including Coca-Cola Zero Sugar, Diet Coke, and various other light options across our brands.</p>
+
+                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 14px; color: #333;">Q: What is the caffeine content in your drinks?</p>
+                    <p style="margin: 0; font-size: 14px; color: #444;">A: Caffeine content varies by product. For example, a standard 12 fl oz (355 ml) can of Coca-Cola contains about 34 mg of caffeine, while Diet Coke has 46 mg.</p>
+                </div>
+            </div>
+
+            <!-- FAQ Category 2 -->
+            <div class="accordion-item" style="margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div class="accordion-header"
+                     style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; cursor: pointer;">
+                    <h3 style="margin: 0; font-size: 18px; color: #333;">Environment</h3>
+                    <span class="toggle-icon" style="font-size: 20px; font-weight: bold; color: #555;">&#43;</span>
+                </div>
+                <div class="accordion-content" style="display: none; padding: 15px; background-color: #fff; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 14px; color: #333;">Q: What are your sustainability goals?</p>
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #444;">A: We aim to collect and recycle the equivalent of every bottle or can we sell by 2030, and to make our packaging 100% recyclable. We also focus on water stewardship and reducing our carbon footprint.</p>
+
+                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 14px; color: #333;">Q: How can I recycle your packaging?</p>
+                    <p style="margin: 0; font-size: 14px; color: #444;">A: Most of our packaging, including PET plastic bottles, aluminum cans, and glass bottles, is widely recyclable. Please check local recycling guidelines in your area for proper disposal.</p>
+                </div>
+            </div>
+
+            <!-- FAQ Category 3 -->
+            <div class="accordion-item" style="margin-bottom: 10px; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+                <div class="accordion-header"
+                     style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background-color: #f9f9f9; cursor: pointer;">
+                    <h3 style="margin: 0; font-size: 18px; color: #333;">Support & Contact</h3>
+                    <span class="toggle-icon" style="font-size: 20px; font-weight: bold; color: #555;">&#43;</span>
+                </div>
+                <div class="accordion-content" style="display: none; padding: 15px; background-color: #fff; border-top: 1px solid #eee;">
+                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 14px; color: #333;">Q: How can I contact customer service?</p>
+                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #444;">A: You can reach our customer service team via our website's contact form, by phone at [Toll-Free Number], or through our social media channels.</p>
+
+                    <p style="margin: 0 0 5px 0; font-weight: bold; font-size: 14px; color: #333;">Q: Where can I find information about job openings?</p>
+                    <p style="margin: 0; font-size: 14px; color: #444;">A: Please visit the "Careers" section on our official corporate website for current job listings and application procedures.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript for Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling; // The accordion-content div
+                const icon = header.querySelector('.toggle-icon'); // The + / - icon
+
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                    icon.textContent = '\u002B'; // Change to Plus sign
+                } else {
+                    content.style.display = 'block';
+                    icon.textContent = '\u2212'; // Change to Minus sign
+                }
+            });
+        });
+
+        // JavaScript for Search Bar functionality
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchButton = document.getElementById('clearSearchButton');
+        const searchResults = document.getElementById('searchResults');
+        const searchQuerySpan = document.getElementById('searchQuerySpan');
+        const noResultsMessage = document.getElementById('noResultsMessage');
+        const exampleResultItems = document.querySelectorAll('.search-result-item');
+
+        searchInput.addEventListener('input', () => {
+            if (searchInput.value.length > 0) {
+                clearSearchButton.style.display = 'inline';
+            } else {
+                clearSearchButton.style.display = 'none';
+                searchResults.style.display = 'none'; // Hide results when input is empty
+                noResultsMessage.style.display = 'none';
+            }
+        });
+
+        clearSearchButton.addEventListener('click', () => {
+            searchInput.value = '';
+            clearSearchButton.style.display = 'none';
+            searchResults.style.display = 'none';
+            noResultsMessage.style.display = 'none';
+            searchInput.focus(); // Optionally refocus the input
+        });
+
+        // Simulate search submission on Enter key press
+        searchInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                performSearch();
+                searchInput.blur(); // Hide keyboard on mobile after search
+            }
+        });
+        
+        // Simulate search on input blur (when user taps outside the input field)
+        searchInput.addEventListener('blur', () => {
+            if (searchInput.value.trim().length > 0 && searchResults.style.display === 'none') {
+                // Only perform search if there's text and results are not already shown
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const query = searchInput.value.trim();
+            
+            if (query.length > 0) {
+                searchQuerySpan.textContent = query;
+                searchResults.style.display = 'block';
+                
+                let resultsFound = false;
+                // Simple simulation: show results if query contains "product" or "ingredient"
+                if (query.toLowerCase().includes('product') || query.toLowerCase().includes('ingredient')) {
+                    exampleResultItems.forEach(item => item.style.display = 'block');
+                    resultsFound = true;
+                } else {
+                    exampleResultItems.forEach(item => item.style.display = 'none');
+                }
+
+                if (resultsFound) {
+                    noResultsMessage.style.display = 'none';
+                } else {
+                    noResultsMessage.style.display = 'block';
+                }
+
+            } else {
+                searchResults.style.display = 'none';
+                noResultsMessage.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>

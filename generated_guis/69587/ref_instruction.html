@@ -1,297 +1,529 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Email Inbox</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-    /* Basic Reset & Font */
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      font-size: 16px;
-      color: #333; /* Base text color */
-      background-color: #FAFAFA; /* Surface Color */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Email Inbox</title>
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Base styles for the mobile screen container */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif; /* Material Design standard font, implicitly loaded by Material Icons CDN */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0; /* Light background for the surrounding area */
+        }
 
-    /* App Bar Styles */
-    .app-bar {
-      height: 56px;
-      background-color: #6200EE; /* Material Design Primary Color */
-      color: #FFFFFF; /* On Primary Color */
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 16px;
-      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100; /* Ensure app bar stays on top */
-    }
+        .mobile-screen {
+            width: 375px;
+            height: 667px;
+            background-color: #ffffff; /* Page background color */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative; /* For FAB and Contextual Bar positioning */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensures elements like FAB don't break layout */
+        }
 
-    .app-bar-left,
-    .app-bar-right {
-      display: flex;
-      align-items: center;
-    }
+        /* Material Design Colors */
+        :root {
+            --md-sys-color-primary: #6200EE;
+            --md-sys-color-on-primary: #FFFFFF;
+            --md-sys-color-secondary: #03DAC6;
+            --md-sys-color-on-secondary: #000000;
+            --md-sys-color-primary-variant: #3700B3; /* A darker primary for contextual bar */
+            --md-sys-color-surface: #FFFFFF;
+            --md-sys-color-on-surface: #000000;
+            --md-sys-color-divider: #E0E0E0;
+            --md-sys-color-text-secondary: #757575;
+            --md-sys-color-text-tertiary: #9E9E9E;
+            --md-sys-color-star-active: #FFC107; /* Material yellow for active star */
+        }
 
-    .app-bar-center {
-      font-size: 20px;
-      font-weight: 500; /* Roboto Medium */
-    }
+        /* 1. Top App Bar (Header) */
+        .top-app-bar {
+            width: 100%;
+            height: 56px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0; /* Prevents shrinking when content grows */
+            position: relative; /* For z-index if needed for overlay */
+            z-index: 10; /* Ensure it's above scrolling content */
+        }
 
-    .app-bar i {
-      cursor: pointer;
-      padding: 8px;
-    }
+        .top-app-bar .material-icons {
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none; /* Prevent text selection on icons */
+        }
 
-    /* Email List Styles */
-    .email-list {
-      margin-top: 56px; /* Account for app bar height */
-      padding: 8px;
-    }
+        .top-app-bar h1 {
+            flex-grow: 1;
+            margin: 0; /* Reset default h1 margin */
+            margin-left: 16px;
+            font-size: 20px; /* Headline 6 / Subtitle 1 */
+            font-weight: 500;
+            line-height: 24px;
+        }
 
-    .email-card {
-      display: flex;
-      padding: 12px;
-      border-bottom: 1px solid #EEEEEE; /* Divider */
-      background-color: #FFFFFF;
-      align-items: flex-start;
-      cursor: pointer;
-    }
+        /* 2. Email List (Main Content Area) */
+        .email-list {
+            flex-grow: 1; /* Occupies remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            background-color: var(--md-sys-color-surface);
+            padding-bottom: 80px; /* Space for FAB */
+        }
 
-    .email-card-left {
-      margin-right: 16px;
-    }
+        .email-list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--md-sys-color-divider);
+            background-color: var(--md-sys-color-surface);
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
 
-    .email-card-left img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+        .email-list-item:hover {
+            background-color: #f5f5f5; /* Subtle hover effect */
+        }
 
-    .email-card-center {
-      flex-grow: 1;
-      overflow: hidden; /* Ensure text doesn't overflow */
-    }
+        .email-list-item.selected {
+            background-color: #e3f2fd; /* Light blue background for selected items */
+        }
 
-    .email-card-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: space-between;
-    }
+        /* Leading Avatar/Selection Icon */
+        .email-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #F44336; /* Example color, should be randomized/sender-specific */
+            color: var(--md-sys-color-on-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px; /* Body 1 / Subtitle 2 */
+            font-weight: 500;
+            margin-right: 16px;
+            flex-shrink: 0; /* Prevent avatar from shrinking */
+            cursor: pointer;
+            user-select: none;
+        }
 
-    .email-sender {
-      font-size: 16px;
-      font-weight: 500; /* Roboto Medium */
-      color: #212121; /* On Surface High Emphasis (close to 87% black) */
-      white-space: nowrap; /* Prevent wrapping */
-      overflow: hidden;
-      text-overflow: ellipsis; /* Add ellipsis if too long */
-    }
+        .email-avatar.selected {
+            background-color: var(--md-sys-color-primary); /* Primary color for selected avatar */
+        }
 
-    .email-subject {
-      font-size: 14px;
-      color: #757575; /* On Surface Medium Emphasis (close to 54% black) */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+        .email-avatar .initials {
+            display: block;
+        }
 
-    .email-summary {
-      font-size: 12px;
-      color: #757575; /* On Surface Medium Emphasis */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+        .email-avatar .check-icon {
+            display: none; /* Hidden by default */
+            font-size: 20px; /* Slightly smaller checkmark */
+        }
 
-    .email-timestamp {
-      font-size: 12px;
-      color: #9E9E9E; /* On Surface Disabled Emphasis (close to 38% black) */
-    }
+        .email-avatar.selected .initials {
+            display: none;
+        }
 
-    .email-card-right i {
-      color: #FF4081; /* Accent Color (Pink A400) */
-      cursor: pointer;
-    }
+        .email-avatar.selected .check-icon {
+            display: block;
+        }
 
-    /* FAB Styles */
-    .fab {
-      position: fixed;
-      bottom: 16px;
-      right: 16px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background-color: #03DAC5; /* Material Design Secondary Color */
-      color: #000000; /* On Secondary Color */
-      box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 99;
-    }
+        /* Content Area */
+        .email-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0; /* Allows content to shrink and use ellipsis */
+        }
 
-    .fab i {
-      font-size: 24px;
-    }
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            font-size: 16px; /* Subtitle 1 / Body 1 */
+            font-weight: 500;
+            line-height: 20px;
+        }
 
-    /* Bottom Navigation Styles (Optional) */
-    footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 56px;
-      background-color: #FFFFFF; /* Surface Color */
-      box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 100;
-    }
+        .email-sender {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: calc(100% - 70px); /* Adjust based on time width */
+            color: var(--md-sys-color-on-surface);
+        }
 
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      cursor: pointer;
-    }
+        .email-time {
+            font-size: 12px; /* Caption */
+            color: var(--md-sys-color-text-secondary);
+            margin-left: 8px; /* Space between sender and time */
+            flex-shrink: 0;
+        }
 
-    .nav-item i {
-      font-size: 24px;
-      color: #757575;
-    }
+        .email-subject {
+            font-size: 14px; /* Body 2 */
+            line-height: 20px;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--md-sys-color-on-surface);
+        }
 
-    .nav-item span {
-      font-size: 12px;
-      color: #757575;
-    }
+        .email-snippet {
+            font-size: 12px; /* Caption */
+            line-height: 16px;
+            color: var(--md-sys-color-text-secondary);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
-    /* Media Queries for Responsiveness (Example) */
-    @media (max-width: 480px) {
-      .app-bar {
-        padding: 0 8px;
-      }
-      .email-card {
-        padding: 8px;
-      }
-    }
+        /* Trailing Star Icon */
+        .email-star-icon {
+            font-size: 20px;
+            color: var(--md-sys-color-text-secondary);
+            margin-left: 16px;
+            flex-shrink: 0;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    /* Example avatar placeholder */
-    .avatar-placeholder {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background-color: #90A4AE; /* Grey 300 */
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 16px;
-    }
+        .email-star-icon.starred {
+            color: var(--md-sys-color-star-active);
+        }
 
-  </style>
+        /* 3. Floating Action Button (FAB) */
+        .fab {
+            position: absolute; /* Relative to .mobile-screen */
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--md-sys-color-secondary);
+            color: var(--md-sys-color-on-secondary);
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            outline: none; /* Remove focus outline */
+            transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+            z-index: 100; /* Ensure it's on top of everything */
+        }
+
+        .fab:hover {
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+            transform: translateY(-2px); /* Subtle lift effect */
+        }
+
+        .fab .material-icons {
+            font-size: 24px;
+        }
+
+        /* 4. Contextual Action Bar (Conditional) */
+        .contextual-action-bar {
+            width: 100%;
+            height: 56px;
+            background-color: var(--md-sys-color-primary-variant);
+            color: var(--md-sys-color-on-primary);
+            display: none; /* Hidden by default */
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 20; /* Higher than top-app-bar to overlay it */
+        }
+
+        .contextual-action-bar .material-icons {
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .contextual-action-bar .selection-count {
+            flex-grow: 1;
+            margin-left: 16px;
+            font-size: 20px; /* Subtitle 1 */
+            font-weight: 500;
+            line-height: 24px;
+            white-space: nowrap;
+        }
+
+        .contextual-action-bar .action-icon {
+            margin-left: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- App Bar -->
-  <header class="app-bar">
-    <div class="app-bar-left">
-      <i class="material-icons">menu</i>
-    </div>
-    <div class="app-bar-center">
-      <span>Inbox</span>
-    </div>
-    <div class="app-bar-right">
-      <i class="material-icons">search</i>
-      <i class="material-icons">more_vert</i>
-    </div>
-  </header>
+    <div class="mobile-screen">
 
-  <!-- Email List -->
-  <div class="email-list">
+        <!-- 1. Top App Bar (Header) -->
+        <header class="top-app-bar">
+            <i class="material-icons">menu</i>
+            <h1>Inbox</h1>
+            <i class="material-icons">search</i>
+        </header>
 
-    <!-- Email Card 1 -->
-    <div class="email-card">
-      <div class="email-card-left">
-        <img src="https://via.placeholder.com/40" alt="John Doe Avatar">
-      </div>
-      <div class="email-card-center">
-        <div class="email-sender">John Doe</div>
-        <div class="email-subject">Meeting Agenda</div>
-        <div class="email-summary">Please find attached the agenda for our upcoming meeting...</div>
-      </div>
-      <div class="email-card-right">
-        <div class="email-timestamp">2 hours ago</div>
-        <i class="material-icons">star_border</i>
-      </div>
+        <!-- 4. Contextual Action Bar (Conditional) - Initially hidden -->
+        <header class="contextual-action-bar" id="contextualActionBar">
+            <i class="material-icons" onclick="exitSelectionMode()">close</i>
+            <span class="selection-count" id="selectionCount">0 selected</span>
+            <i class="material-icons action-icon">delete</i>
+            <!-- Optional: <i class="material-icons action-icon">archive</i> -->
+        </header>
+
+        <!-- 2. Email List (Main Content Area) -->
+        <main class="email-list" id="emailList">
+            <!-- Example Email List Item 1 -->
+            <div class="email-list-item" data-id="1">
+                <div class="email-avatar" style="background-color: #F44336;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">JS</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">John Smith</span>
+                        <span class="email-time">10:30 AM</span>
+                    </div>
+                    <span class="email-subject">Meeting Notes for Project X</span>
+                    <span class="email-snippet">Hi team, attached are the notes from our last meeting regarding the upcoming project...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+
+            <!-- Example Email List Item 2 -->
+            <div class="email-list-item" data-id="2">
+                <div class="email-avatar" style="background-color: #2196F3;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">MA</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Marketing Team Updates</span>
+                        <span class="email-time">Yesterday</span>
+                    </div>
+                    <span class="email-subject">Q3 Performance Review and Strategy</span>
+                    <span class="email-snippet">Reviewing our Q3 performance, we saw significant growth in engagement metrics across all platforms. Details enclosed...</span>
+                </div>
+                <i class="material-icons email-star-icon starred" onclick="toggleStar(this)">star</i>
+            </div>
+
+            <!-- Example Email List Item 3 -->
+            <div class="email-list-item" data-id="3">
+                <div class="email-avatar" style="background-color: #4CAF50;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">SV</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Service Vendor Inc.</span>
+                        <span class="email-time">Aug 15</span>
+                    </div>
+                    <span class="email-subject">Your monthly invoice is ready</span>
+                    <span class="email-snippet">Dear Customer, your invoice for August services is now available in your portal...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+
+            <!-- Example Email List Item 4 -->
+            <div class="email-list-item" data-id="4">
+                <div class="email-avatar" style="background-color: #FF9800;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">AR</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Andrew R.</span>
+                        <span class="email-time">Aug 14</span>
+                    </div>
+                    <span class="email-subject">Follow-up on our chat</span>
+                    <span class="email-snippet">Just wanted to circle back on our conversation from last week regarding the new project scope...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+
+            <!-- Example Email List Item 5 -->
+            <div class="email-list-item" data-id="5">
+                <div class="email-avatar" style="background-color: #9C27B0;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">NT</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Newsletter Today</span>
+                        <span class="email-time">Aug 14</span>
+                    </div>
+                    <span class="email-subject">Your Weekly Tech Roundup!</span>
+                    <span class="email-snippet">Stay updated with the latest in technology, AI breakthroughs, and gadget reviews...</span>
+                </div>
+                <i class="material-icons email-star-icon starred" onclick="toggleStar(this)">star</i>
+            </div>
+            
+            <!-- More items to make it scrollable -->
+            <div class="email-list-item" data-id="6">
+                <div class="email-avatar" style="background-color: #FF5722;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">AD</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Advisory Board</span>
+                        <span class="email-time">Aug 13</span>
+                    </div>
+                    <span class="email-subject">Important: New Policy Update</span>
+                    <span class="email-snippet">Please review the new company policy regarding remote work and flex hours...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+            <div class="email-list-item" data-id="7">
+                <div class="email-avatar" style="background-color: #795548;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">HR</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Human Resources</span>
+                        <span class="email-time">Aug 12</span>
+                    </div>
+                    <span class="email-subject">Your Pay Stub is Available</span>
+                    <span class="email-snippet">Your bi-weekly pay stub has been uploaded to your employee portal...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+            <div class="email-list-item" data-id="8">
+                <div class="email-avatar" style="background-color: #607D8B;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">DD</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Design Dept.</span>
+                        <span class="email-time">Aug 12</span>
+                    </div>
+                    <span class="email-subject">Feedback on Mockups V2</span>
+                    <span class="email-snippet">We've incorporated your feedback into the new design mockups, please take a look...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+            <div class="email-list-item" data-id="9">
+                <div class="email-avatar" style="background-color: #E91E63;" onclick="toggleEmailSelection(this)">
+                    <span class="initials">SP</span>
+                    <i class="material-icons check-icon">check</i>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="email-sender">Sarah P.</span>
+                        <span class="email-time">Aug 11</span>
+                    </div>
+                    <span class="email-subject">Lunch plans for Friday?</span>
+                    <span class="email-snippet">Hey, are you free for lunch this Friday? There's a new cafe downtown I wanted to try...</span>
+                </div>
+                <i class="material-icons email-star-icon" onclick="toggleStar(this)">star_border</i>
+            </div>
+        </main>
+
+        <!-- 3. Floating Action Button (FAB) -->
+        <button class="fab">
+            <i class="material-icons">edit</i>
+        </button>
+
     </div>
 
-    <!-- Email Card 2 -->
-    <div class="email-card">
-      <div class="email-card-left">
-        <div class="avatar-placeholder">JD</div>
-      </div>
-      <div class="email-card-center">
-        <div class="email-sender">Jane Smith</div>
-        <div class="email-subject">Project Update</div>
-        <div class="email-summary">Quick update on the project progress.  We're on track to meet the deadline...</div>
-      </div>
-      <div class="email-card-right">
-        <div class="email-timestamp">Yesterday</div>
-        <i class="material-icons">star</i>
-      </div>
-    </div>
+    <script>
+        let selectedEmails = new Set();
+        const contextualActionBar = document.getElementById('contextualActionBar');
+        const selectionCountSpan = document.getElementById('selectionCount');
 
-    <!-- Email Card 3 -->
-     <div class="email-card">
-      <div class="email-card-left">
-          <img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Peter Jones Avatar">
-      </div>
-      <div class="email-card-center">
-        <div class="email-sender">Peter Jones</div>
-        <div class="email-subject">Weekend Getaway</div>
-        <div class="email-summary">Thinking of planning a weekend getaway, any suggestions?...</div>
-      </div>
-      <div class="email-card-right">
-        <div class="email-timestamp">3 days ago</div>
-        <i class="material-icons">star_border</i>
-      </div>
-    </div>
+        function updateSelectionCount() {
+            selectionCountSpan.textContent = `${selectedEmails.size} selected`;
+            if (selectedEmails.size > 0) {
+                contextualActionBar.style.display = 'flex';
+            } else {
+                contextualActionBar.style.display = 'none';
+            }
+        }
 
-    <!-- More Email Cards (Add as needed) -->
+        function toggleEmailSelection(avatarElement) {
+            const emailListItem = avatarElement.closest('.email-list-item');
+            const emailId = emailListItem.dataset.id;
 
-  </div>
+            if (selectedEmails.has(emailId)) {
+                selectedEmails.delete(emailId);
+                avatarElement.classList.remove('selected');
+                emailListItem.classList.remove('selected');
+            } else {
+                selectedEmails.add(emailId);
+                avatarElement.classList.add('selected');
+                emailListItem.classList.add('selected');
+            }
+            updateSelectionCount();
+        }
 
-  <!-- Floating Action Button -->
-  <button class="fab" aria-label="Compose Email">
-    <i class="material-icons">add</i>
-  </button>
+        function exitSelectionMode() {
+            selectedEmails.forEach(emailId => {
+                const item = document.querySelector(`.email-list-item[data-id="${emailId}"]`);
+                if (item) {
+                    item.classList.remove('selected');
+                    item.querySelector('.email-avatar').classList.remove('selected');
+                }
+            });
+            selectedEmails.clear();
+            updateSelectionCount();
+        }
 
-  <!-- Optional Bottom Navigation -->
-  <footer>
-    <div class="nav-item">
-      <i class="material-icons">mail</i>
-      <span>Inbox</span>
-    </div>
-    <div class="nav-item">
-      <i class="material-icons">send</i>
-      <span>Sent</span>
-    </div>
-    <div class="nav-item">
-      <i class="material-icons">drafts</i>
-      <span>Drafts</span>
-    </div>
-  </footer>
+        function toggleStar(starIcon) {
+            starIcon.classList.toggle('starred');
+            if (starIcon.textContent === 'star_border') {
+                starIcon.textContent = 'star';
+            } else {
+                starIcon.textContent = 'star_border';
+            }
+            // Prevent event bubbling if this interaction should not trigger email selection
+            event.stopPropagation();
+        }
+
+        // Add event listener to email list items to open email view
+        document.querySelectorAll('.email-list-item').forEach(item => {
+            item.addEventListener('click', (event) => {
+                // Check if the click was on the avatar or star icon
+                const target = event.target;
+                const isAvatarOrStar = target.closest('.email-avatar') || target.closest('.email-star-icon');
+                
+                if (!isAvatarOrStar) {
+                    // This is where you would navigate to the email detail page
+                    console.log(`Opening email: ${item.dataset.id}`);
+                    // For demonstration, simply remove selection if any
+                    if (selectedEmails.size > 0) {
+                        exitSelectionMode();
+                    }
+                }
+            });
+        });
+
+        // Initialize selection state
+        updateSelectionCount();
+    </script>
 
 </body>
 </html>

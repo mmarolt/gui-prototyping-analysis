@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Networking App</title>
+    <style>
+        /* General Resets and Body Styling */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light grey background */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            box-sizing: border-box;
+        }
+
+        /* Top Navigation Bar */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            color: #333;
+            height: 56px; /* Standard mobile header height */
+        }
+
+        .header-icon {
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+            padding: 5px; /* Add some padding for easier tap target */
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1; /* Allows main content to take available space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Center the profile card vertically */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Profile Counter */
+        .profile-counter {
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            width: 100%; /* Take full width within its container */
+            max-width: 335px; /* Max width for 375px screen (375 - 2*20px padding = 335) */
+            margin-bottom: 25px;
+            box-sizing: border-box;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            border: 3px solid #007bff; /* Accent color */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .profile-details .name-distance {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            margin-bottom: 8px;
+            flex-wrap: wrap; /* Allow wrapping on very small screens */
+        }
+
+        .profile-details .name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+            line-height: 1.2;
+        }
+
+        .profile-details .distance {
+            font-size: 14px;
+            color: #777;
+            white-space: nowrap; /* Prevent distance from breaking */
+        }
+
+        .profile-details .job-title {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .profile-details .bio {
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .profile-details .interests {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .profile-details .hashtag {
+            background-color: #e0f7fa; /* Light blue */
+            color: #007bff; /* Primary blue */
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 335px; /* Align with profile card width */
+            box-sizing: border-box;
+        }
+
+        .action-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            flex: 1; /* Make buttons take equal width */
+            max-width: 150px; /* Limit individual button width */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .action-button:active {
+            transform: translateY(1px); /* Slight press effect */
+        }
+
+        .pass-button {
+            background-color: #ff4d4d; /* Red */
+            color: #fff;
+        }
+
+        .pass-button:hover {
+            background-color: #e60000;
+        }
+
+        .meet-button {
+            background-color: #007bff; /* Primary blue */
+            color: #fff;
+        }
+
+        .meet-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Swiping Hint */
+        .swipe-hint {
+            margin-top: 25px;
+            padding-bottom: 15px;
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+        }
+
+        /* Accessibility improvements for icons (using text/emoji for simplicity) */
+        .header-icon[role="button"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: none;
+            border: none;
+            padding: 0;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: pointer;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="header-icon" role="button" aria-label="Open Menu">&#9776;</button> <!-- Hamburger icon -->
+        <div class="app-title">ConnectPro</div>
+        <button class="header-icon" role="button" aria-label="View Messages">&#128488;&#xFE0F;</button> <!-- Speech bubble icon -->
+    </div>
+
+    <div class="main-content">
+        <div class="profile-counter">
+            Profile 1 of 5
+        </div>
+
+        <div class="profile-card">
+            <img class="profile-image" src="https://via.placeholder.com/120/007bff/ffffff?text=JD" alt="Profile of Jane Doe">
+            <div class="profile-details">
+                <div class="name-distance">
+                    <span class="name">Jane Doe</span>
+                    <span class="distance">0.8 mi away</span>
+                </div>
+                <div class="job-title">Senior UX Designer at InnovateTech</div>
+                <div class="bio">
+                    Passionate about creating intuitive and user-centered digital experiences.
+                    Loves collaborating with diverse teams to bring innovative ideas to life.
+                    Always open to new challenges and learning opportunities.
+                </div>
+                <div class="interests">
+                    <span class="hashtag">#UXDesign</span>
+                    <span class="hashtag">#ProductManagement</span>
+                    <span class="hashtag">#DesignThinking</span>
+                    <span class="hashtag">#Collaboration</span>
+                    <span class="hashtag">#Mentorship</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="action-button pass-button">Pass</button>
+            <button class="action-button meet-button">Meet</button>
+        </div>
+
+        <div class="swipe-hint">
+            Swipe left to Pass, right to Meet
+        </div>
+    </div>
+
+</body>
+</html>

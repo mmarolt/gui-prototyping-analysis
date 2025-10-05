@@ -3,288 +3,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Police Station Details</title>
+    <title>ROP Directory Mobile Page</title>
     <style>
-        /* Reset some default browser styles */
-        body, h1, h2, h3, p, address {
+        /* Basic Reset and Mobile Viewport Configuration */
+        html, body {
             margin: 0;
             padding: 0;
-            border: 0;
-            font-size: 100%;
-            font: inherit;
-            vertical-align: baseline;
+            font-family: 'Segoe UI', Arial, sans-serif; /* A more modern font choice */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box; /* Ensure padding and border are included in element's total width and height */
+            height: 100%; /* Make html and body take full viewport height */
+            width: 100%;  /* Make html and body take full viewport width */
+            overflow: hidden; /* Prevent scrolling on html/body if content overflows */
+        }
+        *, *::before, *::after {
+            box-sizing: inherit; /* Inherit box-sizing for all elements */
         }
 
+        /* Simulate mobile device dimensions for consistent testing */
         body {
-            font-family: sans-serif;
-            line-height: 1.6;
-            color: #333;
+            max-width: 375px; /* Constrain width to typical mobile size */
+            max-height: 667px; /* Constrain height to typical mobile size */
+            margin: 0 auto; /* Center the body on larger screens */
+            border: 1px solid #ddd; /* Visual border for the simulated device frame */
+            box-shadow: 0 0 15px rgba(0,0,0,0.1); /* Subtle shadow */
+            position: relative; /* For absolute positioning of detail view */
+            overflow: hidden; /* Ensure content within the simulated device doesn't overflow */
+            background-color: #f5f5f5; /* Light background for the "device frame" */
         }
 
-        header {
-            background-color: #f0f0f0;
-            padding: 10px 0;
-            text-align: center;
-            border-bottom: 1px solid #ccc;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 0 10px;
-        }
-
-        #back-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            margin-right: 10px;
-        }
-
-        #back-button svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        h1 {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 0; /* Reset default margin */
-        }
-
-        main {
-            padding: 15px;
-        }
-
-        #station-info {
-            margin-bottom: 20px;
-        }
-
-        #station-name {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        #address-container, #phone-numbers {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        #address-container svg, #phone-numbers svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-            color: #555;
-        }
-
-        address {
-            font-style: normal;
-            font-size: 1em;
-        }
-
-        #phone-numbers p {
-            margin-bottom: 5px; /* Space between phone number entries */
-            display: flex;
-            align-items: center;
-        }
-
-        #phone-numbers a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        #map-section {
-            margin-bottom: 20px;
-        }
-
-        #map-section img {
+        /* Ensure the main container takes the full simulated device space */
+        .main-screen, .location-detail-view {
             width: 100%;
-            max-width: 100%; /* Ensure image doesn't overflow */
-            height: auto;
-            display: block;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-        }
-
-        #get-directions {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%; /* Full width for mobile */
-        }
-
-        #get-directions svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-        }
-
-        #actions {
+            height: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px; /* spacing between buttons */
-            margin-bottom: 20px;
+            background-color: #fff;
         }
 
-        #actions button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border: none;
+        /* Utility for hiding/showing elements */
+        .hidden {
+            display: none !important;
+        }
+        /* For elements that are initially hidden but transition into view */
+        .visually-hidden {
+            visibility: hidden;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        .visually-visible {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Placeholder for images */
+        .placeholder-image {
+            width: 40px;
+            height: 40px;
+            background-color: #007bff; /* ROP Blue */
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100%; /* Full width for mobile */
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+            flex-shrink: 0; /* Prevent emblem from shrinking */
         }
-
-        #actions button svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 5px;
-        }
-
-        #operating-hours {
-            border-top: 1px solid #ccc;
-            padding-top: 15px;
-        }
-
-        #operating-hours h3 {
-            font-size: 1.2em;
-            margin-bottom: 5px;
-        }
-
-        #operating-hours p {
-            margin-bottom: 3px;
-        }
-
-        footer {
+        /* Placeholder for maps */
+        .placeholder-map {
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 1.1em;
             text-align: center;
-            padding: 10px 0;
-            background-color: #f0f0f0;
-            border-top: 1px solid #ccc;
-        }
-
-        /* Media Query for larger screens (e.g., tablets) */
-        @media (min-width: 600px) {
-            #actions {
-                flex-direction: row;
-                justify-content: space-between;
-            }
-
-            #actions button {
-                width: 48%; /* Adjust as needed */
-            }
+            border-radius: 5px;
+            line-height: 1.4;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <nav>
-            <button id="back-button" aria-label="Back to Police Stations">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                    <path d="M11.707 5.293a1 1 0 0 0-1.414 0L4.293 11.586a1 1 0 0 0 0 1.414l6 7.293a1 1 0 0 0 1.414-1.414L6.414 12l5.293-5.293a1 1 0 0 0 0-1.414z"/>
-                </svg>
-            </button>
-            <h1>Police Station Details</h1>
-        </nav>
-    </header>
+    <!-- Main Screen -->
+    <div class="main-screen">
 
-    <main>
-        <section id="station-info">
-            <h2 id="station-name">Central Police Station</h2>
+        <!-- 1.1. Application Header -->
+        <div style="
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            flex-shrink: 0; /* Prevent header from shrinking */
+        ">
+            <!-- ROP Emblem -->
+            <div class="placeholder-image" style="margin-right: 10px;">ROP</div>
+            <!-- App Title -->
+            <span style="
+                font-size: 1.3em;
+                font-weight: bold;
+                color: #333;
+                flex-grow: 1; /* Allow title to take available space */
+                text-align: center; /* Center title */
+                margin-left: -50px; /* Offset for emblem width + margin to center title visually */
+            ">ROP Directory</span>
+        </div>
 
-            <div id="address-container">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                </svg>
-                <address>
-                    123 Main Street<br>
-                    Anytown, CA 91234
-                </address>
+        <!-- 1.2. Primary Navigation/Browsing Modes -->
+        <div style="
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0; /* Prevent navigation from shrinking */
+        ">
+            <button id="listViewBtn" onclick="showView('list')" style="
+                flex: 1;
+                padding: 12px 0;
+                border: none;
+                background-color: #fff;
+                font-size: 1em;
+                cursor: pointer;
+                border-bottom: 2px solid #007bff; /* Active state */
+                color: #007bff;
+                transition: all 0.2s ease-in-out;
+                -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+                outline: none; /* Remove focus outline */
+            ">List View</button>
+            <button id="mapViewBtn" onclick="showView('map')" style="
+                flex: 1;
+                padding: 12px 0;
+                border: none;
+                background-color: #fff;
+                font-size: 1em;
+                cursor: pointer;
+                border-bottom: 2px solid transparent; /* Inactive state */
+                color: #555;
+                transition: all 0.2s ease-in-out;
+                -webkit-tap-highlight-color: transparent;
+                outline: none;
+            ">Map View</button>
+        </div>
+
+        <!-- 1.3. Main Content Area (Stack Layout) -->
+        <div style="
+            flex: 1; /* Takes remaining vertical space */
+            position: relative; /* For stacking children */
+            overflow: hidden; /* Prevent content area from scrolling itself, children handle scrolling */
+        ">
+            <!-- 1.3.1. List View (Initially Visible) -->
+            <div id="listViewContent" style="
+                position: absolute; /* Stacked */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow-y: auto; /* Scrollable list */
+                background-color: #fff;
+                display: block; /* Initially visible */
+            ">
+                <!-- ListItem (Custom Layout for each row) - Repeated for each location -->
+                <div onclick="showDetail('ROP Muscat HQ', '99123456')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Muscat HQ</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Sohar Police Station', '99234567')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Sohar Police Station</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Salalah Checkpoint', '99345678')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Salalah Checkpoint</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Nizwa Traffic Dept.', '99456789')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Nizwa Traffic Dept.</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Sur Maritime Police', '99567890')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Sur Maritime Police</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Barka Operations', '99678901')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Barka Operations</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Buraimi Border Post', '99789012')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Buraimi Border Post</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Khasab Coast Guard', '99890123')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Khasab Coast Guard</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Ibri Directorate', '99901234')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Ibri Directorate</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
+                <div onclick="showDetail('ROP Bahla Fort Security', '99012345')" style="
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #eee;
+                    cursor: pointer;
+                    background-color: #fff;
+                    transition: background-color 0.1s ease-in-out;
+                " onmouseover="this.style.backgroundColor='#f0f0f0'" onmouseout="this.style.backgroundColor='#fff'">
+                    <span style="font-size: 1.1em; color: #333;">ROP Bahla Fort Security</span>
+                    <span style="color: #bbb; font-weight: bold; font-size: 1.2em;">&gt;</span>
+                </div>
             </div>
 
-            <div id="phone-numbers">
-                <p>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                        <path d="M20.65 17.06c-1.25-1.25-2.83-1.98-4.54-1.98-1.71 0-3.29.73-4.54 1.98l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H7c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C5.29 15.27 3.71 14.54 2.46 13.29c-1.25-1.25-1.98-2.83-1.98-4.54 0-1.71.73-3.29 1.98-4.54l.09-.09c.22-.22.35-.53.35-.85V3c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1.23c0 .32.13.63.35.85l.09.09C3.29 8.73 4.71 9.46 5.96 10.71c1.25 1.25 2.83 1.98 4.54 1.98 1.71 0 3.29-.73 4.54-1.98l.09-.09c.22-.22.35-.53.35-.85V3c0-.55.45-1 1-1h.23c.55 0 1 .45 1 1v1.23c0 .32.13.63.35.85l.09.09C20.71 8.73 22.13 9.46 23.38 10.71c1.25 1.25 1.98 2.83 1.98 4.54 0 1.71-.73 3.29-1.98 4.54l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H23c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C20.65 17.06 20.65 17.06 20.65 17.06zM6.5 4.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm11 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-                    </svg>
-                    <a href="tel:+15551234567">Emergency Line: (555) 123-4567</a>
-                </p>
-                <p>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                        <path d="M20.65 17.06c-1.25-1.25-2.83-1.98-4.54-1.98-1.71 0-3.29.73-4.54 1.98l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H7c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C5.29 15.27 3.71 14.54 2.46 13.29c-1.25-1.25-1.98-2.83-1.98-4.54 0-1.71.73-3.29 1.98-4.54l.09-.09c.22-.22.35-.53.35-.85V3c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1v1.23c0 .32.13.63.35.85l.09.09C3.29 8.73 4.71 9.46 5.96 10.71c1.25 1.25 2.83 1.98 4.54 1.98 1.71 0 3.29-.73 4.54-1.98l.09-.09c.22-.22.35-.53.35-.85V3c0-.55.45-1 1-1h.23c.55 0 1 .45 1 1v1.23c0 .32.13.63.35.85l.09.09C20.71 8.73 22.13 9.46 23.38 10.71c1.25 1.25 1.98 2.83 1.98 4.54 0 1.71-.73 3.29-1.98 4.54l-.09.09c-.22.22-.35.53-.35.85v1.23c0 .55.45 1 1 1H23c.55 0 1-.45 1-1v-1.23c0-.32-.13-.63-.35-.85l-.09-.09C20.65 17.06 20.65 17.06 20.65 17.06zM6.5 4.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zm11 15a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/>
-                    </svg>
-                    <a href="tel:+15557654321">Non-Emergency: (555) 765-4321</a>
-                </p>
+            <!-- 1.3.2. Map View (Initially Hidden) -->
+            <div id="mapViewContent" class="hidden" style="
+                position: absolute; /* Stacked */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden; /* Map typically doesn't scroll itself */
+                background-color: #f0f0f0;
+            ">
+                <div class="placeholder-map" style="width: 100%; height: 100%;">
+                    Interactive Map Area<br> (Markers would be here)
+                </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <section id="map-section">
-            <a href="https://www.google.com/maps?q=123+Main+Street+Anytown+CA+91234">
-                <img src="https://via.placeholder.com/375x200/444444/FFFFFF?text=Map+Placeholder" alt="Map of Central Police Station">
-            </a>
-            <button id="get-directions">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M1.96 14.48a1 1 0 0 1 0-1.28l20-11.5a1 1 0 0 1 1.56.72v22.6a1 1 0 0 1-1.56.72l-20-11.5a1 1 0 0 1 0-1.28zM4.08 13.86l17.77 10.22v-20.05L4.08 10.14z"/>
-                </svg>
-                Get Directions
-            </button>
-        </section>
+    <!-- Location Detail View (Separate Screen / Modal Overlay) -->
+    <div id="locationDetailView" class="visually-hidden" style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10; /* Above main screen */
+        background-color: #fff;
+        transition: transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s ease-out; /* For slide-in/out effect */
+        display: flex; /* Always flex for this container, visibility handled by classes */
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+    ">
+        <!-- 2.2. Detail Header -->
+        <div style="
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #eee;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        ">
+            <button onclick="hideDetail()" style="
+                background: none;
+                border: none;
+                font-size: 1.5em;
+                color: #007bff;
+                cursor: pointer;
+                padding: 0 10px 0 0;
+                -webkit-tap-highlight-color: transparent;
+                outline: none;
+                font-weight: bold;
+                flex-shrink: 0;
+            ">&lt;</button>
+            <span id="detailHeaderTitle" style="
+                font-size: 1.3em;
+                font-weight: bold;
+                color: #333;
+                flex-grow: 1;
+                text-align: center;
+                margin-left: -30px; /* Offset back button for true center */
+            ">Location Details</span>
+        </div>
 
-        <section id="actions">
-            <button id="add-to-contacts">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 6.1c0-1.1.9-2 2-2h12a2 2 0 0 1 2 2v1.8H4V6.1zM4 12c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2H4zm14 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/>
-                </svg>
-                Add to Contacts
-            </button>
-            <button id="report-issue">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                </svg>
-                Report an Issue
-            </button>
-        </section>
+        <!-- 2.3. Detail Content Area -->
+        <div style="
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto; /* Scrollable if content is long */
+            background-color: #fdfdfd;
+        ">
+            <!-- Full Location Name -->
+            <h2 id="detailLocationName" style="
+                font-size: 1.6em;
+                color: #333;
+                margin-top: 0;
+                margin-bottom: 15px;
+                line-height: 1.3;
+            ">ROP Muscat HQ</h2>
 
-        <section id="operating-hours">
-            <h3>Operating Hours</h3>
-            <p>Monday-Friday: 8:00 AM - 6:00 PM</p>
-            <p>Saturday: 9:00 AM - 1:00 PM</p>
-            <p>Sunday: Closed</p>
-        </section>
-    </main>
+            <!-- Phone Number -->
+            <p style="
+                font-size: 1.1em;
+                color: #555;
+                margin-bottom: 20px;
+            ">Phone: <span id="detailPhoneNumber" style="font-weight: bold; color: #007bff;">99123456</span></p>
 
-    <footer>
-        <p>&copy; 2024 Police Department</p>
-    </footer>
+            <!-- Call Button -->
+            <button onclick="alert('Calling ' + document.getElementById('detailPhoneNumber').innerText + '...') /* In a real app, this would use tel: scheme */" style="
+                width: 100%;
+                padding: 15px;
+                background-color: #28a745; /* Green for call button */
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 1.2em;
+                font-weight: bold;
+                cursor: pointer;
+                margin-bottom: 25px;
+                box-shadow: 0 2px 5px rgba(0,123,255,0.2);
+                -webkit-tap-highlight-color: transparent;
+                outline: none;
+            ">Call Now</button>
+
+            <!-- Map Integration (Small Embedded MapView) -->
+            <div class="placeholder-map" style="height: 200px; margin-bottom: 20px;">
+                Small Embedded Map<br> (Focused on this location)
+            </div>
+
+            <!-- Button to View Full Map -->
+            <button onclick="showView('map'); hideDetail();" style="
+                width: 100%;
+                padding: 12px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 1.1em;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                -webkit-tap-highlight-color: transparent;
+                outline: none;
+            ">View Full Map</button>
+        </div>
+    </div>
 
     <script>
-        document.getElementById('back-button').addEventListener('click', function() {
-            window.history.back();
-        });
+        // Function to switch between List View and Map View
+        function showView(viewName) {
+            const listViewContent = document.getElementById('listViewContent');
+            const mapViewContent = document.getElementById('mapViewContent');
+            const listViewBtn = document.getElementById('listViewBtn');
+            const mapViewBtn = document.getElementById('mapViewBtn');
 
-        document.getElementById('get-directions').addEventListener('click', function() {
-            window.location.href = "https://www.google.com/maps?daddr=123+Main+Street+Anytown+CA+91234";
-        });
+            if (viewName === 'list') {
+                listViewContent.style.display = 'block';
+                mapViewContent.style.display = 'none';
+                listViewBtn.style.borderBottom = '2px solid #007bff';
+                listViewBtn.style.color = '#007bff';
+                mapViewBtn.style.borderBottom = '2px solid transparent';
+                mapViewBtn.style.color = '#555';
+            } else { // viewName === 'map'
+                listViewContent.style.display = 'none';
+                mapViewContent.style.display = 'flex'; /* Use flex for placeholder map */
+                listViewBtn.style.borderBottom = '2px solid transparent';
+                listViewBtn.style.color = '#555';
+                mapViewBtn.style.borderBottom = '2px solid #007bff';
+                mapViewBtn.style.color = '#007bff';
+            }
+        }
 
-        document.getElementById('report-issue').addEventListener('click', function() {
-            window.location.href = "mailto:feedback@example.com?subject=Issue with Police Station Info&body=Please describe the issue:";
+        // Function to show the Location Detail View
+        function showDetail(locationName, phoneNumber) {
+            const detailView = document.getElementById('locationDetailView');
+            document.getElementById('detailLocationName').innerText = locationName;
+            document.getElementById('detailPhoneNumber').innerText = phoneNumber;
+            document.getElementById('detailHeaderTitle').innerText = locationName; // Update header title
+
+            detailView.classList.remove('visually-hidden');
+            detailView.classList.add('visually-visible');
+        }
+
+        // Function to hide the Location Detail View
+        function hideDetail() {
+            const detailView = document.getElementById('locationDetailView');
+            detailView.classList.remove('visually-visible');
+            detailView.classList.add('visually-hidden');
+        }
+
+        // Initialize the page to show the List View when loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            showView('list');
         });
     </script>
+
 </body>
 </html>

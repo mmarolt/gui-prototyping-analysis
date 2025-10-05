@@ -1,352 +1,555 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Email Inbox</title>
-<style>
-/* General Styles */
-body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f8f8;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Inbox Page</title>
+    <style>
+        /* Basic Reset & Font */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif; /* A common mobile-friendly font */
+            overflow: hidden; /* Prevent body scroll */
+            background-color: #f0f0f0; /* Light background for the page outside the app */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensures app-container is centered vertically */
+        }
 
-/* Top Navigation Bar */
-.top-nav {
-  background-color: #ffffff;
-  color: #000000;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #ddd; /* Subtle border */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  box-sizing: border-box;  /* Important for width */
-  z-index: 100; /* Ensure it stays on top */
-}
+        /* --- I. Overall Page Layout (Simulated Mobile Device) --- */
+        #app-container {
+            width: 375px; /* Specified mobile width */
+            height: 667px; /* Specified mobile height */
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow for device frame */
+            border-radius: 8px; /* Rounded corners for device frame */
+            overflow: hidden; /* Ensures content and absolute elements stay within bounds */
+            display: flex;
+            flex-direction: column; /* Stacks app bars and main content vertically */
+            position: relative; /* Crucial for FAB absolute positioning inside */
+        }
 
-.top-nav h1 {
-  margin: 0;
-  font-size: 1.2em;
-  font-weight: normal;
-}
+        /* --- App Bars (Common Styles) --- */
+        .app-bar {
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px; /* Standard mobile app bar height */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+            flex-shrink: 0; /* Prevents app bar from shrinking when main content grows */
+            z-index: 10; /* Ensures app bar is above content */
+        }
 
-.top-nav .account-indicator {
-  font-size: 1em;
-  cursor: pointer;
-}
+        /* Icon Styling */
+        .app-bar .icon {
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px; /* Makes tap target larger */
+            user-select: none; /* Prevents text selection on icons */
+            transition: opacity 0.2s ease; /* Smooth transition for icon changes */
+        }
 
-.top-nav .icons {
-    display: flex;
-    align-items: center;
-}
+        /* --- A. Top App Bar / Navigation Bar Components (Default State) --- */
+        #top-app-bar {
+            background-color: #6200EE; /* Material Design Primary Purple */
+            color: white;
+        }
+        #top-app-bar .page-title {
+            flex-grow: 1; /* Pushes search icon to the right */
+            font-size: 20px;
+            font-weight: 500; /* Medium weight for title */
+            margin-left: 16px;
+        }
+        #top-app-bar .search-icon {
+            margin-left: auto; /* Aligns to the far right */
+        }
 
-.top-nav .icons img {
-  width: 24px;
-  height: 24px;
-  margin-left: 10px;
-  cursor: pointer;
-}
+        /* --- III. Interaction-Specific States & Overlays --- */
+        /* A. Search Bar (Activated State) */
+        #search-bar {
+            background-color: white;
+            color: #333; /* Darker text for white background */
+            display: none; /* Hidden by default, shown via JS */
+        }
+        #search-bar .icon {
+            color: #555; /* Subtle icon color */
+        }
+        .search-input {
+            flex-grow: 1; /* Takes most available space */
+            border: none;
+            outline: none; /* Remove focus outline */
+            padding: 8px 0;
+            font-size: 16px;
+            margin-left: 8px;
+            color: #333;
+            background-color: transparent; /* Matches app bar background */
+        }
+        .search-input::placeholder {
+            color: #888;
+        }
+        #search-bar .clear-search-icon {
+            margin-left: auto; /* Aligns to the far right */
+        }
 
-.menu-icon {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-}
+        /* B. Contextual Action Bar (Multi-Selection Mode) */
+        #contextual-action-bar {
+            background-color: #E8EAF6; /* Light blue/purple for selection */
+            color: #333;
+            display: none; /* Hidden by default, shown via JS */
+        }
+        #contextual-action-bar .icon {
+            color: #333;
+        }
+        #contextual-action-bar .selected-count {
+            font-size: 18px;
+            font-weight: 500;
+            margin-left: 16px;
+            flex-grow: 1; /* Pushes delete icon to the right */
+        }
+        #contextual-action-bar .delete-icon {
+            margin-left: auto; /* Aligns to the far right */
+        }
 
-/* Email List Area */
-.email-list {
-  padding: 10px;
-  margin-top: 50px; /* Account for fixed top nav */
-}
+        /* --- II. Detailed Component Breakdown --- */
+        /* Main Content Area */
+        #main-content {
+            flex-grow: 1; /* Takes all remaining vertical space */
+            overflow-y: auto; /* Enables vertical scrolling for email list */
+            background-color: #f5f5f5; /* Light background for content area */
+        }
 
-.email-item {
-  background-color: #fff;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  display: flex;
-  align-items: center;
-}
+        #email-list {
+            padding-top: 8px; /* Some padding at the top of the list */
+            padding-bottom: 80px; /* Ensures space for the FAB at the bottom */
+        }
 
-.email-item .sender-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #ddd;
-  margin-right: 10px;
-  overflow: hidden;  /* Ensure image stays within the circle */
-}
+        /* Email List Item (Individual Row Layout) */
+        .email-item {
+            display: flex;
+            align-items: center; /* Vertically centers items in the row */
+            padding: 12px 16px;
+            background-color: white;
+            border-bottom: 1px solid #eee; /* Separator between emails */
+            cursor: pointer;
+            min-height: 72px; /* Standard email item height for touch targets */
+            transition: background-color 0.2s ease; /* Smooth transition for selection/hover */
+        }
+        .email-item:hover {
+            background-color: #f0f0f0; /* Slight hover effect */
+        }
+        .email-item.selected {
+            background-color: #E8EAF6; /* Light blue for selected state */
+        }
 
-.email-item .sender-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Maintain aspect ratio and fill the container */
-}
+        /* Left Side (Selection Target) - Circular Image/Container with Text Label */
+        .sender-icon-container {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            margin-right: 16px;
+            flex-shrink: 0; /* Prevents icon from shrinking */
+            cursor: pointer; /* Indicates it's tappable for selection */
+        }
+        .sender-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #FF5722; /* Example color for sender initial */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+            user-select: none;
+            transition: opacity 0.2s ease, transform 0.2s ease; /* Smooth transition for selection */
+        }
+        .selection-checkbox {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #6200EE; /* Primary color for checkbox */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            user-select: none;
+            opacity: 0; /* Hidden by default */
+            transform: scale(0.8); /* Slightly smaller when hidden */
+            transition: opacity 0.2s ease, transform 0.2s ease; /* Smooth transition for appearance */
+        }
+        /* State for selected email item */
+        .email-item.selected .sender-icon {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        .email-item.selected .selection-checkbox {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-.email-item .email-content {
-  flex: 1;
-}
+        /* Main Content Area (Email Details) */
+        .email-content {
+            flex-grow: 1; /* Takes most of the available space */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Important for text truncation */
+            min-width: 0; /* Allows content to shrink within flex container */
+        }
+        .email-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .sender-name {
+            font-weight: bold;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncates long sender names */
+            flex-grow: 1;
+        }
+        .time-received {
+            font-size: 12px;
+            color: #555;
+            margin-left: 8px;
+            flex-shrink: 0; /* Prevents time from shrinking */
+            white-space: nowrap;
+        }
+        .subject {
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncates long subjects */
+            margin-bottom: 2px;
+        }
+        .snippet {
+            font-size: 12px;
+            color: #777;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Truncates long snippets */
+        }
 
-.email-item .email-content .sender-name {
-  font-weight: bold;
-  margin-bottom: 3px;
-}
+        /* Right Side (Aligned to the right of the row) */
+        .star-icon-container {
+            margin-left: 16px;
+            flex-shrink: 0; /* Prevents star icon from shrinking */
+            padding: 8px; /* Makes tap target larger */
+            cursor: pointer;
+            user-select: none;
+        }
+        .star-icon {
+            font-size: 20px;
+            color: #999; /* Default grey for unstarred */
+            transition: color 0.2s ease; /* Smooth color change */
+        }
+        .star-icon.filled {
+            color: #FFC107; /* Gold color for filled star */
+        }
 
-.email-item .email-content .subject {
-  font-weight: normal;
-  margin-bottom: 3px;
-}
-
-.email-item .email-content .preview {
-  color: #666;
-  font-size: 0.9em;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.email-item .timestamp {
-  font-size: 0.8em;
-  color: #888;
-  margin-left: 10px;
-}
-
-.email-item .unread-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: blue;
-  margin-left: 10px;
-}
-
-.email-item .attachment-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-.email-item .flag-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 5px;
-    cursor: pointer;
-}
-
-/* FAB */
-.fab {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #007bff;
-  color: #fff;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5em;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  z-index: 99; /* Ensure it is above other elements */
-}
-
-/* Empty State */
-.empty-state {
-  text-align: center;
-  padding: 20px;
-  color: #888;
-  margin-top: 60px;
-}
-
-/* Loading Indicator */
-.loading-indicator {
-  text-align: center;
-  padding: 20px;
-  color: #888;
-  margin-top: 60px;
-}
-
-/* Selection Mode */
-.email-item.selected {
-  background-color: #e0f7fa; /* Light blue highlight */
-}
-
-.selection-checkbox {
-  margin-right: 10px;
-}
-
-/* Contextual Action Bar (displayed in selection mode) */
-.contextual-action-bar {
-    background-color: #007bff;
-    color: white;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 101;
-}
-
-.contextual-action-bar button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1em;
-    cursor: pointer;
-    margin: 0 5px;
-}
-</style>
+        /* --- Floating Action Button (FAB) --- */
+        #fab {
+            position: absolute; /* Positioned relative to #app-container */
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: #03DAC5; /* Material Design Accent Teal */
+            color: white;
+            font-size: 28px;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Shadow for floating effect */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 20; /* Ensures FAB is above all other content */
+            transition: transform 0.2s ease, opacity 0.2s ease; /* Smooth hide/show */
+        }
+        #fab:active {
+            transform: scale(0.95); /* Slight press effect */
+        }
+        #fab.hidden {
+            opacity: 0;
+            transform: scale(0);
+            pointer-events: none; /* Disable clicks when hidden */
+        }
+    </style>
 </head>
 <body>
 
-<div class="top-nav">
-  <img src="menu-icon.png" alt="Menu" class="menu-icon">
-  <h1>Inbox</h1>
-  <div class="icons">
-    <img src="search-icon.png" alt="Search">
-    <span class="account-indicator">JD</span>
-  </div>
-</div>
+    <div id="app-container">
+        <!-- I. Overall Page Layout (Default/Normal State) -->
+        <!-- 1. Top App Bar / Navigation Bar (Fixed at Top) -->
+        <div id="top-app-bar" class="app-bar">
+            <!-- Left: Navigation Menu Icon -->
+            <span class="icon menu-icon">☰</span>
+            <!-- Center/Left: Page Title -->
+            <span class="page-title">Inbox</span>
+            <!-- Right: Search Icon -->
+            <span class="icon search-icon" id="trigger-search">🔍</span>
+        </div>
 
-<div class="email-list">
+        <!-- III. Interaction-Specific States & Overlays -->
+        <!-- A. Search Bar (Activated State - Hidden by default) -->
+        <div id="search-bar" class="app-bar" style="display: none;">
+            <!-- Left: Back/Close Icon -->
+            <span class="icon back-icon" id="exit-search">←</span>
+            <!-- Center: Text Input Field -->
+            <input type="text" placeholder="Search in inbox..." class="search-input">
+            <!-- Right (within input field): Clear Text Icon (hidden by default) -->
+            <span class="icon clear-search-icon" style="display: none;">✖</span>
+        </div>
 
-  <div class="email-item">
-    <div class="sender-image">
-      <img src="user1.jpg" alt="Sender">
+        <!-- B. Contextual Action Bar (Multi-Selection Mode - Hidden by default) -->
+        <div id="contextual-action-bar" class="app-bar" style="display: none;">
+            <!-- Left: Close/Deselect Icon -->
+            <span class="icon close-selection-icon" id="exit-multi-select">✖</span>
+            <!-- Center: Selected Count -->
+            <span class="selected-count">0 selected</span>
+            <!-- Right: Delete Email Icon -->
+            <span class="icon delete-icon" id="delete-selected">🗑️</span>
+            <!-- (Optional: Other action icons like Archive, Mark as Read/Unread, etc.) -->
+        </div>
+
+        <!-- 2. Main Content Area (Below App Bar, Fills Remaining Space) -->
+        <div id="main-content">
+            <!-- Element: Scrollable List View -->
+            <div id="email-list">
+                <!-- Email List Items will be dynamically inserted here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- 3. Compose Button (Floating, Bottom-Right Corner) -->
+        <!-- Element: Floating Action Button (FAB) -->
+        <button id="fab" class="fab-button">➕</button>
     </div>
-    <div class="email-content">
-      <div class="sender-name">John Doe</div>
-      <div class="subject">Project Update</div>
-      <div class="preview">This is a preview of the email content...</div>
-    </div>
-    <span class="timestamp">10:30 AM</span>
-    <div class="unread-indicator"></div>
-    <img src="attachment.png" alt="Attachment" class="attachment-icon">
-    <img src="flag.png" alt="Flag" class="flag-icon">
-  </div>
 
-  <div class="email-item">
-    <div class="sender-image">
-      <img src="user2.jpg" alt="Sender">
-    </div>
-    <div class="email-content">
-      <div class="sender-name">Jane Smith</div>
-      <div class="subject">Meeting Reminder</div>
-      <div class="preview">Don't forget about our meeting tomorrow...</div>
-    </div>
-    <span class="timestamp">Yesterday</span>
-    <img src="attachment.png" alt="Attachment" class="attachment-icon">
-    <img src="flag.png" alt="Flag" class="flag-icon">
-  </div>
+    <script>
+        // --- Get DOM Elements ---
+        const topAppBar = document.getElementById('top-app-bar');
+        const searchBar = document.getElementById('search-bar');
+        const contextualActionBar = document.getElementById('contextual-action-bar');
+        const fab = document.getElementById('fab');
+        const emailList = document.getElementById('email-list');
+        const selectedCountSpan = contextualActionBar.querySelector('.selected-count');
+        const searchInput = searchBar.querySelector('.search-input');
+        const clearSearchIcon = searchBar.querySelector('.clear-search-icon');
 
-  <!-- More email items... -->
-</div>
+        // --- State Variables ---
+        let multiSelectMode = false;
+        let selectedEmails = new Set(); // Stores IDs of selected emails
 
-<div class="fab">+</div>
+        // --- State Management Functions ---
 
-<!-- Empty State (initially hidden) -->
-<div class="empty-state" style="display: none;">
-  <p>Your inbox is empty.</p>
-</div>
+        // Enters Search Mode
+        function enterSearchMode() {
+            topAppBar.style.display = 'none';
+            searchBar.style.display = 'flex';
+            fab.classList.add('hidden'); // FAB typically hides during search
+            searchInput.focus(); // Automatically focus input
+            // In a real app, content would update with search suggestions
+        }
 
-<!-- Loading Indicator (initially hidden) -->
-<div class="loading-indicator" style="display: none;">
-  <p>Loading...</p>
-</div>
+        // Exits Search Mode
+        function exitSearchMode() {
+            searchBar.style.display = 'none';
+            topAppBar.style.display = 'flex';
+            fab.classList.remove('hidden');
+            searchInput.value = ''; // Clear search input
+            clearSearchIcon.style.display = 'none'; // Hide clear icon
+            // In a real app, content would revert to default list
+        }
 
-<!-- Contextual Action Bar (initially hidden) -->
-<div class="contextual-action-bar" style="display: none;">
-    <button>Cancel</button>
-    <span>2 Selected</span>
-    <div>
-        <button>Delete</button>
-        <button>Archive</button>
-    </div>
-</div>
+        // Enters Multi-Selection Mode
+        function enterMultiSelectMode() {
+            multiSelectMode = true;
+            topAppBar.style.display = 'none';
+            contextualActionBar.style.display = 'flex';
+            fab.classList.add('hidden'); // FAB typically hides during multi-selection
+        }
 
-<script>
-  //Basic JavaScript for Selection Mode
-  const emailItems = document.querySelectorAll('.email-item');
-  const contextualActionBar = document.querySelector('.contextual-action-bar');
-  let selectionMode = false;
-  let selectedCount = 0;
+        // Exits Multi-Selection Mode
+        function exitMultiSelectMode() {
+            multiSelectMode = false;
+            contextualActionBar.style.display = 'none';
+            topAppBar.style.display = 'flex';
+            fab.classList.remove('hidden');
+            
+            // Deselect all emails visually
+            selectedEmails.forEach(emailId => {
+                const emailItem = document.querySelector(`.email-item[data-id="${emailId}"]`);
+                if (emailItem) {
+                    emailItem.classList.remove('selected');
+                }
+            });
+            selectedEmails.clear(); // Clear selected emails set
+            updateSelectedCount(); // Update count (will be 0)
+        }
 
-  emailItems.forEach(item => {
-    item.addEventListener('click', () => {
-      if (selectionMode) {
-        item.classList.toggle('selected');
-        updateSelectedCount();
-      } else {
-        // Open the email (replace with actual email opening logic)
-        alert('Opening email...');
-      }
-    });
+        // Updates the count of selected emails in the Contextual Action Bar
+        function updateSelectedCount() {
+            selectedCountSpan.textContent = `${selectedEmails.size} selected`;
+            // If no emails are selected, exit multi-selection mode automatically
+            if (selectedEmails.size === 0 && multiSelectMode) {
+                exitMultiSelectMode();
+            }
+        }
 
-    item.addEventListener('longpress', (event) => { //Using a custom event for long press
-      event.preventDefault(); // Prevent default long press behavior
-      if (!selectionMode) {
-        selectionMode = true;
-        contextualActionBar.style.display = 'flex';
-        item.classList.add('selected');
-        selectedCount = 1;
-        updateSelectedCount();
-      }
-    });
-  });
+        // --- Event Listeners for App Bar Interactions ---
 
-  // Simulate long press event (since it's not natively supported well)
-  emailItems.forEach(item => {
-      let pressTimer;
-      item.addEventListener('mousedown', function(e) {
-          pressTimer = window.setTimeout(function() {
-              const longPressEvent = new Event('longpress');
-              item.dispatchEvent(longPressEvent);
-          }, 500); // Adjust time as needed
-      });
+        // Trigger Search
+        document.getElementById('trigger-search').addEventListener('click', enterSearchMode);
 
-      item.addEventListener('mouseup', function(e) {
-          clearTimeout(pressTimer);
-      });
-      item.addEventListener('mouseleave', function(e) {
-          clearTimeout(pressTimer);
-      });
+        // Exit Search
+        document.getElementById('exit-search').addEventListener('click', exitSearchMode);
+        
+        // Handle Search Input changes (show/hide clear icon)
+        searchInput.addEventListener('input', () => {
+            clearSearchIcon.style.display = searchInput.value.length > 0 ? 'block' : 'none';
+            // In a real app, this would trigger dynamic search results/suggestions
+        });
 
-      item.addEventListener('touchstart', function(e) {
-          pressTimer = window.setTimeout(function() {
-              const longPressEvent = new Event('longpress');
-              item.dispatchEvent(longPressEvent);
-          }, 500); // Adjust time as needed
-      });
+        // Clear Search Input
+        clearSearchIcon.addEventListener('click', () => {
+            searchInput.value = '';
+            clearSearchIcon.style.display = 'none';
+            searchInput.focus(); // Keep focus in search bar
+            // In a real app, this would clear search results
+        });
 
-      item.addEventListener('touchend', function(e) {
-          clearTimeout(pressTimer);
-      });
-  });
+        // Exit Multi-Selection Mode
+        document.getElementById('exit-multi-select').addEventListener('click', exitMultiSelectMode);
+        
+        // Delete Selected Emails (Action in Contextual Action Bar)
+        document.getElementById('delete-selected').addEventListener('click', () => {
+            if (selectedEmails.size > 0) {
+                alert(`Simulating deletion of ${selectedEmails.size} selected email(s).`);
+                // In a real app: Send delete request to server, then remove items from UI
+                selectedEmails.forEach(emailId => {
+                    const emailItem = document.querySelector(`.email-item[data-id="${emailId}"]`);
+                    if (emailItem) {
+                        emailItem.remove(); // Remove from DOM
+                    }
+                });
+                exitMultiSelectMode(); // Exit multi-selection after action
+            }
+        });
 
-  function updateSelectedCount() {
-    selectedCount = document.querySelectorAll('.email-item.selected').length;
-    contextualActionBar.querySelector('span').textContent = `${selectedCount} Selected`;
-  }
+        // FAB Click (Compose Button)
+        fab.addEventListener('click', () => {
+            alert('Simulating: Open new email composition screen!');
+        });
 
-  contextualActionBar.querySelector('button:first-child').addEventListener('click', () => {
-    selectionMode = false;
-    contextualActionBar.style.display = 'none';
-    emailItems.forEach(item => item.classList.remove('selected'));
-    selectedCount = 0;
-  });
-</script>
+        // --- Email List Item Generation and Interactions ---
+
+        // Sample Email Data
+        const dummyEmails = [
+            { id: 1, sender: 'John Doe', subject: 'Meeting notes for Project X', snippet: 'Hi team, please find attached the meeting notes from our discussion yesterday...', time: '10:30 AM', starred: false },
+            { id: 2, sender: 'Alice Smith', subject: 'Regarding your recent order', snippet: 'Your order #12345 has been shipped and will arrive by...', time: 'Yesterday', starred: true },
+            { id: 3, sender: 'Google Support', subject: 'Security alert for your account', snippet: 'We detected a suspicious login attempt from an unknown device...', time: 'Mon', starred: false },
+            { id: 4, sender: 'Marketing Team', subject: 'New features in our product!', snippet: 'Check out the exciting new updates we\'ve rolled out this week...', time: 'Aug 28', starred: false },
+            { id: 5, sender: 'Client Update', subject: 'Project Alpha status report', snippet: 'The latest progress report for Project Alpha is now available...', time: 'Aug 27', starred: true },
+            { id: 6, sender: 'Online Store', subject: 'Your wishlist items are on sale!', snippet: 'Great news! Items you\'ve been eyeing are now available at a discount...', time: 'Aug 25', starred: false },
+            { id: 7, sender: 'Friends & Family', subject: 'Weekend plans?', snippet: 'Hey, are you free this weekend? We were thinking of going...', time: 'Aug 24', starred: false },
+            { id: 8, sender: 'Service Provider', subject: 'Important update to our terms of service', snippet: 'We\'re updating our terms of service to reflect recent changes...', time: 'Aug 23', starred: false },
+            { id: 9, sender: 'Recruitment', subject: 'Interview Confirmation - Software Engineer', snippet: 'This email confirms your interview for the Software Engineer position...', time: 'Aug 22', starred: false },
+            { id: 10, sender: 'Newsletter', subject: 'Weekly Tech Digest', snippet: 'Your weekly dose of the latest in technology news and trends...', time: 'Aug 21', starred: true },
+            { id: 11, sender: 'Customer Service', subject: 'Your inquiry has been received', snippet: 'Thank you for contacting us. We will get back to you within 24 hours.', time: 'Aug 20', starred: false },
+            { id: 12, sender: 'Event Organizer', subject: 'Reminder: Upcoming Webinar', snippet: 'Don\'t forget to join our webinar on "Future of AI" this Thursday!', time: 'Aug 19', starred: false },
+        ];
+
+        // Helper to get initials for sender icon
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        // Creates an individual email list item HTML element
+        function createEmailItem(email) {
+            const item = document.createElement('div');
+            item.className = 'email-item';
+            item.dataset.id = email.id; // Store email ID for selection
+
+            item.innerHTML = `
+                <div class="sender-icon-container">
+                    <div class="sender-icon">${getInitials(email.sender)}</div>
+                    <div class="selection-checkbox">✔</div>
+                </div>
+                <div class="email-content">
+                    <div class="email-header">
+                        <span class="sender-name">${email.sender}</span>
+                        <span class="time-received">${email.time}</span>
+                    </div>
+                    <div class="subject">${email.subject}</div>
+                    <div class="snippet">${email.snippet}</div>
+                </div>
+                <div class="star-icon-container">
+                    <span class="icon star-icon ${email.starred ? 'filled' : ''}">${email.starred ? '★' : '☆'}</span>
+                </div>
+            `;
+
+            // Interaction: Tapping Sender Icon (Primary tap target for multi-selection)
+            const senderIconContainer = item.querySelector('.sender-icon-container');
+            senderIconContainer.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent the parent email item's click listener from firing
+                toggleEmailSelection(item, email.id);
+            });
+
+            // Interaction: Tapping Star Icon (Toggles importance without multi-selection)
+            const starIconContainer = item.querySelector('.star-icon-container');
+            starIconContainer.addEventListener('click', (event) => {
+                event.stopPropagation(); // Prevent parent clicks, and multi-selection
+                const starIcon = starIconContainer.querySelector('.star-icon');
+                starIcon.classList.toggle('filled'); // Toggle visual state
+                starIcon.textContent = starIcon.classList.contains('filled') ? '★' : '☆'; // Update icon character
+                email.starred = !email.starred; // Update internal dummy data state
+            });
+
+            // Interaction: Tapping anywhere else on an Email List Item (Opens detailed email view)
+            item.addEventListener('click', () => {
+                // Only open email if not in multi-selection mode
+                if (!multiSelectMode) {
+                    alert(`Simulating: Opening detailed view for email from ${email.sender}: "${email.subject}"`);
+                }
+                // If in multi-select mode, clicking the body of an email does nothing,
+                // as selection is handled by the sender icon.
+            });
+
+            return item;
+        }
+
+        // Toggles the selection state of an email item
+        function toggleEmailSelection(item, id) {
+            if (!multiSelectMode) {
+                enterMultiSelectMode(); // Enter multi-selection mode if not already in it
+            }
+
+            if (selectedEmails.has(id)) {
+                selectedEmails.delete(id);
+                item.classList.remove('selected'); // Remove visual selected state
+            } else {
+                selectedEmails.add(id);
+                item.classList.add('selected'); // Add visual selected state
+            }
+            updateSelectedCount(); // Update the count in the action bar
+        }
+
+        // Populate the email list on page load
+        dummyEmails.forEach(email => {
+            emailList.appendChild(createEmailItem(email));
+        });
+
+    </script>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
-const NUM_APPS = 4;
+const NUM_APPS = 44;
 const NUM_METHODS = 4;
 const METHOD = ["instruction", "pd_zs", "pd_fs", "ref_instruction"];
-const APPS = [3261, 38961, 53054, 69587];
+const APPS = ['12740', '14283', '18782', '20947', '22151', '27360', '27382', '27707', '30982', '31390', '32310', '3261', '33383', '34346', '34517', '34527', '35526', '3727', '37505', '38961', '40673', '43872', '43977', '44756', '47926', '49794', '53054', '53469', '54377', '54468', '56905', '58124', '59429', '59576', '61851', '63575', '64858', '65592', '67044', '68368', '69574', '69587', '70410', '8640'];
 const CRITERIA = [
     "Skladnost z zahtevami",
     "Ustreznost komponent",
@@ -55,7 +55,7 @@ function createPrototype(index, id) {
             input.id = `a${id}_p${index}_c${cIndex}_${i}`;
             input.name = `a${id}_p${index}_c${cIndex}`;
             input.value = i;
-            input.required = true;
+            //input.required = true;
 
             const label = document.createElement("label");
             label.htmlFor = input.id;
@@ -104,7 +104,7 @@ loadDataset().then(([opisMap, idMap]) => {
     }
 });
 
-document.getElementById("surveyForm").addEventListener("submit", async function(e) {
+/*document.getElementById("surveyForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {};
@@ -124,4 +124,32 @@ document.getElementById("surveyForm").addEventListener("submit", async function(
     } catch (err) {
         alert("Težava s povezavo: " + err);
     }
+});*/
+
+document.getElementById("surveyForm").addEventListener("submit", function(e) {
+    console.log("Submit handler je sprožen!");
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = {};
+    formData.forEach((val, key) => { data[key] = val; });
+
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+
+    let csvContent = keys.join(";") + "\n";
+    csvContent += values.map(v => `"${v.replace(/"/g, '""')}"`).join(";") + "\n";
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "rezultati.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+    alert("Rezultati so bili preneseni kot CSV datoteka.");
 });

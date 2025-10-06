@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Camera</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Base styles for the entire page, simulating the mobile viewport */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Full height of the viewport */
+            width: 100%;  /* Full width of the viewport */
+            overflow: hidden; /* Prevent scrolling */
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Simulate dark camera feed background */
+            color: white; /* Default text color for overlays and icons */
+            display: flex; /* Use flexbox to manage overall layout, though fixed elements override this */
+            flex-direction: column;
+            align-items: center; /* Center content horizontally if not fixed/absolute */
+            justify-content: center; /* Center content vertically if not fixed/absolute */
+        }
+
+        /* 1. Main Viewport (Full Screen Background) - Live Camera Feed Display */
+        /* This is implicitly handled by the body's background-color and full dimensions.
+           In a real app, this would be a <video> element streaming the camera. */
+
+        /* 2. Overlays (on top of Camera Feed) */
+        .framing-guide {
+            position: absolute; /* Positioned relative to the body/initial containing block */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centering trick */
+            width: 80%; /* 80% of viewport width */
+            height: 70%; /* 70% of viewport height */
+            border: 2px solid rgba(255, 255, 255, 0.7); /* Transparent white border */
+            box-sizing: border-box; /* Include padding/border in element's total size */
+            pointer-events: none; /* Allow clicks to pass through to elements below */
+            position: relative; /* Important: Make this a positioning context for its children */
+        }
+
+        .focus-indicator {
+            position: absolute; /* Positioned relative to its parent (.framing-guide) */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centering trick */
+            width: 50px; /* Fixed size for a clear focus indicator */
+            height: 50px;
+            border: 2px solid limegreen;
+            background-color: rgba(50, 205, 50, 0.2); /* Transparent green fill */
+            pointer-events: none;
+            border-radius: 5px; /* Slightly rounded corners */
+        }
+
+        /* 3. Top Controls (Header Section) */
+        .top-controls {
+            position: fixed; /* Fixed position relative to the viewport */
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between; /* Pushes items to the start and end */
+            padding: 15px; /* Padding around the buttons */
+            box-sizing: border-box;
+            z-index: 10; /* Ensures controls are on top of other content */
+        }
+
+        .top-controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px; /* Large enough for icon visibility */
+            cursor: pointer;
+            padding: 5px; /* Increases clickable area */
+            line-height: 1; /* Ensures consistent vertical alignment of icon */
+        }
+
+        /* 4. Bottom Controls (Footer Section) */
+        .bottom-controls {
+            position: fixed; /* Fixed position relative to the viewport */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between; /* Distributes items to allow centering of capture button */
+            align-items: center;
+            padding: 20px 15px; /* Padding for the entire bottom section */
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        .undo-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px; /* Icon size */
+            cursor: pointer;
+            padding: 10px;
+            line-height: 1; /* Ensures consistent vertical alignment of icon */
+            /* Flexbox will position this to the left */
+        }
+
+        .capture-button {
+            width: 80px; /* Large circular button */
+            height: 80px;
+            border-radius: 50%; /* Makes it a perfect circle */
+            background-color: white; /* Prominent white background */
+            border: 5px solid rgba(255, 255, 255, 0.5); /* Semi-transparent white outer ring */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 40px; /* Camera icon size */
+            color: black; /* Camera icon color */
+            box-shadow: 0 0 15px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+            line-height: 1; /* Ensures vertical centering of icon */
+        }
+
+        .right-placeholder {
+            /* This div acts as a spacer to push the capture button to the center
+               by balancing the space taken by the undo button on the left. */
+            width: 50px; /* Approximate width of the undo button (icon + padding) */
+            height: 1px; /* Minimal height, as it's just for spacing */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Main Viewport (Full Screen Background) - Live Camera Feed Display -->
+    <!-- The <body> element itself serves as the full-screen camera feed display,
+         simulated by its black background. -->
+
+    <!-- 2. Overlays (on top of Camera Feed) -->
+    <div class="framing-guide">
+        <!-- Focus Indicator Overlay: Centrally positioned within the Framing Guide -->
+        <div class="focus-indicator"></div>
+    </div>
+
+    <!-- 3. Top Controls (Header Section) -->
+    <div class="top-controls">
+        <!-- Navigation Back Icon Button: Upper-left corner -->
+        <button class="back-button">&#x2190;</button> <!-- Unicode for Leftwards Arrow -->
+        <!-- Settings Icon Button: Upper-right corner -->
+        <button class="settings-button">&#x2699;</button> <!-- Unicode for Gear Symbol -->
+    </div>
+
+    <!-- 4. Bottom Controls (Footer Section) -->
+    <div class="bottom-controls">
+        <!-- Undo/Revert Icon Button: Bottom-left of Capture Button -->
+        <button class="undo-button">&#x21B6;</button> <!-- Unicode for Anticlockwise Open Circle Arrow -->
+        <!-- Capture Button: Bottom-center -->
+        <div class="capture-button">
+            &#x1F4F7; <!-- Unicode for Camera with Flash -->
+        </div>
+        <!-- Placeholder to visually balance the undo button and keep capture button centered -->
+        <div class="right-placeholder"></div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page - The Ultimate Productivity Guide</title>
+
+    <!-- Material Icons CDN -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Roboto Font CDN for Material Design Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Global Material Design Resets & Body Styling */
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #e0e0e0; /* A slightly darker light grey for body background to make the mobile screen stand out */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Prevent body scrollbars */
+            color: #212121; /* Default text color */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        /* Mobile Screen Simulation Container (667x375) */
+        .mobile-screen {
+            width: 375px; /* Mobile screen width as per description */
+            height: 667px; /* Mobile screen height as per description */
+            background-color: #f5f5f5; /* Light grey for the app's background */
+            border-radius: 24px; /* Soft corners for device simulation */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05); /* Device shadow for depth */
+            overflow: hidden; /* Contains children, scrollable content handled by .scroll-content */
+            position: relative; /* Essential for positioning the fixed bottom bar */
+        }
+
+        /* Scrollable Content Area - all content EXCEPT the fixed bottom bar */
+        .scroll-content {
+            /* Calculated height: Total screen height (100%) minus the height of the fixed order-action-bar.
+               The order-action-bar has 12px top/bottom padding + a 44px tall button (14px*2 padding + 16px font-size) = 68px total height. */
+            height: calc(100% - 68px);
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+            padding-bottom: 0; /* Ensures no extra padding pushes content under fixed bar */
+        }
+
+        /* Base Material Card Style */
+        .md-card {
+            background-color: #fff;
+            border-radius: 8px; /* Standard Material Design border-radius */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Standard Material Design elevation (z-index 1) */
+            margin: 16px; /* Consistent spacing around cards */
+            padding: 16px; /* Consistent internal padding */
+        }
+
+        /* Base Material Button Styles */
+        .md-button {
+            width: 100%;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.2s, box-shadow 0.2s, color 0.2s;
+            display: flex; /* To potentially center text/icon if button was not full-width */
+            justify-content: center;
+            align-items: center;
+        }
+        .md-button-primary {
+            background-color: #6200EE; /* Material Design primary purple */
+            color: #fff;
+        }
+        .md-button-elevated {
+            box-shadow: 0 3px 1px -2px rgba(0,0,0,0.2),
+                        0 2px 2px 0 rgba(0,0,0,0.14),
+                        0 1px 5px 0 rgba(0,0,0,0.12); /* Standard Material elevation for primary button */
+        }
+        .md-button-primary:hover {
+            background-color: #3700B3; /* Darker primary color on hover */
+        }
+        .md-button-primary:active {
+            box-shadow: 0 5px 5px -3px rgba(0,0,0,0.2),
+                        0 8px 10px 1px rgba(0,0,0,0.14),
+                        0 3px 14px 2px rgba(0,0,0,0.12); /* Increased elevation on press */
+        }
+
+        /* 1. Product Header & Actions */
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px; /* Material Design standard spacing */
+            background-color: #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle elevation */
+            position: sticky; /* Keeps the header visible at the top while content scrolls */
+            top: 0;
+            z-index: 10; /* Ensures header stays above scrolling content */
+        }
+        .product-header h1 {
+            font-size: 24px; /* Material Design Headline 6 equivalent */
+            font-weight: 500;
+            color: #212121;
+            margin: 0;
+            flex-grow: 1; /* Allows title to take available space */
+            padding-right: 16px; /* Space before icons */
+            line-height: 1.2; /* Good line height for headlines */
+        }
+        .header-actions {
+            display: flex;
+            gap: 16px; /* Space between icons */
+        }
+        .header-actions .material-icons {
+            font-size: 24px;
+            color: #757575; /* Standard icon color */
+            cursor: pointer;
+            padding: 8px; /* Increased touch target area for mobile */
+            border-radius: 50%; /* Makes touch target circular */
+            transition: background-color 0.2s;
+        }
+        .header-actions .material-icons:hover {
+            background-color: rgba(0,0,0,0.04); /* Subtle hover effect */
+        }
+
+        /* 2. Product Description */
+        .product-description-card {
+            margin-top: 16px; /* Consistent top margin */
+        }
+        .product-description-card h2 {
+            font-size: 18px; /* Material Design Subtitle 1 equivalent */
+            font-weight: 500;
+            color: #212121;
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        .product-description-card p {
+            font-size: 14px; /* Material Design Body 1 equivalent */
+            line-height: 20px;
+            color: #424242;
+            margin-bottom: 0;
+        }
+
+        /* 3. Customer Reviews Summary */
+        .review-summary-card h2 {
+            font-size: 18px; /* Subtitle 1 equivalent */
+            font-weight: 500;
+            color: #212121;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        .overall-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* Spacing between elements */
+            flex-wrap: wrap; /* Allows elements to wrap on smaller widths if needed */
+        }
+        .overall-rating .score {
+            font-size: 28px; /* Larger for prominence */
+            font-weight: 700;
+            color: #212121;
+            margin-right: 4px; /* Small additional space */
+        }
+        .star-rating {
+            display: flex; /* Align stars horizontally */
+            align-items: center;
+        }
+        .star-rating .material-icons {
+            font-size: 20px;
+            color: #FFC107; /* Material Design amber for stars */
+            vertical-align: middle;
+        }
+        .overall-rating .review-count {
+            font-size: 14px;
+            color: #757575;
+            margin-left: 4px; /* Small additional space */
+        }
+
+        /* 4. Individual Customer Reviews List */
+        .individual-reviews-list {
+            margin: 0 16px 16px 16px; /* Matches card margins horizontally, adds bottom space for list context */
+        }
+        .review-item {
+            margin-bottom: 12px; /* Space between individual review cards */
+            padding: 16px; /* Internal padding inherited from .md-card */
+        }
+        .review-item:last-child {
+            margin-bottom: 0; /* No bottom margin for the last review item */
+        }
+        .review-item .reviewer-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .review-item h3 {
+            font-size: 16px; /* Body 1 equivalent */
+            font-weight: 500;
+            color: #212121;
+            margin: 0;
+        }
+        .review-item .star-rating .material-icons {
+            font-size: 16px; /* Smaller stars for individual reviews */
+            color: #FFC107;
+            vertical-align: middle;
+        }
+        .review-item p {
+            font-size: 14px; /* Body 2 equivalent */
+            line-height: 20px;
+            color: #424242;
+            margin-bottom: 0;
+        }
+
+        /* 5. Call to Action (Order) Bar */
+        .order-action-bar {
+            position: absolute; /* Fixed relative to .mobile-screen */
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 68px; /* Explicitly defined height for consistent layout */
+            background-color: #fff;
+            padding: 12px 16px; /* Vertical and horizontal padding */
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1); /* Elevation from content above */
+            z-index: 1000; /* Ensures it stays on top of all other content */
+            display: flex; /* Centers the button vertically if it weren't 100% width */
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-screen">
+        <div class="scroll-content">
+            <!-- 1. Product Header & Actions -->
+            <div class="product-header">
+                <h1>The Ultimate Productivity Guide</h1>
+                <div class="header-actions">
+                    <i class="material-icons" role="button" aria-label="Share product">share</i>
+                    <i class="material-icons" role="button" aria-label="Like product">favorite_border</i>
+                </div>
+            </div>
+
+            <!-- 2. Product Description -->
+            <div class="product-description-card md-card">
+                <h2>Description</h2>
+                <p>Unlock your full potential with "The Ultimate Productivity Guide." This comprehensive digital product provides actionable strategies, time-management techniques, and mindset shifts to help you conquer your goals. From mastering your daily routine to optimizing your workflow, this guide is your go-to resource for achieving peak performance and reclaiming your valuable time. Ideal for students, professionals, and anyone looking to enhance their daily efficiency.</p>
+            </div>
+
+            <!-- 3. Customer Reviews Summary -->
+            <div class="review-summary-card md-card">
+                <h2>Customer Reviews</h2>
+                <div class="overall-rating">
+                    <span class="score">4.8</span>
+                    <div class="star-rating">
+                        <i class="material-icons">star</i>
+                        <i class="material-icons">star</i>
+                        <i class="material-icons">star</i>
+                        <i class="material-icons">star</i>
+                        <i class="material-icons">star_half</i>
+                    </div>
+                    <span class="review-count">(124 reviews)</span>
+                </div>
+            </div>
+
+            <!-- 4. Individual Customer Reviews List -->
+            <div class="individual-reviews-list">
+                <!-- Example Review Item 1 -->
+                <div class="review-item md-card">
+                    <div class="reviewer-info">
+                        <h3>Alice W.</h3>
+                        <div class="star-rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                        </div>
+                    </div>
+                    <p>"This guide completely transformed my daily routine! I've never been more productive. Highly recommend for anyone feeling overwhelmed and looking for practical solutions."</p>
+                </div>
+
+                <!-- Example Review Item 2 -->
+                <div class="review-item md-card">
+                    <div class="reviewer-info">
+                        <h3>John D.</h3>
+                        <div class="star-rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_border</i>
+                        </div>
+                    </div>
+                    <p>"Solid advice, though some sections felt a bit generic. Still, I picked up a few good tips that have helped me stay on track."</p>
+                </div>
+
+                <!-- Example Review Item 3 (added for more scrollable content) -->
+                <div class="review-item md-card">
+                    <div class="reviewer-info">
+                        <h3>Sarah K.</h3>
+                        <div class="star-rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_half</i>
+                        </div>
+                    </div>
+                    <p>"A really helpful guide, especially the parts on time blocking. My only wish is for a few more real-world examples."</p>
+                </div>
+
+                <!-- Example Review Item 4 (added for more scrollable content) -->
+                <div class="review-item md-card">
+                    <div class="reviewer-info">
+                        <h3>Mike R.</h3>
+                        <div class="star-rating">
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                        </div>
+                    </div>
+                    <p>"Five stars! This guide is a game-changer for anyone struggling with productivity. Worth every penny."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Call to Action (Order) Bar -->
+        <div class="order-action-bar">
+            <button class="md-button md-button-primary md-button-elevated" role="button" aria-label="Order product for $29.99">
+                Order Now - $29.99
+            </button>
+        </div>
+    </div>
+</body>
+</html>

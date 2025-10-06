@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Product Page</title>
     <style>
-        /* Global styles for basic mobile rendering */
+        /* General Body and Container Styles */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
             margin: 0;
@@ -13,286 +13,293 @@
             background-color: #f8f8f8;
             color: #333;
             line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            -webkit-text-size-adjust: 100%; /* Prevent text zoom on orientation change */
         }
 
-        /* Ensure all elements respect padding and border in their total width */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-
-        /* Main container to simulate mobile screen width */
+        /* Main container to simulate a mobile screen */
         .container {
-            max-width: 375px; /* Simulating the target device width */
+            max-width: 375px; /* Target width for mobile simulation */
             margin: 0 auto; /* Center the container on larger screens */
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-            min-height: 100vh; /* Ensure it takes full height for the mobile view */
-        }
-
-        /* Header for actions (Share/Like) */
-        .header-actions {
+            background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            min-height: 100vh; /* Ensure it takes full viewport height */
             display: flex;
-            justify-content: flex-end; /* Align to the right */
-            margin-bottom: 20px;
-            gap: 15px; /* Space between items */
+            flex-direction: column;
         }
 
-        .action-item {
-            font-size: 14px;
-            color: #555;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 5px;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        /* Header Section */
+        .header {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            background-color: #ffffff;
+            position: sticky; /* Sticky header for app-like feel */
+            top: 0;
+            z-index: 10;
         }
-        .action-item:hover {
-            background-color: #e0e0e0;
-        }
-        .action-item::before {
-            font-size: 16px;
-        }
-        .action-item.share::before {
-            content: "🔗"; /* Unicode share icon */
-        }
-        .action-item.like::before {
-            content: "❤️"; /* Unicode heart icon */
-            color: #e74c3c;
+        .header h1 {
+            margin: 0;
+            font-size: 1.25em;
+            color: #333;
         }
 
-        /* Product Image */
+        /* Product Cover/Image */
         .product-image {
             width: 100%;
-            height: auto;
-            max-height: 200px; /* Constrain image height */
-            object-fit: cover; /* Ensure image covers the area without distortion */
-            border-radius: 8px;
-            margin-bottom: 20px;
+            height: 200px; /* Fixed height for cover art */
+            background-color: #e0e0e0; /* Placeholder background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: #666;
+            overflow: hidden; /* Ensure image fits */
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the area, cropping if necessary */
             display: block; /* Remove extra space below image */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Product Title */
-        .product-title {
-            font-size: 26px;
-            font-weight: 700;
-            color: #333;
+        /* Product Details Section */
+        .product-details {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            flex-grow: 1; /* Allow details section to grow */
+        }
+        .product-details h2 {
+            font-size: 1.5em;
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .product-details p {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 0;
         }
 
-        /* Product Description */
-        .product-description {
-            font-size: 15px;
+        /* Order Button Section */
+        .order-section {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: #ffffff;
+        }
+        .order-button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.15em;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            text-decoration: none; /* For anchor tags */
+            display: block; /* Make it a block element to fill width */
+            box-sizing: border-box; /* Include padding in width */
+            transition: background-color 0.2s ease;
+        }
+        .order-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Social Share/Like Functionality */
+        .social-actions {
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+            gap: 10px; /* Space between buttons */
+            border-bottom: 1px solid #eee;
+            background-color: #ffffff;
+        }
+        .social-button {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 25px; /* Pill shape */
+            cursor: pointer;
+            font-size: 0.9em;
             color: #555;
-            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1; /* Distribute space evenly */
+            justify-content: center;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .social-button:hover {
+            background-color: #f0f0f0;
+            border-color: #ccc;
+        }
+        .social-button .icon {
+            font-size: 1.2em; /* Using unicode characters for icons */
         }
 
-        /* Overall Rating */
+        /* Reviews Section */
+        .reviews-section {
+            padding: 15px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #eee;
+        }
+        .reviews-section h3 {
+            font-size: 1.3em;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Overall Rating Display */
         .overall-rating {
             display: flex;
             align-items: center;
-            margin-bottom: 25px;
-            background-color: #f9f9f9;
-            padding: 10px 15px;
-            border-radius: 8px;
-            border: 1px solid #eee;
-        }
-
-        .overall-score {
-            font-size: 24px;
-            font-weight: 700;
-            color: #28a745; /* Green for good score */
-            margin-right: 8px;
-        }
-
-        .overall-stars {
-            font-size: 20px;
-            color: #f39c12; /* Orange for stars */
-            margin-right: 10px;
-            letter-spacing: 2px; /* Space out stars */
-        }
-
-        .review-count {
-            font-size: 14px;
-            color: #777;
-        }
-
-        /* Order Button */
-        .order-button {
-            width: 100%;
-            padding: 18px 20px;
-            background-color: #007bff; /* Primary blue */
-            color: #fff;
-            font-size: 20px;
-            font-weight: 600;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none; /* In case it's an <a> tag */
-            display: block; /* Ensure it takes full width */
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        .order-button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-        .order-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
-        }
-
-        /* Reviews Section Title */
-        .reviews-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #333;
-            margin-top: 30px;
             margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            gap: 10px;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens if needed */
+        }
+        .overall-score {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .overall-stars {
+            display: flex;
+            align-items: center;
+        }
+        .overall-stars .star {
+            color: #ffd700; /* Gold for stars */
+            font-size: 1.8em;
+            line-height: 1; /* Adjust line height to align stars */
+        }
+        .overall-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-left: 5px;
         }
 
-        /* Individual Review Item */
+        /* Individual Review List */
+        .review-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
         .review-item {
-            background-color: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-top: 1px solid #eee;
+            padding: 15px 0;
         }
-
+        .review-item:first-child {
+            border-top: none; /* No border for the first review */
+        }
         .reviewer-info {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-
         .reviewer-name {
-            font-weight: 600;
+            font-weight: bold;
             color: #333;
-            font-size: 16px;
+            font-size: 1em;
         }
-
-        .reviewer-rating {
-            font-size: 18px;
-            color: #f39c12; /* Orange for stars */
-            letter-spacing: 1px;
+        /* Star rating system for individual reviews */
+        .review-stars {
+            display: flex;
+            align-items: center;
         }
-
+        .review-stars .star {
+            color: #ffd700;
+            font-size: 1.1em;
+            line-height: 1;
+        }
         .review-text {
-            font-size: 14px;
-            color: #666;
-            margin-top: 0;
-            margin-bottom: 0;
+            font-size: 0.9em;
+            color: #555;
         }
 
-        /* Star styling for ratings */
-        .star-filled {
-            color: #f39c12; /* Gold/Orange for filled stars */
-        }
-        .star-empty {
-            color: #ddd; /* Lighter color for empty stars */
+        /* Footer */
+        .footer {
+            padding: 15px;
+            text-align: center;
+            font-size: 0.75em;
+            color: #999;
+            border-top: 1px solid #eee;
+            background-color: #ffffff;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header: Share & Like functionality -->
-        <div class="header-actions">
-            <span class="action-item share">Share</span>
-            <span class="action-item like">Like</span>
+        <div class="header">
+            <h1>Product Details</h1>
         </div>
 
-        <!-- Product Image -->
-        <img src="https://via.placeholder.com/375x200/5fa2e0/ffffff?text=Digital+Product+Image" alt="Digital Product Image" class="product-image">
-
-        <!-- Product Details -->
-        <h1 class="product-title">Premium Digital Course: Web Dev Masterclass</h1>
-        <p class="product-description">
-            Unlock your potential with our comprehensive Web Development Masterclass. Learn front-end and back-end skills, build real-world projects, and launch your career in tech. Perfect for beginners and intermediate developers.
-        </p>
-
-        <!-- Overall Score & Reviews Count -->
-        <div class="overall-rating">
-            <span class="overall-score">4.7</span>
-            <span class="overall-stars">
-                <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">☆</span>
-            </span>
-            <span class="review-count">(2,543 Reviews)</span>
+        <div class="product-image">
+            <img src="https://via.placeholder.com/375x200/007bff/ffffff?text=Digital+Product+Cover" alt="Product Cover Art">
         </div>
 
-        <!-- Order Button with Price -->
-        <button class="order-button">
-            Order Now - $99.99
-        </button>
+        <div class="product-details">
+            <h2>The Ultimate Productivity Guide 2024</h2>
+            <p>Unlock your full potential with this comprehensive digital guide. Learn proven techniques, strategies, and tools to boost your productivity, manage your time effectively, and achieve your goals faster. Perfect for students, professionals, and anyone looking to optimize their daily routine.</p>
+        </div>
 
-        <!-- Customer Reviews Section -->
-        <h2 class="reviews-title">Customer Reviews</h2>
+        <div class="order-section">
+            <a href="#" class="order-button">Order Now - $19.99</a>
+        </div>
 
-        <div class="review-list">
-            <!-- Individual Review 1 -->
-            <div class="review-item">
-                <div class="reviewer-info">
-                    <span class="reviewer-name">Sarah J.</span>
-                    <span class="reviewer-rating">
-                        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span>
-                    </span>
+        <div class="social-actions">
+            <button class="social-button">
+                <span class="icon">🔗</span> Share
+            </button>
+            <button class="social-button">
+                <span class="icon">👍</span> Like
+            </button>
+        </div>
+
+        <div class="reviews-section">
+            <h3>Customer Reviews</h3>
+            <div class="overall-rating">
+                <span class="overall-score">4.7</span>
+                <div class="overall-stars">
+                    <!-- 4.7 stars visually represented as 4 full and 1 empty star -->
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star" style="color:#ccc;">★</span>
                 </div>
-                <p class="review-text">
-                    "This course is absolutely fantastic! The content is well-structured, easy to understand, and the projects are super helpful. Highly recommend for anyone serious about web dev."
-                </p>
+                <span class="overall-text">(Based on 128 reviews)</span>
             </div>
 
-            <!-- Individual Review 2 -->
-            <div class="review-item">
-                <div class="reviewer-info">
-                    <span class="reviewer-name">Mike R.</span>
-                    <span class="reviewer-rating">
-                        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">☆</span>
-                    </span>
-                </div>
-                <p class="review-text">
-                    "Very good course, learned a lot. Some parts moved a bit fast for me, but overall excellent value for money. The instructors are knowledgeable."
-                </p>
-            </div>
-
-            <!-- Individual Review 3 -->
-            <div class="review-item">
-                <div class="reviewer-info">
-                    <span class="reviewer-name">Anna L.</span>
-                    <span class="reviewer-rating">
-                        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">☆</span><span class="star-empty">☆</span>
-                    </span>
-                </div>
-                <p class="review-text">
-                    "Decent course. It covers the basics well, but I was hoping for more advanced topics. Good for beginners though."
-                </p>
-            </div>
-
-            <!-- Individual Review 4 -->
-            <div class="review-item">
-                <div class="reviewer-info">
-                    <span class="reviewer-name">Chris P.</span>
-                    <span class="reviewer-rating">
-                        <span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span>
-                    </span>
-                </div>
-                <p class="review-text">
-                    "An absolute game-changer! From zero to hero in web development. The support forum is also very active and helpful."
-                </p>
-            </div>
+            <ul class="review-list">
+                <li class="review-item">
+                    <div class="reviewer-info">
+                        <span class="reviewer-name">Jane Doe</span>
+                        <div class="review-stars">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                    </div>
+                    <p class="review-text">"Absolutely life-changing! My productivity has soared since I started implementing the strategies from this guide. Highly recommend it to everyone."</p>
+                </li>
+                <li class="review-item">
+                    <div class="reviewer-info">
+                        <span class="reviewer-name">John Smith</span>
+                        <div class="review-stars">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star" style="color:#ccc;">★</span>
+                        </div>
+                    </div>
+                    <p class="review-text">"A very practical guide with actionable advice. Some parts were a bit repetitive, but overall, a great resource for improving focus and time management."</p>
+                </li>
+                <li class="review-item">
+                    <div class="reviewer-info">
+                        <span class="reviewer-name">Alice B.</span>
+                        <div class="review-stars">
+                            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                        </div>
+                    </div>
+                    <p class="review-text">"Fantastic content! The time management section alone was worth the purchase. I feel much more organized and in control of my day now."</p>
+                </li>
+            </ul>
+        </div>
+        <div class="footer">
+            &copy; 2024 Digital Products Inc.
         </div>
     </div>
 </body>

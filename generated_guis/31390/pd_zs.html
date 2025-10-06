@@ -3,477 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile UI Page</title>
+    <title>Mobile Camera Page UI</title>
+    <!-- Basic reset for consistent styling -->
     <style>
-        /* General Reset & Base Styles */
         body {
             margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow: hidden; /* Prevent scrolling on the body */
-            height: 100vh; /* Full viewport height */
-            display: flex; /* Use flex to center the mobile container */
+            display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0; /* Page background */
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden; /* Prevent body scroll if content slightly exceeds */
         }
-
-        /* Main Container for the mobile page simulation */
-        .mobile-page-container {
-            width: 375px; /* Simulate mobile device width */
-            height: 667px; /* Simulate mobile device height */
-            background-color: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3); /* Soft shadow for device look */
-            position: relative;
-            overflow: hidden; /* Crucial for containing absolute elements and transitions */
-            border-radius: 8px; /* Slightly rounded corners for device simulation */
-        }
-
-        /* Common Button Styles - ensures good touch target size and visual feedback */
-        .button {
-            border: none;
-            background: none;
+        /* Global styles for elements within the mobile frame */
+        .button-icon {
+            font-size: 24px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-width: 44px; /* Recommended touch target size */
-            min-height: 44px; /* Recommended touch target size */
-            border-radius: 50%; /* Default to circular, can be overridden */
-            transition: background-color 0.2s ease, opacity 0.2s ease;
-            font-size: 20px; /* Base icon size */
-            color: white; /* Default color for icons */
-            user-select: none; /* Prevent text selection on tap */
-            -webkit-tap-highlight-color: transparent; /* Remove default tap highlight */
+            user-select: none;
+            transition: opacity 0.2s ease-in-out, transform 0.1s ease-in-out;
+            text-shadow: 0px 0px 5px rgba(0,0,0,0.5); /* For better visibility on varying backgrounds */
         }
-        .button:active {
-            opacity: 0.7; /* Visual feedback on tap */
+        .button-icon:active {
+            opacity: 0.7;
+            transform: scale(0.95);
         }
-        .button[disabled] {
-            opacity: 0.5; /* Disabled state visual */
-            cursor: not-allowed;
-        }
-
-        /* ------------------------------------------------------------------ */
-        /* I. Camera View Screen Structure */
-        .camera-view-screen {
-            position: absolute; /* Take full control of layout within container */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex; /* To layer elements easily */
-            flex-direction: column;
-            background-color: black; /* Simulates camera viewfinder (1. Camera Viewfinder Area) */
+        .text-label {
             color: white;
-            visibility: visible; /* Default state: visible */
-        }
-
-        /* Overlays Container */
-        .camera-overlays {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none; /* Allows clicks to pass through to elements below */
-            display: flex; /* For centering its children */
-            justify-content: center;
-            align-items: center;
-            z-index: 10; /* Ensure overlays are above viewfinder */
-        }
-
-        /* 2. Framing Guide Rectangle */
-        .framing-guide {
-            width: 80%; /* Example size */
-            height: 60%; /* Example size */
-            border: 1px solid rgba(255, 255, 255, 0.7); /* White border, slightly transparent */
-            box-sizing: border-box;
-            pointer-events: none; /* Not interactive */
-            position: absolute; /* Centered by parent flexbox */
-        }
-
-        /* 3. Focus Area Indicator Square */
-        .focus-area-indicator {
-            width: 80px; /* Example size */
-            height: 80px; /* Example size */
-            border: 2px solid #4CAF50; /* Green border */
-            box-sizing: border-box;
-            pointer-events: none; /* Not interactive */
-            position: absolute; /* Centered by parent flexbox initially */
-            transition: all 0.2s ease-out; /* Smooth movement */
-            opacity: 0; /* Initially hidden */
-            will-change: transform, opacity, left, top; /* Optimize for animation */
-        }
-        .focus-area-indicator.active {
-            opacity: 1; /* Appears when active */
-        }
-
-        /* Top Controls Container */
-        .top-camera-controls {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 20; /* Above overlays */
-        }
-
-        /* 5. Settings Button */
-        .settings-button {
-            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
-            border-radius: 50%;
-            width: 44px; /* Specific size for this button */
-            height: 44px;
-            font-size: 24px;
-            color: white;
-        }
-        .settings-button:active {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        /* Bottom Controls Container */
-        .bottom-camera-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%); /* Center horizontally */
-            z-index: 20; /* Above overlays */
-        }
-
-        /* 4. Primary Shutter Button */
-        .shutter-button {
-            width: 70px; /* Large circular button */
-            height: 70px;
-            background-color: white;
-            border-radius: 50%;
-            border: 4px solid rgba(255, 255, 255, 0.5); /* Outer ring */
-            box-sizing: border-box;
-            font-size: 30px; /* Icon size */
-            color: black; /* Icon color */
-        }
-        .shutter-button:active {
-            background-color: #e0e0e0;
-            border-color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* ------------------------------------------------------------------ */
-        /* II. Post-Capture Editing Screen Structure */
-        .editing-screen {
-            position: absolute; /* Take full control of layout within container */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column; /* Stack top bar, image, bottom tools */
-            background-color: #f5f5f5;
-            visibility: hidden; /* Default hidden */
-        }
-        .editing-screen.active {
-            visibility: visible;
-        }
-
-        /* Top Bar / Toolbar */
-        .top-toolbar {
-            height: 56px; /* Standard toolbar height */
-            background-color: #333; /* Dark toolbar background */
-            color: white;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-
-        /* 9. Back Navigation Button */
-        .back-button {
-            color: white;
-            font-size: 24px;
-            margin-right: 15px; /* Space between button and title */
-            background-color: transparent;
-            border-radius: 4px; /* Slightly rounded corners for feedback */
-        }
-        .back-button:active {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .toolbar-title {
-            font-size: 18px;
-            font-weight: bold;
-            flex-grow: 1; /* Allows title to take available space */
-            text-align: center;
-            /* Adjust for back button's width + margin to visually center the text */
-            margin-left: -59px; /* (44px button + 15px margin) */
-        }
-
-        /* 6. Captured Image View */
-        .captured-image-view {
-            flex-grow: 1; /* Takes up remaining space between toolbars */
-            background-color: #ccc; /* Placeholder for image */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative; /* For overlaying drawing layer */
-            overflow: hidden; /* Ensure drawing stays within bounds */
-        }
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Or 'cover' depending on desired behavior */
-            background-image: url('https://via.placeholder.com/375x400/999999/FFFFFF?text=Captured+Image'); /* Placeholder image */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        /* Highlighting Layer (User interaction layer for drawing/highlighting) */
-        .highlighting-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: auto; /* Allow interaction */
-            /* In a real app, this would be a <canvas> or SVG layer */
-        }
-        /* Example drawing element for visualization */
-        .drawing-example {
-            position: absolute;
-            border: 2px solid red;
-            background-color: rgba(255, 0, 0, 0.2);
-            width: 100px;
-            height: 80px;
-            top: 30%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Center the example drawing */
-            border-radius: 5px;
-            pointer-events: none; /* Not interactive itself, just visual */
-        }
-
-
-        /* Bottom Toolbar / Highlighting Tools Palette */
-        .bottom-tools-palette {
-            height: 70px; /* Height for tool buttons */
-            background-color: #333;
-            display: flex;
-            justify-content: space-around; /* Distribute tools evenly */
-            align-items: center;
-            padding: 0 10px;
-            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
-            flex-shrink: 0; /* Prevent shrinking */
-        }
-
-        /* 7. Image Highlighting/Selection Tools */
-        .tool-button {
-            color: white;
-            font-size: 24px;
-            background-color: transparent;
-            border-radius: 8px; /* Slightly rounded for tool buttons */
-            padding: 8px; /* Ensure larger touch target */
-            min-width: 44px;
-            min-height: 44px;
-            line-height: 1; /* Better icon alignment */
-        }
-        .tool-button:active {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .tool-button.selected {
-            background-color: #007bff; /* Active tool color */
-            box-shadow: 0 0 0 2px #007bff; /* Visual highlight for selected state */
-        }
-
-        /* 8. Undo Button */
-        .undo-button {
-            color: white;
-            font-size: 24px;
-            margin-left: auto; /* Pushes it to the right */
-            background-color: transparent;
-            border-radius: 8px;
-            padding: 8px;
-            min-width: 44px;
-            min-height: 44px;
-        }
-        .undo-button:active {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .undo-button[disabled] {
-            color: rgba(255, 255, 255, 0.5); /* Faded color when disabled */
-            background-color: transparent;
-        }
-
-        /* Toggle Button for demonstration purposes */
-        .toggle-button {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 100; /* Above everything */
-            font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            -webkit-tap-highlight-color: transparent;
-        }
-        .toggle-button:hover {
-            background-color: #0056b3;
+            font-size: 14px;
+            text-shadow: 0px 0px 5px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <div class="mobile-page-container">
+    <!-- Mobile Page Container (Simulates a mobile device screen) -->
+    <div id="mobile-page-container" 
+        style="width: 375px; 
+               height: 667px; 
+               border: 8px solid #333; 
+               border-radius: 36px; 
+               box-shadow: 0 0 20px rgba(0,0,0,0.3); 
+               position: relative; 
+               overflow: hidden; 
+               background-color: black;">
 
-        <!-- I. Camera View Screen -->
-        <div id="cameraView" class="camera-view-screen">
-            <!-- 1. Camera Viewfinder Area: Implemented as the background of .camera-view-screen -->
+        <!--
+            SCREEN MANAGEMENT:
+            To switch between screens, change the 'display' style property:
+            - Set 'display: block;' for the screen you want to show.
+            - Set 'display: none;' for the screens you want to hide.
+            By default, the Primary Camera View is shown.
+        -->
 
-            <!-- Overlays Container -->
-            <div class="camera-overlays">
-                <!-- 2. Framing Guide Rectangle -->
-                <div class="framing-guide"></div>
-                <!-- 3. Focus Area Indicator Square -->
-                <div id="focusIndicator" class="focus-area-indicator" aria-label="Focus area"></div>
+        <!-- 1. Primary Camera View Screen -->
+        <div id="primary-camera-view" 
+            style="width: 100%; 
+                   height: 100%; 
+                   position: absolute; 
+                   top: 0; 
+                   left: 0; 
+                   background-color: black; /* Represents the live camera feed area */
+                   display: block;"> <!-- Currently visible -->
+
+            <!-- Live Camera View / Viewfinder Area -->
+            <div style="width: 100%; 
+                        height: calc(100% - 100px); /* 100px for bottom control bar */
+                        position: absolute; 
+                        top: 0; 
+                        left: 0; 
+                        background-color: #1a1a1a; /* Dark gray to simulate camera feed */
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        font-size: 20px; 
+                        color: #bbb;">
+                Live Camera Feed
             </div>
 
-            <!-- Top Controls Container -->
-            <div class="top-camera-controls">
-                <!-- 5. Settings Button -->
-                <button class="button settings-button" aria-label="Settings">⚙️</button>
+            <!-- White Framing Rectangle Overlay -->
+            <div style="position: absolute; 
+                        top: 50%; 
+                        left: 50%; 
+                        width: 80%; 
+                        height: 80%; /* Example for 1:1 aspect ratio within the feed */
+                        transform: translate(-50%, -50%); 
+                        border: 2px solid rgba(255, 255, 255, 0.6); 
+                        pointer-events: none; /* Allows clicks to pass through to underlying elements */
+                        box-sizing: border-box;">
             </div>
 
-            <!-- Bottom Controls Container -->
-            <div class="bottom-camera-controls">
-                <!-- 4. Primary Shutter Button -->
-                <button class="button shutter-button" aria-label="Capture Photo">📸</button>
+            <!-- Green Focus Square Overlay -->
+            <div style="position: absolute; 
+                        top: 40%; 
+                        left: 30%; 
+                        width: 60px; 
+                        height: 60px; 
+                        border: 2px solid #00ff00; 
+                        opacity: 0.8; 
+                        pointer-events: none; /* Allows clicks to pass through */
+                        animation: pulse-focus 1s infinite alternate; /* Simple animation */
+                        box-sizing: border-box;">
+            </div>
+            
+            <style>
+                @keyframes pulse-focus {
+                    from { transform: scale(1); opacity: 0.8; }
+                    to { transform: scale(1.05); opacity: 0.9; }
+                }
+            </style>
+
+            <!-- Shutter Button (with Camera Icon) -->
+            <button 
+                style="position: absolute; 
+                       bottom: 30px; 
+                       left: 50%; 
+                       transform: translateX(-50%); 
+                       width: 70px; 
+                       height: 70px; 
+                       border-radius: 50%; 
+                       background-color: white; 
+                       border: 4px solid #ccc; 
+                       display: flex; 
+                       align-items: center; 
+                       justify-content: center; 
+                       cursor: pointer; 
+                       box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                       outline: none;
+                       font-size: 32px;
+                       color: #333;"
+                class="button-icon">
+                📸
+            </button>
+
+            <!-- Settings Access Button/Icon -->
+            <a href="#" 
+                style="position: absolute; 
+                       top: 15px; 
+                       right: 15px; 
+                       font-size: 28px; 
+                       color: white; 
+                       text-shadow: 0px 0px 5px rgba(0,0,0,0.5);"
+                class="button-icon">
+                ⚙️
+            </a>
+        </div>
+
+        <!-- 2. Post-Capture / Annotation Screen -->
+        <div id="annotation-screen" 
+            style="width: 100%; 
+                   height: 100%; 
+                   position: absolute; 
+                   top: 0; 
+                   left: 0; 
+                   background-color: #333; /* Dark background for annotation */
+                   display: none;"> <!-- Hidden by default -->
+
+            <!-- Captured Image (represented by background) -->
+            <div style="width: 100%; 
+                        height: calc(100% - 60px); /* 60px for bottom toolbar */
+                        background-image: url('https://via.placeholder.com/375x607/555555/FFFFFF?text=Captured+Image'); /* Placeholder image */
+                        background-size: cover; 
+                        background-position: center; 
+                        position: absolute; 
+                        top: 0; 
+                        left: 0; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        color: white; 
+                        font-size: 18px;">
+                <!-- Annotation canvas would go here -->
+            </div>
+
+            <!-- Back Navigation Button/Icon -->
+            <a href="#" 
+                style="position: absolute; 
+                       top: 15px; 
+                       left: 15px; 
+                       font-size: 28px; 
+                       color: white; 
+                       text-shadow: 0px 0px 5px rgba(0,0,0,0.5);"
+                class="button-icon">
+                &lt;
+            </a>
+
+            <!-- Undo Action Button/Icon -->
+            <a href="#" 
+                style="position: absolute; 
+                       top: 15px; 
+                       right: 15px; 
+                       font-size: 28px; 
+                       color: rgba(255, 255, 255, 0.5); /* Disabled state */
+                       text-shadow: 0px 0px 5px rgba(0,0,0,0.5);"
+                class="button-icon">
+                ↩️
+            </a>
+
+            <!-- Image Annotation/Highlighting Tools -->
+            <div style="position: absolute; 
+                        bottom: 0; 
+                        left: 0; 
+                        width: 100%; 
+                        height: 60px; 
+                        background-color: rgba(0,0,0,0.7); 
+                        display: flex; 
+                        justify-content: space-around; 
+                        align-items: center; 
+                        padding: 0 10px; 
+                        box-sizing: border-box;">
+                <!-- Selection Tool Icon -->
+                <a href="#" class="button-icon" style="font-size: 28px; color: #007bff;">👆</a> <!-- Selected state example -->
+                <!-- Drawing Tool Icon -->
+                <a href="#" class="button-icon" style="font-size: 28px;">🖊️</a>
+                <!-- Predefined Shape: Square Outline -->
+                <a href="#" class="button-icon" style="font-size: 28px;">◻️</a>
+                <!-- Predefined Shape: Circle Outline -->
+                <a href="#" class="button-icon" style="font-size: 28px;">◯</a>
+                <!-- Predefined Shape: Arrow -->
+                <a href="#" class="button-icon" style="font-size: 28px;">➡️</a>
+                <!-- Color Picker -->
+                <a href="#" class="button-icon" style="font-size: 28px;">🎨</a>
+                <!-- Eraser Tool -->
+                <a href="#" class="button-icon" style="font-size: 28px;">🧽</a>
             </div>
         </div>
 
-        <!-- II. Post-Capture Editing Screen -->
-        <div id="editingScreen" class="editing-screen">
-            <!-- Top Bar / Toolbar -->
-            <div class="top-toolbar">
-                <!-- 9. Back Navigation Button -->
-                <button class="button back-button" aria-label="Back">←</button>
-                <span class="toolbar-title">Edit Photo</span>
+        <!-- 3. Settings Adjustment Interface -->
+        <div id="settings-screen" 
+            style="width: 100%; 
+                   height: 100%; 
+                   position: absolute; 
+                   top: 0; 
+                   left: 0; 
+                   background-color: #222; /* Dark background for settings */
+                   display: none; /* Hidden by default */
+                   color: white; 
+                   overflow: hidden;">
+
+            <!-- Settings Header -->
+            <div style="padding: 15px; 
+                        background-color: #333; 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: space-between; 
+                        box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                <!-- Back Navigation Button/Icon (within Settings) -->
+                <a href="#" class="button-icon" style="font-size: 28px; color: white; text-shadow: none;">&lt;</a>
+                <h2 style="margin: 0; font-size: 20px; color: white; flex-grow: 1; text-align: center;">Settings</h2>
+                <div style="width: 28px;"></div> <!-- Spacer to balance back button -->
             </div>
 
-            <!-- 6. Captured Image View -->
-            <div class="captured-image-view">
-                <div class="image-placeholder" aria-label="Captured photo to edit"></div>
-                <!-- Highlighting Layer (User interaction layer for drawing/highlighting) -->
-                <div class="highlighting-layer">
-                    <!-- Example drawing element to visualize highlighting -->
-                    <div class="drawing-example"></div>
+            <!-- Settings List -->
+            <div style="padding: 10px 0; 
+                        overflow-y: auto; 
+                        height: calc(100% - 60px);"> <!-- Adjust height for header -->
+                
+                <!-- Setting Item: Toggle Switch -->
+                <div style="display: flex; 
+                            justify-content: space-between; 
+                            align-items: center; 
+                            padding: 12px 20px; 
+                            border-bottom: 1px solid #444;">
+                    <span class="text-label" style="font-size: 16px;">Flash Auto</span>
+                    <label style="position: relative; display: inline-block; width: 40px; height: 24px;">
+                        <input type="checkbox" checked 
+                            style="opacity: 0; width: 0; height: 0;">
+                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
+                                     background-color: #ccc; transition: .4s; border-radius: 24px;">
+                            <span style="position: absolute; content: ''; height: 18px; width: 18px; left: 3px; bottom: 3px; 
+                                         background-color: white; transition: .4s; border-radius: 50%;
+                                         transform: translateX(16px);"></span> <!-- Checked state transform -->
+                        </span>
+                    </label>
                 </div>
-            </div>
 
-            <!-- Bottom Toolbar / Highlighting Tools Palette -->
-            <div class="bottom-tools-palette">
-                <!-- 7. Image Highlighting/Selection Tools -->
-                <button class="button tool-button selected" aria-label="Drawing Tool">✏️</button>
-                <button class="button tool-button" aria-label="Rectangle Tool">◻️</button>
-                <button class="button tool-button" aria-label="Circle Tool">⚪</button>
-                <button class="button tool-button" aria-label="Color Picker">🎨</button>
-                <!-- Optional: Stroke/Thickness Slider/Buttons could be added here -->
+                <!-- Setting Item: Slider -->
+                <div style="display: flex; 
+                            flex-direction: column; 
+                            padding: 12px 20px; 
+                            border-bottom: 1px solid #444;">
+                    <span class="text-label" style="font-size: 16px; margin-bottom: 8px;">Image Quality</span>
+                    <input type="range" min="0" max="100" value="75" 
+                        style="width: 100%; 
+                               -webkit-appearance: none; 
+                               height: 4px; 
+                               background: #555; 
+                               outline: none; 
+                               opacity: 0.7; 
+                               transition: opacity .2s;">
+                </div>
 
-                <!-- 8. Undo Button -->
-                <button id="undoButton" class="button undo-button" aria-label="Undo last action" disabled>↩️</button>
+                <!-- Setting Item: Radio Buttons / Dropdown (simulated with text) -->
+                <div style="display: flex; 
+                            justify-content: space-between; 
+                            align-items: center; 
+                            padding: 12px 20px; 
+                            border-bottom: 1px solid #444;">
+                    <span class="text-label" style="font-size: 16px;">Aspect Ratio</span>
+                    <span class="text-label" style="font-size: 16px; color: #007bff;">4:3</span>
+                </div>
+
+                <!-- Setting Item: Toggle Switch -->
+                <div style="display: flex; 
+                            justify-content: space-between; 
+                            align-items: center; 
+                            padding: 12px 20px; 
+                            border-bottom: 1px solid #444;">
+                    <span class="text-label" style="font-size: 16px;">Grids Overlay</span>
+                    <label style="position: relative; display: inline-block; width: 40px; height: 24px;">
+                        <input type="checkbox" 
+                            style="opacity: 0; width: 0; height: 0;">
+                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
+                                     background-color: #ccc; transition: .4s; border-radius: 24px;">
+                            <span style="position: absolute; content: ''; height: 18px; width: 18px; left: 3px; bottom: 3px; 
+                                         background-color: white; transition: .4s; border-radius: 50%;"></span>
+                        </span>
+                    </label>
+                </div>
+
+                <!-- Setting Item: Info Label -->
+                <div style="display: flex; 
+                            justify-content: space-between; 
+                            align-items: center; 
+                            padding: 12px 20px; 
+                            border-bottom: 1px solid #444;">
+                    <span class="text-label" style="font-size: 16px;">App Version</span>
+                    <span class="text-label" style="font-size: 16px; color: #aaa;">1.0.0</span>
+                </div>
+
             </div>
         </div>
+
     </div>
 
-    <!-- Toggle button for demonstration purposes -->
-    <button class="toggle-button" onclick="toggleScreens()">Switch to Editing</button>
-
-    <script>
-        const cameraView = document.getElementById('cameraView');
-        const editingScreen = document.getElementById('editingScreen');
-        const toggleButton = document.querySelector('.toggle-button');
-        const undoButton = document.getElementById('undoButton');
-        const focusIndicator = document.getElementById('focusIndicator');
-
-        let isCameraActive = true; // State variable
-
-        /**
-         * Toggles between the camera view and the editing screen.
-         */
-        function toggleScreens() {
-            if (isCameraActive) {
-                cameraView.style.visibility = 'hidden';
-                editingScreen.style.visibility = 'visible';
-                editingScreen.classList.add('active'); // Add active class if needed for transitions
-                toggleButton.textContent = 'Switch to Camera';
-                simulateFocus(); // Simulate a focus event before switching for effect
-            } else {
-                cameraView.style.visibility = 'visible';
-                editingScreen.style.visibility = 'hidden';
-                editingScreen.classList.remove('active');
-                toggleButton.textContent = 'Switch to Editing';
-            }
-            isCameraActive = !isCameraActive;
-            updateUndoButtonState(); // Update undo button state based on current screen
-        }
-
-        /**
-         * Updates the disabled state of the Undo button.
-         * In a real app, this would depend on the actual edit history.
-         */
-        function updateUndoButtonState() {
-            undoButton.disabled = isCameraActive; // Undo is disabled on camera screen
-            // When on editing screen, it would be enabled if there are actions to undo.
-            // For this demo, it's always enabled on editing screen.
-            if (!isCameraActive) {
-                undoButton.disabled = false;
-            }
-        }
-
-        /**
-         * Simulates a camera focus event by showing and moving the focus indicator.
-         */
-        function simulateFocus() {
-            focusIndicator.classList.add('active');
-
-            const framingGuide = document.querySelector('.framing-guide');
-            const guideRect = framingGuide.getBoundingClientRect(); // Position relative to viewport
-            const overlayRect = focusIndicator.parentElement.getBoundingClientRect(); // Position of overlay container
-
-            // Calculate framing guide's position relative to its parent (.camera-overlays)
-            const guideLeftInOverlay = guideRect.left - overlayRect.left;
-            const guideTopInOverlay = guideRect.top - overlayRect.top;
-
-            // Get current size of focus indicator
-            const indicatorWidth = focusIndicator.offsetWidth;
-            const indicatorHeight = focusIndicator.offsetHeight;
-
-            // Calculate max random movement within the framing guide
-            const maxX = guideRect.width - indicatorWidth;
-            const maxY = guideRect.height - indicatorHeight;
-
-            const randomX = Math.random() * maxX;
-            const randomY = Math.random() * maxY;
-
-            // Set new position (top-left corner of indicator)
-            focusIndicator.style.left = `${guideLeftInOverlay + randomX}px`;
-            focusIndicator.style.top = `${guideTopInOverlay + randomY}px`;
-            focusIndicator.style.transform = 'none'; // Remove centering transform for absolute positioning
-
-            setTimeout(() => {
-                focusIndicator.classList.remove('active');
-                // Reset position to center after fade for next focus event
-                focusIndicator.style.left = '50%';
-                focusIndicator.style.top = '50%';
-                focusIndicator.style.transform = 'translate(-50%, -50%)'; // Re-apply centering transform
-            }, 1500); // Focus visible for 1.5 seconds
-        }
-
-        // Initial state update for undo button
-        updateUndoButtonState();
-    </script>
+    <!-- Instructions for switching screens in DevTools -->
+    <div style="position: fixed; bottom: 20px; background-color: rgba(0,0,0,0.7); color: white; padding: 10px; border-radius: 5px; font-size: 14px; text-align: center; max-width: 350px;">
+        <p><strong>To switch screens:</strong></p>
+        <p>In your browser's Developer Tools (F12), find the `#mobile-page-container` element.</p>
+        <p>Locate the `div` elements for `#primary-camera-view`, `#annotation-screen`, and `#settings-screen`.</p>
+        <p>To view a screen, set its `style="... display: block;"` and set the others to `style="... display: none;"`.</p>
+    </div>
 
 </body>
 </html>

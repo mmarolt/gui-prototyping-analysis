@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Detail Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Base styles for the mobile screen simulation */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8; /* Light background for the page */
+            height: 100vh; /* Full viewport height */
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            width: 375px; /* Fixed width for Google Chrome Developer Tools simulation */
+            overflow-x: hidden; /* Prevent horizontal scroll on the body */
+            margin: 0 auto; /* Center the page if viewed on a wider screen */
+            position: relative; /* Needed for `left: 50%; transform: translateX(-50%);` on fixed elements */
+        }
+
+        /* 1. Top Bar / Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed; /* Keeps the header at the top */
+            top: 0;
+            width: 375px; /* Match body width */
+            left: 50%; /* Center the fixed element horizontally */
+            transform: translateX(-50%); /* Adjust for centering */
+            z-index: 100; /* Ensure header is on top of other content */
+            height: 64px; /* Explicit height for layout calculations */
+            box-sizing: border-box;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            font-size: 24px; /* Size for icons */
+            cursor: pointer;
+            color: #333;
+            padding: 5px; /* Clickable area */
+        }
+
+        .header-right-icons {
+            display: flex;
+            gap: 10px; /* Space between share and like buttons */
+        }
+
+        /* 2. Product Details Section (Scrollable) */
+        .scrollable-content {
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 15px;
+            box-sizing: border-box;
+            /* Calculate height based on total viewport height minus fixed header and footer heights */
+            height: calc(100vh - 64px - 78px); 
+            margin-top: 64px; /* Push content down below the fixed header */
+            margin-bottom: 78px; /* Lift content up from the fixed footer */
+            background-color: #f8f8f8; /* Match body background */
+            width: 375px; /* Ensure content area also respects the fixed width */
+            margin-left: auto; /* Center the scrollable content */
+            margin-right: auto;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: left;
+            color: #333;
+        }
+
+        .product-price {
+            font-size: 22px;
+            color: #e67e22; /* A distinct color for price */
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .star-rating {
+            color: #f39c12; /* Gold color for stars */
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .numerical-rating {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .product-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #444;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .product-description ul {
+            list-style-type: disc;
+            margin-left: 20px;
+            padding-left: 0;
+            margin-top: 15px;
+        }
+
+        .product-description li {
+            margin-bottom: 5px;
+        }
+
+        /* 3. Customer Reviews Section */
+        .reviews-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: left;
+            color: #333;
+        }
+
+        .review-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        .reviewer-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .individual-rating {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #f39c12; /* Gold color for stars */
+        }
+
+        .review-content {
+            font-size: 15px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        /* 4. Bottom Action Bar (Sticky) */
+        .bottom-bar {
+            position: fixed; /* Keeps the bottom bar at the bottom */
+            bottom: 0;
+            width: 375px; /* Match body width */
+            left: 50%; /* Center the fixed element horizontally */
+            transform: translateX(-50%); /* Adjust for centering */
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            z-index: 100; /* Ensure it's on top of other content */
+            box-sizing: border-box;
+            height: 78px; /* Explicit height for layout calculations */
+        }
+
+        .order-button {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #28a745; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease; /* Smooth transition for hover/active states */
+        }
+
+        .order-button:active {
+            background-color: #218838; /* Darker green on press */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Bar / Header Section -->
+    <div class="header">
+        <button class="icon-button back-button">&#x2190;</button> <!-- Unicode left arrow -->
+        <div class="header-right-icons">
+            <button class="icon-button share-button">&#x1F517;</button> <!-- Unicode link icon for share -->
+            <button class="icon-button like-button">&#x2665;</button>  <!-- Unicode heart icon for like/favorite -->
+        </div>
+    </div>
+
+    <!-- 2. Product Details Section (Scrollable) -->
+    <div class="scrollable-content">
+        <h1 class="product-title">Premium Ergonomic Office Chair with Lumbar Support</h1>
+        <p class="product-price">$299.99</p>
+
+        <div class="rating-section">
+            <span class="star-rating">★★★★☆</span> <!-- Overall Star Rating Component -->
+            <span class="numerical-rating">4.5 out of 5</span> <!-- Numerical Rating Text Label -->
+        </div>
+
+        <p class="product-description">
+            Experience unparalleled comfort and style with our Premium Ergonomic Office Chair. Designed for long hours of work, it features adjustable lumbar support, a breathable mesh back, and a plush seat cushion. The chair's sleek design complements any modern office space, while its robust construction ensures durability. Perfect for professionals seeking comfort and productivity.
+            <br><br>
+            Key Features:
+            <ul>
+                <li>Adjustable lumbar support</li>
+                <li>Breathable mesh back</li>
+                <li>High-density foam seat</li>
+                <li>Smooth-rolling casters</li>
+                <li>360-degree swivel</li>
+            </ul>
+            Available in multiple colors.
+        </p>
+
+        <!-- 3. Customer Reviews Section -->
+        <h2 class="reviews-header">Customer Reviews</h2>
+        <div class="reviews-container">
+            <!-- Individual Review Item 1 -->
+            <div class="review-item">
+                <p class="reviewer-name">Jane Doe</p>
+                <div class="individual-rating">★★★★★</div> <!-- Individual Star Rating Component -->
+                <p class="review-content">"This chair is incredibly comfortable! My back pain has significantly reduced since I started using it. Highly recommend!"</p>
+            </div>
+            <!-- Individual Review Item 2 -->
+            <div class="review-item">
+                <p class="reviewer-name">John Smith</p>
+                <div class="individual-rating">★★★★☆</div>
+                <p class="review-content">"Great chair for the price. Assembly was straightforward, and it feels very sturdy. The lumbar support is a game-changer."</p>
+            </div>
+            <!-- Individual Review Item 3 -->
+            <div class="review-item">
+                <p class="reviewer-name">Alice Brown</p>
+                <div class="individual-rating">★★★★☆</div>
+                <p class="review-content">"Good quality and comfortable. The only minor issue is that the armrests could be a bit softer, but overall very satisfied."</p>
+            </div>
+            <!-- Individual Review Item 4 -->
+            <div class="review-item">
+                <p class="reviewer-name">Bob White</p>
+                <div class="individual-rating">★★★★★</div>
+                <p class="review-content">"Finally found a chair that supports me all day. The mesh back keeps me cool, and the adjustments are easy to use."</p>
+            </div>
+             <!-- Individual Review Item 5 -->
+             <div class="review-item">
+                <p class="reviewer-name">Charlie Green</p>
+                <div class="individual-rating">★★★☆☆</div>
+                <p class="review-content">"It's an okay chair. Comfortable enough for short periods, but I find myself needing to stand up after a couple of hours. Good value though."</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Bottom Action Bar (Sticky) -->
+    <div class="bottom-bar">
+        <button class="order-button">Order for $299.99</button>
+    </div>
+
+</body>
+</html>

@@ -4,178 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mobile Camera App</title>
-</head>
-<body style="
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: white;
-">
-
-    <!-- Main application container, sized for mobile simulation -->
-    <div style="
-        width: 375px;
-        height: 667px;
-        background-color: black;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        border-radius: 10px; /* Gives a soft, app-like border */
-    ">
-
-        <!-- Header Bar: Go Back & Settings -->
-        <div style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background-color: #1a1a1a;
-            border-bottom: 1px solid #333;
+    <style>
+        /* Universal box-sizing for easier layout calculations */
+        *, *::before, *::after {
             box-sizing: border-box;
-            height: 60px; /* Fixed height for header */
-        ">
-            <!-- Go Back Button -->
-            <button style="
-                background: none;
-                border: none;
-                color: white;
-                font-size: 24px;
-                cursor: pointer;
-                padding: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-                <!-- SVG for Chevron Left Icon -->
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                </svg>
-            </button>
-            <!-- Settings Button -->
-            <button style="
-                background: none;
-                border: none;
-                color: white;
-                font-size: 24px;
-                cursor: pointer;
-                padding: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-                <!-- SVG for Gear Icon -->
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                    <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.09-.73-1.71-.98L14.82 2.8c-.06-.2-.25-.33-.47-.33h-4c-.22 0-.41.13-.47.33L9.25 5.35c-.62.25-1.19.58-1.71.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.09.73 1.71.98l.36 2.54c.06.2.25.33.47.33h4c.22 0 .41-.13.47-.33l.36-2.54c.62-.25 1.19-.58 1.71-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zm-4.43 2.52c-1.95 0-3.5-1.55-3.5-3.5s1.55-3.5 3.5-3.5 3.5 1.55 3.5 3.5-1.55 3.5-3.5 3.5z"/>
-                </svg>
-            </button>
-        </div>
+        }
 
-        <!-- Camera View Area: Simulates the camera feed with overlays -->
-        <div style="
-            flex-grow: 1; /* Takes up remaining vertical space */
-            background-color: #333; /* Dark gray to simulate a camera feed */
-            position: relative;
+        /* Basic body styles for a full-screen mobile app look */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            overflow: hidden; /* Prevent scrolling */
+            height: 100vh; /* Full viewport height */
+            width: 100vw;  /* Full viewport width */
+            background-color: #000; /* Dark background for the app outside camera view area */
+            display: flex; /* Use flexbox to ensure app container fills the screen */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Main container for the entire camera application */
+        .camera-app-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* Take full width of the viewport */
+            height: 100%; /* Take full height of the viewport */
+            background-color: #1a1a1a; /* Simulates the camera's dark background/feed */
+            position: relative; /* For stacking contexts */
+            max-width: 375px; /* Constrain for typical mobile width in dev tools */
+            max-height: 667px; /* Constrain for typical mobile height in dev tools */
+        }
+
+        /* Top control bar for settings, back, and undo buttons */
+        .top-controls {
+            display: flex;
+            justify-content: space-between; /* Pushes button groups to the ends */
+            align-items: center;
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black bar */
+            z-index: 10; /* Ensure controls are above camera view content */
+            height: 60px; /* Fixed height for the control bar */
+            flex-shrink: 0; /* Prevent shrinking when space is tight */
+        }
+
+        /* Group for the left-aligned back and undo buttons */
+        .top-controls > div {
+            display: flex;
+            gap: 10px; /* Space between the back and undo buttons */
+        }
+
+        /* Styles for all control buttons (back, undo, settings) */
+        .control-button {
+            background: none;
+            border: none;
+            color: white; /* White icons */
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px 10px;
+            text-shadow: 0px 0px 5px rgba(0,0,0,0.5); /* Make icons stand out against dark background */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+            outline: none; /* Remove focus outline */
+            transition: opacity 0.2s ease; /* Smooth transition for active state */
+        }
+        .control-button:active {
+            opacity: 0.7; /* Dim button slightly when pressed */
+        }
+
+        /* Main camera view area where the image and overlays appear */
+        .camera-view {
+            flex-grow: 1; /* Takes up all available vertical space */
             display: flex;
             justify-content: center;
             align-items: center;
-        ">
-            <!-- White Rectangle Overlay for Framing -->
-            <div style="
-                position: absolute;
-                width: 80%; /* 80% of camera-view-container width */
-                height: 60%; /* 60% of camera-view-container height */
-                border: 2px solid white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                box-sizing: border-box; /* Include padding and border in the element's total width/height */
-            ">
-                <!-- Green Square Overlay for Focus Area -->
-                <div style="
-                    width: 30%; /* 30% of white-rectangle-overlay width */
-                    height: 30%; /* 30% of white-rectangle-overlay height */
-                    border: 2px solid limegreen;
-                    box-sizing: border-box;
-                "></div>
+            position: relative; /* For absolute positioning of the frames */
+            overflow: hidden; /* Important for containing absolutely positioned children */
+        }
+
+        /* White rectangle overlay for framing the shot */
+        .white-frame {
+            position: absolute;
+            width: 85vw; /* 85% of viewport width */
+            /* Calculate height for a 4:3 aspect ratio based on the width */
+            height: calc(85vw * 4 / 3); 
+            
+            /* Ensure the frame doesn't exceed the available vertical space,
+               accounting for top/bottom controls. 120px is an estimation for controls height. */
+            max-height: calc(100% - 120px); 
+            /* Also ensure it doesn't exceed horizontal space if height becomes the limiting factor */
+            max-width: calc( (100% - 120px) * 3 / 4); 
+
+            border: 2px solid white; /* White border */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); /* Subtle glow effect */
+        }
+
+        /* Green square within the white rectangle to highlight a specific area */
+        .green-square {
+            width: 35%; /* 35% of the white frame's width */
+            height: 35%; /* Make it a perfect square */
+            background-color: rgba(0, 255, 0, 0.4); /* Semi-transparent green */
+            border: 1px solid lime; /* Lime green border */
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); /* Green glow effect */
+        }
+
+        /* Bottom control bar for the capture button */
+        .bottom-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            height: 100px; /* Fixed height for the control bar */
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+        /* Styles for the main capture button */
+        .capture-button {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%; /* Make it a circle */
+            background-color: white; /* White background for the button */
+            border: none; /* No default border */
+            font-size: 36px; /* Size of the camera icon (📸) */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Shadow for depth */
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transitions */
+        }
+        .capture-button:active {
+            transform: scale(0.95); /* Slight shrink on tap */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5); /* Adjusted shadow on tap */
+        }
+    </style>
+</head>
+<body>
+    <div class="camera-app-container">
+        <!-- Top control bar with Back, Revert, and Settings buttons -->
+        <div class="top-controls">
+            <div>
+                <button class="control-button back-button">⬅️</button> <!-- Go Back button -->
+                <button class="control-button undo-button">↩️</button> <!-- Revert Last Action button -->
+            </div>
+            <button class="control-button settings-button">⚙️</button> <!-- Adjust Settings button -->
+        </div>
+
+        <!-- Camera view area with guiding overlays -->
+        <div class="camera-view">
+            <!-- White rectangle overlay for framing -->
+            <div class="white-frame">
+                <!-- Green square overlay for specific focus area -->
+                <div class="green-square"></div>
             </div>
         </div>
 
-        <!-- Control Bar: Revert & Take Photo -->
-        <div style="
-            display: flex;
-            justify-content: space-between; /* Pushes items to ends */
-            align-items: center;
-            padding: 20px 15px; /* Added horizontal padding for spacing from edges */
-            background-color: #1a1a1a;
-            border-top: 1px solid #333;
-            min-height: 80px; /* Ensure enough space for controls */
-            box-sizing: border-box;
-            position: relative; /* Needed for absolute positioning of camera button */
-        ">
-            <!-- Revert Last Action Button -->
-            <button style="
-                background: none;
-                border: none;
-                color: white;
-                font-size: 24px;
-                cursor: pointer;
-                padding: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">
-                <!-- SVG for Undo/Revert Icon -->
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                    <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/>
-                </svg>
-            </button>
-
-            <!-- Take Photo Button (centered) -->
-            <button style="
-                background-color: white;
-                border: 5px solid #555; /* Outer ring of the shutter button */
-                border-radius: 50%;
-                width: 70px;
-                height: 70px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                box-shadow: 0 0 10px rgba(0,0,0,0.3);
-                /* Absolute positioning to truly center it */
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-            ">
-                <!-- Inner circle of the shutter button -->
-                <div style="
-                    background-color: white;
-                    border: 2px solid #333;
-                    border-radius: 50%;
-                    width: 50px;
-                    height: 50px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                ">
-                    <!-- SVG for Camera Icon -->
-                    <svg viewBox="0 0 24 24" width="30" height="30" fill="#333">
-                        <path d="M12 12c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0 9c-5.52 0-10-4.48-10-10S6.48 1 12 1s10 4.48 10 10-4.48 10-10 10zm-1-17.93c-3.14.93-5.59 3.82-5.93 7.23H4v2h2.07c.34 3.41 2.79 6.3 5.93 7.23V19h2v-2.77c3.14-.93 5.59-3.82 5.93-7.23H20v-2h-2.07c-.34-3.41-2.79-6.3-5.93-7.23V3h-2v2.07z"/>
-                    </svg>
-                </div>
-            </button>
-
-            <!-- Empty div for spacing to balance the 'Revert' button on the left -->
-            <div style="width: 28px; height: 28px;"></div> 
+        <!-- Bottom control bar with the Capture Photo button -->
+        <div class="bottom-controls">
+            <button class="capture-button">📸</button> <!-- Take Photo button -->
         </div>
-
     </div>
-
 </body>
 </html>

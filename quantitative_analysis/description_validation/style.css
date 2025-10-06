@@ -1,0 +1,113 @@
+/* Osnovni stil */
+body {
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #011936;
+    color: #FFFFFF;
+    line-height: 1.6;
+}
+
+/* Glava in naslovi */
+h1 {
+    font-size: 1.6rem;
+    margin: 20px 0 10px 0;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.3rem;
+    margin: 25px 0 10px 0;
+    color: #FFFFFF;
+}
+
+h3 {
+    font-size: 1.1rem;
+    margin: 15px 0 10px 0;
+    color: #FFFFFF;
+}
+
+/* Glavni vsebinski blok */
+form {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #011936;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Sklopi */
+.group {
+    margin-top: 30px;
+    padding: 15px;
+    border-top: 2px solid #e1e6eb;
+}
+
+/* Posamezen prototip */
+.prototype {
+    border-top: 2px solid #e1e6eb;
+}
+
+.prototype:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Gumb oddaje */
+.submit-btn {
+    padding: 14px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    background: #2c3e50;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 20px;
+    width: 100%;
+    transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+    background: #34495e;
+}
+
+.prototype-block {
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #ccc;
+    padding: 16px;
+    margin-bottom: 28px;
+    gap: 36px;
+}
+
+.prototype-iframe {
+    min-width: 375px;
+    border-radius: 6px;
+}
+
+.opis-block {
+    flex: 1;
+    margin-top: 8px;
+}
+
+.opis-block strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #FFD600;
+    vertical-align: middle;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.opis-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 32px; /* ali 24px, odvisno od dizajna */
+    padding: 10px 0px;
+}

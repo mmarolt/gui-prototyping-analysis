@@ -46,22 +46,67 @@ function createPrototype(appId, methodIndex) {
     row2.appendChild(label2);
     row2.appendChild(input2);
 
-    // Checkbox: GUI ni prikazan
+    // Vnos števila elementov, ki se prekrivajo (niso prikazani v celoti)
     const row3 = document.createElement("div");
     row3.className = "input-row";
-    const input3 = document.createElement("input");
-    input3.type = "checkbox";
-    input3.name = `a${appId}_m${methodIndex}_not_displayed`;
-    input3.value = "1";
     const label3 = document.createElement("label");
-    label3.textContent = "GUI ni prikazan";
-    row3.appendChild(input3);
+    label3.textContent = "Število prekritih elementov:";
+    const input3 = document.createElement("input");
+    input3.type = "number";
+    input3.min = "0";
+    input3.name = `a${appId}_m${methodIndex}_hidden`;
+    input3.value = "";
+    input3.required = true;
     row3.appendChild(label3);
+    row3.appendChild(input3);
+
+    // Vnos števila elementov z neberljivim tekstom
+    const row4 = document.createElement("div");
+    row4.className = "input-row";
+    const label4 = document.createElement("label");
+    label4.textContent = "Število neberljivih elementov z besedilom:";
+    const input4 = document.createElement("input");
+    input4.type = "number";
+    input4.min = "0";
+    input4.name = `a${appId}_m${methodIndex}_unreadable`;
+    input4.value = "";
+    input4.required = true;
+    row4.appendChild(label4);
+    row4.appendChild(input4);
+
+    // Vnos števila neustreznih/neprikazanih ikon
+    const row5 = document.createElement("div");
+    row5.className = "input-row";
+    const label5 = document.createElement("label");
+    label5.textContent = "Število neustreznih ikon:";
+    const input5 = document.createElement("input");
+    input5.type = "number";
+    input5.min = "0";
+    input5.name = `a${appId}_m${methodIndex}_icons`;
+    input5.value = "";
+    input5.required = true;
+    row5.appendChild(label5);
+    row5.appendChild(input5);
+
+    // Checkbox: GUI ni ustrezne dimenzije
+    const row6 = document.createElement("div");
+    row6.className = "input-row";
+    const input6 = document.createElement("input");
+    input6.type = "checkbox";
+    input6.name = `a${appId}_m${methodIndex}_dimensions`;
+    input6.value = "1";
+    const label6 = document.createElement("label");
+    label6.textContent = "GUI ni ustrezne dimenzije";
+    row6.appendChild(input6);
+    row6.appendChild(label6);
 
     // Dodaj vse vrstice v input blok
     inputDiv.appendChild(row1);
     inputDiv.appendChild(row2);
     inputDiv.appendChild(row3);
+    inputDiv.appendChild(row4);
+    inputDiv.appendChild(row5);
+    inputDiv.appendChild(row6);
 
     div.appendChild(inputDiv);
     return div;
@@ -72,7 +117,7 @@ function createGroup(appIndex) {
     groupDiv.className = "group-block";
 
     const h2 = document.createElement("h2");
-    h2.textContent = `App ${appIndex + 1}`;
+    h2.textContent = `App ${APPS[appIndex]}`;
     groupDiv.appendChild(h2);
 
     for (let m = 0; m < METHOD.length; m++) {
@@ -92,15 +137,18 @@ document.addEventListener("DOMContentLoaded", async function() {
         const formData = new FormData(e.target);
 
         // Pripravi CSV glavo
-        let csvContent = "UI_Number;Method;Bounds;Nonresponsive;Not_displayed\n";
+        let csvContent = "UI_Number;Method;Bounds;Nonresponsive;Hidden;Dimensions\n";
 
         for (let g = 0; g < NUM_APPS; g++) {
             const appId = APPS[g];
             for (let m = 0; m < METHOD.length; m++) {
                 const outOfBounds = formData.get(`a${appId}_m${m}_out_of_bounds`) || "0";
                 const nonresponsive = formData.get(`a${appId}_m${m}_nonresponsive`) || "0";
-                const notDisplayed = formData.has(`a${appId}_m${m}_not_displayed`) ? "YES" : "NO";
-                csvContent += `${appId};${METHOD[m]};${outOfBounds};${nonresponsive};${notDisplayed}\n`;
+                const hidden = formData.get(`a${appId}_m${m}_hidden`) || "0";
+                const unreadable = formData.get(`a${appId}_m${m}_unreadable`) || "0";
+                const icons = formData.get(`a${appId}_m${m}_icons`) || "0";
+                const dimensions = formData.has(`a${appId}_m${m}_dimensions`) ? "YES" : "NO";
+                csvContent += `${appId};${METHOD[m]};${outOfBounds};${nonresponsive};${hidden};${dimensions}\n`;
             }
         }
 

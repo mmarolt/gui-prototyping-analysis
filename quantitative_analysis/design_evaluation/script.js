@@ -104,8 +104,8 @@ function createPrototype(appId, methodIndex) {
     inputDiv.appendChild(row1);
     inputDiv.appendChild(row2);
     inputDiv.appendChild(row3);
-    inputDiv.appendChild(row4);
-    inputDiv.appendChild(row5);
+    //inputDiv.appendChild(row4);
+    //inputDiv.appendChild(row5);
     inputDiv.appendChild(row6);
 
     div.appendChild(inputDiv);

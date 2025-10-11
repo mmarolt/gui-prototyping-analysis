@@ -3,12 +3,12 @@ const NUM_METHODS = 4;
 const METHOD = ["instruction", "pd_zs", "pd_fs", "ref_instruction"];
 const APPS = ['8640','12740','22151','27382','31390','34527','38961','43977','44756','59429','59576','69574'];
 const CRITERIA = [
-    "Prototip je skladen s svojim opisom.",
+    "Prototip je skladen s svojim opisom. ",
     "Komponente so pravilno izbrane, jasno poimenovane in logično umeščene.",
     "Uporabnik brez dodatnih navodil razume, kako uporabljati prototip.",
     "V prototipu ni oblikovalskih ali funkcionalnih napak.",
     "Prototip je vizualno usklajen, prijeten in profesionalen.",
-    "Generalno gledano, je vmesnik dober."
+    "Generalno gledano, je vmesnik dober. "
 ];
 
 async function loadDataset() {

@@ -105,26 +105,30 @@ loadDataset().then(([opisMap, idMap]) => {
 });
 
 document.getElementById("surveyForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = {};
-    formData.forEach((val, key) => { data[key] = val; });
-
-    try {
-        const resp = await fetch("/netlify/functions/saveResponse", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        });
-        if (resp.ok) {
-            alert("Hvala! Odgovori so bili shranjeni.");
-        } else {
-            alert("Napaka pri shranjevanju.");
-        }
-    } catch (err) {
-        alert("Težava s povezavo: " + err);
-    }
+    alert("Hvala! Odgovori so bili shranjeni.");
 });
+
+// document.getElementById("surveyForm").addEventListener("submit", async function(e) {
+//     e.preventDefault();
+//     const formData = new FormData(e.target);
+//     const data = {};
+//     formData.forEach((val, key) => { data[key] = val; });
+//
+//     try {
+//         const resp = await fetch("/netlify/functions/saveResponse", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json" },
+//             body: JSON.stringify(data),
+//         });
+//         if (resp.ok) {
+//             alert("Hvala! Odgovori so bili shranjeni.");
+//         } else {
+//             alert("Napaka pri shranjevanju.");
+//         }
+//     } catch (err) {
+//         alert("Težava s povezavo: " + err);
+//     }
+// });
 
 // document.getElementById("surveyForm").addEventListener("submit", function(e) {
 //     console.log("Submit handler je sprožen!");

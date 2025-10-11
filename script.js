@@ -18,8 +18,6 @@ async function loadDataset() {
     const idMap = {};
     const opisMap = {};
     rows.slice(1).forEach(r => {
-        //idMap[r[0]] = r[1];
-        //opisMap[+r[0]] = r[2];
         opisMap[+r[0]] = r[1];
     });
     return [opisMap, idMap];
@@ -88,72 +86,37 @@ function createGroup(groupIndex, opis, prototypes) {
     return groupDiv;
 }
 
-loadDataset().then(([opisMap, idMap]) => {
+loadDataset().then(([opisMap]) => {
     const groupsDiv = document.getElementById("groups");
     for (let g = 0; g < NUM_APPS; g++) {
         const prototypes = [];
         const appId = APPS[g];
         for (let i = 1; i <= NUM_METHODS; i++) {
-            ///prototypes.push(createPrototype(i, idMap[i]));
             prototypes.push(createPrototype(i, appId));
         }
 
-        ///const opis = opisMap[g + 1]; // v dataset.csv so lahko opisi po sklopih (1–5)
         const opis = opisMap[appId];
         groupsDiv.appendChild(createGroup(g, opis, prototypes));
     }
 });
 
 document.getElementById("surveyForm").addEventListener("submit", async function(e) {
+    const answers = [];
+    ids.forEach(id => {
+        indexes.forEach(index => {
+            cIndexes.forEach(cIndex => {
+                const name = `a${id}_p${index}_c${cIndex}`;
+                const checked = document.querySelector(`input[name="${name}"]:checked`);
+                answers.push({
+                    name: name,
+                    value: checked ? checked.value : ""
+                });
+            });
+        });
+    });
+    // Shrani kot CSV
+    const csv = answers.map(a => `${a.name},${a.value}`).join("\n");
+    document.getElementById("odgovori").value = csv;
+
     alert("Hvala! Odgovori so bili shranjeni.");
 });
-
-// document.getElementById("surveyForm").addEventListener("submit", async function(e) {
-//     e.preventDefault();
-//     const formData = new FormData(e.target);
-//     const data = {};
-//     formData.forEach((val, key) => { data[key] = val; });
-//
-//     try {
-//         const resp = await fetch("/netlify/functions/saveResponse", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify(data),
-//         });
-//         if (resp.ok) {
-//             alert("Hvala! Odgovori so bili shranjeni.");
-//         } else {
-//             alert("Napaka pri shranjevanju.");
-//         }
-//     } catch (err) {
-//         alert("Težava s povezavo: " + err);
-//     }
-// });
-
-// document.getElementById("surveyForm").addEventListener("submit", function(e) {
-//     console.log("Submit handler je sprožen!");
-//     e.preventDefault();
-//     const formData = new FormData(e.target);
-//     const data = {};
-//     formData.forEach((val, key) => { data[key] = val; });
-//
-//     const keys = Object.keys(data);
-//     const values = Object.values(data);
-//
-//     let csvContent = keys.join(";") + "\n";
-//     csvContent += values.map(v => `"${v.replace(/"/g, '""')}"`).join(";") + "\n";
-//
-//     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-//     const url = URL.createObjectURL(blob);
-//
-//     const a = document.createElement("a");
-//     a.href = url;
-//     a.download = "rezultati.csv";
-//     document.body.appendChild(a);
-//     a.click();
-//     document.body.removeChild(a);
-//
-//     URL.revokeObjectURL(url);
-//
-//     alert("Rezultati so bili preneseni kot CSV datoteka.");
-// });

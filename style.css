@@ -70,7 +70,7 @@ input[type="number"] {
 
 /* Okvir prototipa (iframe) */
 iframe {
-    width: auto;
+    width: 375px;
     height: 95vh;
     max-height: 667px;
     border: 1px solid #ccd3db;
@@ -83,7 +83,6 @@ iframe {
     display: flex;
     flex-direction: column;
     margin: 10px 0;
-    max-width: 500px;
 }
 
 .criterion span {

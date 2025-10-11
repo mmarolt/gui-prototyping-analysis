@@ -1,14 +1,14 @@
-const NUM_APPS = 44;
+const NUM_APPS = 12;
 const NUM_METHODS = 4;
 const METHOD = ["instruction", "pd_zs", "pd_fs", "ref_instruction"];
-const APPS = ['12740', '14283', '18782', '20947', '22151', '27360', '27382', '27707', '30982', '31390', '32310', '3261', '33383', '34346', '34517', '34527', '35526', '3727', '37505', '38961', '40673', '43872', '43977', '44756', '47926', '49794', '53054', '53469', '54377', '54468', '56905', '58124', '59429', '59576', '61851', '63575', '64858', '65592', '67044', '68368', '69574', '69587', '70410', '8640'];
+const APPS = ['8640','12740','22151','27382','31390','34527','38961','43977','44756','59429','59576','69574'];
 const CRITERIA = [
-    "Skladnost z zahtevami",
-    "Ustreznost komponent",
-    "Intuitivnost in preprostost",
-    "Minimalno število slabosti",
-    "Estetska privlačnost",
-    "Splošno zadovoljstvo"
+    "Prototip je skladen s svojim opisom.",
+    "Komponente so pravilno izbrane, jasno poimenovane in logično umeščene.",
+    "Uporabnik brez dodatnih navodil razume, kako uporabljati prototip.",
+    "V prototipu ni oblikovalskih ali funkcionalnih napak.",
+    "Prototip je vizualno usklajen, prijeten in profesionalen.",
+    "Generalno gledano, je vmesnik dober."
 ];
 
 async function loadDataset() {
@@ -30,7 +30,7 @@ function createPrototype(index, id) {
     div.className = "prototype";
 
     const h3 = document.createElement("h3");
-    h3.textContent = `Prototype ${index}`;
+    h3.textContent = `Prototip ${index}`;
     div.appendChild(h3);
 
     const iframe = document.createElement("iframe");
@@ -77,7 +77,7 @@ function createGroup(groupIndex, opis, prototypes) {
     groupDiv.className = "group";
 
     const h2 = document.createElement("h2");
-    h2.textContent = `App ${groupIndex + 1}`;
+    h2.textContent = `Opis aplikacije ${groupIndex + 1}`;
     groupDiv.appendChild(h2);
 
     const p = document.createElement("p");
@@ -104,7 +104,7 @@ loadDataset().then(([opisMap, idMap]) => {
     }
 });
 
-/*document.getElementById("surveyForm").addEventListener("submit", async function(e) {
+document.getElementById("surveyForm").addEventListener("submit", async function(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = {};
@@ -124,32 +124,32 @@ loadDataset().then(([opisMap, idMap]) => {
     } catch (err) {
         alert("Težava s povezavo: " + err);
     }
-});*/
-
-document.getElementById("surveyForm").addEventListener("submit", function(e) {
-    console.log("Submit handler je sprožen!");
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = {};
-    formData.forEach((val, key) => { data[key] = val; });
-
-    const keys = Object.keys(data);
-    const values = Object.values(data);
-
-    let csvContent = keys.join(";") + "\n";
-    csvContent += values.map(v => `"${v.replace(/"/g, '""')}"`).join(";") + "\n";
-
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "rezultati.csv";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    URL.revokeObjectURL(url);
-
-    alert("Rezultati so bili preneseni kot CSV datoteka.");
 });
+
+// document.getElementById("surveyForm").addEventListener("submit", function(e) {
+//     console.log("Submit handler je sprožen!");
+//     e.preventDefault();
+//     const formData = new FormData(e.target);
+//     const data = {};
+//     formData.forEach((val, key) => { data[key] = val; });
+//
+//     const keys = Object.keys(data);
+//     const values = Object.values(data);
+//
+//     let csvContent = keys.join(";") + "\n";
+//     csvContent += values.map(v => `"${v.replace(/"/g, '""')}"`).join(";") + "\n";
+//
+//     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+//     const url = URL.createObjectURL(blob);
+//
+//     const a = document.createElement("a");
+//     a.href = url;
+//     a.download = "rezultati.csv";
+//     document.body.appendChild(a);
+//     a.click();
+//     document.body.removeChild(a);
+//
+//     URL.revokeObjectURL(url);
+//
+//     alert("Rezultati so bili preneseni kot CSV datoteka.");
+// });

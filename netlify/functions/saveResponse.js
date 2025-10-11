@@ -21,7 +21,7 @@ export async function handler(event) {
         const sheets = google.sheets({ version: "v4", auth });
 
         const spreadsheetId = "1dAFQnBIkarG_N2pjD6xHnI66He3Xx3yl_0h4pbFd9w4";
-        const range = "List1!A:AH";
+        const range = "List1!A:KK";
 
         await sheets.spreadsheets.values.append({
             spreadsheetId,

@@ -102,24 +102,20 @@ loadDataset().then(([opisMap]) => {
 
 document.getElementById("surveyForm").addEventListener("submit", async function(e) {
     const answers = [];
-    ids.forEach(id => {
-        indexes.forEach(index => {
-            cIndexes.forEach(cIndex => {
+    APPS.forEach(id => {
+        [1,2,3,4].forEach(index => {
+            [1,2,3,4,5,6].forEach(cIndex => {
                 const name = `a${id}_p${index}_c${cIndex}`;
-                [1,2,3,4,5].forEach(i => {
-                    const checked = document.querySelector(`input[name="${name}_${i}"]:checked`);
-                    if (checked) {
-                        answers.push({
-                            name: name,
-                            value: i
-                        });
-                    }
+                const checked = document.querySelector(`input[name="${name}"]:checked`);
+                answers.push({
+                    name: name,
+                    value: checked ? checked.value : ""
                 });
             });
         });
     });
-    // Shrani kot CSV
-    const csv = answers.map(a => `${a.name},${a.value}`).join("\n");
+
+    const csv = answers.map(a => `${a.name}_${a.value}`).join(",");
     document.getElementById("odgovori").value = csv;
 
     alert("Hvala! Odgovori so bili shranjeni.");

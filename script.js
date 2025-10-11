@@ -53,7 +53,7 @@ function createPrototype(index, id) {
             input.id = `a${id}_p${index}_c${cIndex}_${i}`;
             input.name = `a${id}_p${index}_c${cIndex}`;
             input.value = i;
-            //input.required = true;
+            input.required = true;
 
             const label = document.createElement("label");
             label.htmlFor = input.id;
@@ -118,6 +118,7 @@ document.getElementById("surveyForm").addEventListener("submit", async function(
 
     const csv = answers.map(a => `${a.name}_${a.value}`).join(",");
     document.getElementById("odgovori").value = csv;
+    console.log(csv)
 
     alert("Hvala! Odgovori so bili shranjeni.");
 });

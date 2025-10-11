@@ -106,10 +106,14 @@ document.getElementById("surveyForm").addEventListener("submit", async function(
         indexes.forEach(index => {
             cIndexes.forEach(cIndex => {
                 const name = `a${id}_p${index}_c${cIndex}`;
-                const checked = document.querySelector(`input[name="${name}"]:checked`);
-                answers.push({
-                    name: name,
-                    value: checked ? checked.value : ""
+                [1,2,3,4,5].forEach(i => {
+                    const checked = document.querySelector(`input[name="${name}_${i}"]:checked`);
+                    if (checked) {
+                        answers.push({
+                            name: name,
+                            value: i
+                        });
+                    }
                 });
             });
         });

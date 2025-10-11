@@ -104,9 +104,10 @@ document.getElementById("surveyForm").addEventListener("submit", async function(
     const answers = [];
     APPS.forEach(id => {
         [1,2,3,4].forEach(index => {
-            [1,2,3,4,5,6].forEach(cIndex => {
+            [0,1,2,3,4,5].forEach(cIndex => {
                 const name = `a${id}_p${index}_c${cIndex}`;
                 const checked = document.querySelector(`input[name="${name}"]:checked`);
+                console.log(name, checked ? checked.value : 0)
                 answers.push({
                     name: name,
                     value: checked ? checked.value : ""

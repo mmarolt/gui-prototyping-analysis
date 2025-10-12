@@ -100,6 +100,44 @@ loadDataset().then(([opisMap]) => {
     }
 });
 
+function saveAnswersToLocalStorage() {
+    const answers = {};
+    ids.forEach(id => {
+        indexes.forEach(index => {
+            cIndexes.forEach(cIndex => {
+                const name = `a${id}_p${index}_c${cIndex}`;
+                const checked = document.querySelector(`input[name="${name}"]:checked`);
+                answers[name] = checked ? checked.value : "";
+            });
+        });
+    });
+    localStorage.setItem('anketa_odgovori', JSON.stringify(answers));
+}
+
+function restoreAnswersFromLocalStorage() {
+    const answers = JSON.parse(localStorage.getItem('anketa_odgovori') || '{}');
+    Object.keys(answers).forEach(name => {
+        const value = answers[name];
+        if (value) {
+            const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (radio) radio.checked = true;
+        }
+    });
+    const csv = Object.entries(answers).map(([name, value]) => `${name},${value}`).join("\n");
+    document.getElementById("odgovori").value = csv;
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+    restoreAnswersFromLocalStorage();
+
+    document.querySelectorAll('input[type="radio"]').forEach(input => {
+        input.addEventListener('change', function() {
+            saveAnswersToLocalStorage();
+            restoreAnswersFromLocalStorage();
+        });
+    });
+});
+
 document.getElementById("surveyForm").addEventListener("submit", async function(e) {
     const answers = [];
     APPS.forEach(id => {
@@ -107,7 +145,6 @@ document.getElementById("surveyForm").addEventListener("submit", async function(
             [0,1,2,3,4,5].forEach(cIndex => {
                 const name = `a${id}_p${index}_c${cIndex}`;
                 const checked = document.querySelector(`input[name="${name}"]:checked`);
-                console.log(name, checked ? checked.value : 0)
                 answers.push({
                     name: name,
                     value: checked ? checked.value : ""
@@ -118,7 +155,8 @@ document.getElementById("surveyForm").addEventListener("submit", async function(
 
     const csv = answers.map(a => `${a.name}_${a.value}`).join(",");
     document.getElementById("odgovori").value = csv;
-    console.log(csv)
+
+    saveAnswersToLocalStorage();
 
     alert("Hvala! Odgovori so bili shranjeni.");
 });

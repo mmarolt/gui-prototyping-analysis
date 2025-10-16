@@ -1,4 +1,4 @@
-app_id;method;errors;warnings;error_descriptions;warning_descriptions
+app_id;prompt;errors;warnings;error_descriptions;warning_descriptions
 12740;instruction;0;0;;
 12740;pd_zs;0;0;;
 12740;pd_fs;0;0;;

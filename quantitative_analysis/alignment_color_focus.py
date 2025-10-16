@@ -14,7 +14,7 @@ def main_sync_jupyter():
     ROOT = Path("../generated_guis")
     PROMPTS = ["instruction", "pd_zs", "pd_fs", "ref_instruction"]
     VIEWPORT = {"width": 1280, "height": 800}
-    OUT_CSV = "all_ui_metrics_md_sync.csv"
+    OUT_CSV = "alignment_color_focus.csv"
 
     def parse_rgb(css_color):
         if not css_color or 'transparent' in css_color:

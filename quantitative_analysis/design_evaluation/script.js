@@ -60,29 +60,29 @@ function createPrototype(appId, methodIndex) {
     row3.appendChild(label3);
     row3.appendChild(input3);
 
-    // Vnos števila elementov z neberljivim tekstom
+    // Vnos števila interaktivnih elementov
     const row4 = document.createElement("div");
     row4.className = "input-row";
     const label4 = document.createElement("label");
-    label4.textContent = "Število neberljivih elementov z besedilom:";
+    label4.textContent = "Število interaktivnih elementov:";
     const input4 = document.createElement("input");
     input4.type = "number";
     input4.min = "0";
-    input4.name = `a${appId}_m${methodIndex}_unreadable`;
+    input4.name = `a${appId}_m${methodIndex}_interactive`;
     input4.value = "";
     input4.required = true;
     row4.appendChild(label4);
     row4.appendChild(input4);
 
-    // Vnos števila neustreznih/neprikazanih ikon
+    // Vnos števila vseh elementov
     const row5 = document.createElement("div");
     row5.className = "input-row";
     const label5 = document.createElement("label");
-    label5.textContent = "Število neustreznih ikon:";
+    label5.textContent = "Število vseh elementov:";
     const input5 = document.createElement("input");
     input5.type = "number";
     input5.min = "0";
-    input5.name = `a${appId}_m${methodIndex}_icons`;
+    input5.name = `a${appId}_m${methodIndex}_all`;
     input5.value = "";
     input5.required = true;
     row5.appendChild(label5);
@@ -101,12 +101,12 @@ function createPrototype(appId, methodIndex) {
     row6.appendChild(label6);
 
     // Dodaj vse vrstice v input blok
-    inputDiv.appendChild(row1);
-    inputDiv.appendChild(row2);
-    inputDiv.appendChild(row3);
-    //inputDiv.appendChild(row4);
-    //inputDiv.appendChild(row5);
     inputDiv.appendChild(row6);
+    inputDiv.appendChild(row1);
+    inputDiv.appendChild(row3);
+    inputDiv.appendChild(row2);
+    inputDiv.appendChild(row4);
+    //inputDiv.appendChild(row5);
 
     div.appendChild(inputDiv);
     return div;
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         const formData = new FormData(e.target);
 
         // Pripravi CSV glavo
-        let csvContent = "UI_Number;Method;Bounds;Nonresponsive;Hidden;Dimensions\n";
+        let csvContent = "app_id;prompt;boundary;nonresponsive;overlap;all;dimensions\n";
 
         for (let g = 0; g < NUM_APPS; g++) {
             const appId = APPS[g];
@@ -145,10 +145,10 @@ document.addEventListener("DOMContentLoaded", async function() {
                 const outOfBounds = formData.get(`a${appId}_m${m}_out_of_bounds`) || "0";
                 const nonresponsive = formData.get(`a${appId}_m${m}_nonresponsive`) || "0";
                 const hidden = formData.get(`a${appId}_m${m}_hidden`) || "0";
-                const unreadable = formData.get(`a${appId}_m${m}_unreadable`) || "0";
-                const icons = formData.get(`a${appId}_m${m}_icons`) || "0";
-                const dimensions = formData.has(`a${appId}_m${m}_dimensions`) ? "YES" : "NO";
-                csvContent += `${appId};${METHOD[m]};${outOfBounds};${nonresponsive};${hidden};${dimensions}\n`;
+                const allInteractive = formData.get(`a${appId}_m${m}_interactive`) || "0";
+                const all = formData.get(`a${appId}_m${m}_all`) || "0";
+                const dimensions = formData.has(`a${appId}_m${m}_dimensions`) ? "1" : "0";
+                csvContent += `${appId};${METHOD[m]};${outOfBounds};${nonresponsive};${hidden};${allInteractive};${dimensions}\n`;
             }
         }
 
@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "gui_visual_analysis.csv";
+        a.download = "dimensions_activeness_overlap.csv";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

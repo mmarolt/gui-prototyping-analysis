@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         e.preventDefault();
         const formData = new FormData(e.target);
 
-        let csvContent = "UI_Number;Method;All;Correct\n";
+        let csvContent = "app_id;prompt;all;correct\n";
 
         for (let g = 0; g < NUM_APPS; g++) {
             const appId = APPS[g];
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "rezultati.csv";
+        a.download = "description_validation.csv";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

@@ -8,6 +8,8 @@ The project implements and compares several prompt-driven and chain-based approa
 
 ### Key Features
 
+- **Dataset Creation:** Tools for creating datasets by describing mobile app screenshots and mapping them to requirements, summaries, or UI elements.
+
 - **Prompt-based GUI Generation:** Uses large language models (LLMs) and carefully designed prompts to convert requirements into code, including intermediate steps such as:
     - Extracting visible functionalities from descriptions.
     - Generating lists of UI elements.
@@ -15,8 +17,6 @@ The project implements and compares several prompt-driven and chain-based approa
     - Producing HTML and inline CSS code optimized for mobile viewports.
 
 - **Multiple Prototyping Chains:** Implements several strategies (e.g., "instruction", "pd_zs", "pd_fs", "ref_instruction") to analyze and refine requirements, providing alternative methods for GUI generation.
-
-- **Dataset Creation:** Tools for creating datasets by describing mobile app screenshots and mapping them to requirements, summaries, or UI elements.
 
 - **Evaluation Metrics:**
     - **Quantitative Metrics:**
@@ -60,18 +60,6 @@ The project implements and compares several prompt-driven and chain-based approa
 - **HTML/CSS/JavaScript** (prototype generation and questionnaire)
 - **Netlify** (online deployment of the questionnaire)
 - **Large Language Models** (prompt execution via LangChain)
-
-## Example Evaluation Criteria
-
-**Quantitative:**
-- SSIM (visual similarity)
-- DOM Complexity
-- Layout Area
-
-**Qualitative (via questionnaire):**
-- Compliance with requirements
-- Appropriateness of components
-- Intuitiveness and simplicity of navigation and usage
 
 
 ## License
